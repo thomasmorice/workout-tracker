@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import formatDistance from "date-fns/formatDistance";
+import Image from "next/image";
 import { MdOutlineMenu, MdOutlinePlaylistAddCheck } from "react-icons/md";
 import { WorkoutWithExtras } from "../../server/router/workout";
 import { enumToString } from "../../utils/formatting";
@@ -24,13 +25,25 @@ export default function WorkoutCard({
           {/* Author */}
           <div className="flex items-center gap-5">
             <div className="mask mask-circle h-12 w-12 ">
-              <img src={workout.creator.image as string} alt="" />
+              <Image
+                width={48}
+                height={48}
+                referrerPolicy="no-referrer"
+                src={workout.creator.image ?? "https://i.pravatar.cc/300"}
+                alt="Workout creator"
+              />
             </div>
-            <div className="text-xl font-extralight">
-              {workout?.creator.name}
+            <div className="flex flex-col justify-center">
+              <div className="text-xl font-extralight">
+                {workout?.creator.name}
+              </div>
+              <div className={`rounded-none text-xs font-medium`}>
+                Added {formatDistance(new Date(), new Date(workout.createdAt))}{" "}
+                ago
+              </div>
             </div>
           </div>
-          <div className="dropdown-end dropdown">
+          {/* <div className="dropdown-end dropdown">
             <label tabIndex={0} className="btn btn-square btn-sm">
               <MdOutlineMenu size="24" />
             </label>
@@ -53,7 +66,7 @@ export default function WorkoutCard({
                 </a>
               </li>
             </ul>
-          </div>
+          </div> */}
         </div>
 
         {/* Title */}
@@ -98,13 +111,7 @@ export default function WorkoutCard({
 
         <div className="divider opacity-50"></div>
 
-        <div className="flex items-center justify-between">
-          <div
-            className={`badge badge-ghost rounded-none text-xs font-medium `}
-          >
-            Added {formatDistance(new Date(), new Date(workout.createdAt))} ago
-          </div>
-
+        {/* <div className="flex items-center justify-between">
           {workout._count.workoutResults > 0 && (
             <div className="tooltip" data-tip={`View results `}>
               <div className="flex">
@@ -115,6 +122,13 @@ export default function WorkoutCard({
               </div>
             </div>
           )}
+        </div>
+
+        <div className="divider opacity-50"></div> */}
+
+        {/* Card footer */}
+        <div className="card-actions justify-end">
+          <button className="btn btn-primary">Buy Now</button>
         </div>
       </div>
     </div>
