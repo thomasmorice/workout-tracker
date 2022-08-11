@@ -20,6 +20,7 @@
     "@trpc/react": "^9.27.0",
     "@trpc/server": "^9.27.0",
     "daisyui": "^2.22.0",
+    "date-fns": "^2.29.1",
     "framer-motion": "^7.0.1",
     "next": "12.2.3",
     "next-auth": "^4.10.3",
