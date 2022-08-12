@@ -7,13 +7,19 @@ import ThemeSwitcher from "./ThemeSwitcher";
 import Image from "next/image";
 import ToastMessage from "./ToastMessage";
 import { Rings } from "react-loading-icons";
+import { useRouter } from "next/router";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 export default function Layout({ children }: LayoutProps) {
+  const router = useRouter();
   const { data: sessionData, status } = useSession();
   const { state: workoutFromState } = useWorkoutFormStore();
+  const asPathWithoutQuery = router.asPath.split("?")[0];
+  const asPathNestedRoutes = asPathWithoutQuery
+    ?.split("/")
+    .filter((v) => v.length > 0);
   return (
     <div>
       <ToastMessage />
@@ -22,7 +28,19 @@ export default function Layout({ children }: LayoutProps) {
       {workoutFromState && <WorkoutForm />}
 
       <main className={`px-5 sm:px-8 md:ml-[320px]`}>
-        <div className="flex w-full justify-between py-5 md:justify-end items-center">
+        <div className="flex w-full justify-between py-5 items-center">
+          <div className="hidden md:block text-sm breadcrumbs">
+            <ul>
+              <li className="capitalize" key={"home"}>
+                Home
+              </li>
+              {asPathNestedRoutes?.map((path, index) => (
+                <li key={path}>
+                  <a className="capitalize">{path}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
           <div className="md:hidden">
             <Logo />
           </div>

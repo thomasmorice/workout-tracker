@@ -37,6 +37,27 @@ type ThenArg<T> = T extends PromiseLike<infer U> ? U : T;
 export type WorkoutWithExtras = ThenArg<ReturnType<typeof getWorkoutForType>>;
 
 export const workoutRouter = createProtectedRouter()
+  .query("get-workout-by-id", {
+    input: z.object({
+      id: z.number(),
+    }),
+    async resolve({ ctx, input }) {
+      const { id } = input;
+      const workout = await prisma.workout.findFirst({
+        select: {
+          ...WorkoutExtras,
+          ...WorkoutSelect,
+        },
+        where: {
+          AND: {
+            id: id,
+            creatorId: ctx.session.user.id,
+          },
+        },
+      });
+      return workout;
+    },
+  })
   .query("get-infinite-workouts", {
     input: z.object({
       elementTypes: z.nativeEnum(ElementType).array().nullish(),

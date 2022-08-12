@@ -1,3 +1,4 @@
+import { UseTRPCQueryOptions } from "@trpc/react";
 import { TRPCError } from "@trpc/server";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
@@ -57,5 +58,24 @@ export const useWorkoutService = () => {
     );
   };
 
-  return { createWorkout, editWorkout, deleteWorkout, getInfiniteWorkouts };
+  const getWorkoutById = (id: unknown) => {
+    const workoutId = parseInt(id as string);
+    return trpc.useQuery(
+      [
+        "workout.get-workout-by-id",
+        {
+          id: workoutId,
+        },
+      ],
+      { enabled: !!sessionData && !!id, refetchOnWindowFocus: false }
+    );
+  };
+
+  return {
+    createWorkout,
+    editWorkout,
+    deleteWorkout,
+    getWorkoutById,
+    getInfiniteWorkouts,
+  };
 };
