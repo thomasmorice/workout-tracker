@@ -1,7 +1,15 @@
 import { Prisma } from "@prisma/client";
 import formatDistance from "date-fns/formatDistance";
 import Image from "next/image";
-import { MdOutlineMenu, MdOutlinePlaylistAddCheck } from "react-icons/md";
+import {
+  MdOutlineMenu,
+  MdOutlinePlaylistAddCheck,
+  MdDone,
+  MdDelete,
+  MdMenu,
+  MdCopyAll,
+  MdEdit,
+} from "react-icons/md";
 import { WorkoutWithExtras } from "../../server/router/workout";
 import { enumToString } from "../../utils/formatting";
 
@@ -19,71 +27,45 @@ export default function WorkoutCard({
   onDelete,
 }: WorkoutCardProps) {
   return (
-    <div className="group card mb-8 bg-base-200 shadow-sm transition-shadow hover:shadow-lg">
+    <div className="group card mb-8 bg-base-200 transition-all hover:shadow-lg duration-300">
       <div className="card-body ">
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           {/* Author */}
-          <div className="flex items-center gap-5">
-            <div className="mask mask-circle h-12 w-12 ">
+          <div className="flex items-center gap-3">
+            <div className="mask mask-circle relative h-10 w-10 ">
               <Image
-                width={48}
-                height={48}
+                layout="fill"
                 referrerPolicy="no-referrer"
                 src={workout.creator.image ?? "https://i.pravatar.cc/300"}
                 alt="Workout creator"
               />
             </div>
-            <div className="flex flex-col justify-center">
-              <div className="text-xl font-extralight">
+            <div className="flex flex-col">
+              <div className="text-lg leading-tight">
                 {workout?.creator.name}
               </div>
-              <div className={`rounded-none text-xs font-medium`}>
-                Added {formatDistance(new Date(), new Date(workout.createdAt))}{" "}
-                ago
+              <div className={`text-xs opacity-50 font-light`}>
+                Created{" "}
+                {formatDistance(new Date(), new Date(workout.createdAt))} ago
               </div>
             </div>
           </div>
-          {/* <div className="dropdown-end dropdown">
-            <label tabIndex={0} className="btn btn-square btn-sm">
-              <MdOutlineMenu size="24" />
-            </label>
-            <ul
-              tabIndex={0}
-              className="dropdown-content menu rounded-box  bg-base-100 p-2 text-sm shadow"
-            >
-              <li>
-                <a onClick={onEdit}>Edit</a>
-              </li>
-              <li>
-                <a onClick={onDuplicate}>Duplicate</a>
-              </li>
-              <li>
-                <a
-                  onClick={onDelete}
-                  className="hover:bg-error hover:text-white"
-                >
-                  Delete
-                </a>
-              </li>
-            </ul>
-          </div> */}
-        </div>
 
-        {/* Title */}
-        <div className="card-title py-3 text-2xl">
-          {workout.name ? workout.name : `#${workout.id}`}
-        </div>
-
-        {/* Description */}
-        <div className="description whitespace-pre-wrap break-words text-sm font-light">
-          {workout.description}
+          {workout._count.workoutResults > 0 && (
+            <div className="flex opacity-70">
+              <MdDone className="" size={21} />
+              <sup className="text-[0.65rem]">
+                {workout._count.workoutResults}
+              </sup>
+            </div>
+          )}
         </div>
 
         {/* Badges */}
         <div className="badges flex flex-wrap gap-2 pt-4 uppercase">
           {workout.difficulty && (
             <div
-              className={`badge badge-outline rounded-none text-xs font-medium border-${workout.difficulty.toLowerCase()}-600 text-${workout.difficulty.toLowerCase()}-600
+              className={`badge badge-outline rounded-none text-xs font-medium text-${workout.difficulty.toLowerCase()}-600
             ${
               workout.difficulty === "BLACK"
                 ? "border-white bg-black text-white"
@@ -94,9 +76,7 @@ export default function WorkoutCard({
             </div>
           )}
 
-          <div
-            className={`badge badge-primary rounded-none text-xs font-medium `}
-          >
+          <div className={`badge rounded-none text-xs font-medium `}>
             {enumToString(workout.elementType)}
           </div>
 
@@ -109,26 +89,44 @@ export default function WorkoutCard({
           )}
         </div>
 
-        <div className="divider opacity-50"></div>
+        <div className="divider opacity-50 my-2"></div>
 
-        {/* <div className="flex items-center justify-between">
-          {workout._count.workoutResults > 0 && (
-            <div className="tooltip" data-tip={`View results `}>
-              <div className="flex">
-                <div className="btn btn-ghost btn-sm">
-                  <MdOutlinePlaylistAddCheck size={27} />
-                  <sup className="text-xs">{workout._count.workoutResults}</sup>
-                </div>
-              </div>
-            </div>
-          )}
+        {/* Title */}
+        <div className="card-title text-2xl">
+          {workout.name ? workout.name : `#${workout.id}`}
         </div>
 
-        <div className="divider opacity-50"></div> */}
+        {/* Description */}
+        <div className="description whitespace-pre-wrap break-words text-[0.8rem] leading-relaxed font-medium opacity-70">
+          {workout.description}
+        </div>
+
+        <div className="divider opacity-50"></div>
 
         {/* Card footer */}
         <div className="card-actions justify-end">
-          <button className="btn btn-primary">Buy Now</button>
+          <div className="btn-group ">
+            <button
+              onClick={onEdit}
+              className="btn btn-sm btn-outline gap-x-2 text-xs"
+            >
+              <MdEdit size={17} /> Edit
+            </button>
+
+            <button
+              onClick={onDuplicate}
+              className="btn btn-sm btn-outline gap-x-2 text-xs"
+            >
+              <MdCopyAll size={17} /> Duplicate
+            </button>
+
+            <button
+              onClick={onDelete}
+              className="btn btn-sm btn-outline btn-error text-xs"
+            >
+              <MdDelete size={17} />
+            </button>
+          </div>
         </div>
       </div>
     </div>

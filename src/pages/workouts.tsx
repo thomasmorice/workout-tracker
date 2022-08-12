@@ -1,4 +1,3 @@
-import { ElementType, Workout } from "@prisma/client";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
@@ -8,41 +7,22 @@ import { useIntersectionObserver } from "usehooks-ts";
 import WorkoutCard from "../components/Workout/WorkoutCard";
 import WorkoutCardSkeleton from "../components/Workout/WorkoutCardSkeleton";
 import { useWorkoutService } from "../hooks/useWorkoutService";
-import { useToastStore } from "../store/ToastStore";
 import { useWorkoutFormStore } from "../store/WorkoutFormStore";
-import { trpc } from "../utils/trpc";
 
 const Workouts: NextPage = () => {
   const { data: sessionData } = useSession();
-  const { deleteWorkout } = useWorkoutService();
   const ref = useRef<HTMLDivElement | null>(null);
   const entry = useIntersectionObserver(ref, {});
 
-  const [confirmDeleteWorkout, set_confirmDeleteWorkout] = useState<Workout>();
-
-  const { addMessage, closeMessage } = useToastStore();
   const { showWorkoutForm } = useWorkoutFormStore();
+  const { getInfiniteWorkouts } = useWorkoutService();
 
-  const [elementTypeFilter, set_elementTypeFilter] = useState<
-    `${ElementType}`[]
-  >([]);
   const [classifiedOnly, set_classifiedOnly] = useState(true);
 
   const { data, fetchNextPage, hasNextPage, isFetching, ...rest } =
-    trpc.useInfiniteQuery(
-      [
-        "workout.get-infinite-workouts",
-        {
-          elementTypes: elementTypeFilter,
-          classifiedOnly: classifiedOnly,
-          limit: 12,
-        },
-      ],
-      {
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-        enabled: !!sessionData,
-      }
-    );
+    getInfiniteWorkouts({
+      showClassifiedWorkoutOnly: classifiedOnly,
+    });
 
   useEffect(() => {
     !!entry?.isIntersecting && hasNextPage && fetchNextPage();
