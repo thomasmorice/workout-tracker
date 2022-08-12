@@ -29,10 +29,9 @@ export default function DesktopSidebar({ items }: NavigationItemsProps) {
           {sessionData ? (
             <>
               <div className="flex items-center gap-4">
-                <div className="mask mask-circle h-14">
+                <div className="mask mask-circle h-14 w-14 relative">
                   <Image
-                    width={56}
-                    height={56}
+                    layout="fill"
                     referrerPolicy="no-referrer"
                     src={sessionData.user?.image ?? "https://i.pravatar.cc/300"}
                     alt=""

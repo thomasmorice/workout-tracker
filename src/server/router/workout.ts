@@ -41,13 +41,14 @@ export const workoutRouter = createProtectedRouter()
     input: z.object({
       elementTypes: z.nativeEnum(ElementType).array().nullish(),
       classifiedOnly: z.boolean().nullish(),
+      searchTerm: z.string().nullish(),
       limit: z.number().min(1).max(100).nullish(),
       cursor: z.number().nullish(), // <-- "cursor" needs to exist, but can be any type
     }),
     async resolve({ ctx, input }) {
       const limit = input.limit ?? 20;
       const { cursor } = input;
-      const { elementTypes, classifiedOnly } = input;
+      const { elementTypes, classifiedOnly, searchTerm } = input;
       const where: Prisma.WorkoutWhereInput = {
         ...(elementTypes &&
           elementTypes.length > 0 && {
@@ -58,6 +59,12 @@ export const workoutRouter = createProtectedRouter()
         ...(classifiedOnly && {
           NOT: {
             elementType: "UNCLASSIFIED",
+          },
+        }),
+        ...(searchTerm && {
+          description: {
+            contains: searchTerm,
+            mode: "insensitive",
           },
         }),
         AND: {
