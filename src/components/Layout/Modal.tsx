@@ -28,7 +28,7 @@ export default function Modal({
       >
         <div
           ref={ref}
-          className="max-h-4/5 modal-box w-full bg-base-200 sm:max-h-[calc(100vh_-_5rem)] sm:w-[520px] sm:max-w-5xl"
+          className="max-h-4/5 modal-box w-full bg-base-200 sm:max-h-[calc(100vh_-_5rem)] sm:w-[580px] sm:max-w-5xl"
         >
           {withCloseButton && (
             <label

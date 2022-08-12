@@ -1,5 +1,7 @@
+import { TRPCError } from "@trpc/server";
 import create from "zustand";
 import { WorkoutWithExtras } from "../server/router/workout";
+import { useToastStore } from "./ToastStore";
 
 type StateType = "create" | "duplicate" | "edit" | "delete";
 
@@ -10,6 +12,7 @@ interface WorkoutFormState {
     state: StateType,
     existingWorkout?: WorkoutWithExtras
   ) => void;
+  handleWorkoutFormError: (e: TRPCError) => void;
   closeWorkoutForm: () => void;
 }
 
@@ -23,6 +26,26 @@ const useWorkoutFormStore = create<WorkoutFormState>()((set, get) => ({
       set({
         state: state,
         workout: workout,
+      });
+    }
+  },
+  handleWorkoutFormError: (e: TRPCError) => {
+    const { addMessage } = useToastStore.getState();
+    if (
+      e.message.includes(
+        "Unique constraint failed on the fields: (`description`)"
+      )
+    ) {
+      addMessage({
+        type: "error",
+        message: "A workout with this description already exists",
+        closeAfter: 7000,
+      });
+    } else {
+      addMessage({
+        type: "error",
+        message: e.message,
+        closeAfter: 7000,
       });
     }
   },

@@ -1,8 +1,10 @@
-import { Difficulty, ElementType, Workout } from "@prisma/client";
+import { Difficulty, ElementType } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { useEffect, useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
 import { useWorkoutService } from "../../hooks/useWorkoutService";
+import { WorkoutWithExtras } from "../../server/router/workout";
 import { useToastStore } from "../../store/ToastStore";
 import { useWorkoutFormStore } from "../../store/WorkoutFormStore";
 import { enumToString } from "../../utils/formatting";
@@ -14,38 +16,10 @@ export default function WorkoutForm() {
     state,
     workout: existingWorkout,
     closeWorkoutForm,
+    handleWorkoutFormError,
   } = useWorkoutFormStore();
 
-  const { createWorkout, editWorkout, deleteWorkout, onError, onSuccess } =
-    useWorkoutService();
-
-  useEffect(() => {
-    if (onError) {
-      if (
-        onError.message.includes(
-          "Unique constraint failed on the fields: (`description`)"
-        )
-      ) {
-        addMessage({
-          type: "error",
-          message: "A workout with this description already exists",
-          closeAfter: 7000,
-        });
-      } else {
-        addMessage({
-          type: "error",
-          message: onError.message,
-          closeAfter: 7000,
-        });
-      }
-    }
-  }, [onError, addMessage]);
-
-  useEffect(() => {
-    if (onSuccess) {
-      closeWorkoutForm();
-    }
-  }, [onSuccess, closeWorkoutForm]);
+  const { createWorkout, editWorkout, deleteWorkout } = useWorkoutService();
 
   const defaultValues = useMemo(() => {
     return {
@@ -64,17 +38,19 @@ export default function WorkoutForm() {
     handleSubmit,
     reset,
     formState: { isSubmitting },
-  } = useForm<Workout>({
+  } = useForm<WorkoutWithExtras>({
     defaultValues,
   });
 
-  const onSave: SubmitHandler<Workout> = async (workout: Workout) => {
+  const handleSave: SubmitHandler<WorkoutWithExtras> = async (
+    workout: WorkoutWithExtras
+  ) => {
     let toastId;
     try {
       if (state === "edit") {
         toastId = addMessage({
-          message: "Editing workout",
           type: "pending",
+          message: "Editing workout",
         });
         await editWorkout.mutateAsync(workout);
         addMessage({
@@ -93,22 +69,25 @@ export default function WorkoutForm() {
         });
       }
     } catch (e) {
+      handleWorkoutFormError(e as TRPCError);
+      throw e;
     } finally {
       toastId && closeMessage(toastId);
     }
   };
-  const onDuplicateAndDelete: SubmitHandler<Workout> = async (
-    workout: Workout
+  const handleDuplicateAndDelete: SubmitHandler<WorkoutWithExtras> = async (
+    workout: WorkoutWithExtras
   ) => {
-    await onSave(workout);
+    workout && (await handleSave(workout));
+    workout && (await handleDelete(workout));
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (workout: WorkoutWithExtras) => {
     const toastId = addMessage({
       message: "Deleting workout",
       type: "pending",
     });
-    existingWorkout && (await deleteWorkout.mutateAsync(existingWorkout));
+    await deleteWorkout.mutateAsync(workout);
     closeMessage(toastId);
     addMessage({
       message: "Deleted successfully",
@@ -125,11 +104,15 @@ export default function WorkoutForm() {
       {state === "delete" ? (
         <Modal onClose={() => closeWorkoutForm()}>
           <>
-            <h3 className="text-xl font-bold capitalize">Delete workout</h3>
+            <h3 className="text-xl font-bold capitalize mb-2">
+              Delete workout
+            </h3>
             <p>Are you sure you wanna delete the workout </p>
             <div className="modal-action">
               <label
-                onClick={async () => await handleDelete()}
+                onClick={async () =>
+                  existingWorkout && (await handleDelete(existingWorkout))
+                }
                 className="btn btn-error"
               >
                 Yay!
@@ -148,14 +131,19 @@ export default function WorkoutForm() {
 
             <form
               className="mt-5 flex flex-col gap-2"
-              onSubmit={(e) => {
-                const action = (
-                  e.nativeEvent as SubmitEvent
-                ).submitter?.getAttribute("data-action");
-                if (action === "save") {
-                  void handleSubmit(onSave)(e);
-                } else if (action == "duplicate-and-delete") {
-                  void handleSubmit(onDuplicateAndDelete)(e);
+              onSubmit={async (e) => {
+                try {
+                  const action = (
+                    e.nativeEvent as SubmitEvent
+                  ).submitter?.getAttribute("data-action");
+                  if (action === "save") {
+                    await handleSubmit(handleSave)(e);
+                  } else if (action == "duplicate-and-delete") {
+                    await handleSubmit(handleDuplicateAndDelete)(e);
+                  }
+                  closeWorkoutForm();
+                } catch (e) {
+                  console.error(e);
                 }
               }}
             >
@@ -183,53 +171,44 @@ export default function WorkoutForm() {
                   maxRows={12}
                   placeholder="5 rounds of..."
                 />
-                {/* <textarea
-
-        ></textarea> */}
               </div>
 
-              <div className="form-control relative w-full">
-                <label className="label">
-                  <span className="label-text">Difficulty</span>
-                </label>
-                <select {...register("difficulty")} className="select">
-                  <option disabled value="">
-                    Select a difficulty
-                  </option>
-                  {Object.keys(Difficulty).map((difficulty) => (
-                    <option key={difficulty} value={difficulty}>
-                      {enumToString(difficulty).toLowerCase()}
+              <div className="flex gap-4 flex-wrap w-full">
+                <div className="form-control relative flex-1">
+                  <label className="label">
+                    <span className="label-text">Difficulty</span>
+                  </label>
+                  <select {...register("difficulty")} className="select">
+                    <option disabled value="">
+                      Select a difficulty
                     </option>
-                  ))}
-                </select>
-              </div>
+                    {Object.keys(Difficulty).map((difficulty) => (
+                      <option key={difficulty} value={difficulty}>
+                        {enumToString(difficulty).toLowerCase()}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-              <div className="form-control relative w-full">
-                <label className="label">
-                  <span className="label-text">Type of element</span>
-                </label>
-                <select {...register("elementType")} className="select">
-                  {Object.keys(ElementType).map((element) => (
-                    <option key={element} value={element}>
-                      {enumToString(element).toLowerCase()}
-                    </option>
-                  ))}
-                </select>
+                <div className="form-control relative flex-1">
+                  <label className="label">
+                    <span className="label-text">Type of element</span>
+                  </label>
+                  <select {...register("elementType")} className="select">
+                    {Object.keys(ElementType).map((element) => (
+                      <option key={element} value={element}>
+                        {enumToString(element).toLowerCase()}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               <div className="form-control relative w-full">
                 <label className="label">
                   <span className="label-text">Total time</span>
                 </label>
-                <div
-                  onClick={() =>
-                    addMessage({
-                      message: "Test",
-                      type: "info",
-                    })
-                  }
-                  className="flex flex-wrap items-center gap-2"
-                >
+                <div className="flex flex-wrap items-center gap-2">
                   <input
                     className="input max-w-[110px] flex-1"
                     placeholder="12"
@@ -246,22 +225,27 @@ export default function WorkoutForm() {
                   />
                   <span className="mr-3"> mn</span>
 
-                  <div className="flex">
-                    <label className="label cursor-pointer">
-                      <input
-                        type="checkbox"
-                        {...register("isDoableAtHome")}
-                        className="checkbox bg-base-100"
-                      />
-                      <span className="label-text ml-2">Do-able at home </span>
-                    </label>
-                  </div>
+                  <label className="label cursor-pointer">
+                    <input
+                      type="checkbox"
+                      {...register("isDoableAtHome")}
+                      className="checkbox bg-base-100"
+                    />
+                    <span className="label-text ml-2">Do-able at home </span>
+                  </label>
                 </div>
               </div>
 
               {/* <pre>{JSON.stringify(watch(), null, 2)}</pre> */}
 
-              <div className="mt-3 flex justify-end gap-4">
+              <div className="mt-3 flex justify-end gap-4 flex-wrap">
+                <button
+                  data-action="save"
+                  className={`btn mt-2 ${isSubmitting ? "loading" : ""}`}
+                  type="submit"
+                >
+                  {`${state} workout`}
+                </button>
                 {state === "duplicate" && (
                   <button
                     data-action="duplicate-and-delete"
@@ -273,13 +257,6 @@ export default function WorkoutForm() {
                     Duplicate & Delete Original
                   </button>
                 )}
-                <button
-                  data-action="save"
-                  className={`btn mt-2 ${isSubmitting ? "loading" : ""}`}
-                  type="submit"
-                >
-                  {`${state} workout`}
-                </button>
               </div>
             </form>
           </>
