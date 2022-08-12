@@ -3,11 +3,12 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
 import Masonry from "react-masonry-css";
-import { useIntersectionObserver } from "usehooks-ts";
+import { useIntersectionObserver, useDebounce } from "usehooks-ts";
 import WorkoutCard from "../components/Workout/WorkoutCard";
 import WorkoutCardSkeleton from "../components/Workout/WorkoutCardSkeleton";
 import { useWorkoutService } from "../hooks/useWorkoutService";
 import { useWorkoutFormStore } from "../store/WorkoutFormStore";
+import { MdSearch } from "react-icons/md";
 
 const Workouts: NextPage = () => {
   const { data: sessionData } = useSession();
@@ -18,10 +19,13 @@ const Workouts: NextPage = () => {
   const { getInfiniteWorkouts } = useWorkoutService();
 
   const [classifiedOnly, set_classifiedOnly] = useState(true);
+  const [searchTerm, set_searchTerm] = useState("");
+  const searchTermDebounced = useDebounce<string>(searchTerm, 500);
 
   const { data, fetchNextPage, hasNextPage, isFetching, ...rest } =
     getInfiniteWorkouts({
       showClassifiedWorkoutOnly: classifiedOnly,
+      searchTerm: searchTermDebounced,
     });
 
   useEffect(() => {
@@ -43,8 +47,7 @@ const Workouts: NextPage = () => {
             <p className="py-6">
               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste,
               perspiciatis consequuntur in, similique quo magnam molestiae non
-              delectus modi, beatae voluptatibus laboriosam. Cum, neque iste
-              minus debitis inventore excepturi pariatur!
+              delectus modi, beatae voluptatibus laboriosam.
             </p>
 
             {sessionData && (
@@ -61,19 +64,43 @@ const Workouts: NextPage = () => {
       {sessionData && (
         <>
           <div className="pt-8">
-            <div className="form-control items-start ">
-              <label className="label cursor-pointer gap-2">
-                <span className="label-text">
-                  {classifiedOnly ? "Only classified" : "All workouts"}
-                </span>
+            <div className="flex flex-wrap gap-2 items-center">
+              <div className="form-control items-start ">
+                <label className="label cursor-pointer gap-2">
+                  <span className="label-text">
+                    {classifiedOnly
+                      ? "Only classified workouts"
+                      : "All workouts"}
+                  </span>
+                  <input
+                    type="checkbox"
+                    onChange={(e) => set_classifiedOnly(e.target.checked)}
+                    className="toggle"
+                    checked={classifiedOnly}
+                  />
+                </label>
+              </div>
+
+              <div className="input bg-base-200 w-full relative flex items-center justify-between">
+                <label className="z-10" htmlFor="searchWorkoutInput">
+                  <MdSearch size={22} />
+                </label>
                 <input
-                  type="checkbox"
-                  onChange={(e) => set_classifiedOnly(e.target.checked)}
-                  className="toggle"
-                  checked={classifiedOnly}
+                  id="searchWorkoutInput"
+                  type="search"
+                  placeholder="Search…"
+                  value={searchTerm}
+                  onChange={(e) => set_searchTerm(e.target.value)}
+                  className="input absolute w-full left-0 px-12 bg-base-200"
                 />
-              </label>
+
+                <div className="z-10">
+                  <kbd className="kbd bg-base-100">⌘</kbd>
+                  <kbd className="kbd bg-base-100">K</kbd>
+                </div>
+              </div>
             </div>
+
             <Masonry
               breakpointCols={{
                 default: 3,
