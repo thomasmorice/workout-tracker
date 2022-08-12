@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useOnClickOutside } from "usehooks-ts";
+import { useOnClickOutside, useLockedBody } from "usehooks-ts";
 
 interface ModalProps {
   onClose: () => void;
@@ -15,6 +15,8 @@ export default function Modal({
   const [isMounted, set_isMounted] = useState(false);
   const ref = useRef(null);
 
+  useLockedBody(true);
+
   useEffect(() => set_isMounted(true), []);
 
   useOnClickOutside(ref, onClose);
@@ -28,7 +30,7 @@ export default function Modal({
       >
         <div
           ref={ref}
-          className="max-h-4/5 modal-box w-full bg-base-200 sm:max-h-[calc(100vh_-_5rem)] sm:w-[580px] sm:max-w-5xl"
+          className="max-h-[85%] modal-box w-full bg-base-200 sm:max-h-[calc(100vh_-_5rem)] sm:w-[580px] sm:max-w-5xl"
         >
           {withCloseButton && (
             <label
