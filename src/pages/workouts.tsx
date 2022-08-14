@@ -6,7 +6,7 @@ import Masonry from "react-masonry-css";
 import { useIntersectionObserver, useDebounce } from "usehooks-ts";
 import WorkoutCard from "../components/Workout/WorkoutCard";
 import WorkoutCardSkeleton from "../components/Workout/WorkoutCardSkeleton";
-import { useWorkoutService } from "../hooks/useWorkoutService";
+import { useWorkoutService } from "../services/useWorkoutService";
 import { useWorkoutFormStore } from "../store/WorkoutFormStore";
 import { MdSearch } from "react-icons/md";
 
@@ -43,7 +43,7 @@ const Workouts: NextPage = () => {
       <div className="hero  rounded-3xl bg-base-200 py-16 ">
         <div className="hero-content text-center">
           <div className="max-w-md">
-            <h1 className="text-3xl font-bold sm:text-5xl">Workout list</h1>
+            <h1 className="text-3xl font-bold sm:text-5xl ">Workout list</h1>
             <p className="py-6">
               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste,
               perspiciatis consequuntur in, similique quo magnam molestiae non
