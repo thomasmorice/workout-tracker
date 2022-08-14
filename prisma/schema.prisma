@@ -28,6 +28,7 @@ model Workout {
     name           String?
     difficulty     Difficulty?
     elementType    ElementType     @default(UNCLASSIFIED)
+    workoutType    WorkoutType?
     isDoableAtHome Boolean         @default(false)
     description    String          @unique
     totalTime      Float?
@@ -45,6 +46,8 @@ model WorkoutSession {
     updatedAt      DateTime        @updatedAt
     workoutResults WorkoutResult[]
     event          Event?
+    athlete        User            @relation(fields: [athleteId], references: [id])
+    athleteId      String          @default("cl6jsjxy00006uyo8h2v8fr2e")
 }
 
 model Event {
@@ -58,11 +61,6 @@ model Event {
     createdAt        DateTime        @default(now())
     updatedAt        DateTime        @updatedAt
 }
-
-// model Profile {
-//   id                Int @id @default(autoincrement())
-
-// }
 
 model WorkoutResult {
     id                          Int            @id @default(autoincrement())
@@ -98,6 +96,12 @@ enum Difficulty {
     YELLOW
     RED
     BLACK
+}
+
+enum WorkoutType {
+    EMOM
+    AMRAP
+    FOR_TIME
 }
 
 enum ElementType {
@@ -145,14 +149,15 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    workouts      Workout[]
+    id              String           @id @default(cuid())
+    name            String?
+    email           String?          @unique
+    emailVerified   DateTime?
+    image           String?
+    accounts        Account[]
+    sessions        Session[]
+    workouts        Workout[]
+    workoutSessions WorkoutSession[]
 }
 
 model VerificationToken {

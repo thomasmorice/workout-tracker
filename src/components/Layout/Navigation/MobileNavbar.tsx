@@ -32,7 +32,7 @@ export default function MobileNavbar({ items }: NavigationItemsProps) {
             );
           })}
         </>
-      ) : status !== "loading" ? (
+      ) : (
         <a
           onClick={() => {
             void signIn();
@@ -42,11 +42,6 @@ export default function MobileNavbar({ items }: NavigationItemsProps) {
           <MdLogin size="22px" />
           Login
         </a>
-      ) : (
-        <div className="flex w-full flex-col items-center justify-center py-1 text-sm">
-          <Rings />
-          Loading data...
-        </div>
       )}
     </div>
   );

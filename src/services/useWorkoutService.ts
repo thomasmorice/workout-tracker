@@ -35,6 +35,9 @@ export const useWorkoutService = () => {
     async onSuccess() {
       await utils.invalidateQueries(["workout.get-infinite-workouts"]);
     },
+    onError(e: unknown) {
+      throw e as TRPCError;
+    },
   });
 
   const getInfiniteWorkouts = ({

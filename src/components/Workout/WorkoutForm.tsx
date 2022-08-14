@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { useEffect, useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
-import { useWorkoutService } from "../../hooks/useWorkoutService";
+import { useWorkoutService } from "../../services/useWorkoutService";
 import { WorkoutWithExtras } from "../../server/router/workout";
 import { useToastStore } from "../../store/ToastStore";
 import { useWorkoutFormStore } from "../../store/WorkoutFormStore";

@@ -7,6 +7,7 @@ import {
   MdDone,
   MdDelete,
   MdMenu,
+  MdTimer,
   MdCopyAll,
   MdEdit,
 } from "react-icons/md";
@@ -94,6 +95,16 @@ export default function WorkoutCard({
         {/* Title */}
         <div className="card-title text-2xl">
           {workout.name ? workout.name : `#${workout.id}`}
+        </div>
+
+        {/* Timecap and workout type */}
+
+        <div className="flex gap-1 items-center">
+          {workout.totalTime && (
+            <>
+              <MdTimer /> {workout.totalTime}mn
+            </>
+          )}
         </div>
 
         {/* Description */}

@@ -7,6 +7,7 @@ import { Rings } from "react-loading-icons";
 import Logo from "../Logo";
 import { NavigationItemsProps } from "./Navigation";
 import Image from "next/image";
+import ThemeSwitcher from "../ThemeSwitcher";
 
 export default function DesktopSidebar({ items }: NavigationItemsProps) {
   const ref = useRef(null);
@@ -82,6 +83,7 @@ export default function DesktopSidebar({ items }: NavigationItemsProps) {
                   </>
                 </a>
               </li>
+              <ThemeSwitcher />
             </>
           ) : status !== "loading" ? (
             <li
