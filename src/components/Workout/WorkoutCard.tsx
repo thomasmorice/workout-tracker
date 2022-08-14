@@ -98,11 +98,18 @@ export default function WorkoutCard({
         </div>
 
         {/* Timecap and workout type */}
-
         <div className="flex gap-1 items-center">
           {workout.totalTime && (
             <>
               <MdTimer /> {workout.totalTime}mn
+              {workout.workoutType && (
+                <>
+                  {" — "}
+                  <span className="capitalize">
+                    {enumToString(workout.workoutType.toLowerCase())}
+                  </span>
+                </>
+              )}
             </>
           )}
         </div>

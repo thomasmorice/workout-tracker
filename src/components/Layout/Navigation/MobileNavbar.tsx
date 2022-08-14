@@ -13,36 +13,24 @@ export default function MobileNavbar({ items }: NavigationItemsProps) {
       style={{ boxShadow: "0px -1px 5px 0px rgba(0,0,0,0.3)" }}
       className="fixed bottom-0 z-50 flex w-full items-center rounded-t-xl bg-base-100 shadow-black drop-shadow-xl"
     >
-      {sessionData ? (
-        <>
-          {items.map((item) => {
-            const isActive = item.href === router.asPath;
-            return (
-              <Link key={item.href} href={item.href}>
-                <a
-                  className={`
+      <>
+        {items.map((item) => {
+          const isActive = item.href === router.asPath;
+          return (
+            <Link key={item.href} href={item.href}>
+              <a
+                className={`
             flex w-1/4 flex-col items-center gap-1 border-r border-base-200 px-4 py-2 text-xs transition-all duration-300
             ${isActive ? "rounded-t-lg bg-primary text-primary-content" : ""}
           `}
-                >
-                  <item.icon size="22px" />
-                  {item.label}
-                </a>
-              </Link>
-            );
-          })}
-        </>
-      ) : (
-        <a
-          onClick={() => {
-            void signIn();
-          }}
-          className={`cursor-pointer flex w-full flex-col items-center gap-1 border-r border-base-200 px-4 py-2 text-xs transition-all duration-300`}
-        >
-          <MdLogin size="22px" />
-          Login
-        </a>
-      )}
+              >
+                <item.icon size="22px" />
+                {item.label}
+              </a>
+            </Link>
+          );
+        })}
+      </>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Difficulty, ElementType, Prisma } from "@prisma/client";
+import { Difficulty, ElementType, Prisma, WorkoutType } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { prisma } from "../db/client";
@@ -12,6 +12,7 @@ export const WorkoutSelect = {
   isDoableAtHome: true,
   totalTime: true,
   description: true,
+  workoutType: true,
   createdAt: true,
   updatedAt: true,
 };
@@ -127,6 +128,7 @@ export const workoutRouter = createProtectedRouter()
     input: z.object({
       name: z.string().nullable(),
       description: z.string().min(1),
+      workoutType: z.nativeEnum(WorkoutType).nullable(),
       difficulty: z.nativeEnum(Difficulty).nullable(),
       elementType: z.nativeEnum(ElementType).default("UNCLASSIFIED"),
       totalTime: z.number().nullable(),
@@ -155,6 +157,7 @@ export const workoutRouter = createProtectedRouter()
       id: z.number(),
       name: z.string().nullable(),
       description: z.string().min(1),
+      workoutType: z.nativeEnum(WorkoutType).nullable(),
       difficulty: z.nativeEnum(Difficulty).nullable(),
       elementType: z.nativeEnum(ElementType).default("UNCLASSIFIED"),
       totalTime: z.number().nullable(),

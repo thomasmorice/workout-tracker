@@ -8,6 +8,7 @@ import Image from "next/image";
 import ToastMessage from "./ToastMessage";
 import { Rings } from "react-loading-icons";
 import { useRouter } from "next/router";
+import { MdLogin } from "react-icons/md";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -69,7 +70,11 @@ export default function Layout({ children }: LayoutProps) {
                   </div>
                 </button>
               ) : (
-                <button onClick={() => signIn()} className="btn btn-ghost">
+                <button
+                  onClick={() => signIn()}
+                  className="btn btn-ghost flex gap-x-2"
+                >
+                  <MdLogin size="22px" />
                   Login
                 </button>
               )}
