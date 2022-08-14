@@ -1,4 +1,4 @@
-import { Difficulty, ElementType } from "@prisma/client";
+import { Difficulty, ElementType, WorkoutType } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { useEffect, useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -28,6 +28,7 @@ export default function WorkoutForm() {
       description: existingWorkout?.description ?? "",
       difficulty: existingWorkout?.difficulty ?? null,
       totalTime: existingWorkout?.totalTime ?? null,
+      workoutType: existingWorkout?.workoutType ?? null,
       elementType: existingWorkout?.elementType ?? "UNCLASSIFIED",
       isDoableAtHome: existingWorkout?.isDoableAtHome ?? false,
     };
@@ -202,6 +203,22 @@ export default function WorkoutForm() {
                     ))}
                   </select>
                 </div>
+              </div>
+
+              <div className="form-control relative flex-1">
+                <label className="label">
+                  <span className="label-text">Type of workout</span>
+                </label>
+                <select {...register("workoutType")} className="select">
+                  <option disabled value="">
+                    Select a workout type
+                  </option>
+                  {Object.keys(WorkoutType).map((type) => (
+                    <option key={type} value={type}>
+                      {enumToString(type).toLowerCase()}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="form-control relative w-full">
