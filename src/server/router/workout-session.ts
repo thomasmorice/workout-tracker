@@ -14,6 +14,19 @@ export const WorkoutSessionSelect = {
   },
 };
 
+async function getWorkoutSessionForType() {
+  const workoutSession = await prisma.workoutSession.findFirstOrThrow({
+    select: {
+      ...WorkoutSessionSelect,
+    },
+  });
+  return workoutSession;
+}
+type ThenArg<T> = T extends PromiseLike<infer U> ? U : T;
+export type WorkoutSession = ThenArg<
+  ReturnType<typeof getWorkoutSessionForType>
+>;
+
 export const workoutSessionRouter = createProtectedRouter().query(
   "get-workout-sessions",
   {

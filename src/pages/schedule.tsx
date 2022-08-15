@@ -4,43 +4,50 @@ import {
   formatISO,
   startOfMonth,
   endOfMonth,
-  isBefore,
   isAfter,
+  isBefore,
 } from "date-fns";
-import { zonedTimeToUtc, utcToZonedTime, format } from "date-fns-tz";
-import { MdCalendarToday } from "react-icons/md";
+import ScheduleTimeline from "../components/WorkoutSchedule/ScheduleTimeline";
+import Calendar from "../components/WorkoutSchedule/Calendar";
 
 export const Schedule: NextPage = () => {
   const { getWorkoutSessions } = useWorkoutSessionService();
   const now = new Date();
-  const { data: workoutSessions } = getWorkoutSessions({
+  const { data: workoutSessions, isLoading } = getWorkoutSessions({
     dateFilter: {
       gte: formatISO(startOfMonth(now)),
       lte: formatISO(endOfMonth(now)),
     },
   });
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
   return (
-    <div>
-      <div className="mt-4 p-4 bg-base-300 rounded-md">
-        <h1 className="font-semibold text-2xl">Monthly sessions</h1>
-        <div className="mt-4 flex flex-col gap-3">
+    <div className="flex gap-10 flex-wrap">
+      <div>
+        <div className="mt-4 mb-28 md:mb-8 flex flex-col">
           {workoutSessions
             ?.filter((session) => isAfter(session.date, now))
-            .map((session) => (
-              <div key={session.id}>
-                <h2>Upcoming sessions</h2>
-                <div className="flex opacity-60 items-center gap-2">
-                  <MdCalendarToday size={20} />
-                  <div className="font-light text-sm ">
-                    {format(
-                      zonedTimeToUtc(session.date, "Europe/Stockholm"),
-                      "LLLL do, u 'at' p"
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
+            .map((session) => {
+              return <ScheduleTimeline key={session.id} session={session} />;
+            })}
+          <ol className="relative border-l border-gray-200 dark:border-gray-700">
+            <li className="mb-10 ml-6 font-bold text-xl text-black dark:text-white">
+              <div className="absolute w-3 h-3  rounded-full mt-2 -left-1.5 border border-white dark:border-gray-900 bg-primary"></div>
+              Today
+            </li>
+          </ol>
+          {workoutSessions
+            ?.filter((session) => isBefore(session.date, now))
+            .map((session) => {
+              return <ScheduleTimeline key={session.id} session={session} />;
+            })}
         </div>
+      </div>
+
+      <div className="">
+        <Calendar />
       </div>
     </div>
   );
