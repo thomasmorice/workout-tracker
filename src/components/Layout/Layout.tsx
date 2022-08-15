@@ -9,6 +9,7 @@ import ToastMessage from "./ToastMessage";
 import { Rings } from "react-loading-icons";
 import { useRouter } from "next/router";
 import { MdLogin } from "react-icons/md";
+import { useEffect, useState } from "react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -17,10 +18,13 @@ export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
   const { data: sessionData, status } = useSession();
   const { state: workoutFromState } = useWorkoutFormStore();
-  const asPathWithoutQuery = router.asPath.split("?")[0];
-  const asPathNestedRoutes = asPathWithoutQuery
-    ?.split("/")
-    .filter((v) => v.length > 0);
+  const [currentPath, set_currentPath] = useState<String[]>();
+
+  useEffect(() => {
+    const asPathWithoutQuery = router.pathname.split("?")[0];
+    set_currentPath(asPathWithoutQuery?.split("/").filter((v) => v.length > 0));
+  }, [router.pathname]);
+
   return (
     <div>
       <ToastMessage />
@@ -35,8 +39,8 @@ export default function Layout({ children }: LayoutProps) {
               <li className="capitalize" key={"home"}>
                 Home
               </li>
-              {asPathNestedRoutes?.map((path, index) => (
-                <li key={path}>
+              {currentPath?.map((path, index) => (
+                <li key={index}>
                   <a className="capitalize">{path}</a>
                 </li>
               ))}
