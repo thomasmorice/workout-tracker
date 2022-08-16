@@ -84,8 +84,6 @@ export default function Layout({ children }: LayoutProps) {
               )}
             </>
           )}
-
-          {/* <ThemeSwitcher /> */}
         </div>
         {children}
       </main>

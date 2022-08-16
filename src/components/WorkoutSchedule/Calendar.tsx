@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   format,
   startOfWeek,
@@ -14,30 +14,48 @@ import {
 } from "date-fns";
 
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
+import { WorkoutSession } from "../../server/router/workout-session";
+import { now } from "next-auth/client/_utils";
 
-// interface CalendarProps
+interface CalendarProps {
+  workoutSessions: WorkoutSession[];
+  handleGoToPreviousMonth: () => void;
+  handleGoToNextMonth: () => void;
+  date?: Date;
+}
 
-const Calendar = () => {
+const Calendar = ({
+  workoutSessions,
+  handleGoToPreviousMonth,
+  handleGoToNextMonth,
+  date,
+}: CalendarProps) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [activeDate, setActiveDate] = useState(new Date());
+  const [activeDate, setActiveDate] = useState(date ?? new Date());
 
   const getHeader = () => {
     return (
       <div className="flex items-center justify-between mb-4">
-        <div className="btn btn-sm btn-square btn-ghost">
-          <AiOutlineLeft
-            className=""
-            onClick={() => setActiveDate(subMonths(activeDate, 1))}
-          />
+        <div
+          onClick={() => {
+            handleGoToPreviousMonth();
+            setActiveDate(subMonths(activeDate, 1));
+          }}
+          className="btn btn-sm btn-square btn-ghost"
+        >
+          <AiOutlineLeft className="" />
         </div>
         <h2 className="font-semibold text-black dark:text-white">
           {format(activeDate, "MMMM yyyy")}
         </h2>
-        <div className="btn btn-sm btn-square btn-ghost">
-          <AiOutlineRight
-            className="navIcon"
-            onClick={() => setActiveDate(addMonths(activeDate, 1))}
-          />
+        <div
+          onClick={() => {
+            handleGoToNextMonth();
+            setActiveDate(addMonths(activeDate, 1));
+          }}
+          className="btn btn-sm btn-square btn-ghost"
+        >
+          <AiOutlineRight className="navIcon" />
         </div>
       </div>
     );
@@ -48,7 +66,7 @@ const Calendar = () => {
     const weekDays = [];
     for (let day = 0; day < 7; day++) {
       weekDays.push(
-        <div className="bg-white p-2">
+        <div key={day} className="p-2">
           {format(addDays(weekStartDate, day), "EEEEE")}
         </div>
       );
@@ -71,13 +89,14 @@ const Calendar = () => {
       const cloneDate = currentDate;
       week.push(
         <div
-          // className={`day border-b border-x -mb-[1px] -ml-[1px] p-2 border-base-content border-opacity-50
-          className={`cursor-pointer text-sm h-10 w-10 leading-none flex items-center justify-center 
+          id={`${format(currentDate, "w")}-${day}`}
+          key={`${format(currentDate, "w")}-${day}`}
+          className={`relative cursor-pointer text-sm h-10 w-10 leading-none flex items-center justify-center hover:bg-gray-100 hover:dark:bg-gray-600 transition-colors 
             ${day === 0 && ""}
             ${
               isSameMonth(currentDate, activeDate)
-                ? "bg-white hover:bg-gray-100 transition-colors"
-                : "text-opacity-30 bg-gray-100 text-base-content"
+                ? "bg-white dark:bg-base-100 dark:bg-opacity-80 "
+                : "text-opacity-30 bg-gray-100 dark:bg-base-300 text-base-content"
             } 
             ${isSameDay(currentDate, selectedDate) ? "bg-" : ""}
             
@@ -89,17 +108,35 @@ const Calendar = () => {
           <div
             className={`${
               isSameDay(currentDate, new Date())
-                ? "p-2 bg-black rounded-full text-white"
+                ? "p-1.5 bg-black dark:bg-white rounded-full text-white dark:text-black"
                 : ""
             }`}
           >
             {format(currentDate, "d")}
+            <div className="absolute bottom-0.5 left-0 w-full gap-1 flex justify-center">
+              {workoutSessions
+                .find((session) => isSameDay(session.date, currentDate))
+                ?.workoutResults.map((result) => {
+                  return (
+                    <div
+                      key={result.id}
+                      className={`flex w-1 h-1 items-center justify-end  rounded-full bg-${
+                        !result.workout.difficulty
+                          ? "gray-400"
+                          : result.workout.difficulty === "BLACK"
+                          ? "black"
+                          : `${result.workout.difficulty?.toLowerCase()}-500`
+                      } text-xs`}
+                    ></div>
+                  );
+                })}
+            </div>
           </div>
         </div>
       );
       currentDate = addDays(currentDate, 1);
     }
-    return <>{week}</>;
+    return week;
   };
 
   const getDates = () => {
@@ -120,8 +157,10 @@ const Calendar = () => {
     }
 
     return (
-      <div className="border-opacity-80 border shadow-sm rounded-lg">
-        <div className="grid grid-cols-7 gap-[1px] bg-base-300">{allWeeks}</div>
+      <div className="border-opacity-80 border shadow-sm  dark:border-gray-700 rounded-xl overflow-hidden">
+        <div className="grid grid-cols-7 gap-[1px] bg-base-300 dark:bg-gray-700">
+          {allWeeks}
+        </div>
       </div>
     );
   };
