@@ -105,10 +105,10 @@ const Workouts: NextPage = () => {
               breakpointCols={{
                 default: 3,
                 1400: 2,
-                980: 1,
+                1120: 1,
               }}
-              className="-ml-8 flex w-auto pt-4"
-              columnClassName="pl-8 bg-clip-padding"
+              className="-ml-8 flex w-auto pt-4 "
+              columnClassName="pl-8 bg-clip-padding "
             >
               {data?.pages
                 ? data.pages.map((page) =>

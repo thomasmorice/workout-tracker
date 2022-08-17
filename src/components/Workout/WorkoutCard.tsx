@@ -122,7 +122,7 @@ export default function WorkoutCard({
         <div className="divider opacity-50"></div>
 
         {/* Card footer */}
-        <div className="card-actions justify-end">
+        <div className="card-actions justify-end ">
           <div className="btn-group ">
             <button
               onClick={onEdit}

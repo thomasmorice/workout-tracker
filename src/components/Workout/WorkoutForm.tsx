@@ -23,7 +23,7 @@ export default function WorkoutForm() {
 
   const defaultValues = useMemo(() => {
     return {
-      id: existingWorkout?.id ?? 0,
+      id: existingWorkout?.id ?? undefined,
       name: existingWorkout?.name ?? "",
       description: existingWorkout?.description ?? "",
       difficulty: existingWorkout?.difficulty ?? null,

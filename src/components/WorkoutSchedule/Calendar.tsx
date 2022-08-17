@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   format,
   startOfWeek,
@@ -15,12 +15,13 @@ import {
 
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import { WorkoutSession } from "../../server/router/workout-session";
-import { now } from "next-auth/client/_utils";
 
 interface CalendarProps {
   workoutSessions: WorkoutSession[];
   handleGoToPreviousMonth: () => void;
   handleGoToNextMonth: () => void;
+  handleSelectDate: (date: Date) => void;
+  handleResetSelectDate: () => void;
   date?: Date;
 }
 
@@ -28,10 +29,20 @@ const Calendar = ({
   workoutSessions,
   handleGoToPreviousMonth,
   handleGoToNextMonth,
+  handleSelectDate,
+  handleResetSelectDate,
   date,
 }: CalendarProps) => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [activeDate, setActiveDate] = useState(date ?? new Date());
+  const [selectedDate, set_selectedDate] = useState<Date | undefined>();
+  const [activeDate, set_activeDate] = useState(date ?? new Date());
+
+  useEffect(() => {
+    if (selectedDate) {
+      handleSelectDate(selectedDate);
+    } else {
+      handleResetSelectDate();
+    }
+  }, [selectedDate, handleSelectDate, handleResetSelectDate]);
 
   const getHeader = () => {
     return (
@@ -39,7 +50,7 @@ const Calendar = ({
         <div
           onClick={() => {
             handleGoToPreviousMonth();
-            setActiveDate(subMonths(activeDate, 1));
+            set_activeDate(subMonths(activeDate, 1));
           }}
           className="btn btn-sm btn-square btn-ghost"
         >
@@ -51,7 +62,7 @@ const Calendar = ({
         <div
           onClick={() => {
             handleGoToNextMonth();
-            setActiveDate(addMonths(activeDate, 1));
+            set_activeDate(addMonths(activeDate, 1));
           }}
           className="btn btn-sm btn-square btn-ghost"
         >
@@ -78,32 +89,34 @@ const Calendar = ({
     );
   };
 
-  const generateDatesForCurrentWeek = (
-    date: Date,
-    selectedDate: Date,
-    activeDate: Date
-  ) => {
+  const generateDatesForCurrentWeek = (date: Date, activeDate: Date) => {
     let currentDate = date;
     const week = [];
     for (let day = 0; day < 7; day++) {
-      const cloneDate = currentDate;
+      let clonedDate = addDays(date, day);
       week.push(
         <div
-          id={`${format(currentDate, "w")}-${day}`}
           key={`${format(currentDate, "w")}-${day}`}
           className={`relative cursor-pointer text-sm h-10 w-10 leading-none flex items-center justify-center hover:bg-gray-100 hover:dark:bg-gray-600 transition-colors 
             ${day === 0 && ""}
             ${
-              isSameMonth(currentDate, activeDate)
-                ? "bg-white dark:bg-base-100 dark:bg-opacity-80 "
-                : "text-opacity-30 bg-gray-100 dark:bg-base-300 text-base-content"
+              isSameMonth(clonedDate, activeDate)
+                ? "bg-base-100"
+                : "text-opacity-20 bg-opacity-5 bg-base-content text-base-content"
             } 
-            ${isSameDay(currentDate, selectedDate) ? "bg-" : ""}
-            
+            ${
+              selectedDate && isSameDay(clonedDate, selectedDate)
+                ? // ? "bg-gray-200 hover:bg-gray-200 dark:bg-gray-800 hover:dark:bg-gray-800"
+                  "bg-neutral-focus hover:bg-neutral-focus text-neutral-content"
+                : "no-selected"
+            }
           `}
-          onClick={() => {
-            setSelectedDate(cloneDate);
-          }}
+          onClick={() =>
+            !selectedDate ||
+            clonedDate.toDateString() !== selectedDate.toDateString()
+              ? set_selectedDate(clonedDate)
+              : set_selectedDate(undefined)
+          }
         >
           <div
             className={`${
@@ -142,25 +155,21 @@ const Calendar = ({
   const getDates = () => {
     const startOfTheSelectedMonth = startOfMonth(activeDate);
     const endOfTheSelectedMonth = endOfMonth(activeDate);
-    const startDate = subDays(startOfWeek(startOfTheSelectedMonth), 4);
-    const endDate = addDays(endOfWeek(endOfTheSelectedMonth), 3);
+    const startDate = subDays(startOfWeek(startOfTheSelectedMonth), 0);
+    const endDate = addDays(endOfWeek(endOfTheSelectedMonth), 0);
 
     let currentDate = startDate;
 
     const allWeeks = [];
 
     while (currentDate <= endDate) {
-      allWeeks.push(
-        generateDatesForCurrentWeek(currentDate, selectedDate, activeDate)
-      );
+      allWeeks.push(generateDatesForCurrentWeek(currentDate, activeDate));
       currentDate = addDays(currentDate, 7);
     }
 
     return (
-      <div className="border-opacity-80 border shadow-sm  dark:border-gray-700 rounded-xl overflow-hidden">
-        <div className="grid grid-cols-7 gap-[1px] bg-base-300 dark:bg-gray-700">
-          {allWeeks}
-        </div>
+      <div className="border shadow-sm  border-base-content border-opacity-10 rounded-xl overflow-hidden">
+        <div className="grid grid-cols-7 gap-[1px] bg-base-300">{allWeeks}</div>
       </div>
     );
   };
