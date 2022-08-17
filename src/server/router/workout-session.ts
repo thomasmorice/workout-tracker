@@ -40,7 +40,6 @@ export const workoutSessionRouter = createProtectedRouter().query(
     }),
     async resolve({ ctx, input }) {
       const { dateFilter } = input;
-      console.log("datefilter", dateFilter);
       const workoutSessions = await prisma.workoutSession.findMany({
         select: {
           ...WorkoutSessionSelect,

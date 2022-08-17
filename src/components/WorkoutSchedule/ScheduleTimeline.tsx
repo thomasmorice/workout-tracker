@@ -23,38 +23,49 @@ export default function ScheduleTimeline({
               "LLLL do, u 'at' p"
             )}
           </div>
-          <div className="text-xs">
-            {formatDistance(new Date(), new Date(session.date))} ago
+          <div className="text-xs flex items-center gap-2">
+            {formatDistance(new Date(), new Date(session.date))} ago{" "}
           </div>
         </time>
         {session.workoutResults.length > 0 && (
-          <div className="mt-5 mb-12 text-gray-900 dark:text-gray-300  flex w-fit flex-col gap-6 py-5 px-3 bg-gray-600 dark:bg-white bg-opacity-5 dark:bg-opacity-5 rounded-xl border-black dark:border-white border border-opacity-5 dark:border-opacity-5">
-            {session.workoutResults.map((result, index) => (
-              <div key={index} className="flex flex-col gap-2">
-                <div className="flex items-center gap-3 ">
-                  <div
-                    className={`flex w-1.5 h-1.5 items-center justify-center  rounded-full ${
-                      !result.workout.difficulty
-                        ? "bg-gray-400"
-                        : result.workout.difficulty === "BLACK"
-                        ? "bg-black"
-                        : `bg-${result.workout.difficulty?.toLowerCase()}-500`
-                    } text-xs`}
-                  ></div>
-                  <div className="">
-                    {result.workout.totalTime &&
-                      `${result.workout.totalTime}mn `}
-                    <span className="lowercase">
-                      {`${enumToString(result.workout.elementType)}`}
-                    </span>
+          <>
+            <div className="mt-5 flex gap-3 items-center">
+              <a className=" underline cursor-pointer text-xs">edit session</a>
+
+              <a className="underline cursor-pointer text-xs">delete session</a>
+            </div>
+
+            <div className="mt-3 mb-12 text-gray-900 dark:text-gray-300  flex w-fit flex-col gap-6 py-5 px-3 bg-gray-600 dark:bg-white bg-opacity-5 dark:bg-opacity-5 rounded-xl border-black dark:border-white border border-opacity-5 dark:border-opacity-5">
+              {session.workoutResults.map((result, index) => (
+                <div key={index} className="flex flex-col gap-2">
+                  <div className="flex items-center gap-3 ">
+                    <div
+                      className={`flex w-1.5 h-1.5 items-center justify-center  rounded-full ${
+                        !result.workout.difficulty
+                          ? "bg-gray-400"
+                          : result.workout.difficulty === "BLACK"
+                          ? "bg-black"
+                          : `bg-${result.workout.difficulty?.toLowerCase()}-500`
+                      } text-xs`}
+                    ></div>
+                    <div className="">
+                      {result.workout.totalTime &&
+                        `${result.workout.totalTime}mn `}
+                      <span className="lowercase">
+                        {`${enumToString(result.workout.elementType)}`}
+                      </span>
+                    </div>
                   </div>
+                  <p className="whitespace-pre-wrap opacity-70 text-[0.85rem] pl-5">
+                    {result.description}
+                  </p>
+                  {/* <button className="mt-2 btn btn-sm mx-3 btn-outline">
+                  Edit
+                </button> */}
                 </div>
-                <p className="whitespace-pre-wrap opacity-70 text-[0.85rem] pl-5">
-                  {result.description}
-                </p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </>
         )}
       </li>
     </ol>
