@@ -4,11 +4,15 @@ import { useEffect, useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
 import { useWorkoutService } from "../../services/useWorkoutService";
-import { WorkoutWithExtras } from "../../server/router/workout";
+import {
+  WorkoutWithExtras,
+  CreateWorkoutInputSchema,
+} from "../../server/router/workout";
 import { useToastStore } from "../../store/ToastStore";
 import { useWorkoutFormStore } from "../../store/WorkoutFormStore";
 import { enumToString } from "../../utils/formatting";
 import Modal from "../Layout/Modal";
+import { z } from "zod";
 
 export default function WorkoutForm() {
   const { addMessage, closeMessage } = useToastStore();
@@ -21,18 +25,19 @@ export default function WorkoutForm() {
 
   const { createWorkout, editWorkout, deleteWorkout } = useWorkoutService();
 
-  const defaultValues = useMemo(() => {
-    return {
-      id: existingWorkout?.id ?? undefined,
-      name: existingWorkout?.name ?? "",
-      description: existingWorkout?.description ?? "",
-      difficulty: existingWorkout?.difficulty ?? null,
-      totalTime: existingWorkout?.totalTime ?? null,
-      workoutType: existingWorkout?.workoutType ?? null,
-      elementType: existingWorkout?.elementType ?? "UNCLASSIFIED",
-      isDoableAtHome: existingWorkout?.isDoableAtHome ?? false,
-    };
-  }, [existingWorkout]);
+  const defaultValues: z.infer<typeof CreateWorkoutInputSchema> =
+    useMemo(() => {
+      return {
+        id: existingWorkout?.id ?? undefined,
+        name: existingWorkout?.name ?? "",
+        description: existingWorkout?.description ?? "",
+        difficulty: existingWorkout?.difficulty ?? undefined,
+        totalTime: existingWorkout?.totalTime ?? null,
+        workoutType: existingWorkout?.workoutType ?? null,
+        elementType: existingWorkout?.elementType ?? "UNCLASSIFIED",
+        isDoableAtHome: existingWorkout?.isDoableAtHome ?? false,
+      };
+    }, [existingWorkout]);
 
   const {
     register,
@@ -94,6 +99,7 @@ export default function WorkoutForm() {
       message: "Deleted successfully",
       type: "success",
     });
+    closeWorkoutForm();
   };
 
   useEffect(() => {
@@ -179,10 +185,13 @@ export default function WorkoutForm() {
                   <label className="label">
                     <span className="label-text">Difficulty</span>
                   </label>
-                  <select {...register("difficulty")} className="select">
-                    <option disabled value="">
-                      Select a difficulty
-                    </option>
+                  <select
+                    {...register("difficulty", {
+                      setValueAs: (value) => (value === "" ? null : value),
+                    })}
+                    className="select"
+                  >
+                    <option value={""}>Select a difficulty</option>
                     {Object.keys(Difficulty).map((difficulty) => (
                       <option key={difficulty} value={difficulty}>
                         {enumToString(difficulty).toLowerCase()}
@@ -195,7 +204,12 @@ export default function WorkoutForm() {
                   <label className="label">
                     <span className="label-text">Type of element</span>
                   </label>
-                  <select {...register("elementType")} className="select">
+                  <select
+                    {...register("elementType", {
+                      setValueAs: (value) => (value === "" ? null : value),
+                    })}
+                    className="select"
+                  >
                     {Object.keys(ElementType).map((element) => (
                       <option key={element} value={element}>
                         {enumToString(element).toLowerCase()}
@@ -209,7 +223,12 @@ export default function WorkoutForm() {
                 <label className="label">
                   <span className="label-text">Type of workout</span>
                 </label>
-                <select {...register("workoutType")} className="select">
+                <select
+                  {...register("workoutType", {
+                    setValueAs: (value) => (value === "" ? null : value),
+                  })}
+                  className="select"
+                >
                   <option disabled value="">
                     Select a workout type
                   </option>

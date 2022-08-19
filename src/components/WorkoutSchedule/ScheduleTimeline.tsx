@@ -10,7 +10,7 @@ interface ScheduleTimelineProps {
 
 export default function ScheduleTimeline({
   session,
-  isSessionDone = false,
+  isSessionDone = true,
 }: ScheduleTimelineProps) {
   return (
     <ol className="relative border-l border-gray-200 dark:border-gray-700">
@@ -24,13 +24,19 @@ export default function ScheduleTimeline({
             )}
           </div>
           <div className="text-xs flex items-center gap-2">
-            {formatDistance(new Date(), new Date(session.date))} ago{" "}
+            {!isSessionDone && "In"}{" "}
+            {formatDistance(new Date(), new Date(session.date))}{" "}
+            {isSessionDone && "ago"}
           </div>
         </time>
         {session.workoutResults.length > 0 && (
           <>
             <div className="mt-5 flex gap-3 items-center">
-              <a className=" underline cursor-pointer text-xs">edit session</a>
+              {isSessionDone && (
+                <a className=" underline cursor-pointer text-xs">
+                  Manage results
+                </a>
+              )}
 
               <a className="underline cursor-pointer text-xs">delete session</a>
             </div>

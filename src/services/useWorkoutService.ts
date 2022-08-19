@@ -7,6 +7,7 @@ import { trpc } from "../utils/trpc";
 interface InfiniteWorkoutsProps {
   showClassifiedWorkoutOnly?: boolean;
   searchTerm?: string;
+  enabled?: boolean;
 }
 
 export const useWorkoutService = () => {
@@ -43,6 +44,7 @@ export const useWorkoutService = () => {
   const getInfiniteWorkouts = ({
     showClassifiedWorkoutOnly = true,
     searchTerm,
+    enabled = true,
   }: InfiniteWorkoutsProps) => {
     return trpc.useInfiniteQuery(
       [
@@ -56,7 +58,7 @@ export const useWorkoutService = () => {
       ],
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
-        enabled: !!sessionData,
+        enabled: !!sessionData && enabled,
       }
     );
   };

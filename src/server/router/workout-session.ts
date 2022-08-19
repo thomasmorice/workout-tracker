@@ -22,6 +22,7 @@ async function getWorkoutSessionForType() {
   });
   return workoutSession;
 }
+
 type ThenArg<T> = T extends PromiseLike<infer U> ? U : T;
 export type WorkoutSession = ThenArg<
   ReturnType<typeof getWorkoutSessionForType>
