@@ -17,6 +17,7 @@ import ScheduleTimeline from "../components/WorkoutSchedule/ScheduleTimeline";
 import Calendar from "../components/WorkoutSchedule/Calendar";
 import { useState } from "react";
 import { WorkoutSession } from "../server/router/workout-session";
+import Link from "next/link";
 
 export const Schedule: NextPage = () => {
   const { getWorkoutSessions } = useWorkoutSessionService();
@@ -63,9 +64,9 @@ export const Schedule: NextPage = () => {
               }}
               workoutSessions={workoutSessions}
             />
-            <button className="btn btn-primary btn-sm">
-              Plan a new session
-            </button>
+            <Link href={"/session/add"}>
+              <a className="btn btn-primary btn-sm">Plan a new session</a>
+            </Link>
           </div>
         )}
       </div>
@@ -78,7 +79,11 @@ export const Schedule: NextPage = () => {
                 ?.filter((session) => isAfter(session.date, now))
                 .map((session) => {
                   return (
-                    <ScheduleTimeline key={session.id} session={session} />
+                    <ScheduleTimeline
+                      isSessionDone={false}
+                      key={session.id}
+                      session={session}
+                    />
                   );
                 })}
               <ol className="relative border-l border-gray-200 dark:border-gray-700">

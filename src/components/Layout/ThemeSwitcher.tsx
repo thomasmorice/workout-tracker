@@ -17,6 +17,7 @@ export default function ThemeSwitcher({
 
   useEffect(() => {
     document.body.setAttribute("data-theme", theme);
+    // window.document.documentElement.style.colorScheme = theme;
   }, [theme]);
 
   return !themeLoaded ? (

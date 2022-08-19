@@ -1,6 +1,12 @@
-import { Difficulty, ElementType, Prisma, WorkoutType } from "@prisma/client";
+import {
+  Difficulty,
+  ElementType,
+  Prisma,
+  Workout,
+  WorkoutType,
+} from "@prisma/client";
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { number, z } from "zod";
 import { prisma } from "../db/client";
 import { createProtectedRouter } from "./protected-router";
 
@@ -16,6 +22,16 @@ export const WorkoutSelect = {
   createdAt: true,
   updatedAt: true,
 };
+
+export const CreateWorkoutInputSchema = z.object({
+  name: z.string().nullable(),
+  description: z.string().min(1),
+  workoutType: z.nativeEnum(WorkoutType).nullable(),
+  difficulty: z.nativeEnum(Difficulty).nullish(),
+  elementType: z.nativeEnum(ElementType).default("UNCLASSIFIED"),
+  totalTime: z.number().nullable(),
+  isDoableAtHome: z.boolean().default(false),
+});
 
 export const WorkoutExtras = {
   creator: true,
@@ -125,15 +141,7 @@ export const workoutRouter = createProtectedRouter()
     },
   })
   .mutation("add", {
-    input: z.object({
-      name: z.string().nullable(),
-      description: z.string().min(1),
-      workoutType: z.nativeEnum(WorkoutType).nullable(),
-      difficulty: z.nativeEnum(Difficulty).nullable(),
-      elementType: z.nativeEnum(ElementType).default("UNCLASSIFIED"),
-      totalTime: z.number().nullable(),
-      isDoableAtHome: z.boolean().default(false),
-    }),
+    input: CreateWorkoutInputSchema,
     async resolve({ ctx, input }) {
       if (!ctx.session?.user?.id) {
         throw new TRPCError({
