@@ -1,4 +1,3 @@
-import { Prisma } from "@prisma/client";
 import formatDistance from "date-fns/formatDistance";
 import Image from "next/image";
 import {
@@ -16,9 +15,9 @@ import { enumToString } from "../../utils/formatting";
 
 interface WorkoutCardProps {
   workout: WorkoutWithExtras;
-  onDuplicate: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
+  onDuplicate?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 export default function WorkoutCard({
@@ -119,33 +118,38 @@ export default function WorkoutCard({
           {workout.description}
         </div>
 
-        <div className="divider opacity-50"></div>
+        {onEdit && onDuplicate && onDelete && (
+          <>
+            <div className="divider opacity-50"></div>
 
-        {/* Card footer */}
-        <div className="card-actions justify-end ">
-          <div className="btn-group ">
-            <button
-              onClick={onEdit}
-              className="btn btn-sm btn-outline gap-x-2 text-xs"
-            >
-              <MdEdit size={17} /> Edit
-            </button>
+            {/* Card footer */}
 
-            <button
-              onClick={onDuplicate}
-              className="btn btn-sm btn-outline gap-x-2 text-xs"
-            >
-              <MdCopyAll size={17} /> Duplicate
-            </button>
+            <div className="card-actions justify-end ">
+              <div className="btn-group ">
+                <button
+                  onClick={onEdit}
+                  className="btn btn-sm btn-outline gap-x-2 text-xs"
+                >
+                  <MdEdit size={17} /> Edit
+                </button>
 
-            <button
-              onClick={onDelete}
-              className="btn btn-sm btn-outline btn-error text-xs"
-            >
-              <MdDelete size={17} />
-            </button>
-          </div>
-        </div>
+                <button
+                  onClick={onDuplicate}
+                  className="btn btn-sm btn-outline gap-x-2 text-xs"
+                >
+                  <MdCopyAll size={17} /> Duplicate
+                </button>
+
+                <button
+                  onClick={onDelete}
+                  className="btn btn-sm btn-outline btn-error text-xs"
+                >
+                  <MdDelete size={17} />
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

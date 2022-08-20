@@ -1,13 +1,17 @@
-import { UseTRPCQueryOptions } from "@trpc/react";
 import { TRPCError } from "@trpc/server";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { WorkoutWithExtras } from "../server/router/workout";
 import { trpc } from "../utils/trpc";
 
 interface InfiniteWorkoutsProps {
   showClassifiedWorkoutOnly?: boolean;
   searchTerm?: string;
   enabled?: boolean;
+  ids?: {
+    show?: WorkoutWithExtras["id"][];
+    hide?: WorkoutWithExtras["id"][];
+  };
 }
 
 export const useWorkoutService = () => {
@@ -45,7 +49,9 @@ export const useWorkoutService = () => {
     showClassifiedWorkoutOnly = true,
     searchTerm,
     enabled = true,
+    ids,
   }: InfiniteWorkoutsProps) => {
+    console.log("ids", ids);
     return trpc.useInfiniteQuery(
       [
         "workout.get-infinite-workouts",
@@ -54,6 +60,7 @@ export const useWorkoutService = () => {
           classifiedOnly: showClassifiedWorkoutOnly,
           searchTerm: searchTerm,
           limit: 12,
+          ids,
         },
       ],
       {

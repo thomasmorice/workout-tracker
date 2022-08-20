@@ -90,6 +90,7 @@ const WorkoutSessionForm: NextPage = () => {
               <span className="label-text">Add workouts to this session</span>
             </label>
             <WorkoutSelectField
+              selectedIds={workouts.map((workout) => workout.id)}
               handleAddWorkout={(workout) => {
                 set_workouts([...workouts, workout]);
               }}

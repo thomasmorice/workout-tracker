@@ -4,20 +4,22 @@ import { Rings } from "react-loading-icons";
 import { useDebounce } from "usehooks-ts";
 import { WorkoutWithExtras } from "../../server/router/workout";
 import { useWorkoutService } from "../../services/useWorkoutService";
+import WorkoutCard from "./WorkoutCard";
 
 interface WorkoutSelectProps {
   handleAddWorkout: (workout: WorkoutWithExtras) => void;
+  selectedIds: number[];
 }
 
 export default function WorkoutSelectField({
   handleAddWorkout,
+  selectedIds,
 }: WorkoutSelectProps) {
   const [searchTerm, set_searchTerm] = useState("");
   const [showWorkoutSearchResult, set_showWorkoutSearchResult] =
     useState(false);
   let searchTermDebounced = useDebounce<string>(searchTerm, 500);
 
-  const [workouts, set_workouts] = useState<WorkoutWithExtras[]>([]);
   const { getInfiniteWorkouts } = useWorkoutService();
 
   const {
@@ -29,34 +31,29 @@ export default function WorkoutSelectField({
     searchTerm: searchTermDebounced,
     enabled: searchTermDebounced.length > 2,
     showClassifiedWorkoutOnly: true,
+    ids: {
+      hide: selectedIds,
+    },
   });
 
-  useEffect(() => {
-    console.log("data", fetchedWorkouts);
-  }, [fetchedWorkouts]);
+  // Workout Search Results
   const workoutSearchResult = (
     <>
       {(fetchedWorkouts?.pages[0]?.workouts.length ?? 0) > 0 &&
         searchTerm.length !== 0 && (
-          <div className="absolute top-14 bg-base-200 max-h-[580px] overflow-auto rounded-xl">
+          <div className="absolute top-14 bg-base-200 max-h-[520px] overflow-auto rounded-xl">
             {fetchedWorkouts?.pages.map((workoutPage, pageIndex) => (
               <div className="flex flex-col" key={pageIndex}>
                 {workoutPage.workouts.map((workout) => (
                   <div
-                    className="text-[0.8rem] border-y border-base-100 hover:bg-base-300 p-3 py-5 flex gap-5 cursor-pointer whitespace-pre-wrap border-b "
-                    key={workout.id}
                     onClick={() => {
-                      // set_workouts([...workouts, workout]);
                       handleAddWorkout(workout);
                       set_searchTerm("");
-                      searchTermDebounced = "";
                     }}
+                    key={workout.id}
+                    className=""
                   >
-                    <div className="opacity-70">
-                      {format(workout.createdAt, "dd/MM/yyyy")}
-                    </div>
-
-                    {workout.description}
+                    <WorkoutCard workout={workout} />
                   </div>
                 ))}
               </div>
