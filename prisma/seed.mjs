@@ -38,11 +38,11 @@ async function main() {
       });
     } catch (e) {
       console.error("Error on workout:");
+      console.log("e", e);
       console.table(workout);
     }
   });
+  await prisma.$disconnect();
 }
 
-main().finally(async () => {
-  await prisma.$disconnect();
-});
+main();
