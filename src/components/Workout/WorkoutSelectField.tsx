@@ -18,7 +18,7 @@ export default function WorkoutSelectField({
   const [searchTerm, set_searchTerm] = useState("");
   const [showWorkoutSearchResult, set_showWorkoutSearchResult] =
     useState(false);
-  let searchTermDebounced = useDebounce<string>(searchTerm, 500);
+  const searchTermDebounced = useDebounce<string>(searchTerm, 500);
 
   const { getInfiniteWorkouts } = useWorkoutService();
 
@@ -32,7 +32,7 @@ export default function WorkoutSelectField({
     enabled: searchTermDebounced.length > 2,
     showClassifiedWorkoutOnly: true,
     ids: {
-      hide: selectedIds,
+      notIn: selectedIds,
     },
   });
 
@@ -41,17 +41,17 @@ export default function WorkoutSelectField({
     <>
       {(fetchedWorkouts?.pages[0]?.workouts.length ?? 0) > 0 &&
         searchTerm.length !== 0 && (
-          <div className="absolute top-14 bg-base-200 max-h-[520px] overflow-auto rounded-xl">
+          <div className="absolute z-30 top-14 bg-base-200 max-h-[520px] overflow-auto rounded-xl">
             {fetchedWorkouts?.pages.map((workoutPage, pageIndex) => (
               <div className="flex flex-col" key={pageIndex}>
                 {workoutPage.workouts.map((workout) => (
                   <div
                     onClick={() => {
-                      handleAddWorkout(workout);
                       set_searchTerm("");
+                      handleAddWorkout(workout);
                     }}
                     key={workout.id}
-                    className=""
+                    className="cursor-pointer"
                   >
                     <WorkoutCard workout={workout} />
                   </div>
@@ -71,6 +71,7 @@ export default function WorkoutSelectField({
         // onBlur={() => set_showWorkoutSearchResult(false)}
         type="search"
         placeholder={"search..."}
+        value={searchTerm}
         onChange={(e) => set_searchTerm(e.target.value)}
       />
       {isFetching && (

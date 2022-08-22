@@ -9,8 +9,8 @@ interface InfiniteWorkoutsProps {
   searchTerm?: string;
   enabled?: boolean;
   ids?: {
-    show?: WorkoutWithExtras["id"][];
-    hide?: WorkoutWithExtras["id"][];
+    in?: WorkoutWithExtras["id"][];
+    notIn?: WorkoutWithExtras["id"][];
   };
 }
 
@@ -51,7 +51,6 @@ export const useWorkoutService = () => {
     enabled = true,
     ids,
   }: InfiniteWorkoutsProps) => {
-    console.log("ids", ids);
     return trpc.useInfiniteQuery(
       [
         "workout.get-infinite-workouts",

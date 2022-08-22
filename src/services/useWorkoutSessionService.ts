@@ -24,5 +24,30 @@ export const useWorkoutSessionService = () => {
     );
   };
 
-  return { getWorkoutSessions };
+  const getWorkoutSessionById = ({ id }: { id: number }) => {
+    // return trpc.useQuery(
+    //   [
+    //     "workout-session.get-workout-session-by-id",
+    //     {
+    //       id,
+    //     },
+    //   ],
+    //   {
+    //     enabled: !!sessionData,
+    //   }
+    // );
+  };
+
+  const createWorkoutSession = trpc.useMutation("workout-session.add", {
+    async onSuccess() {
+      console.log("success!");
+      // await utils.invalidateQueries(["workout.get-infinite-workouts"]);
+    },
+    onError(e: unknown) {
+      console.log("error", e);
+      // throw e as TRPCError;
+    },
+  });
+
+  return { getWorkoutSessions, createWorkoutSession, getWorkoutSessionById };
 };

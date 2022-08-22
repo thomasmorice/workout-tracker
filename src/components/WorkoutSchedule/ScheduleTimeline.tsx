@@ -2,6 +2,7 @@ import { zonedTimeToUtc, utcToZonedTime, format } from "date-fns-tz";
 import { formatDistance, intlFormat } from "date-fns";
 import { WorkoutSession } from "../../server/router/workout-session";
 import { enumToString } from "../../utils/formatting";
+import Link from "next/link";
 
 interface ScheduleTimelineProps {
   session: WorkoutSession;
@@ -29,7 +30,7 @@ export default function ScheduleTimeline({
             {isSessionDone && "ago"}
           </div>
         </time>
-        {session.workoutResults.length > 0 && (
+        {session.workoutResults.length > 0 ? (
           <>
             <div className="mt-5 flex gap-3 items-center">
               {isSessionDone && (
@@ -72,6 +73,10 @@ export default function ScheduleTimeline({
               ))}
             </div>
           </>
+        ) : (
+          <Link href={`/session/edit/${session.id}`}>
+            <a className="underline cursor-pointer text-xs">Add results</a>
+          </Link>
         )}
       </li>
     </ol>
