@@ -121,7 +121,7 @@ const Calendar = ({
           <div
             className={`${
               isSameDay(currentDate, new Date())
-                ? "p-1.5 bg-black dark:bg-white rounded-full text-white dark:text-black"
+                ? "p-[3px] bg-black dark:bg-white rounded-full text-white dark:text-black"
                 : ""
             }`}
           >
@@ -130,6 +130,7 @@ const Calendar = ({
               {workoutSessions
                 .find((session) => isSameDay(session.date, currentDate))
                 ?.workoutResults.map((result) => {
+                  // console.log("result", result);
                   return (
                     <div
                       key={result.id}

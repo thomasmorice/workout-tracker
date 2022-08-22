@@ -24,6 +24,8 @@ export const WorkoutResultsExtras = {
   },
 };
 
+type ManyCreateInput = Prisma.WorkoutResultCreateManyInput;
+
 async function getWorkoutForType() {
   const workouts = await prisma.workoutResult.findFirstOrThrow({
     select: {
@@ -31,6 +33,7 @@ async function getWorkoutForType() {
       ...WorkoutResultsExtras,
     },
   });
+
   return workouts;
 }
 
@@ -59,3 +62,19 @@ export const workoutResultRouter = createProtectedRouter().query(
     },
   }
 );
+// .query(
+//   "add-workout-results", {
+//     input,
+
+//     async resolve({ ctx, input }) {
+//       // const { workoutResults } = input;
+//       const workoutResults = await prisma.workoutResult.createMany({
+//         data: []
+//         // select: {
+//         //   ...WorkoutResultsSelect,
+//         // },
+//       });
+//       return workoutResults;
+//     },
+//   }
+// );

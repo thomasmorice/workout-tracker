@@ -10,7 +10,6 @@ import { Rings } from "react-loading-icons";
 import { useRouter } from "next/router";
 import { MdLogin } from "react-icons/md";
 import { useEffect, useState } from "react";
-import WorkoutSessionForm from "./WorkoutSession/WorkoutSessionForm";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -33,8 +32,6 @@ export default function Layout({ children }: LayoutProps) {
       <Navigation />
 
       {workoutFormState && <WorkoutForm />}
-
-      {/* {workoutSessionFormState && <WorkoutSessionForm />} */}
 
       <main className={`px-5 sm:px-8 md:ml-[320px]`}>
         <div className="flex w-full justify-between py-5 items-center">

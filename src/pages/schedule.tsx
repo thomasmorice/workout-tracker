@@ -106,7 +106,10 @@ export const Schedule: NextPage = () => {
             <>
               {selectedSession !== -1 ? (
                 <div className="flex flex-col gap-5">
-                  <ScheduleTimeline session={selectedSession} />
+                  <ScheduleTimeline
+                    isSessionDone={isBefore(selectedSession.date, now)}
+                    session={selectedSession}
+                  />
                   {/* <button className="btn">Edit this session</button> */}
                 </div>
               ) : (

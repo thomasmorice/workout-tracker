@@ -82,8 +82,8 @@ export const workoutRouter = createProtectedRouter()
       searchTerm: z.string().nullish(),
       ids: z
         .object({
-          show: z.array(z.number()).nullish(),
-          hide: z.array(z.number()).nullish(),
+          in: z.array(z.number()).nullish(),
+          notIn: z.array(z.number()).nullish(),
         })
         .nullish(),
       limit: z.number().min(1).max(100).nullish(),
@@ -94,7 +94,6 @@ export const workoutRouter = createProtectedRouter()
       const { cursor } = input;
       const { elementTypes, classifiedOnly, searchTerm, ids } = input;
 
-      console.log("ids", ids);
       const where: Prisma.WorkoutWhereInput = {
         ...(elementTypes &&
           elementTypes.length > 0 && {
@@ -108,21 +107,28 @@ export const workoutRouter = createProtectedRouter()
           },
         }),
         ...(searchTerm && {
-          description: {
-            contains: searchTerm,
-            mode: "insensitive",
+          OR: {
+            description: {
+              contains: searchTerm,
+              mode: "insensitive",
+            },
+            ...(parseInt(searchTerm) && {
+              id: {
+                equals: parseInt(searchTerm),
+              },
+            }),
           },
         }),
         ...(ids &&
-          ids.hide && {
+          ids.notIn && {
             id: {
-              notIn: ids.hide,
+              notIn: ids.notIn,
             },
           }),
         ...(ids &&
-          ids.show && {
+          ids.in && {
             id: {
-              in: ids.show,
+              in: ids.in,
             },
           }),
         AND: {
