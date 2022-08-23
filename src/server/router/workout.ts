@@ -6,7 +6,7 @@ import {
   WorkoutType,
 } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
-import { number, z } from "zod";
+import { z } from "zod";
 import { prisma } from "../db/client";
 import { createProtectedRouter } from "./protected-router";
 

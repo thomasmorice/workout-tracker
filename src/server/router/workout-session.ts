@@ -1,7 +1,7 @@
 import { number, object, string, z } from "zod";
 import { createProtectedRouter } from "./protected-router";
 import { prisma } from "../db/client";
-import { Prisma, WorkoutResult } from "@prisma/client";
+import { Difficulty, Prisma, WorkoutResult } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { Query } from "react-query";
 import { WorkoutWithExtras, CreateWorkoutInputSchema } from "./workout";
@@ -20,14 +20,13 @@ export const WorkoutSessionSelect = {
 export const CreateWorkoutSessionInputSchema = z.object({
   date: z.date(),
   workoutResults: z.array(
-    // z.object({
-    //   workout: z.object({
-    //     id: z.number(),
-    //     name: z.string(),
-    //     diffil
-    //   }),
     z.object({
-      workout: CreateWorkoutInputSchema,
+      workout: z.object({
+        id: z.number(),
+        name: z.string().nullish(),
+        difficulty: z.nativeEnum(Difficulty).nullable(),
+        description: z.string(),
+      }),
     })
   ),
 });

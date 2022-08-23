@@ -10,7 +10,6 @@ const Edit: NextPage = () => {
   const { getWorkoutSessionById } = useWorkoutSessionService();
 
   const { data: workoutSession, isFetching } = getWorkoutSessionById(id);
-  console.log("workoutSession", workoutSession);
   return (
     <>
       <Head>
@@ -18,8 +17,9 @@ const Edit: NextPage = () => {
         <meta name="description" content="Add or edit a session" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <WorkoutSessionForm />
+      {workoutSession && (
+        <WorkoutSessionForm existingWorkoutSession={workoutSession} />
+      )}
     </>
   );
 };
