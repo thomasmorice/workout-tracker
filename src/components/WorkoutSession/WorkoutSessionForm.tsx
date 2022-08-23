@@ -7,7 +7,6 @@ import {
   CreateWorkoutSessionInputSchema,
 } from "../../server/router/workout-session";
 import WorkoutSelectField from "../../components/Workout/WorkoutSelectField";
-import { WorkoutWithExtras } from "../../server/router/workout";
 import { MdRemove } from "react-icons/md";
 import { DifficultyBadge } from "../../components/Workout/WorkoutBadges";
 import { useWorkoutSessionService } from "../../services/useWorkoutSessionService";
@@ -34,6 +33,7 @@ const WorkoutSessionForm = ({
     register,
     handleSubmit,
     reset,
+    watch,
     setValue,
     getValues,
     control,
@@ -42,28 +42,34 @@ const WorkoutSessionForm = ({
     defaultValues,
   });
 
-  // const [workouts, set_workouts] = useState<WorkoutWithExtras[]>([]);
+  const watchWorkoutResults = watch("workoutResults");
+
+  // const [workoutResults, set_workoutResult s] = useState<WorkoutWithExtras[]>([]);
 
   const handleCreate: SubmitHandler<
     z.infer<typeof CreateWorkoutSessionInputSchema>
   > = async (
     workoutSession: z.infer<typeof CreateWorkoutSessionInputSchema>
   ) => {
-    let message = addMessage({
-      type: "pending",
-      message: "Creating workout session",
-    });
-    await createWorkoutSession.mutateAsync(workoutSession);
-    closeMessage(message);
-    if (workoutSession.workoutResults?.length ?? 0 > 0) {
-      message = addMessage({
-        type: "pending",
-        message: "Adding workouts to this session",
-      });
-
-      // await createWorkoutResult.mutateAsync(workoutSession);
-    }
+    // console.log("create workoutSession", workoutSession);
+    // let message = addMessage({
+    //   type: "pending",
+    //   message: "Creating workout session",
+    // });
+    // await createWorkoutSession.mutateAsync(workoutSession);
+    // closeMessage(message);
+    // if (workoutSession.workoutResults?.length ?? 0 > 0) {
+    //   message = addMessage({
+    //     type: "pending",
+    //     message: "Adding workouts to this session",
+    //   });
+    //   // await createWorkoutResult.mutateAsync(workoutSession);
+    // }
   };
+
+  useEffect(() => {
+    reset(defaultValues);
+  }, [reset, defaultValues]);
 
   return (
     <>
@@ -99,11 +105,9 @@ const WorkoutSessionForm = ({
               <span className="label-text">Add workouts to this session</span>
             </label>
             <WorkoutSelectField
-              selectedIds={
-                getValues("workoutResults")?.map(
-                  (result) => result.workout.id
-                ) ?? []
-              }
+              selectedIds={getValues("workoutResults")?.map(
+                (result) => result?.workout.id
+              )}
               handleAddWorkout={(workout) =>
                 setValue("workoutResults", [
                   ...(getValues("workoutResults") ?? []),
@@ -117,48 +121,63 @@ const WorkoutSessionForm = ({
               //   set_workouts([...workouts, workout]);
               // }}
             />
-
-            {(getValues("workoutResults")?.length ?? 0) > 0 && (
-              <>
-                <div className="form-control relative w-full flex-1 mt-2">
-                  <label className="label">
-                    <span className="label-text">
-                      Selected workouts{" "}
-                      {`(${getValues("workoutResults").length})`}
-                    </span>
-                  </label>
-                  <div className="text-sm flex flex-col gap-2">
-                    {workouts.map((workout) => (
-                      <div
-                        key={workout.id}
-                        className="flex flex-col p-3 bg-base-200 gap-1 rounded-lg"
-                      >
-                        <div className=" flex items-center gap-3 ">
-                          <div className="flex items-center ">
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                                set_workouts(
-                                  workouts.filter((w) => w.id !== workout.id)
-                                );
-                              }}
-                              className="btn btn-sm btn-circle btn-ghost"
-                            >
-                              <MdRemove size={27} className="text-error p-1" />
-                            </button>
+            {watchWorkoutResults &&
+              (getValues("workoutResults")?.length ?? 0) > 0 && (
+                <>
+                  <div className="form-control relative w-full flex-1 mt-2">
+                    <label className="label">
+                      <span className="label-text">
+                        Selected workouts{" "}
+                        {`(${getValues("workoutResults").length})`}
+                      </span>
+                    </label>
+                    <div className="text-sm flex flex-col gap-2">
+                      {getValues("workoutResults")?.map((result) => (
+                        <div
+                          key={result?.workout.id}
+                          className="flex flex-col px-5 py-4 bg-base-200 gap-1 rounded-lg"
+                        >
+                          <div className=" flex items-center gap-2 ">
+                            <div className="flex items-center ">
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  console.log(
+                                    'getValues("workoutResults")',
+                                    getValues("workoutResults")
+                                  );
+                                  setValue(
+                                    "workoutResults",
+                                    getValues("workoutResults").filter(
+                                      (w) => w.workout.id !== result.workout.id
+                                    )
+                                  );
+                                }}
+                                className="btn btn-sm btn-circle btn-ghost"
+                              >
+                                <MdRemove
+                                  size={27}
+                                  className="text-error p-1"
+                                />
+                              </button>
+                            </div>
+                            <div className="text-xl">
+                              {result.workout.name || `#${result.workout.id}`}
+                            </div>
+                            <DifficultyBadge
+                              difficulty={result.workout.difficulty}
+                            />
                           </div>
-                          <DifficultyBadge difficulty={workout.difficulty} />
-                          {workout.name ? workout.name : `#${workout.id}`}
+                          <div className="overflow-hidden text-ellipsis whitespace-pre-wrap cursor-default text-2xs">
+                            {result.workout.description}
+                          </div>
+                          <div className="">Enter / Edit result</div>
                         </div>
-                        <div className="overflow-hidden ml-2 text-ellipsis whitespace-pre-wrap cursor-default text-2xs">
-                          {workout.description}
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </>
-            )}
+                </>
+              )}
           </div>
         </div>
         <div className="mt-3 flex justify-end gap-4 flex-wrap">
