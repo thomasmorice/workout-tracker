@@ -8,6 +8,9 @@ const Edit: NextPage = () => {
   const router = useRouter();
   const id = parseInt(router.query.id as string, 10);
   const { getWorkoutSessionById } = useWorkoutSessionService();
+
+  const { data: workoutSession, isFetching } = getWorkoutSessionById(id);
+  console.log("workoutSession", workoutSession);
   return (
     <>
       <Head>

@@ -24,18 +24,18 @@ export const useWorkoutSessionService = () => {
     );
   };
 
-  const getWorkoutSessionById = ({ id }: { id: number }) => {
-    // return trpc.useQuery(
-    //   [
-    //     "workout-session.get-workout-session-by-id",
-    //     {
-    //       id,
-    //     },
-    //   ],
-    //   {
-    //     enabled: !!sessionData,
-    //   }
-    // );
+  const getWorkoutSessionById = (id: number) => {
+    return trpc.useQuery(
+      [
+        "workout-session.get-workout-session-by-id",
+        {
+          id,
+        },
+      ],
+      {
+        enabled: !!sessionData,
+      }
+    );
   };
 
   const createWorkoutSession = trpc.useMutation("workout-session.add", {
