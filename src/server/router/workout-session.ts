@@ -1,9 +1,10 @@
-import { number, string, z } from "zod";
+import { number, object, string, z } from "zod";
 import { createProtectedRouter } from "./protected-router";
 import { prisma } from "../db/client";
 import { Prisma, WorkoutResult } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { Query } from "react-query";
+import { WorkoutWithExtras, CreateWorkoutInputSchema } from "./workout";
 
 export const WorkoutSessionSelect = {
   id: true,
@@ -18,6 +19,17 @@ export const WorkoutSessionSelect = {
 
 export const CreateWorkoutSessionInputSchema = z.object({
   date: z.date(),
+  workoutResults: z.array(
+    // z.object({
+    //   workout: z.object({
+    //     id: z.number(),
+    //     name: z.string(),
+    //     diffil
+    //   }),
+    z.object({
+      workout: CreateWorkoutInputSchema,
+    })
+  ),
 });
 
 async function getWorkoutSessionForType() {
@@ -66,22 +78,32 @@ export const workoutSessionRouter = createProtectedRouter()
       return workoutSessions;
     },
   })
+  .query("get-workout-session-by-id", {
+    input: z.object({
+      id: z.number(),
+    }),
+    async resolve({ ctx, input }) {
+      const { id } = input;
+      const workoutSession = prisma.workoutSession.findFirst({
+        select: {
+          ...WorkoutSessionSelect,
+        },
+        where: {
+          id: id,
+        },
+      });
+      return workoutSession;
+    },
+  })
   .mutation("add", {
     input: CreateWorkoutSessionInputSchema,
     async resolve({ ctx, input }) {
-      if (!ctx.session?.user?.id) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Could not get user ID",
-        });
-      } else {
-        const workoutSession = await prisma.workoutSession.create({
-          data: {
-            ...input,
-          },
-          select: WorkoutSessionSelect,
-        });
-        return workoutSession;
-      }
+      const workoutSession = await prisma.workoutSession.create({
+        data: {
+          ...input,
+        },
+        select: WorkoutSessionSelect,
+      });
+      return workoutSession;
     },
   });

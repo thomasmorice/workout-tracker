@@ -2,25 +2,31 @@ import { useEffect, useMemo, useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { WorkoutSession } from "../../server/router/workout-session";
+import {
+  WorkoutSession,
+  CreateWorkoutSessionInputSchema,
+} from "../../server/router/workout-session";
 import WorkoutSelectField from "../../components/Workout/WorkoutSelectField";
 import { WorkoutWithExtras } from "../../server/router/workout";
 import { MdRemove } from "react-icons/md";
 import { DifficultyBadge } from "../../components/Workout/WorkoutBadges";
 import { useWorkoutSessionService } from "../../services/useWorkoutSessionService";
 import { useToastStore } from "../../store/ToastStore";
+import { z } from "zod";
 
-const WorkoutSessionForm = () => {
+interface WorkoutSessionFormProps {
+  existingWorkoutSession?: WorkoutSession;
+}
+const WorkoutSessionForm = ({
+  existingWorkoutSession,
+}: WorkoutSessionFormProps) => {
   const { addMessage, closeMessage } = useToastStore();
   const { createWorkoutSession } = useWorkoutSessionService();
   const defaultValues = useMemo(() => {
     return {
-      // id: existingSession?.id ?? undefined,
-      // date: existingSession?.date ?? new Date(),
-      // workoutResults: existingSession?.workoutResults ?? [],
-      id: undefined,
-      date: new Date(),
-      createdAt: undefined,
+      id: existingWorkoutSession?.id ?? undefined,
+      date: existingWorkoutSession?.date ?? new Date(),
+      workoutResults: existingWorkoutSession?.workoutResults ?? undefined,
     };
   }, []);
 
@@ -32,14 +38,16 @@ const WorkoutSessionForm = () => {
     getValues,
     control,
     formState: { isSubmitting },
-  } = useForm<WorkoutSession>({
+  } = useForm<z.infer<typeof CreateWorkoutSessionInputSchema>>({
     defaultValues,
   });
 
-  const [workouts, set_workouts] = useState<WorkoutWithExtras[]>([]);
+  // const [workouts, set_workouts] = useState<WorkoutWithExtras[]>([]);
 
-  const handleCreate: SubmitHandler<WorkoutSession> = async (
-    workoutSession: WorkoutSession
+  const handleCreate: SubmitHandler<
+    z.infer<typeof CreateWorkoutSessionInputSchema>
+  > = async (
+    workoutSession: z.infer<typeof CreateWorkoutSessionInputSchema>
   ) => {
     let message = addMessage({
       type: "pending",
@@ -47,7 +55,7 @@ const WorkoutSessionForm = () => {
     });
     await createWorkoutSession.mutateAsync(workoutSession);
     closeMessage(message);
-    if (workoutSession.workoutResults.length > 0) {
+    if (workoutSession.workoutResults?.length ?? 0 > 0) {
       message = addMessage({
         type: "pending",
         message: "Adding workouts to this session",
@@ -91,18 +99,32 @@ const WorkoutSessionForm = () => {
               <span className="label-text">Add workouts to this session</span>
             </label>
             <WorkoutSelectField
-              selectedIds={workouts.map((workout) => workout.id)}
-              handleAddWorkout={(workout) => {
-                set_workouts([...workouts, workout]);
-              }}
+              selectedIds={
+                getValues("workoutResults")?.map(
+                  (result) => result.workout.id
+                ) ?? []
+              }
+              handleAddWorkout={(workout) =>
+                setValue("workoutResults", [
+                  ...(getValues("workoutResults") ?? []),
+                  {
+                    workout: workout,
+                  },
+                ])
+              }
+              // selectedIds={workouts.map((workout) => workout.id)}
+              // handleAddWorkout={(workout) => {
+              //   set_workouts([...workouts, workout]);
+              // }}
             />
 
-            {workouts.length > 0 && (
+            {(getValues("workoutResults")?.length ?? 0) > 0 && (
               <>
                 <div className="form-control relative w-full flex-1 mt-2">
                   <label className="label">
                     <span className="label-text">
-                      Selected workouts {`(${workouts.length})`}
+                      Selected workouts{" "}
+                      {`(${getValues("workoutResults").length})`}
                     </span>
                   </label>
                   <div className="text-sm flex flex-col gap-2">
