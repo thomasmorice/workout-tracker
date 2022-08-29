@@ -24,10 +24,11 @@ export const WorkoutSelect = {
 };
 
 export const CreateWorkoutInputSchema = z.object({
+  id: z.number().optional(),
   name: z.string().nullable(),
   description: z.string().min(1),
   workoutType: z.nativeEnum(WorkoutType).nullable(),
-  difficulty: z.nativeEnum(Difficulty).nullish(),
+  difficulty: z.nativeEnum(Difficulty).nullable(),
   elementType: z.nativeEnum(ElementType).default("UNCLASSIFIED"),
   totalTime: z.number().nullable(),
   isDoableAtHome: z.boolean().default(false),

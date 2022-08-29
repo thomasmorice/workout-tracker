@@ -127,6 +127,7 @@ export default function WorkoutCard({
             <div className="card-actions justify-end ">
               <div className="btn-group ">
                 <button
+                  type="button"
                   onClick={onEdit}
                   className="btn btn-sm btn-outline gap-x-2 text-xs"
                 >
@@ -134,6 +135,7 @@ export default function WorkoutCard({
                 </button>
 
                 <button
+                  type="button"
                   onClick={onDuplicate}
                   className="btn btn-sm btn-outline gap-x-2 text-xs"
                 >
@@ -141,6 +143,7 @@ export default function WorkoutCard({
                 </button>
 
                 <button
+                  type="button"
                   onClick={onDelete}
                   className="btn btn-sm btn-outline btn-error text-xs"
                 >

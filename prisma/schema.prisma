@@ -63,19 +63,21 @@ model Event {
 }
 
 model WorkoutResult {
-    id                          Int            @id @default(autoincrement())
-    workoutSessionId            Int
-    workoutSession              WorkoutSession @relation(fields: [workoutSessionId], references: [id])
-    workoutId                   Int
-    workout                     Workout        @relation(fields: [workoutId], references: [id])
-    isRx                        Boolean?
-    totalReps                   Int?
-    time                        Int? // represented in seconds 
-    rating                      Int? // between 1-5 but might change
+    id               Int            @id @default(autoincrement())
+    workoutSessionId Int
+    workoutSession   WorkoutSession @relation(fields: [workoutSessionId], references: [id])
+    workoutId        Int
+    workout          Workout        @relation(fields: [workoutId], references: [id])
+    isRx             Boolean?
+    totalReps        Int?
+    time             Int? // represented in seconds 
+    weight           Float? // represented in Kg
+    rating           Int? // between 1-5 but might change
+
     description                 String?
-    shouldRecommendWorkoutAgain Boolean        @default(false)
-    createdAt                   DateTime       @default(now())
-    updatedAt                   DateTime       @updatedAt
+    shouldRecommendWorkoutAgain Boolean  @default(false)
+    createdAt                   DateTime @default(now())
+    updatedAt                   DateTime @updatedAt
 }
 
 model Profile {
@@ -102,6 +104,7 @@ enum WorkoutType {
     EMOM
     AMRAP
     FOR_TIME
+    ONE_REP_MAX
 }
 
 enum ElementType {

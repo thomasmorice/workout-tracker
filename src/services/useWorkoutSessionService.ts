@@ -10,6 +10,8 @@ interface WorkoutSessionsProps {
 
 export const useWorkoutSessionService = () => {
   const { data: sessionData } = useSession();
+  const utils = trpc.useContext();
+
   const getWorkoutSessions = ({ dateFilter }: WorkoutSessionsProps) => {
     return trpc.useQuery(
       [
@@ -38,10 +40,22 @@ export const useWorkoutSessionService = () => {
     );
   };
 
-  const createWorkoutSession = trpc.useMutation("workout-session.add", {
+  const createOrEditWorkoutSession = trpc.useMutation(
+    "workout-session.addOrEdit",
+    {
+      async onSuccess() {
+        await utils.invalidateQueries(["workout-session.get-workout-sessions"]);
+      },
+      onError(e: unknown) {
+        console.log("error", e);
+        // throw e as TRPCError;
+      },
+    }
+  );
+
+  const deleteWorkoutSession = trpc.useMutation("workout-session.delete", {
     async onSuccess() {
-      console.log("success!");
-      // await utils.invalidateQueries(["workout.get-infinite-workouts"]);
+      await utils.invalidateQueries(["workout-session.get-workout-sessions"]);
     },
     onError(e: unknown) {
       console.log("error", e);
@@ -49,5 +63,10 @@ export const useWorkoutSessionService = () => {
     },
   });
 
-  return { getWorkoutSessions, createWorkoutSession, getWorkoutSessionById };
+  return {
+    getWorkoutSessions,
+    createOrEditWorkoutSession,
+    getWorkoutSessionById,
+    deleteWorkoutSession,
+  };
 };

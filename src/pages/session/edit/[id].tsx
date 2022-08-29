@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import WorkoutSessionForm from "../../../components/WorkoutSession/WorkoutSessionForm";
+import WorkoutSessionForm from "../../../components/WorkoutSession/WorkoutSessionForm/WorkoutSessionForm";
 import { useWorkoutSessionService } from "../../../services/useWorkoutSessionService";
 
 const Edit: NextPage = () => {

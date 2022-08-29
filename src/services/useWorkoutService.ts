@@ -51,13 +51,20 @@ export const useWorkoutService = () => {
     enabled = true,
     ids,
   }: InfiniteWorkoutsProps) => {
+    let filteredSearchTerm = searchTerm;
+    if (searchTerm?.includes(">")) {
+      if (searchTerm.includes("latest")) {
+        filteredSearchTerm = "";
+        // showLatest = true
+      }
+    }
     return trpc.useInfiniteQuery(
       [
         "workout.get-infinite-workouts",
         {
           elementTypes: [],
           classifiedOnly: showClassifiedWorkoutOnly,
-          searchTerm: searchTerm,
+          searchTerm: filteredSearchTerm,
           limit: 12,
           ids,
         },

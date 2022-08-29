@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import WorkoutSessionForm from "../../components/WorkoutSession/WorkoutSessionForm";
+import WorkoutSessionForm from "../../components/WorkoutSession/WorkoutSessionForm/WorkoutSessionForm";
 
 const Add: NextPage = () => {
   return (
