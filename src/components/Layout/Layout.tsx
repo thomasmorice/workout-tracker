@@ -60,6 +60,7 @@ export default function Layout({ children }: LayoutProps) {
             <>
               {sessionData ? (
                 <button
+                  type="button"
                   onClick={() => signOut()}
                   className="avatar btn btn-circle"
                 >
@@ -76,6 +77,7 @@ export default function Layout({ children }: LayoutProps) {
                 </button>
               ) : (
                 <button
+                  type="button"
                   onClick={() => signIn()}
                   className="btn btn-ghost flex gap-x-2"
                 >

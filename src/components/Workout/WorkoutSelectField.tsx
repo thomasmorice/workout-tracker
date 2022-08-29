@@ -1,5 +1,4 @@
-import { format } from "date-fns";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Rings } from "react-loading-icons";
 import { useDebounce } from "usehooks-ts";
 import { WorkoutWithExtras } from "../../server/router/workout";
@@ -15,9 +14,11 @@ export default function WorkoutSelectField({
   handleAddWorkout,
   selectedIds,
 }: WorkoutSelectProps) {
+  const searchInput = useRef<HTMLInputElement>(null);
   const [searchTerm, set_searchTerm] = useState("");
   const [showWorkoutSearchResult, set_showWorkoutSearchResult] =
     useState(false);
+
   const searchTermDebounced = useDebounce<string>(searchTerm, 500);
 
   const { getInfiniteWorkouts } = useWorkoutService();
@@ -68,6 +69,7 @@ export default function WorkoutSelectField({
       <input
         className="input w-full pr-8 bg-base-200"
         onFocus={() => set_showWorkoutSearchResult(true)}
+        ref={searchInput}
         // onBlur={() => set_showWorkoutSearchResult(false)}
         type="search"
         placeholder={"search..."}
@@ -80,6 +82,16 @@ export default function WorkoutSelectField({
         </div>
       )}
       {showWorkoutSearchResult && workoutSearchResult}
+      <button
+        type="button"
+        onClick={() => {
+          set_searchTerm(">latest");
+          searchInput.current?.focus();
+        }}
+        className="btn btn-xs w-fit"
+      >
+        Latest workouts
+      </button>
     </div>
   );
 }

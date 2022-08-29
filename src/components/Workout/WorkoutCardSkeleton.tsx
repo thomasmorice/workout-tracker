@@ -1,6 +1,6 @@
 export default function WorkoutCardSkeleton() {
   return (
-    <div className="card mb-8 bg-base-100 shadow-xl">
+    <div className="card mb-8 bg-base-200 shadow-xl">
       <div className="flex animate-pulse space-x-4">
         <div className="card-body">
           <div className="flex items-center justify-between">

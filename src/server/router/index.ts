@@ -5,6 +5,7 @@ import superjson from "superjson";
 import { exampleRouter } from "./example";
 import { protectedExampleRouter } from "./protected-example-router";
 import { workoutRouter } from "./workout";
+import { workoutResultRouter } from "./workout-result";
 import { workoutSessionRouter } from "./workout-session";
 
 export const appRouter = createRouter()
@@ -12,7 +13,8 @@ export const appRouter = createRouter()
   .merge("example.", exampleRouter)
   .merge("question.", protectedExampleRouter)
   .merge("workout.", workoutRouter)
-  .merge("workout-session.", workoutSessionRouter);
+  .merge("workout-session.", workoutSessionRouter)
+  .merge("workout-result.", workoutResultRouter);
 
 // export type definition of API
 export type AppRouter = typeof appRouter;

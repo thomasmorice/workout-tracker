@@ -1,10 +1,8 @@
-import { number, object, string, z } from "zod";
+import { z } from "zod";
 import { createProtectedRouter } from "./protected-router";
 import { prisma } from "../db/client";
-import { Difficulty, Prisma, WorkoutResult } from "@prisma/client";
-import { TRPCError } from "@trpc/server";
-import { Query } from "react-query";
-import { WorkoutWithExtras, CreateWorkoutInputSchema } from "./workout";
+
+import { WorkoutResultCreateInput } from "./workout-result";
 
 export const WorkoutSessionSelect = {
   id: true,
@@ -18,17 +16,28 @@ export const WorkoutSessionSelect = {
 };
 
 export const CreateWorkoutSessionInputSchema = z.object({
+  id: z.number().optional(), // if not set: create else : edit
   date: z.date(),
-  workoutResults: z.array(
-    z.object({
-      workout: z.object({
-        id: z.number(),
-        name: z.string().nullish(),
-        difficulty: z.nativeEnum(Difficulty).nullable(),
-        description: z.string(),
-      }),
-    })
-  ),
+  workoutResults: z.array(WorkoutResultCreateInput),
+  // workoutResults: z.array(
+  //   z.object({
+  //     workoutId: z.number(),
+  //     description: z.string().nullish(),
+  //     rating: z.number().nullish(),
+  //     shouldRecommendWorkoutAgain: z.boolean().optional(),
+  //     isRx: z.boolean().nullish(),
+  //     totalReps: z.number().nullish(),
+  //     time: z.number().nullish(),
+
+  //     workout: z.object({
+  //       id: z.number(),
+  //       name: z.string().nullish(),
+  //       difficulty: z.nativeEnum(Difficulty).nullable(),
+  //       workoutType: z.nativeEnum(WorkoutType).nullish(),
+  //       description: z.string(),
+  //     }),
+  //   })
+  // ),
 });
 
 async function getWorkoutSessionForType() {
@@ -94,15 +103,55 @@ export const workoutSessionRouter = createProtectedRouter()
       return workoutSession;
     },
   })
-  .mutation("add", {
+  .mutation("addOrEdit", {
     input: CreateWorkoutSessionInputSchema,
     async resolve({ ctx, input }) {
-      const workoutSession = await prisma.workoutSession.create({
-        data: {
-          ...input,
+      console.log("INPUT", input);
+      let workoutSession = await prisma.workoutSession.upsert({
+        create: {
+          date: input.date,
+          // workoutResults: {
+          //   createMany: {
+          //     data: [...input.workoutResults].map(
+          //       ({ workout, ...rest }) => rest
+          //     ),
+          //   },
+          // },
+          athleteId: ctx.session.user.id,
         },
-        select: WorkoutSessionSelect,
+        update: {
+          date: input.date,
+          // workoutResults: {
+          //   createMany: {
+          //     data: [...input.workoutResults].map(
+          //       ({ workout, ...rest }) => rest
+          //     ),
+          //   },
+          // },
+        },
+        where: {
+          id: input.id ?? -1,
+        },
+        // select: WorkoutSessionSelect,
       });
+
       return workoutSession;
+    },
+  })
+  .mutation("delete", {
+    input: z.object({
+      id: z.number(),
+    }),
+    async resolve({ ctx, input }) {
+      const { id } = input;
+      await prisma.workoutResult.deleteMany({
+        where: {
+          workoutSessionId: id,
+        },
+      });
+      await prisma.workoutSession.delete({ where: { id: id } });
+      return {
+        id,
+      };
     },
   });

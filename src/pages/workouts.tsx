@@ -52,6 +52,7 @@ const Workouts: NextPage = () => {
 
             {sessionData && (
               <button
+                type="button"
                 onClick={() => showWorkoutForm("create")}
                 className="btn btn-primary"
               >

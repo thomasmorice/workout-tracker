@@ -11,8 +11,9 @@ import {
 import { useToastStore } from "../../store/ToastStore";
 import { useWorkoutFormStore } from "../../store/WorkoutFormStore";
 import { enumToString } from "../../utils/formatting";
-import Modal from "../Layout/Modal";
+import Modal from "../Layout/Navigation/Modal/Modal";
 import { z } from "zod";
+import ConfirmModal from "../Layout/Navigation/Modal/ConfirmModal";
 
 export default function WorkoutForm() {
   const { addMessage, closeMessage } = useToastStore();
@@ -31,7 +32,7 @@ export default function WorkoutForm() {
         id: existingWorkout?.id ?? undefined,
         name: existingWorkout?.name ?? "",
         description: existingWorkout?.description ?? "",
-        difficulty: existingWorkout?.difficulty ?? undefined,
+        difficulty: existingWorkout?.difficulty ?? null,
         totalTime: existingWorkout?.totalTime ?? null,
         workoutType: existingWorkout?.workoutType ?? null,
         elementType: existingWorkout?.elementType ?? "UNCLASSIFIED",
@@ -68,7 +69,8 @@ export default function WorkoutForm() {
           message: "Creating workout",
           type: "pending",
         });
-        await createWorkout.mutateAsync(workout);
+        const { id, ...workoutWithoutId } = workout;
+        await createWorkout.mutateAsync(workoutWithoutId);
         addMessage({
           type: "success",
           message: "Workout created successfully",
@@ -109,27 +111,15 @@ export default function WorkoutForm() {
   return (
     <>
       {state === "delete" ? (
-        <Modal onClose={() => closeWorkoutForm()}>
-          <>
-            <h3 className="text-xl font-bold capitalize mb-2">
-              Delete workout
-            </h3>
-            <p>Are you sure you wanna delete the workout </p>
-            <div className="modal-action">
-              <label
-                onClick={async () =>
-                  existingWorkout && (await handleDelete(existingWorkout))
-                }
-                className="btn btn-error"
-              >
-                Yay!
-              </label>
-              <label onClick={closeWorkoutForm} className="btn">
-                Cancel
-              </label>
-            </div>
-          </>
-        </Modal>
+        <ConfirmModal
+          onClose={closeWorkoutForm}
+          title="Delete workout"
+          onConfirm={async () =>
+            existingWorkout && (await handleDelete(existingWorkout))
+          }
+        >
+          <p>Are you sure you wanna delete the workout </p>
+        </ConfirmModal>
       ) : (
         // Full Modal Form
         <Modal onClose={closeWorkoutForm}>
@@ -159,7 +149,7 @@ export default function WorkoutForm() {
                   <span className="label-text">Name</span>
                 </label>
                 <input
-                  className="input"
+                  className="input placeholder:opacity-50"
                   placeholder="Grace..."
                   defaultValue=""
                   {...register("name")}
@@ -173,7 +163,7 @@ export default function WorkoutForm() {
 
                 <TextareaAutosize
                   {...register("description")}
-                  className="textarea"
+                  className="textarea placeholder:opacity-50"
                   rows={4}
                   maxRows={12}
                   placeholder="5 rounds of..."
@@ -246,7 +236,7 @@ export default function WorkoutForm() {
                 </label>
                 <div className="flex flex-wrap items-center gap-2">
                   <input
-                    className="input max-w-[110px] flex-1"
+                    className="input max-w-[110px] flex-1 placeholder:opacity-50"
                     placeholder="12"
                     type={"number"}
                     defaultValue=""
