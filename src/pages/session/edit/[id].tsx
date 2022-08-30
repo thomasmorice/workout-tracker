@@ -17,9 +17,11 @@ const Edit: NextPage = () => {
         <meta name="description" content="Add or edit a session" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {workoutSession && (
-        <WorkoutSessionForm existingWorkoutSession={workoutSession} />
-      )}
+      <div className="mb-10">
+        {workoutSession && (
+          <WorkoutSessionForm existingWorkoutSession={workoutSession} />
+        )}
+      </div>
     </>
   );
 };

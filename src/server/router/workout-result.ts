@@ -31,6 +31,7 @@ export const WorkoutResultCreateInput = z.object({
   workoutSessionId: z.number().optional(),
   description: z.string().nullish(),
   rating: z.number().nullish(),
+  order: z.number().nullish(),
   shouldRecommendWorkoutAgain: z.boolean().optional(),
   isRx: z.boolean().nullish(),
   totalReps: z.number().nullish(),
@@ -82,7 +83,7 @@ export const workoutResultRouter = createProtectedRouter()
     }),
     async resolve({ ctx, input }) {
       const workoutResults = await prisma.$transaction(
-        input.workoutResults.map((result) => {
+        input.workoutResults.map((result, index) => {
           const pickedResult = {
             description: result.description,
             isRx: result.isRx,
@@ -91,6 +92,7 @@ export const workoutResultRouter = createProtectedRouter()
             shouldRecommendWorkoutAgain: result.shouldRecommendWorkoutAgain,
             totalReps: result.totalReps,
             id: result.id,
+            order: result.order ?? index + 1,
             workoutId: result.workout.id,
             workoutSessionId: input.workoutSessionId,
           };

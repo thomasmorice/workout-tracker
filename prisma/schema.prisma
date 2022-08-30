@@ -66,6 +66,7 @@ model WorkoutResult {
     id               Int            @id @default(autoincrement())
     workoutSessionId Int
     workoutSession   WorkoutSession @relation(fields: [workoutSessionId], references: [id])
+    order            Int
     workoutId        Int
     workout          Workout        @relation(fields: [workoutId], references: [id])
     isRx             Boolean?
