@@ -16,7 +16,7 @@ import WorkoutResultForm from "../../WorkoutResult/WorkoutResultForm";
 import { useWorkoutResultService } from "../../../services/useWorkoutResultService";
 import { useRouter } from "next/router";
 import { Reorder, useDragControls } from "framer-motion";
-import WorkoutSessionResult from "./WorkoutSessionResult";
+import WorkoutSessionResultDraggable from "./WorkoutSessionResultDraggable";
 
 interface WorkoutSessionFormProps {
   existingWorkoutSession?: WorkoutSession;
@@ -160,23 +160,25 @@ const WorkoutSessionForm = ({
                           setValue("workoutResults", [...values])
                         }
                       >
-                        {getValues("workoutResults")?.map((result) => (
-                          <WorkoutSessionResult
-                            key={result.id}
-                            result={result}
-                            onRemoveWorkoutResult={() =>
-                              setValue(
-                                "workoutResults",
-                                getValues("workoutResults").filter(
-                                  (w) => w.workout.id !== result.workout.id
+                        {getValues("workoutResults")
+                          ?.sort((a, b) => b.order ?? 1 - (a.order ?? 0))
+                          .map((result, index) => (
+                            <WorkoutSessionResultDraggable
+                              key={result.id ?? index}
+                              result={result}
+                              onRemoveWorkoutResult={() =>
+                                setValue(
+                                  "workoutResults",
+                                  getValues("workoutResults").filter(
+                                    (w) => w.workout.id !== result.workout.id
+                                  )
                                 )
-                              )
-                            }
-                            onOpenWorkoutResultDetail={(result) =>
-                              set_editWorkoutResult(result)
-                            }
-                          />
-                        ))}
+                              }
+                              onOpenWorkoutResultDetail={(result) =>
+                                set_editWorkoutResult(result)
+                              }
+                            />
+                          ))}
                       </Reorder.Group>
                     </div>
                   </div>
