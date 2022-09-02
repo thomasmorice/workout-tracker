@@ -8,30 +8,43 @@ import {
   endOfWeek,
   isSameMonth,
   isSameDay,
+  subYears,
+  addYears,
   subMonths,
   addMonths,
   subDays,
 } from "date-fns";
-
-import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
+import { Rings } from "react-loading-icons";
+import {
+  AiOutlineLeft,
+  AiOutlineRight,
+  AiOutlineDoubleRight,
+  AiOutlineDoubleLeft,
+} from "react-icons/ai";
 import { WorkoutSession } from "../../server/router/workout-session";
 
 interface CalendarProps {
   workoutSessions: WorkoutSession[];
+  handleGoToPreviousYear: () => void;
   handleGoToPreviousMonth: () => void;
   handleGoToNextMonth: () => void;
+  handleGoToNextYear: () => void;
   handleSelectDate: (date: Date) => void;
   handleResetSelectDate: () => void;
   date?: Date;
+  isLoading: boolean;
 }
 
 const Calendar = ({
   workoutSessions,
+  handleGoToPreviousYear,
   handleGoToPreviousMonth,
   handleGoToNextMonth,
+  handleGoToNextYear,
   handleSelectDate,
   handleResetSelectDate,
   date,
+  isLoading,
 }: CalendarProps) => {
   const [selectedDate, set_selectedDate] = useState<Date | undefined>();
   const [activeDate, set_activeDate] = useState(date ?? new Date());
@@ -47,26 +60,48 @@ const Calendar = ({
   const getHeader = () => {
     return (
       <div className="flex items-center justify-between mb-4">
-        <div
-          onClick={() => {
-            handleGoToPreviousMonth();
-            set_activeDate(subMonths(activeDate, 1));
-          }}
-          className="btn btn-sm btn-square btn-ghost"
-        >
-          <AiOutlineLeft className="" />
+        <div>
+          <div
+            onClick={() => {
+              handleGoToPreviousYear();
+              set_activeDate(subYears(activeDate, 1));
+            }}
+            className="btn btn-sm btn-square btn-ghost"
+          >
+            <AiOutlineDoubleLeft className="" />
+          </div>
+          <div
+            onClick={() => {
+              handleGoToPreviousMonth();
+              set_activeDate(subMonths(activeDate, 1));
+            }}
+            className="btn btn-sm btn-square btn-ghost"
+          >
+            <AiOutlineLeft className="" />
+          </div>
         </div>
         <h2 className="font-semibold text-black dark:text-white">
           {format(activeDate, "MMMM yyyy")}
         </h2>
-        <div
-          onClick={() => {
-            handleGoToNextMonth();
-            set_activeDate(addMonths(activeDate, 1));
-          }}
-          className="btn btn-sm btn-square btn-ghost"
-        >
-          <AiOutlineRight className="navIcon" />
+        <div>
+          <div
+            onClick={() => {
+              handleGoToNextMonth();
+              set_activeDate(addMonths(activeDate, 1));
+            }}
+            className="btn btn-sm btn-square btn-ghost"
+          >
+            <AiOutlineRight className="navIcon" />
+          </div>
+          <div
+            onClick={() => {
+              handleGoToNextYear();
+              set_activeDate(addYears(activeDate, 1));
+            }}
+            className="btn btn-sm btn-square btn-ghost"
+          >
+            <AiOutlineDoubleRight className="" />
+          </div>
         </div>
       </div>
     );
@@ -121,7 +156,7 @@ const Calendar = ({
           <div
             className={`${
               isSameDay(currentDate, new Date())
-                ? "p-[3px] bg-black dark:bg-white rounded-full text-white dark:text-black"
+                ? "flex w-5 h-5 bg-black dark:bg-white rounded-full text-white dark:text-black items-center justify-center"
                 : ""
             }`}
           >
@@ -176,10 +211,16 @@ const Calendar = ({
   };
 
   return (
-    <section className="">
+    <section className="relative">
       {getHeader()}
+
       {getWeekDaysNames()}
       {getDates()}
+      {isLoading && (
+        <div className="absolute bg-base-300 h-full w-full top-0 bg-opacity-70 rounded-xl flex items-center justify-center">
+          <Rings className="w-14 h-14" />
+        </div>
+      )}
     </section>
   );
 };

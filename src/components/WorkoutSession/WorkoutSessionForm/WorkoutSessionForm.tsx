@@ -7,8 +7,6 @@ import {
   CreateWorkoutSessionInputSchema,
 } from "../../../server/router/workout-session";
 import WorkoutSelectField from "../../Workout/WorkoutSelectField";
-import { MdRemove } from "react-icons/md";
-import { DifficultyBadge } from "../../Workout/WorkoutBadges";
 import { useWorkoutSessionService } from "../../../services/useWorkoutSessionService";
 import { useToastStore } from "../../../store/ToastStore";
 import { z } from "zod";
@@ -17,6 +15,7 @@ import { useWorkoutResultService } from "../../../services/useWorkoutResultServi
 import { useRouter } from "next/router";
 import { Reorder, useDragControls } from "framer-motion";
 import WorkoutSessionResultDraggable from "./WorkoutSessionResultDraggable";
+import { CreateWorkoutSessionResultInput } from "../../../server/router/workout-result";
 
 interface WorkoutSessionFormProps {
   existingWorkoutSession?: WorkoutSession;
@@ -40,9 +39,7 @@ const WorkoutSessionForm = ({
   const [hasUnsavedResults, set_hasUnsavedResults] = useState(false);
 
   const [editWorkoutResult, set_editWorkoutResult] =
-    useState<
-      z.infer<typeof CreateWorkoutSessionInputSchema>["workoutResults"][number]
-    >();
+    useState<CreateWorkoutSessionResultInput>();
 
   const {
     register,
@@ -88,6 +85,13 @@ const WorkoutSessionForm = ({
       message: "Session created successfully",
     });
     router.push("/schedule");
+  };
+
+  const handleMoveResult = (from: number, to: number) => {
+    const arr = [...getValues("workoutResults")];
+    const element = arr.splice(from, 1)[0];
+    element && arr.splice(to, 0, element);
+    setValue("workoutResults", arr);
   };
 
   useEffect(() => {
@@ -164,7 +168,7 @@ const WorkoutSessionForm = ({
                           ?.sort((a, b) => b.order ?? 1 - (a.order ?? 0))
                           .map((result, index) => (
                             <WorkoutSessionResultDraggable
-                              key={result.id ?? index}
+                              key={result.workout.id}
                               result={result}
                               onRemoveWorkoutResult={() =>
                                 setValue(
@@ -174,6 +178,19 @@ const WorkoutSessionForm = ({
                                   )
                                 )
                               }
+                              {...(index > 0
+                                ? {
+                                    onMoveResultUp: () =>
+                                      handleMoveResult(index, index - 1),
+                                  }
+                                : {})}
+                              {...(index <
+                              getValues("workoutResults").length - 1
+                                ? {
+                                    onMoveResultDown: () =>
+                                      handleMoveResult(index, index + 1),
+                                  }
+                                : {})}
                               onOpenWorkoutResultDetail={(result) =>
                                 set_editWorkoutResult(result)
                               }

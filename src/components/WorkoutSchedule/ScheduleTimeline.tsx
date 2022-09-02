@@ -97,11 +97,13 @@ export default function ScheduleTimeline({
                             : `bg-${result.workout.difficulty?.toLowerCase()}-500`
                         } text-xs`}
                       ></div>
-                      <div className="">
+                      <div className="text-sm">
                         {result.workout.totalTime &&
                           `${result.workout.totalTime}mn `}
                         <span className="lowercase">
-                          {`${enumToString(result.workout.elementType)}`}
+                          {result.workout.name && result.workout.name !== ""
+                            ? result.workout.name
+                            : `${enumToString(result.workout.elementType)}`}
                         </span>
                       </div>
                     </div>

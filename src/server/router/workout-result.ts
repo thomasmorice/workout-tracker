@@ -4,6 +4,7 @@ import { z } from "zod";
 import { prisma } from "../db/client";
 import { createProtectedRouter } from "./protected-router";
 import { CreateWorkoutInputSchema } from "./workout";
+import { CreateWorkoutSessionInputSchema } from "./workout-session";
 
 export const WorkoutResultsSelect = {
   id: true,
@@ -17,6 +18,10 @@ export const WorkoutResultsSelect = {
   createdAt: true,
   workoutSession: true,
 };
+
+export type CreateWorkoutSessionResultInput = z.infer<
+  typeof CreateWorkoutSessionInputSchema
+>["workoutResults"][number];
 
 export const WorkoutResultsExtras = {
   creator: true,
@@ -91,8 +96,9 @@ export const workoutResultRouter = createProtectedRouter()
             time: result.time,
             shouldRecommendWorkoutAgain: result.shouldRecommendWorkoutAgain,
             totalReps: result.totalReps,
+            weight: result.weight,
             id: result.id,
-            order: result.order ?? index + 1,
+            order: index + 1,
             workoutId: result.workout.id,
             workoutSessionId: input.workoutSessionId,
           };
