@@ -130,7 +130,7 @@ const Workouts: NextPage = () => {
                     .map((_, i) => <WorkoutCardSkeleton key={i} />)}
             </Masonry>
 
-            <div className="mb-10 w-1/2" ref={ref}></div>
+            <div className="bg-white mb-10 w-1/2 h-10" ref={ref}></div>
 
             {isFetching &&
               hasNextPage &&

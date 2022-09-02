@@ -4,16 +4,12 @@ import { z } from "zod";
 import TextareaAutosize from "react-textarea-autosize";
 import { useEffect, useState } from "react";
 import MoodSelector from "../MoodSelector/MoodSelector";
+import { format } from "date-fns";
+import { CreateWorkoutSessionResultInput } from "../../server/router/workout-result";
 
-interface WorkoutResultFormProps {
-  workoutResult: z.infer<
-    typeof CreateWorkoutSessionInputSchema
-  >["workoutResults"][number];
-  onSave: (
-    result: z.infer<
-      typeof CreateWorkoutSessionInputSchema
-    >["workoutResults"][number]
-  ) => void;
+export interface WorkoutResultFormProps {
+  workoutResult: CreateWorkoutSessionResultInput;
+  onSave: (result: CreateWorkoutSessionResultInput) => void;
   onClose: () => void;
 }
 
@@ -24,7 +20,6 @@ export default function WorkoutResultForm({
 }: WorkoutResultFormProps) {
   const [editedWorkoutResult, set_editedWorkoutResult] =
     useState(workoutResult);
-
   return (
     <Modal onClose={onClose}>
       <>
@@ -109,48 +104,91 @@ export default function WorkoutResultForm({
             </label>
           </div>
 
-          {(workoutResult.workout.workoutType === "AMRAP" ||
-            workoutResult.workout.workoutType === "FOR_TIME") && (
-            <div className="flex flex-wrap items-center gap-2">
-              <input
-                id="input-repetitions"
-                className="input max-w-[110px] flex-1 placeholder:opacity-50"
-                placeholder="122"
-                type={"number"}
-                value={editedWorkoutResult.totalReps ?? ""}
-                onChange={(e) =>
-                  set_editedWorkoutResult({
-                    ...editedWorkoutResult,
-                    totalReps: parseInt(e.target.value ?? null),
-                  })
-                }
-              />
-              <label className="ml-2" htmlFor="input-repetitions">
-                repetitions
-                {workoutResult.workout.workoutType === "FOR_TIME" &&
-                  " (if you haven't finished the workout)"}
-              </label>
-              {/* <span className="mr-3"> repetitions</span> */}
-            </div>
-          )}
+          <div className="flex">
+            {workoutResult.workout.workoutType === "FOR_TIME" && (
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text">Total time</span>
+                </label>
+
+                <label className="input-group">
+                  <input
+                    id="input-time"
+                    className="input max-w-[110px] flex-1 placeholder:opacity-50"
+                    placeholder="122"
+                    type={"number"}
+                    value={editedWorkoutResult.time ?? ""}
+                    onChange={(e) =>
+                      set_editedWorkoutResult({
+                        ...editedWorkoutResult,
+                        time: parseInt(e.target.value ?? null),
+                      })
+                    }
+                  />
+                  <span>seconds</span>
+                </label>
+                {editedWorkoutResult.time && (
+                  <span className="text-xs pt-2">
+                    {!isNaN(editedWorkoutResult.time) &&
+                      ` ${format(
+                        editedWorkoutResult.time * 1000,
+                        "mm:ss' minutes'"
+                      )}`}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {(workoutResult.workout.workoutType === "AMRAP" ||
+              workoutResult.workout.workoutType === "FOR_TIME") && (
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text">Repetitions</span>
+                </label>
+
+                <label className="input-group">
+                  <input
+                    id="input-repetitions"
+                    className="input max-w-[110px] flex-1 placeholder:opacity-50"
+                    placeholder="50"
+                    type={"number"}
+                    value={editedWorkoutResult.totalReps ?? ""}
+                    onChange={(e) =>
+                      set_editedWorkoutResult({
+                        ...editedWorkoutResult,
+                        totalReps: parseInt(e.target.value ?? null),
+                      })
+                    }
+                  />
+                  <span>Reps</span>
+                </label>
+                {workoutResult.workout.workoutType === "FOR_TIME" && (
+                  <span className="text-xs pt-2">{`(if you haven't finished the workout)`}</span>
+                )}
+              </div>
+            )}
+          </div>
 
           {workoutResult.workout.workoutType === "ONE_REP_MAX" && (
-            <div className="flex flex-wrap items-center gap-2">
-              <input
-                id="input-rep-max"
-                className="input max-w-[110px] flex-1 placeholder:opacity-50"
-                onChange={(e) =>
-                  set_editedWorkoutResult({
-                    ...editedWorkoutResult,
-                    weight: parseFloat(e.target.value ?? null),
-                  })
-                }
-                placeholder="120"
-                type={"number"}
-                value={editedWorkoutResult.weight ?? ""}
-              />
-              <label className="ml-2" htmlFor="input-rep-max">
-                Kg
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Weight</span>
+              </label>
+              <label className="input-group">
+                <input
+                  id="input-rep-max"
+                  className="input max-w-[110px] flex-1 placeholder:opacity-50"
+                  onChange={(e) =>
+                    set_editedWorkoutResult({
+                      ...editedWorkoutResult,
+                      weight: parseFloat(e.target.value ?? null),
+                    })
+                  }
+                  placeholder="120"
+                  type={"number"}
+                  value={editedWorkoutResult.weight ?? ""}
+                />
+                <span>Kg</span>
               </label>
             </div>
           )}

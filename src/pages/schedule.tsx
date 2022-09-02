@@ -9,9 +9,10 @@ import {
   subMonths,
   addMonths,
   isSameDay,
-  getMonth,
   isSameMonth,
   format,
+  subYears,
+  addYears,
 } from "date-fns";
 import ScheduleTimeline from "../components/WorkoutSchedule/ScheduleTimeline";
 import Calendar from "../components/WorkoutSchedule/Calendar";
@@ -34,44 +35,46 @@ export const Schedule: NextPage = () => {
     },
   });
 
-  if (isLoading || !workoutSessions) {
-    return <p>Loading...</p>;
-  }
   return (
     <div className="flex mt-10 gap-10 flex-wrap lg:flex-nowrap justify-center md:justify-start">
       <div className="flex lg:sticky top-16 self-start lg:min-w-[320px]">
-        {workoutSessions && (
-          <div className="flex flex-col gap-6">
-            <Calendar
-              date={currentVisibleMonthDate}
-              handleSelectDate={(date) =>
-                set_selectedSession(
-                  workoutSessions.find((session) =>
-                    isSameDay(session.date, date)
-                  ) ?? -1
-                )
-              }
-              handleResetSelectDate={() => set_selectedSession(undefined)}
-              handleGoToPreviousMonth={() => {
-                set_currentVisibleMonthDate(
-                  subMonths(currentVisibleMonthDate, 1)
-                );
-              }}
-              handleGoToNextMonth={() => {
-                set_currentVisibleMonthDate(
-                  addMonths(currentVisibleMonthDate, 1)
-                );
-              }}
-              workoutSessions={workoutSessions}
-            />
-            <Link href={"/session/add"}>
-              <a className="btn btn-primary btn-sm">Plan a new session</a>
-            </Link>
-          </div>
-        )}
+        <div className="flex flex-col gap-6">
+          <Calendar
+            date={currentVisibleMonthDate}
+            handleSelectDate={(date) =>
+              set_selectedSession(
+                workoutSessions?.find((session) =>
+                  isSameDay(session.date, date)
+                ) ?? -1
+              )
+            }
+            handleResetSelectDate={() => set_selectedSession(undefined)}
+            handleGoToPreviousYear={() => {
+              set_currentVisibleMonthDate(subYears(currentVisibleMonthDate, 1));
+            }}
+            handleGoToPreviousMonth={() => {
+              set_currentVisibleMonthDate(
+                subMonths(currentVisibleMonthDate, 1)
+              );
+            }}
+            handleGoToNextMonth={() => {
+              set_currentVisibleMonthDate(
+                addMonths(currentVisibleMonthDate, 1)
+              );
+            }}
+            handleGoToNextYear={() => {
+              set_currentVisibleMonthDate(addYears(currentVisibleMonthDate, 1));
+            }}
+            workoutSessions={workoutSessions ?? []}
+            isLoading={isLoading}
+          />
+          <Link href={"/session/add"}>
+            <a className="btn btn-primary btn-sm">Plan a new session</a>
+          </Link>
+        </div>
       </div>
 
-      <div className="max-w-lg">
+      <div className="w-[288px]">
         <div className="mt-4 sm:mt-0 mb-28 md:mb-8 flex flex-col">
           {!selectedSession ? (
             <>
@@ -87,11 +90,23 @@ export const Schedule: NextPage = () => {
                   );
                 })}
               <ol className="relative border-l border-gray-200 dark:border-gray-700">
-                <li className="mb-10 ml-6 font-bold text-xl text-black dark:text-white">
+                <li className="mb-10 ml-6  text-black dark:text-white">
                   <div className="absolute w-3 h-3  rounded-full mt-2 -left-1.5 border border-white dark:border-gray-900 bg-primary"></div>
-                  {isSameMonth(currentVisibleMonthDate, now)
-                    ? "Today"
-                    : format(currentVisibleMonthDate, "MMMM")}
+                  {isSameMonth(currentVisibleMonthDate, now) ? (
+                    "Today"
+                  ) : (
+                    <div>
+                      <div className="font-bold text-xl">
+                        {format(currentVisibleMonthDate, "MMMM yyyy")}
+                      </div>
+                      <div
+                        onClick={() => set_currentVisibleMonthDate(now)}
+                        className="text-xs link text-base-content"
+                      >
+                        Go back to current month
+                      </div>
+                    </div>
+                  )}
                 </li>
               </ol>
               {workoutSessions

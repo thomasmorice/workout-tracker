@@ -16,7 +16,7 @@ const Workout: NextPage = () => {
     return <>Loading...</>;
   }
   if (!sessionData) {
-    return <>Not conneceted</>;
+    return <>Not connected</>;
   }
   return (
     <>
@@ -62,6 +62,7 @@ const Workout: NextPage = () => {
               </div>
             </div>
           </div>
+          <div className="mt-8">{}</div>
         </>
       ) : (
         <>

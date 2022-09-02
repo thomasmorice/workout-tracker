@@ -108,17 +108,27 @@ export const workoutRouter = createProtectedRouter()
           },
         }),
         ...(searchTerm && {
-          OR: {
-            description: {
-              contains: searchTerm,
-              mode: "insensitive",
-            },
-            ...(parseInt(searchTerm) && {
-              id: {
-                equals: parseInt(searchTerm),
+          OR: [
+            {
+              description: {
+                contains: searchTerm,
+                mode: "insensitive",
               },
-            }),
-          },
+            },
+            {
+              name: {
+                contains: searchTerm,
+                mode: "insensitive",
+              },
+            },
+            {
+              ...(parseInt(searchTerm) && {
+                id: {
+                  equals: parseInt(searchTerm),
+                },
+              }),
+            },
+          ],
         }),
         ...(ids &&
           ids.notIn && {
@@ -136,6 +146,8 @@ export const workoutRouter = createProtectedRouter()
           creatorId: ctx.session.user.id,
         },
       };
+
+      console.log("where", where);
 
       const workouts = await prisma.workout.findMany({
         take: limit + 1,
