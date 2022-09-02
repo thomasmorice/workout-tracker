@@ -22,13 +22,10 @@ import {
   AiOutlineDoubleLeft,
 } from "react-icons/ai";
 import { WorkoutSession } from "../../server/router/workout-session";
+import { useScheduleStore } from "../../store/ScheduleStore";
 
 interface CalendarProps {
   workoutSessions: WorkoutSession[];
-  handleGoToPreviousYear: () => void;
-  handleGoToPreviousMonth: () => void;
-  handleGoToNextMonth: () => void;
-  handleGoToNextYear: () => void;
   handleSelectDate: (date: Date) => void;
   handleResetSelectDate: () => void;
   date?: Date;
@@ -37,17 +34,12 @@ interface CalendarProps {
 
 const Calendar = ({
   workoutSessions,
-  handleGoToPreviousYear,
-  handleGoToPreviousMonth,
-  handleGoToNextMonth,
-  handleGoToNextYear,
   handleSelectDate,
   handleResetSelectDate,
-  date,
   isLoading,
 }: CalendarProps) => {
   const [selectedDate, set_selectedDate] = useState<Date | undefined>();
-  const [activeDate, set_activeDate] = useState(date ?? new Date());
+  const { currentVisibleDate, set_currentVisibleDate } = useScheduleStore();
 
   useEffect(() => {
     if (selectedDate) {
@@ -57,14 +49,17 @@ const Calendar = ({
     }
   }, [selectedDate, handleSelectDate, handleResetSelectDate]);
 
+  useEffect(() => {
+    console.log("currentVisibleDate", currentVisibleDate);
+  }, []);
+
   const getHeader = () => {
     return (
       <div className="flex items-center justify-between mb-4">
         <div>
           <div
             onClick={() => {
-              handleGoToPreviousYear();
-              set_activeDate(subYears(activeDate, 1));
+              set_currentVisibleDate(subYears(currentVisibleDate, 1));
             }}
             className="btn btn-sm btn-square btn-ghost"
           >
@@ -72,8 +67,7 @@ const Calendar = ({
           </div>
           <div
             onClick={() => {
-              handleGoToPreviousMonth();
-              set_activeDate(subMonths(activeDate, 1));
+              set_currentVisibleDate(subMonths(currentVisibleDate, 1));
             }}
             className="btn btn-sm btn-square btn-ghost"
           >
@@ -81,13 +75,12 @@ const Calendar = ({
           </div>
         </div>
         <h2 className="font-semibold text-black dark:text-white">
-          {format(activeDate, "MMMM yyyy")}
+          {format(currentVisibleDate, "MMMM yyyy")}
         </h2>
         <div>
           <div
             onClick={() => {
-              handleGoToNextMonth();
-              set_activeDate(addMonths(activeDate, 1));
+              set_currentVisibleDate(addMonths(currentVisibleDate, 1));
             }}
             className="btn btn-sm btn-square btn-ghost"
           >
@@ -95,8 +88,7 @@ const Calendar = ({
           </div>
           <div
             onClick={() => {
-              handleGoToNextYear();
-              set_activeDate(addYears(activeDate, 1));
+              set_currentVisibleDate(addYears(currentVisibleDate, 1));
             }}
             className="btn btn-sm btn-square btn-ghost"
           >
@@ -108,7 +100,7 @@ const Calendar = ({
   };
 
   const getWeekDaysNames = () => {
-    const weekStartDate = startOfWeek(activeDate);
+    const weekStartDate = startOfWeek(currentVisibleDate);
     const weekDays = [];
     for (let day = 0; day < 7; day++) {
       weekDays.push(
@@ -189,8 +181,8 @@ const Calendar = ({
   };
 
   const getDates = () => {
-    const startOfTheSelectedMonth = startOfMonth(activeDate);
-    const endOfTheSelectedMonth = endOfMonth(activeDate);
+    const startOfTheSelectedMonth = startOfMonth(currentVisibleDate);
+    const endOfTheSelectedMonth = endOfMonth(currentVisibleDate);
     const startDate = subDays(startOfWeek(startOfTheSelectedMonth), 0);
     const endDate = addDays(endOfWeek(endOfTheSelectedMonth), 0);
 
@@ -199,7 +191,9 @@ const Calendar = ({
     const allWeeks = [];
 
     while (currentDate <= endDate) {
-      allWeeks.push(generateDatesForCurrentWeek(currentDate, activeDate));
+      allWeeks.push(
+        generateDatesForCurrentWeek(currentDate, currentVisibleDate)
+      );
       currentDate = addDays(currentDate, 7);
     }
 
@@ -210,10 +204,10 @@ const Calendar = ({
     );
   };
 
+  if (!currentVisibleDate) return null;
   return (
     <section className="relative">
       {getHeader()}
-
       {getWeekDaysNames()}
       {getDates()}
       {isLoading && (
