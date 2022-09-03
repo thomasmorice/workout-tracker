@@ -4,6 +4,7 @@ import { useWorkoutService } from "../../services/useWorkoutService";
 import Image from "next/image";
 import formatDistance from "date-fns/formatDistance";
 import { useSession } from "next-auth/react";
+import { format } from "date-fns";
 
 const Workout: NextPage = () => {
   const router = useRouter();
@@ -62,7 +63,13 @@ const Workout: NextPage = () => {
               </div>
             </div>
           </div>
-          <div className="mt-8">{}</div>
+          <div className="mt-8">
+            {workout.workoutResults?.map((result) => (
+              <p key={result.id}>
+                {format(result.workoutSession.date, "MMMM yyyy")}
+              </p>
+            ))}
+          </div>
         </>
       ) : (
         <>

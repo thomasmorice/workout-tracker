@@ -65,6 +65,18 @@ export const workoutRouter = createProtectedRouter()
         select: {
           ...WorkoutExtras,
           ...WorkoutSelect,
+          ...{
+            workoutResults: {
+              select: {
+                workoutSession: {
+                  select: {
+                    date: true,
+                  },
+                },
+                id: true,
+              },
+            },
+          },
         },
         where: {
           AND: {

@@ -1,4 +1,4 @@
-import formatDistance from "date-fns/formatDistance";
+import { format } from "date-fns";
 import Image from "next/image";
 import {
   MdOutlineMenu,
@@ -45,8 +45,9 @@ export default function WorkoutCard({
                 {workout?.creator.name}
               </div>
               <div className={`text-xs opacity-50 font-light`}>
-                Created{" "}
-                {formatDistance(new Date(), new Date(workout.createdAt))} ago
+                Created on the{" "}
+                {/* {formatDistance(new Date(), new Date(workout.createdAt))} ago */}
+                {format(workout.createdAt, "do MMMM yyyy")}
               </div>
             </div>
           </div>
