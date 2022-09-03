@@ -61,6 +61,7 @@ const WorkoutSessionForm = ({
   > = async (
     workoutSession: z.infer<typeof CreateWorkoutSessionInputSchema>
   ) => {
+    console.log("workoutSession", workoutSession);
     let message = addMessage({
       type: "pending",
       message: "Creating workout session",

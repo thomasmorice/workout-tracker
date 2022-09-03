@@ -49,10 +49,6 @@ const Calendar = ({
     }
   }, [selectedDate, handleSelectDate, handleResetSelectDate]);
 
-  useEffect(() => {
-    console.log("currentVisibleDate", currentVisibleDate);
-  }, []);
-
   const getHeader = () => {
     return (
       <div className="flex items-center justify-between mb-4">
