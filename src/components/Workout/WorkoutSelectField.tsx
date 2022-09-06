@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Rings } from "react-loading-icons";
 import { useDebounce } from "usehooks-ts";
-// import { WorkoutWithExtras } from "../../server/router/workout";
 import { useWorkoutService } from "../../services/useWorkoutService";
 import { InferQueryOutput } from "../../types/trpc";
 import WorkoutCard from "./WorkoutCard";
@@ -10,7 +9,7 @@ interface WorkoutSelectProps {
   handleAddWorkout: (
     workout: InferQueryOutput<"workout.get-infinite-workouts">["workouts"][number]
   ) => void;
-  selectedIds: number[];
+  selectedIds?: number[];
 }
 
 export default function WorkoutSelectField({
