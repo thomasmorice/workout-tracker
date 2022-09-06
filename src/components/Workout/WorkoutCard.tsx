@@ -1,20 +1,11 @@
 import { format } from "date-fns";
 import Image from "next/image";
-import {
-  MdOutlineMenu,
-  MdOutlinePlaylistAddCheck,
-  MdDone,
-  MdDelete,
-  MdMenu,
-  MdTimer,
-  MdCopyAll,
-  MdEdit,
-} from "react-icons/md";
-import { WorkoutWithExtras } from "../../server/router/workout";
+import { MdDone, MdDelete, MdTimer, MdCopyAll, MdEdit } from "react-icons/md";
+import { InferQueryOutput } from "../../types/trpc";
 import { enumToString } from "../../utils/formatting";
 
 interface WorkoutCardProps {
-  workout: WorkoutWithExtras;
+  workout: InferQueryOutput<"workout.get-infinite-workouts">["workouts"][number];
   onDuplicate?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;

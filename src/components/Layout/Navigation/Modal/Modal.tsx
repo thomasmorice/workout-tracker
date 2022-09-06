@@ -24,13 +24,14 @@ export default function Modal({
   return (
     <>
       <div
-        className={`modal modal-bottom bg-black bg-opacity-60 duration-[0] sm:modal-middle ${
+        className={`modal modal-bottom  duration-[0] sm:modal-middle ${
           isMounted ? "modal-open" : ""
         }`}
       >
+        <div className="absolute w-full h-full top-0 left-0 backdrop-blur-[3px] bg-opacity-20 z-30 bg-black"></div>
         <div
           ref={ref}
-          className="max-h-[85%] modal-box w-full bg-base-200 sm:max-h-[calc(100vh_-_5rem)] sm:w-[580px] sm:max-w-5xl"
+          className="relative max-h-[85%] modal-box w-full bg-base-200 sm:max-h-[calc(100vh_-_5rem)] sm:w-[580px] sm:max-w-5xl z-40"
         >
           {withCloseButton && (
             <label

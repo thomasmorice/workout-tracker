@@ -6,7 +6,7 @@ import {
   BiHappyBeaming,
 } from "react-icons/bi";
 
-const moods = [
+export const moods = [
   {
     key: 1,
     icon: BiDizzy,

@@ -1,10 +1,7 @@
-import { Difficulty, ElementType, Prisma, WorkoutType } from "@prisma/client";
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { CreateWorkoutResultInputSchema } from "../../types/app";
 import { prisma } from "../db/client";
 import { createProtectedRouter } from "./protected-router";
-import { CreateWorkoutInputSchema } from "./workout";
-import { CreateWorkoutSessionInputSchema } from "./workout-session";
 
 export const WorkoutResultsSelect = {
   id: true,
@@ -19,49 +16,12 @@ export const WorkoutResultsSelect = {
   workoutSession: true,
 };
 
-export type CreateWorkoutSessionResultInput = z.infer<
-  typeof CreateWorkoutSessionInputSchema
->["workoutResults"][number];
-
 export const WorkoutResultsExtras = {
   creator: true,
   _count: {
     select: { workoutResults: true },
   },
 };
-
-export const WorkoutResultCreateInput = z.object({
-  id: z.number().optional(),
-  workoutId: z.number(),
-  workoutSessionId: z.number().optional(),
-  description: z.string().nullish(),
-  rating: z.number().nullish(),
-  order: z.number().nullish(),
-  shouldRecommendWorkoutAgain: z.boolean().optional(),
-  isRx: z.boolean().nullish(),
-  totalReps: z.number().nullish(),
-  weight: z.number().nullish(),
-  time: z.number().nullish(),
-  workout: CreateWorkoutInputSchema.extend({
-    id: z.number(), // Yep, id is mandatory in workout result, you can't add a result to a non existing workout..
-  }),
-});
-
-async function getWorkoutForType() {
-  const workouts = await prisma.workoutResult.findFirstOrThrow({
-    select: {
-      ...WorkoutResultsSelect,
-      ...WorkoutResultsExtras,
-    },
-  });
-
-  return workouts;
-}
-
-type ThenArg<T> = T extends PromiseLike<infer U> ? U : T;
-export type WorkoutResultsWithExtras = ThenArg<
-  ReturnType<typeof getWorkoutForType>
->;
 
 export const workoutResultRouter = createProtectedRouter()
   .query("get-workout-results-by-workout-id", {
@@ -83,7 +43,7 @@ export const workoutResultRouter = createProtectedRouter()
   })
   .mutation("addOrEditMany", {
     input: z.object({
-      workoutResults: z.array(WorkoutResultCreateInput),
+      workoutResults: z.array(CreateWorkoutResultInputSchema),
       workoutSessionId: z.number(),
     }),
     async resolve({ ctx, input }) {

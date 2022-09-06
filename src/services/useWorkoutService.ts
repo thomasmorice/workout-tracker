@@ -1,7 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { WorkoutWithExtras } from "../server/router/workout";
 import { trpc } from "../utils/trpc";
 
 interface InfiniteWorkoutsProps {
@@ -9,8 +8,8 @@ interface InfiniteWorkoutsProps {
   searchTerm?: string;
   enabled?: boolean;
   ids?: {
-    in?: WorkoutWithExtras["id"][];
-    notIn?: WorkoutWithExtras["id"][];
+    in?: number[];
+    notIn?: number[];
   };
 }
 

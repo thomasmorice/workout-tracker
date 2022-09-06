@@ -7,8 +7,10 @@ import {
 } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { CreateWorkoutInputSchema } from "../../types/app";
 import { prisma } from "../db/client";
 import { createProtectedRouter } from "./protected-router";
+import { WorkoutResultsSelect } from "./workout-result";
 
 export const WorkoutSelect = {
   id: true,
@@ -23,36 +25,12 @@ export const WorkoutSelect = {
   updatedAt: true,
 };
 
-export const CreateWorkoutInputSchema = z.object({
-  id: z.number().optional(),
-  name: z.string().nullable(),
-  description: z.string().min(1),
-  workoutType: z.nativeEnum(WorkoutType).nullable(),
-  difficulty: z.nativeEnum(Difficulty).nullable(),
-  elementType: z.nativeEnum(ElementType).default("UNCLASSIFIED"),
-  totalTime: z.number().nullable(),
-  isDoableAtHome: z.boolean().default(false),
-});
-
 export const WorkoutExtras = {
   creator: true,
   _count: {
     select: { workoutResults: true },
   },
 };
-
-async function getWorkoutForType() {
-  const workouts = await prisma.workout.findFirstOrThrow({
-    select: {
-      ...WorkoutExtras,
-      ...WorkoutSelect,
-    },
-  });
-  return workouts;
-}
-
-type ThenArg<T> = T extends PromiseLike<infer U> ? U : T;
-export type WorkoutWithExtras = ThenArg<ReturnType<typeof getWorkoutForType>>;
 
 export const workoutRouter = createProtectedRouter()
   .query("get-workout-by-id", {
@@ -68,12 +46,12 @@ export const workoutRouter = createProtectedRouter()
           ...{
             workoutResults: {
               select: {
+                ...WorkoutResultsSelect,
                 workoutSession: {
                   select: {
                     date: true,
                   },
                 },
-                id: true,
               },
             },
           },
@@ -212,16 +190,10 @@ export const workoutRouter = createProtectedRouter()
     },
   })
   .mutation("edit", {
-    input: z.object({
+    input: CreateWorkoutInputSchema.extend({
       id: z.number(),
-      name: z.string().nullable(),
-      description: z.string().min(1),
-      workoutType: z.nativeEnum(WorkoutType).nullable(),
-      difficulty: z.nativeEnum(Difficulty).nullable(),
-      elementType: z.nativeEnum(ElementType).default("UNCLASSIFIED"),
-      totalTime: z.number().nullable(),
-      isDoableAtHome: z.boolean().default(false),
     }),
+
     async resolve({ input }) {
       const { id } = input;
       const workout = await prisma.workout.update({
