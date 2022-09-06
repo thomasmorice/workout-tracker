@@ -4,16 +4,12 @@ import { useEffect, useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
 import { useWorkoutService } from "../../services/useWorkoutService";
-import {
-  WorkoutWithExtras,
-  CreateWorkoutInputSchema,
-} from "../../server/router/workout";
 import { useToastStore } from "../../store/ToastStore";
 import { useWorkoutFormStore } from "../../store/WorkoutFormStore";
 import { enumToString } from "../../utils/formatting";
 import Modal from "../Layout/Navigation/Modal/Modal";
-import { z } from "zod";
 import ConfirmModal from "../Layout/Navigation/Modal/ConfirmModal";
+import { InferMutationInput } from "../../types/trpc";
 
 export default function WorkoutForm() {
   const { addMessage, closeMessage } = useToastStore();
@@ -26,49 +22,49 @@ export default function WorkoutForm() {
 
   const { createWorkout, editWorkout, deleteWorkout } = useWorkoutService();
 
-  const defaultValues: z.infer<typeof CreateWorkoutInputSchema> =
-    useMemo(() => {
-      return {
-        id: existingWorkout?.id ?? undefined,
-        name: existingWorkout?.name ?? "",
-        description: existingWorkout?.description ?? "",
-        difficulty: existingWorkout?.difficulty ?? null,
-        totalTime: existingWorkout?.totalTime ?? null,
-        workoutType: existingWorkout?.workoutType ?? null,
-        elementType: existingWorkout?.elementType ?? "UNCLASSIFIED",
-        isDoableAtHome: existingWorkout?.isDoableAtHome ?? false,
-      };
-    }, [existingWorkout]);
+  const defaultValues: InferMutationInput<"workout.add"> = useMemo(() => {
+    return {
+      id: existingWorkout?.id ?? undefined,
+      name: existingWorkout?.name ?? "",
+      description: existingWorkout?.description ?? "",
+      difficulty: existingWorkout?.difficulty ?? null,
+      totalTime: existingWorkout?.totalTime ?? null,
+      workoutType: existingWorkout?.workoutType ?? null,
+      elementType: existingWorkout?.elementType ?? "UNCLASSIFIED",
+      isDoableAtHome: existingWorkout?.isDoableAtHome ?? false,
+    };
+  }, [existingWorkout]);
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { isSubmitting },
-  } = useForm<WorkoutWithExtras>({
+  } = useForm<
+    InferMutationInput<"workout.add"> | InferMutationInput<"workout.edit">
+  >({
     defaultValues,
   });
 
-  const handleSave: SubmitHandler<WorkoutWithExtras> = async (
-    workout: WorkoutWithExtras
+  const handleSave: SubmitHandler<
+    InferMutationInput<"workout.edit"> | InferMutationInput<"workout.add">
+  > = async (
+    workout:
+      | InferMutationInput<"workout.edit">
+      | InferMutationInput<"workout.add">
   ) => {
-    let toastId;
+    const toastId = addMessage({
+      type: "pending",
+      message: `${state} workout`,
+    });
     try {
       if (state === "edit") {
-        toastId = addMessage({
-          type: "pending",
-          message: "Editing workout",
-        });
-        await editWorkout.mutateAsync(workout);
+        editWorkout.mutateAsync(workout as InferMutationInput<"workout.edit">);
         addMessage({
           type: "success",
           message: "Workout edited successfully",
         });
       } else {
-        toastId = addMessage({
-          message: "Creating workout",
-          type: "pending",
-        });
         const { id, ...workoutWithoutId } = workout;
         await createWorkout.mutateAsync(workoutWithoutId);
         addMessage({
@@ -83,14 +79,10 @@ export default function WorkoutForm() {
       toastId && closeMessage(toastId);
     }
   };
-  const handleDuplicateAndDelete: SubmitHandler<WorkoutWithExtras> = async (
-    workout: WorkoutWithExtras
-  ) => {
-    workout && (await handleSave(workout));
-    workout && (await handleDelete(workout));
-  };
 
-  const handleDelete = async (workout: WorkoutWithExtras) => {
+  const handleDelete = async (
+    workout: InferMutationInput<"workout.delete">
+  ) => {
     const toastId = addMessage({
       message: "Deleting workout",
       type: "pending",
@@ -130,14 +122,7 @@ export default function WorkoutForm() {
               className="mt-5 flex flex-col gap-2"
               onSubmit={async (e) => {
                 try {
-                  const action = (
-                    e.nativeEvent as SubmitEvent
-                  ).submitter?.getAttribute("data-action");
-                  if (action === "save") {
-                    await handleSubmit(handleSave)(e);
-                  } else if (action == "duplicate-and-delete") {
-                    await handleSubmit(handleDuplicateAndDelete)(e);
-                  }
+                  await handleSubmit(handleSave)(e);
                   closeWorkoutForm();
                 } catch (e) {
                   console.error(e);
@@ -262,27 +247,13 @@ export default function WorkoutForm() {
                 </div>
               </div>
 
-              {/* <pre>{JSON.stringify(watch(), null, 2)}</pre> */}
-
               <div className="mt-3 flex justify-end gap-4 flex-wrap">
                 <button
-                  data-action="save"
                   className={`btn mt-2 ${isSubmitting ? "loading" : ""}`}
                   type="submit"
                 >
                   {`${state} workout`}
                 </button>
-                {state === "duplicate" && (
-                  <button
-                    data-action="duplicate-and-delete"
-                    className={`btn btn-error mt-2 ${
-                      isSubmitting ? "loading" : ""
-                    }`}
-                    type="submit"
-                  >
-                    Duplicate & Delete Original
-                  </button>
-                )}
               </div>
             </form>
           </>

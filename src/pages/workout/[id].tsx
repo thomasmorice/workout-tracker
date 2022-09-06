@@ -63,11 +63,17 @@ const Workout: NextPage = () => {
               </div>
             </div>
           </div>
-          <div className="mt-8">
+          <div className="mt-4">
             {workout.workoutResults?.map((result) => (
-              <p key={result.id}>
-                {format(result.workoutSession.date, "MMMM yyyy")}
-              </p>
+              <div key={result.id}>
+                <div className="text-lg mt-2">
+                  {format(result.workoutSession.date, "MMMM yyyy")}
+                  <p className="text-xs mt-2">{result.description}</p>
+
+                  <p className="">{result.totalReps} reps</p>
+                </div>
+                <div className="divider opacity-50 my-2"></div>
+              </div>
             ))}
           </div>
         </>

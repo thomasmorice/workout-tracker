@@ -1,8 +1,7 @@
 import { z } from "zod";
 import { createProtectedRouter } from "./protected-router";
 import { prisma } from "../db/client";
-
-import { WorkoutResultCreateInput } from "./workout-result";
+import { CreateWorkoutResultInputSchema } from "../../types/app";
 
 export const WorkoutSessionSelect = {
   id: true,
@@ -18,26 +17,7 @@ export const WorkoutSessionSelect = {
 export const CreateWorkoutSessionInputSchema = z.object({
   id: z.number().optional(), // if not set: create else : edit
   date: z.date(),
-  workoutResults: z.array(WorkoutResultCreateInput),
-  // workoutResults: z.array(
-  //   z.object({
-  //     workoutId: z.number(),
-  //     description: z.string().nullish(),
-  //     rating: z.number().nullish(),
-  //     shouldRecommendWorkoutAgain: z.boolean().optional(),
-  //     isRx: z.boolean().nullish(),
-  //     totalReps: z.number().nullish(),
-  //     time: z.number().nullish(),
-
-  //     workout: z.object({
-  //       id: z.number(),
-  //       name: z.string().nullish(),
-  //       difficulty: z.nativeEnum(Difficulty).nullable(),
-  //       workoutType: z.nativeEnum(WorkoutType).nullish(),
-  //       description: z.string(),
-  //     }),
-  //   })
-  // ),
+  workoutResults: z.array(CreateWorkoutResultInputSchema),
 });
 
 async function getWorkoutSessionForType() {
@@ -110,24 +90,10 @@ export const workoutSessionRouter = createProtectedRouter()
       let workoutSession = await prisma.workoutSession.upsert({
         create: {
           date: input.date,
-          // workoutResults: {
-          //   createMany: {
-          //     data: [...input.workoutResults].map(
-          //       ({ workout, ...rest }) => rest
-          //     ),
-          //   },
-          // },
           athleteId: ctx.session.user.id,
         },
         update: {
           date: input.date,
-          // workoutResults: {
-          //   createMany: {
-          //     data: [...input.workoutResults].map(
-          //       ({ workout, ...rest }) => rest
-          //     ),
-          //   },
-          // },
         },
         where: {
           id: input.id ?? -1,

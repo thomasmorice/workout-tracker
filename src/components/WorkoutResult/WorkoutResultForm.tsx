@@ -1,15 +1,14 @@
 import Modal from "../Layout/Navigation/Modal/Modal";
-import { CreateWorkoutSessionInputSchema } from "../../server/router/workout-session";
-import { z } from "zod";
 import TextareaAutosize from "react-textarea-autosize";
 import { useEffect, useState } from "react";
 import MoodSelector from "../MoodSelector/MoodSelector";
 import { format } from "date-fns";
-import { CreateWorkoutSessionResultInput } from "../../server/router/workout-result";
+import { InferMutationInput, InferQueryOutput } from "../../types/trpc";
+import { WorkoutResultWithWorkout } from "../../types/app";
 
 export interface WorkoutResultFormProps {
-  workoutResult: CreateWorkoutSessionResultInput;
-  onSave: (result: CreateWorkoutSessionResultInput) => void;
+  workoutResult: WorkoutResultWithWorkout;
+  onSave: (result: WorkoutResultWithWorkout) => void;
   onClose: () => void;
 }
 
@@ -20,6 +19,8 @@ export default function WorkoutResultForm({
 }: WorkoutResultFormProps) {
   const [editedWorkoutResult, set_editedWorkoutResult] =
     useState(workoutResult);
+
+  console.log("workoutResult inside", workoutResult);
   return (
     <Modal onClose={onClose}>
       <>
