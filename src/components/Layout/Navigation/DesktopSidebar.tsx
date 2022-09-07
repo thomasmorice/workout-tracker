@@ -18,7 +18,7 @@ export default function DesktopSidebar({ items }: NavigationItemsProps) {
     <>
       <aside
         ref={ref}
-        className="fixed  z-50 h-full w-[320px] rounded-r-2xl bg-base-100 px-8 pt-8 shadow-2xl  shadow-base-300"
+        className="fixed  z-50 h-full w-80 rounded-r-2xl bg-base-100 px-8 pt-8 shadow-2xl  shadow-base-300"
       >
         <Logo />
 

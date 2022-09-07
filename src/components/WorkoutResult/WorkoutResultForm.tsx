@@ -20,7 +20,6 @@ export default function WorkoutResultForm({
   const [editedWorkoutResult, set_editedWorkoutResult] =
     useState(workoutResult);
 
-  console.log("workoutResult inside", workoutResult);
   return (
     <Modal onClose={onClose}>
       <>

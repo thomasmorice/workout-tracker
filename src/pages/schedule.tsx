@@ -13,16 +13,18 @@ import {
 import ScheduleTimeline from "../components/WorkoutSchedule/ScheduleTimeline";
 import Calendar from "../components/WorkoutSchedule/Calendar";
 import { useState } from "react";
-import { WorkoutSession } from "../server/router/workout-session";
 import Link from "next/link";
 import { useScheduleStore } from "../store/ScheduleStore";
+import { InferQueryOutput } from "../types/trpc";
 
 export const Schedule: NextPage = () => {
   const { getWorkoutSessions } = useWorkoutSessionService();
   const now = new Date();
   const { currentVisibleDate, set_currentVisibleDate } = useScheduleStore();
   const [selectedSession, set_selectedSession] = useState<
-    undefined | WorkoutSession | -1
+    | undefined
+    | InferQueryOutput<"workout-session.get-workout-sessions">[number]
+    | -1
   >();
 
   const { data: workoutSessions, isLoading } = getWorkoutSessions({
@@ -55,6 +57,7 @@ export const Schedule: NextPage = () => {
       </div>
 
       <div className="w-[288px]">
+        <h2 className="h2">Activity</h2>
         <div className="mt-4 sm:mt-0 mb-28 md:mb-8 flex flex-col">
           {!selectedSession ? (
             <>

@@ -7,10 +7,7 @@ import {
 } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import {
-  WorkoutSession,
-  CreateWorkoutSessionInputSchema,
-} from "../../../server/router/workout-session";
+import { CreateWorkoutSessionInputSchema } from "../../../server/router/workout-session";
 import WorkoutSelectField from "../../Workout/WorkoutSelectField";
 import { useWorkoutSessionService } from "../../../services/useWorkoutSessionService";
 import { useToastStore } from "../../../store/ToastStore";
@@ -20,12 +17,12 @@ import { useWorkoutResultService } from "../../../services/useWorkoutResultServi
 import { useRouter } from "next/router";
 import { Reorder } from "framer-motion";
 import WorkoutSessionResultItem from "./WorkoutSessionResultItem";
-import { InferMutationInput } from "../../../types/trpc";
+import { InferMutationInput, InferQueryOutput } from "../../../types/trpc";
 import { WorkoutResultWithWorkout } from "../../../types/app";
 import { isBefore } from "date-fns";
 
 interface WorkoutSessionFormProps {
-  existingWorkoutSession?: WorkoutSession;
+  existingWorkoutSession?: InferQueryOutput<"workout-session.get-workout-session-by-id">;
 }
 const WorkoutSessionForm = ({
   existingWorkoutSession,
@@ -33,7 +30,8 @@ const WorkoutSessionForm = ({
   const router = useRouter();
   const { addMessage, closeMessage } = useToastStore();
   const { createOrEditWorkoutSession } = useWorkoutSessionService();
-  const { createOrEditMultipleWorkoutResult } = useWorkoutResultService();
+  const { createOrEditMultipleWorkoutResult, deleteMultipleWorkoutResult } =
+    useWorkoutResultService();
   const defaultValues = useMemo(() => {
     return {
       id: existingWorkoutSession?.id ?? undefined,
@@ -48,8 +46,6 @@ const WorkoutSessionForm = ({
   const {
     handleSubmit,
     reset,
-    watch,
-    setValue,
     getValues,
     control,
     formState: { isSubmitting, isDirty },
@@ -85,11 +81,26 @@ const WorkoutSessionForm = ({
       });
       closeMessage(message);
     }
+
+    const resultsToDelete = existingWorkoutSession?.workoutResults
+      .filter((existingRes) =>
+        workoutSession?.workoutResults.every((res) => res.id !== existingRes.id)
+      )
+      .map((resToDelete) => resToDelete.id);
+
+    if (resultsToDelete && resultsToDelete.length > 0) {
+      await deleteMultipleWorkoutResult.mutateAsync({
+        ids: resultsToDelete,
+      });
+    }
+
     addMessage({
       type: "success",
-      message: "Session created successfully",
+      message: `Session ${
+        existingWorkoutSession ? "edited" : "created"
+      } successfully`,
     });
-    router.push("/schedule");
+    // router.push("/schedule");
   };
 
   useEffect(() => {
@@ -170,28 +181,24 @@ const WorkoutSessionForm = ({
                   values={workoutResults}
                   onReorder={(values) => replaceWorkoutResults(values)}
                 >
-                  {workoutResults
-                    .sort((a, b) => b.order ?? 1 - (a.order ?? 0))
-                    .map((result, index) => (
-                      <WorkoutSessionResultItem
-                        key={result.workout.id}
-                        isDone={isBefore(getValues("date"), new Date())}
-                        result={result}
-                        onRemoveWorkoutResult={() =>
-                          removeWorkoutResults(index)
-                        }
-                        onMoveResultUp={() =>
-                          index > 0 && moveWorkoutResults(index, index - 1)
-                        }
-                        onMoveResultDown={() =>
-                          index < workoutResults.length - 1 &&
-                          moveWorkoutResults(index, index + 1)
-                        }
-                        onOpenWorkoutResultDetail={() =>
-                          set_editWorkoutResultIndex(index)
-                        }
-                      />
-                    ))}
+                  {workoutResults.map((result, index) => (
+                    <WorkoutSessionResultItem
+                      key={result.workout.id}
+                      isDone={isBefore(getValues("date"), new Date())}
+                      result={result}
+                      onRemoveWorkoutResult={() => removeWorkoutResults(index)}
+                      onMoveResultUp={() =>
+                        index > 0 && moveWorkoutResults(index, index - 1)
+                      }
+                      onMoveResultDown={() =>
+                        index < workoutResults.length - 1 &&
+                        moveWorkoutResults(index, index + 1)
+                      }
+                      onOpenWorkoutResultDetail={() =>
+                        set_editWorkoutResultIndex(index)
+                      }
+                    />
+                  ))}
                 </Reorder.Group>
               </div>
             </div>
@@ -213,14 +220,6 @@ const WorkoutSessionForm = ({
           <WorkoutResultForm
             onSave={(workoutResult) => {
               updateWorkoutResults(editWorkoutResultIndex, workoutResult);
-              console.log("workoutResult", workoutResult);
-              const newResults = [...getValues("workoutResults")].map(
-                (result) =>
-                  result.workout.id === workoutResult.workout.id
-                    ? workoutResult
-                    : result
-              );
-              setValue("workoutResults", [...newResults]);
               set_editWorkoutResultIndex(-1);
             }}
             onClose={() => set_editWorkoutResultIndex(-1)}

@@ -77,4 +77,19 @@ export const workoutResultRouter = createProtectedRouter()
       );
       return workoutResults;
     },
+  })
+  .mutation("deleteMany", {
+    input: z.object({
+      ids: z.array(z.number()),
+    }),
+    async resolve({ ctx, input }) {
+      await prisma.workoutResult.deleteMany({
+        where: {
+          id: {
+            in: input.ids,
+          },
+        },
+      });
+      return input.ids;
+    },
   });
