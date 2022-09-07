@@ -20,7 +20,23 @@ export const useWorkoutResultService = () => {
     }
   );
 
+  const deleteMultipleWorkoutResult = trpc.useMutation(
+    "workout-result.deleteMany",
+    {
+      async onSuccess() {
+        await utils.invalidateQueries([
+          "workout-session.get-workout-session-by-id",
+        ]);
+      },
+      onError(e: unknown) {
+        console.log("error", e);
+        // throw e as TRPCError;
+      },
+    }
+  );
+
   return {
     createOrEditMultipleWorkoutResult,
+    deleteMultipleWorkoutResult,
   };
 };

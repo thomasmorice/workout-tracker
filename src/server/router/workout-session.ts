@@ -3,15 +3,10 @@ import { createProtectedRouter } from "./protected-router";
 import { prisma } from "../db/client";
 import { CreateWorkoutResultInputSchema } from "../../types/app";
 
-export const WorkoutSessionSelect = {
+const WorkoutSessionSelect = {
   id: true,
   date: true,
   createdAt: true,
-  workoutResults: {
-    include: {
-      workout: true,
-    },
-  },
 };
 
 export const CreateWorkoutSessionInputSchema = z.object({
@@ -19,20 +14,6 @@ export const CreateWorkoutSessionInputSchema = z.object({
   date: z.date(),
   workoutResults: z.array(CreateWorkoutResultInputSchema),
 });
-
-async function getWorkoutSessionForType() {
-  const workoutSession = await prisma.workoutSession.findFirstOrThrow({
-    select: {
-      ...WorkoutSessionSelect,
-    },
-  });
-  return workoutSession;
-}
-
-type ThenArg<T> = T extends PromiseLike<infer U> ? U : T;
-export type WorkoutSession = ThenArg<
-  ReturnType<typeof getWorkoutSessionForType>
->;
 
 export const workoutSessionRouter = createProtectedRouter()
   .query("get-workout-sessions", {
@@ -49,6 +30,14 @@ export const workoutSessionRouter = createProtectedRouter()
       const workoutSessions = await prisma.workoutSession.findMany({
         select: {
           ...WorkoutSessionSelect,
+          workoutResults: {
+            orderBy: {
+              order: "asc",
+            },
+            include: {
+              workout: true,
+            },
+          },
         },
         where: {
           athleteId: ctx.session.user.id,
@@ -75,6 +64,14 @@ export const workoutSessionRouter = createProtectedRouter()
       const workoutSession = prisma.workoutSession.findFirst({
         select: {
           ...WorkoutSessionSelect,
+          workoutResults: {
+            orderBy: {
+              order: "asc",
+            },
+            include: {
+              workout: true,
+            },
+          },
         },
         where: {
           id: id,
