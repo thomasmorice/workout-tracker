@@ -1,26 +1,27 @@
 import { zonedTimeToUtc, utcToZonedTime, format } from "date-fns-tz";
-import { formatDistance, intlFormat } from "date-fns";
-import { WorkoutSession } from "../../server/router/workout-session";
+import { formatDistance, intlFormat, isBefore, isAfter } from "date-fns";
 import { enumToString } from "../../utils/formatting";
 import Link from "next/link";
 import { useWorkoutSessionService } from "../../services/useWorkoutSessionService";
 import { useToastStore } from "../../store/ToastStore";
 import ConfirmModal from "../Layout/Navigation/Modal/ConfirmModal";
 import { useState } from "react";
+import { InferQueryOutput } from "../../types/trpc";
 
-interface ScheduleTimelineProps {
-  session: WorkoutSession;
+interface TimelineSessionProps {
+  session: InferQueryOutput<"workout-session.get-workout-sessions">[number];
   isSessionDone?: boolean;
 }
 
-export default function ScheduleTimeline({
+export default function TimelineSession({
   session,
-  isSessionDone = true,
-}: ScheduleTimelineProps) {
+}: // isSessionDone = true,
+TimelineSessionProps) {
   const { deleteWorkoutSession } = useWorkoutSessionService();
   const { addMessage, closeMessage } = useToastStore();
   const [showConfirmDeleteSessionModal, set_showConfirmDeleteSessionModal] =
     useState(false);
+
   return (
     <>
       {showConfirmDeleteSessionModal && (
@@ -59,22 +60,20 @@ export default function ScheduleTimeline({
                 "LLLL do, u 'at' p"
               )}
             </div>
-            <div className="text-xs flex items-center gap-2">
-              {!isSessionDone && "In"}{" "}
+            <div className="text-xs flex items-center gap-2 text-accent-content">
+              {isBefore(new Date(), session.date) && "In"}{" "}
               {formatDistance(new Date(), new Date(session.date))}{" "}
-              {isSessionDone && "ago"}
+              {isAfter(new Date(), session.date) && "ago"}
             </div>
           </time>
           {session.workoutResults.length > 0 ? (
             <>
               <div className="mt-5 flex gap-3 items-center">
-                {/* {isSessionDone && ( */}
                 <Link href={`/session/edit/${session.id}`}>
                   <a className=" underline cursor-pointer text-xs">
                     Edit session
                   </a>
                 </Link>
-                {/* )} */}
 
                 <a
                   onClick={() => set_showConfirmDeleteSessionModal(true)}

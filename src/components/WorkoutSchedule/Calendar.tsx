@@ -21,13 +21,13 @@ import {
   AiOutlineDoubleRight,
   AiOutlineDoubleLeft,
 } from "react-icons/ai";
-import { WorkoutSession } from "../../server/router/workout-session";
 import { useScheduleStore } from "../../store/ScheduleStore";
+import { InferQueryOutput } from "../../types/trpc";
 
 interface CalendarProps {
-  workoutSessions: WorkoutSession[];
-  handleSelectDate: (date: Date) => void;
-  handleResetSelectDate: () => void;
+  workoutSessions: InferQueryOutput<"workout-session.get-workout-sessions">;
+  handleSelectDate?: (date: Date) => void;
+  handleResetSelectDate?: () => void;
   date?: Date;
   isLoading: boolean;
 }
@@ -43,53 +43,50 @@ const Calendar = ({
 
   useEffect(() => {
     if (selectedDate) {
-      handleSelectDate(selectedDate);
+      handleSelectDate && handleSelectDate(selectedDate);
     } else {
-      handleResetSelectDate();
+      handleResetSelectDate && handleResetSelectDate();
     }
   }, [selectedDate, handleSelectDate, handleResetSelectDate]);
 
   const getHeader = () => {
     return (
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <div
+      <div className="flex items-center justify-between mb-1">
+        <h2 className="h2">{format(currentVisibleDate, "MMMM, yyyy")}</h2>
+        <div className="flex gap-2">
+          {/* <div
             onClick={() => {
               set_currentVisibleDate(subYears(currentVisibleDate, 1));
             }}
-            className="btn btn-sm btn-square btn-ghost"
+            className="btn btn-xs btn-square"
           >
             <AiOutlineDoubleLeft className="" />
-          </div>
+          </div> */}
           <div
             onClick={() => {
               set_currentVisibleDate(subMonths(currentVisibleDate, 1));
             }}
-            className="btn btn-sm btn-square btn-ghost"
+            className="btn btn-xs btn-circle btn-outline"
           >
             <AiOutlineLeft className="" />
           </div>
-        </div>
-        <h2 className="font-semibold text-black dark:text-white">
-          {format(currentVisibleDate, "MMMM yyyy")}
-        </h2>
-        <div>
+
           <div
             onClick={() => {
               set_currentVisibleDate(addMonths(currentVisibleDate, 1));
             }}
-            className="btn btn-sm btn-square btn-ghost"
+            className="btn btn-xs btn-circle btn-outline"
           >
             <AiOutlineRight className="navIcon" />
           </div>
-          <div
+          {/* <div
             onClick={() => {
               set_currentVisibleDate(addYears(currentVisibleDate, 1));
             }}
-            className="btn btn-sm btn-square btn-ghost"
+            className="btn btn-xs btn-square"
           >
             <AiOutlineDoubleRight className="" />
-          </div>
+          </div> */}
         </div>
       </div>
     );
@@ -101,12 +98,12 @@ const Calendar = ({
     for (let day = 0; day < 7; day++) {
       weekDays.push(
         <div key={day} className="p-2">
-          {format(addDays(weekStartDate, day), "EEEEE")}
+          {format(addDays(weekStartDate, day), "eee")}
         </div>
       );
     }
     return (
-      <div className="grid grid-cols-7 text-xs font-medium text-center opacity-50">
+      <div className="grid grid-cols-7 text-2xs font-light text-center opacity-80">
         {weekDays}
       </div>
     );
@@ -120,12 +117,12 @@ const Calendar = ({
       week.push(
         <div
           key={`${format(currentDate, "w")}-${day}`}
-          className={`relative cursor-pointer text-sm h-10 w-10 leading-none flex items-center justify-center hover:bg-gray-100 hover:dark:bg-gray-600 transition-colors 
+          className={`relative cursor-pointer text-sm rounded-full h-11 w-11 flex items-center justify-center hover:bg-gray-100 hover:dark:bg-gray-600 transition-colors text-accent-content 
             ${day === 0 && ""}
             ${
               isSameMonth(clonedDate, activeDate)
-                ? "bg-base-100"
-                : "text-opacity-20 bg-opacity-5 bg-base-content text-base-content"
+                ? ""
+                : "text-opacity-40 bg-opacity-5 text-base-content"
             } 
             ${
               selectedDate && isSameDay(clonedDate, selectedDate)
@@ -144,7 +141,7 @@ const Calendar = ({
           <div
             className={`${
               isSameDay(currentDate, new Date())
-                ? "flex w-5 h-5 bg-black dark:bg-white rounded-full text-white dark:text-black items-center justify-center"
+                ? "flex w-6 h-6 bg-accent-content rounded-full text-primary items-center justify-center"
                 : ""
             }`}
           >
@@ -194,8 +191,8 @@ const Calendar = ({
     }
 
     return (
-      <div className="border shadow-sm  border-base-content border-opacity-10 rounded-xl overflow-hidden">
-        <div className="grid grid-cols-7 gap-[1px] bg-base-300">{allWeeks}</div>
+      <div className="shadow-sm  border-base-content border-opacity-10 rounded-xl overflow-hidden">
+        <div className="grid grid-cols-7 gap-[1px]">{allWeeks}</div>
       </div>
     );
   };
@@ -207,7 +204,7 @@ const Calendar = ({
       {getWeekDaysNames()}
       {getDates()}
       {isLoading && (
-        <div className="absolute bg-base-300 h-full w-full top-0 bg-opacity-70 rounded-xl flex items-center justify-center">
+        <div className="absolute h-full w-full top-0 bg-opacity-70 rounded-xl flex items-center justify-center">
           <Rings className="w-14 h-14" />
         </div>
       )}

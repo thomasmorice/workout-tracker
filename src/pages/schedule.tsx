@@ -10,7 +10,7 @@ import {
   isSameMonth,
   format,
 } from "date-fns";
-import ScheduleTimeline from "../components/WorkoutSchedule/ScheduleTimeline";
+import TimelineSession from "../components/WorkoutSchedule/TimelineSession";
 import Calendar from "../components/WorkoutSchedule/Calendar";
 import { useState } from "react";
 import Link from "next/link";
@@ -65,7 +65,7 @@ export const Schedule: NextPage = () => {
                 ?.filter((session) => isAfter(session.date, now))
                 .map((session) => {
                   return (
-                    <ScheduleTimeline
+                    <TimelineSession
                       isSessionDone={false}
                       key={session.id}
                       session={session}
@@ -95,16 +95,14 @@ export const Schedule: NextPage = () => {
               {workoutSessions
                 ?.filter((session) => isBefore(session.date, now))
                 .map((session) => {
-                  return (
-                    <ScheduleTimeline key={session.id} session={session} />
-                  );
+                  return <TimelineSession key={session.id} session={session} />;
                 })}
             </>
           ) : (
             <>
               {selectedSession !== -1 ? (
                 <div className="flex flex-col gap-5">
-                  <ScheduleTimeline
+                  <TimelineSession
                     isSessionDone={isBefore(selectedSession.date, now)}
                     session={selectedSession}
                   />
