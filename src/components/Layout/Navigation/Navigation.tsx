@@ -28,11 +28,11 @@ export default function Navigation() {
       label: "Workouts",
       href: "/workouts",
     },
-    {
-      icon: MdOutlineSchedule,
-      label: "Schedule",
-      href: "/schedule",
-    },
+    // {
+    //   icon: MdOutlineSchedule,
+    //   label: "Schedule",
+    //   href: "/schedule",
+    // },
     {
       icon: MdOutlineAccountCircle,
       label: "Profile",

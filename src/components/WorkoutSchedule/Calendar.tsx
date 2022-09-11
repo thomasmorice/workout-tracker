@@ -8,19 +8,12 @@ import {
   endOfWeek,
   isSameMonth,
   isSameDay,
-  subYears,
-  addYears,
   subMonths,
   addMonths,
   subDays,
 } from "date-fns";
 import { Rings } from "react-loading-icons";
-import {
-  AiOutlineLeft,
-  AiOutlineRight,
-  AiOutlineDoubleRight,
-  AiOutlineDoubleLeft,
-} from "react-icons/ai";
+import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import { useScheduleStore } from "../../store/ScheduleStore";
 import { InferQueryOutput } from "../../types/trpc";
 
@@ -53,20 +46,12 @@ const Calendar = ({
     return (
       <div className="flex items-center justify-between mb-1">
         <h2 className="h2">{format(currentVisibleDate, "MMMM, yyyy")}</h2>
-        <div className="flex gap-2">
-          {/* <div
-            onClick={() => {
-              set_currentVisibleDate(subYears(currentVisibleDate, 1));
-            }}
-            className="btn btn-xs btn-square"
-          >
-            <AiOutlineDoubleLeft className="" />
-          </div> */}
+        <div className="flex gap-3">
           <div
             onClick={() => {
               set_currentVisibleDate(subMonths(currentVisibleDate, 1));
             }}
-            className="btn btn-xs btn-circle btn-outline"
+            className="btn btn-sm btn-circle btn-outline"
           >
             <AiOutlineLeft className="" />
           </div>
@@ -75,18 +60,10 @@ const Calendar = ({
             onClick={() => {
               set_currentVisibleDate(addMonths(currentVisibleDate, 1));
             }}
-            className="btn btn-xs btn-circle btn-outline"
+            className="btn btn-sm btn-circle btn-outline"
           >
             <AiOutlineRight className="navIcon" />
           </div>
-          {/* <div
-            onClick={() => {
-              set_currentVisibleDate(addYears(currentVisibleDate, 1));
-            }}
-            className="btn btn-xs btn-square"
-          >
-            <AiOutlineDoubleRight className="" />
-          </div> */}
         </div>
       </div>
     );
@@ -117,19 +94,9 @@ const Calendar = ({
       week.push(
         <div
           key={`${format(currentDate, "w")}-${day}`}
-          className={`relative cursor-pointer text-sm rounded-full h-11 w-11 flex items-center justify-center hover:bg-gray-100 hover:dark:bg-gray-600 transition-colors text-accent-content 
+          className={`relative cursor-pointer text-sm rounded-full h-9 my-1 flex items-center justify-center transition-colors 
             ${day === 0 && ""}
-            ${
-              isSameMonth(clonedDate, activeDate)
-                ? ""
-                : "text-opacity-40 bg-opacity-5 text-base-content"
-            } 
-            ${
-              selectedDate && isSameDay(clonedDate, selectedDate)
-                ? // ? "bg-gray-200 hover:bg-gray-200 dark:bg-gray-800 hover:dark:bg-gray-800"
-                  "bg-neutral-focus hover:bg-neutral-focus text-neutral-content"
-                : "no-selected"
-            }
+            ${isSameMonth(clonedDate, activeDate) ? "" : "text-base-content"} 
           `}
           onClick={() =>
             !selectedDate ||
@@ -139,18 +106,19 @@ const Calendar = ({
           }
         >
           <div
-            className={`${
+            className={`flex w-9 h-9 rounded-full text-base-content dark:text-accent-content  items-center justify-center  hover:bg-primary-content hover:dark:text-primary ${
               isSameDay(currentDate, new Date())
-                ? "flex w-6 h-6 bg-accent-content rounded-full text-primary items-center justify-center"
-                : ""
+                ? "bg-primary"
+                : selectedDate &&
+                  isSameDay(currentDate, selectedDate) &&
+                  "flex w-7 h-7 bg-primary-content dark:text-primary"
             }`}
           >
             {format(currentDate, "d")}
-            <div className="absolute bottom-0.5 left-0 w-full gap-1 flex justify-center">
+            <div className="absolute bottom-0.5 left-0 w-full gap-0.5 flex justify-center">
               {workoutSessions
                 .find((session) => isSameDay(session.date, currentDate))
                 ?.workoutResults.map((result) => {
-                  // console.log("result", result);
                   return (
                     <div
                       key={result.id}
@@ -191,7 +159,7 @@ const Calendar = ({
     }
 
     return (
-      <div className="shadow-sm  border-base-content border-opacity-10 rounded-xl overflow-hidden">
+      <div className="rounded-xl overflow-hidden">
         <div className="grid grid-cols-7 gap-[1px]">{allWeeks}</div>
       </div>
     );

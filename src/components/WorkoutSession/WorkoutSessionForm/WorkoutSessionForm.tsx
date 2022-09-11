@@ -23,10 +23,13 @@ import { isBefore } from "date-fns";
 
 interface WorkoutSessionFormProps {
   existingWorkoutSession?: InferQueryOutput<"workout-session.get-workout-session-by-id">;
+  onSuccess?: () => void;
 }
 const WorkoutSessionForm = ({
   existingWorkoutSession,
-}: WorkoutSessionFormProps) => {
+  onSuccess,
+}: // editMode = false,
+WorkoutSessionFormProps) => {
   const router = useRouter();
   const { addMessage, closeMessage } = useToastStore();
   const { createOrEditWorkoutSession } = useWorkoutSessionService();
@@ -100,7 +103,7 @@ const WorkoutSessionForm = ({
         existingWorkoutSession ? "edited" : "created"
       } successfully`,
     });
-    // router.push("/schedule");
+    onSuccess && onSuccess();
   };
 
   useEffect(() => {
@@ -122,9 +125,6 @@ const WorkoutSessionForm = ({
 
   return (
     <>
-      <h1 className="text-3xl font-bold capitalize">{`${
-        existingWorkoutSession ? "Edit" : "Add a"
-      } session`}</h1>
       <form
         className="mt-5 flex flex-col pb-10"
         onSubmit={handleSubmit(handleCreateOrEdit)}
@@ -139,7 +139,8 @@ const WorkoutSessionForm = ({
               name="date"
               render={({ field }) => (
                 <DatePicker
-                  className="input w-full  bg-base-200"
+                  className="input w-full bg-base-200"
+                  // disabled={!editMode}
                   showTimeInput
                   placeholderText="Select date"
                   onChange={(date: Date) => field.onChange(date)}
@@ -151,6 +152,7 @@ const WorkoutSessionForm = ({
             />
           </div>
 
+          {/* {editMode && ( */}
           <div className="form-control relative">
             <label className="label">
               <span className="label-text">Add workouts to this session </span>
@@ -166,16 +168,14 @@ const WorkoutSessionForm = ({
               }
             />
           </div>
-
+          {/* )} */}
           {workoutResults.length > 0 && (
             <div className="form-control relative w-full flex-1 mt-2">
-              {isBefore(new Date(), getValues("date")) && (
-                <label className="label">
-                  <span className="label-text">
-                    Planned workouts {`(${workoutResults.length})`}
-                  </span>
-                </label>
-              )}
+              <label className="label">
+                <span className="label-text">
+                  Session workouts {`(${workoutResults.length})`}
+                </span>
+              </label>
               <div className="text-sm flex flex-col gap-8">
                 <Reorder.Group
                   values={workoutResults}

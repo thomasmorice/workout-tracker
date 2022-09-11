@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "prisma": {
-    "seed": "ts-node prisma/seed.mjs"
+    "seed": "ts-node prisma/seed.js"
   },
   "scripts": {
     "dev": "next dev -p 3001",
@@ -50,7 +50,7 @@
     "eslint": "8.18.0",
     "eslint-config-next": "12.2.3",
     "postcss": "^8.4.16",
-    "prisma": "^4.2.1",
+    "prisma": "^4.3.1",
     "tailwindcss": "^3.1.8",
     "ts-node": "^10.9.1",
     "typescript": "^4.7.4"

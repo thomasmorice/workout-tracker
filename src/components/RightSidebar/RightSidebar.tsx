@@ -1,17 +1,37 @@
 import { useWorkoutSessionService } from "../../services/useWorkoutSessionService";
 import Calendar from "../WorkoutSchedule/Calendar";
-import { formatISO, startOfMonth, endOfMonth } from "date-fns";
+import {
+  formatISO,
+  startOfMonth,
+  endOfMonth,
+  format,
+  isSameDay,
+} from "date-fns";
 import { useScheduleStore } from "../../store/ScheduleStore";
 import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
 import TimelineSession from "../WorkoutSchedule/TimelineSession";
-import { MdArrowDropDown } from "react-icons/md";
+import {
+  MdArrowDropDown,
+  MdNotifications,
+  MdAdd,
+  MdOutlineKeyboardBackspace,
+  MdClose,
+} from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
+import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm/WorkoutSessionForm";
+import { useMemo, useState, useRef } from "react";
+import { useOnClickOutside, useLockedBody } from "usehooks-ts";
 
-export default function RightSidebar() {
+export default function RightSidebar({ onClose }: { onClose: () => void }) {
   const { data: sessionData, status } = useSession();
   const { getWorkoutSessions } = useWorkoutSessionService();
-  const { currentVisibleDate, set_currentVisibleDate } = useScheduleStore();
+  const {
+    currentVisibleDate,
+    selectedSession,
+    createSession,
+    closeSessionForm,
+  } = useScheduleStore();
 
   const { data: workoutSessions, isLoading } = getWorkoutSessions({
     dateFilter: {
@@ -20,73 +40,181 @@ export default function RightSidebar() {
     },
   });
 
-  const container = {
+  const [showSpecificDay, set_showSpecificDay] = useState<Date>();
+
+  const timelineContainerVariant = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
 
       transition: {
-        staggerChildren: 0.5,
+        staggerChildren: 0.1,
       },
     },
   };
 
-  const item = {
-    hidden: { opacity: 0, x: -40 },
+  const timelineItemVariant = {
+    hidden: { opacity: 0, x: 80 },
     show: { opacity: 1, x: 0 },
   };
 
+  const containerVariant = {
+    hidden: { x: "100%" },
+    show: { x: 0 },
+  };
+
+  const workoutSessionsFiltered = useMemo(() => {
+    if (workoutSessions?.length ?? 0 > 0) {
+      let tempSessions = workoutSessions;
+      if (showSpecificDay && tempSessions) {
+        tempSessions = [
+          ...tempSessions.filter((session) =>
+            isSameDay(session.date, showSpecificDay)
+          ),
+        ];
+      }
+      return tempSessions;
+    }
+    return null;
+  }, [workoutSessions, showSpecificDay]);
+
+  const containerRef = useRef(null);
+  useOnClickOutside(containerRef, onClose);
+
+  useLockedBody(true);
+
   return (
     <>
-      <div className="fixed h-full w-full top-0 left-0 z-10 backdrop-blur-[3px]  bg-base-300 bg-opacity-50"></div>
-      <aside className="fixed overflow-y-scroll z-20 h-full w-80 bg-base-100 px-5 py-8 shadow-2xl shadow-base-300 right-0">
-        <div className="max-w-xs flex flex-col gap-7">
+      <div className="fixed h-full w-full top-0 left-0 z-20 backdrop-blur-[3px]  bg-base-300 bg-opacity-50"></div>
+      <motion.aside
+        ref={containerRef}
+        initial="hidden"
+        animate="show"
+        variants={containerVariant}
+        className="fixed  overflow-y-scroll z-20  h-[calc(100%_-_3rem)] md:h-full w-full sm:w-96 bg-base-100 px-4 py-8 shadow-2xl shadow-base-300 right-0"
+      >
+        <div className="max-w-xs flex flex-col gap-7 mx-auto">
           {sessionData && (
-            <div className="flex gap-1 items-center">
-              <div className="w-12 h-12 relative rounded-full ring ring-base-200 mr-2">
-                <Image
-                  className="rounded-full"
-                  layout="fill"
-                  referrerPolicy="no-referrer"
-                  src={sessionData.user?.image ?? "https://i.pravatar.cc/300"}
-                  alt=""
-                />
+            <div className="flex justify-between items-center">
+              <div className="flex gap-1 items-center">
+                <div className="w-12 h-12 relative rounded-full ring ring-base-200 mr-2">
+                  <Image
+                    className="rounded-full"
+                    layout="fill"
+                    referrerPolicy="no-referrer"
+                    src={sessionData.user?.image ?? "https://i.pravatar.cc/300"}
+                    alt=""
+                  />
+                </div>
+                <h4 className="text-lg font-semibold text-accent-content">
+                  {sessionData.user?.name}
+                </h4>
+                <MdArrowDropDown size={22} />
               </div>
-              <h4 className="text-lg font-semibold text-accent-content">
-                {sessionData.user?.name}
-              </h4>
-              <MdArrowDropDown size={22} />
+              <div>
+                <button type="button" className="btn btn-ghost btn-circle">
+                  <MdNotifications size="24" />
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-circle sm:hidden"
+                  onClick={onClose}
+                >
+                  <MdClose size="24" />
+                </button>
+              </div>
             </div>
           )}
-          <div className="">
-            <Calendar
-              // handleSelectDate={}
-              workoutSessions={workoutSessions ?? []}
-              isLoading={isLoading}
-            />
-          </div>
-          <div className="divider m-0"></div>
-          <div>
-            <h2 className="h2 mb-6">Activity</h2>
 
-            <motion.ol variants={container} initial="hidden" animate="show">
-              <AnimatePresence>
-                {workoutSessions?.map((session) => {
-                  return (
-                    <motion.li variants={item} key={session.id}>
-                      <TimelineSession
-                        // isSessionDone={false}
+          <AnimatePresence>
+            {!selectedSession ? (
+              <>
+                <Calendar
+                  handleSelectDate={(date) => set_showSpecificDay(date)}
+                  handleResetSelectDate={() => set_showSpecificDay(undefined)}
+                  workoutSessions={workoutSessions ?? []}
+                  isLoading={isLoading}
+                />
 
-                        session={session}
-                      />
-                    </motion.li>
-                  );
-                })}
-              </AnimatePresence>
-            </motion.ol>
-          </div>
+                <div className="divider m-0"></div>
+                <div>
+                  <div className="flex gap-3 items-center mb-7">
+                    <h2 className="h2">Activity</h2>
+                    <div className="dropdown ">
+                      <label
+                        tabIndex={0}
+                        className="btn btn-sm btn-outline btn-circle"
+                      >
+                        <MdAdd size={22} />
+                      </label>
+                      <ul
+                        tabIndex={0}
+                        className="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 text-sm"
+                      >
+                        <li>
+                          <a onClick={createSession}>Add new session</a>
+                        </li>
+                        <li>
+                          <a>Other</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <AnimatePresence>
+                    {workoutSessionsFiltered && (
+                      <motion.ol
+                        className="relative border-l border-accent-content border-opacity-20"
+                        variants={timelineContainerVariant}
+                        initial="hidden"
+                        animate="show"
+                      >
+                        {workoutSessionsFiltered?.map((session) => {
+                          if (
+                            (showSpecificDay &&
+                              isSameDay(session.date, showSpecificDay)) ||
+                            !showSpecificDay
+                          ) {
+                            return (
+                              <AnimatePresence key={session.id}>
+                                <motion.li variants={timelineItemVariant}>
+                                  <TimelineSession session={session} />
+                                </motion.li>
+                              </AnimatePresence>
+                            );
+                          }
+                        })}
+                      </motion.ol>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </>
+            ) : (
+              <motion.div
+                variants={timelineItemVariant}
+                initial="hidden"
+                animate="show"
+              >
+                <h2
+                  onClick={closeSessionForm}
+                  className="h2 flex gap-3 items-center group cursor-pointer"
+                >
+                  <MdOutlineKeyboardBackspace
+                    className="group-hover:-translate-x-1 transition-transform"
+                    size={16}
+                  />
+                  Session Details
+                </h2>
+                <WorkoutSessionForm
+                  onSuccess={closeSessionForm}
+                  existingWorkoutSession={
+                    selectedSession !== -1 ? selectedSession : undefined
+                  }
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-      </aside>
+      </motion.aside>
     </>
   );
 }

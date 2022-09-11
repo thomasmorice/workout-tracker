@@ -12,6 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 import { WorkoutResultWithWorkout } from "../../../types/app";
 import { format } from "date-fns";
 import { moods } from "../../MoodSelector/MoodSelector";
+import { workoutResultIsFilled } from "../../../utils/utils";
 
 interface WorkoutSessionResultItemProps {
   result: WorkoutResultWithWorkout;
@@ -96,7 +97,7 @@ export default function WorkoutSessionResultItem({
                 disabled={!onMoveResultDown}
                 onClick={onMoveResultDown}
                 type="button"
-                className="btn btn-sm"
+                className="btn btn-xs"
               >
                 <MdOutlineArrowDropDown size="24px" />
               </button>
@@ -104,7 +105,7 @@ export default function WorkoutSessionResultItem({
                 disabled={!onMoveResultUp}
                 onClick={onMoveResultUp}
                 type="button"
-                className="btn btn-sm"
+                className="btn btn-xs"
               >
                 <MdOutlineArrowDropUp size="24px" />
               </button>
@@ -112,16 +113,16 @@ export default function WorkoutSessionResultItem({
           </div>
 
           <div className="flex flex-col gap-3">
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 ">
               <a
-                className="inline-flex items-center text-lg gap-2 hover:underline"
+                className="flex font-bold gap-2 hover:underline max-w-[calc(100%_-_5rem)]"
                 target="blank"
                 href={`/workout/${result.workoutId}`}
               >
                 {result.workout.name && result.workout.name !== ""
                   ? result.workout.name
                   : `#${result.workout.id}`}
-                <MdLink size={19} />
+                {/* <MdLink size={19} /> */}
               </a>
               <div className="text-sm opacity-80 flex items-center gap-x-0.5">
                 {result.workout.totalTime && (
@@ -160,7 +161,7 @@ export default function WorkoutSessionResultItem({
               <div className="whitespace-pre-wrap text-xs opacity-80">
                 {result.description}
               </div>
-              {(result.time || result.totalReps || result.weight) && (
+              {workoutResultIsFilled(result) && (
                 <div className="badge badge-primary">
                   {result.time && format(result.time * 1000, "mm:ss' minutes'")}
                   {result.totalReps && `${result.totalReps} reps`}
