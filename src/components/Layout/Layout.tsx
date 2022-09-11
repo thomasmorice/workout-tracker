@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { MdLogin, MdMenuOpen } from "react-icons/md";
 import { useEffect, useState } from "react";
 import RightSidebar from "../RightSidebar/RightSidebar";
+import { AnimatePresence } from "framer-motion";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -19,6 +20,7 @@ export default function Layout({ children }: LayoutProps) {
   const { data: sessionData, status } = useSession();
   const { state: workoutFormState } = useWorkoutFormStore();
   const [currentPath, set_currentPath] = useState<String[]>();
+  const [isRightSidebarOpened, set_isRightSidebarOpened] = useState(false);
 
   useEffect(() => {
     const asPathWithoutQuery = router.pathname.split("?")[0];
@@ -29,10 +31,14 @@ export default function Layout({ children }: LayoutProps) {
     <div>
       <ToastMessage />
       <Navigation />
-      {/* <RightSidebar /> */}
+      <AnimatePresence>
+        {isRightSidebarOpened && (
+          <RightSidebar onClose={() => set_isRightSidebarOpened(false)} />
+        )}
+      </AnimatePresence>
       {workoutFormState && <WorkoutForm />}
 
-      <main className={`px-5 sm:px-8 md:ml-80 md:mr-80`}>
+      <main className={`px-5 sm:px-8 md:ml-80`}>
         <div className="flex w-full justify-between py-5 items-center">
           <div className="hidden md:block text-sm breadcrumbs">
             <ul>
@@ -59,24 +65,13 @@ export default function Layout({ children }: LayoutProps) {
             <>
               {sessionData ? (
                 <div className="flex items-center gap-2">
-                  {/* <button
+                  <button
+                    onClick={() => set_isRightSidebarOpened(true)}
                     type="button"
-                    onClick={() => signOut()}
-                    className="avatar btn btn-circle"
+                    className="btn btn-ghost flex gap-2"
                   >
-                    <div className="w-11 relative rounded-full ring ring-base-200">
-                      <Image
-                        layout="fill"
-                        referrerPolicy="no-referrer"
-                        src={
-                          sessionData.user?.image ?? "https://i.pravatar.cc/300"
-                        }
-                        alt=""
-                      />
-                    </div>
-                  </button> */}
-                  <button type="button" className="btn btn-ghost">
                     <MdMenuOpen size={24} />
+                    <div className="hidden md:flex">Schedule</div>
                   </button>
                 </div>
               ) : (

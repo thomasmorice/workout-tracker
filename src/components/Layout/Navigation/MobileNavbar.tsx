@@ -19,7 +19,7 @@ export default function MobileNavbar({ items }: NavigationItemsProps) {
   return (
     <div
       style={{ boxShadow: "0px -1px 5px 0px rgba(0,0,0,0.3)" }}
-      className="fixed bottom-0 z-50 flex w-full items-center rounded-t-xl bg-base-100 shadow-black drop-shadow-xl"
+      className="fixed bottom-0 z-40 flex w-full items-center rounded-t-xl bg-base-100 shadow-black drop-shadow-xl"
     >
       <>
         {items.map((item) => {
