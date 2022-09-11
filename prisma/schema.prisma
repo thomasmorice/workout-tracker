@@ -45,23 +45,23 @@ model WorkoutSession {
     createdAt      DateTime        @default(now())
     updatedAt      DateTime        @updatedAt
     workoutResults WorkoutResult[]
-    event          Event?
+    // event          Event?          @relation(fields: [eventId], references: [id])
+    // eventId        Int?            @unique
     athlete        User            @relation(fields: [athleteId], references: [id])
     athleteId      String          @default("cl6jsjxy00006uyo8h2v8fr2e")
+    Event          Event?
 }
 
-// model Event {
-//     id               Int             @id @default(autoincrement())
-//     workoutSession   WorkoutSession? @relation(fields: [workoutSessionId], references: [id])
-//     workoutSessionId Int?            @unique
-//     profile          Profile?        @relation(fields: [profileId], references: [id])
-//     profileId        Int?            @unique
-//     personalRecord   PersonalRecord? @relation(fields: [personalRecordId], references: [id])
-//     personalRecordId Int?            @unique
-//     eventDate        DateTime           
-//     createdAt        DateTime        @default(now())
-//     updatedAt        DateTime        @updatedAt
-// }
+model Event {
+    id               Int             @id @default(autoincrement())
+    workoutSession   WorkoutSession? @relation(fields: [workoutSessionId], references: [id])
+    workoutSessionId Int?            @unique
+    profile          Profile?        @relation(fields: [profileId], references: [id])
+    profileId        Int?            @unique
+    eventDate        DateTime
+    createdAt        DateTime        @default(now())
+    updatedAt        DateTime        @updatedAt
+}
 
 model WorkoutResult {
     id                          Int            @id @default(autoincrement())
@@ -83,13 +83,6 @@ model WorkoutResult {
 
 model Profile {
     id    Int    @id @default(autoincrement())
-    event Event?
-}
-
-model PersonalRecord {
-    id    Int    @id @default(autoincrement())
-    type  String
-    value Int
     event Event?
 }
 
