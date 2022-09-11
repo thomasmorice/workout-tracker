@@ -50,41 +50,40 @@ model WorkoutSession {
     athleteId      String          @default("cl6jsjxy00006uyo8h2v8fr2e")
 }
 
-model Event {
-    id               Int             @id @default(autoincrement())
-    workoutSession   WorkoutSession? @relation(fields: [workoutSessionId], references: [id])
-    workoutSessionId Int?            @unique
-    profile          Profile?        @relation(fields: [profileId], references: [id])
-    profileId        Int?            @unique
-    personalRecord   PersonalRecord? @relation(fields: [personalRecordId], references: [id])
-    personalRecordId Int?            @unique
-    createdAt        DateTime        @default(now())
-    updatedAt        DateTime        @updatedAt
-}
+// model Event {
+//     id               Int             @id @default(autoincrement())
+//     workoutSession   WorkoutSession? @relation(fields: [workoutSessionId], references: [id])
+//     workoutSessionId Int?            @unique
+//     profile          Profile?        @relation(fields: [profileId], references: [id])
+//     profileId        Int?            @unique
+//     personalRecord   PersonalRecord? @relation(fields: [personalRecordId], references: [id])
+//     personalRecordId Int?            @unique
+//     eventDate        DateTime           
+//     createdAt        DateTime        @default(now())
+//     updatedAt        DateTime        @updatedAt
+// }
 
 model WorkoutResult {
-    id               Int            @id @default(autoincrement())
-    workoutSessionId Int
-    workoutSession   WorkoutSession @relation(fields: [workoutSessionId], references: [id])
-    order            Int
-    workoutId        Int
-    workout          Workout        @relation(fields: [workoutId], references: [id])
-    isRx             Boolean?
-    totalReps        Int?
-    time             Int? // represented in seconds 
-    weight           Float? // represented in Kg
-    rating           Int? // between 1-5 but might change
-
+    id                          Int            @id @default(autoincrement())
+    workoutSessionId            Int
+    workoutSession              WorkoutSession @relation(fields: [workoutSessionId], references: [id])
+    order                       Int
+    workoutId                   Int
+    workout                     Workout        @relation(fields: [workoutId], references: [id])
+    isRx                        Boolean?
+    totalReps                   Int?
+    time                        Int? // represented in seconds 
+    weight                      Float? // represented in Kg
+    rating                      Int? // between 1-5 but might change
     description                 String?
-    shouldRecommendWorkoutAgain Boolean  @default(false)
-    createdAt                   DateTime @default(now())
-    updatedAt                   DateTime @updatedAt
+    shouldRecommendWorkoutAgain Boolean        @default(false)
+    createdAt                   DateTime       @default(now())
+    updatedAt                   DateTime       @updatedAt
 }
 
 model Profile {
-    id     Int    @id @default(autoincrement())
-    weight Int
-    event  Event?
+    id    Int    @id @default(autoincrement())
+    event Event?
 }
 
 model PersonalRecord {

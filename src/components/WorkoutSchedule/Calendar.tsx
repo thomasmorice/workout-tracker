@@ -167,12 +167,12 @@ const Calendar = ({
 
   if (!currentVisibleDate) return null;
   return (
-    <section className="relative">
+    <section className={`relative`}>
       {getHeader()}
       {getWeekDaysNames()}
       {getDates()}
       {isLoading && (
-        <div className="absolute h-full w-full top-0 bg-opacity-70 rounded-xl flex items-center justify-center">
+        <div className="absolute h-[calc(100%_+_2rem)] w-[calc(100%_+_2rem)] -top-4 -left-4 bg-opacity-70 bg-base-200 rounded-xl flex items-center justify-center">
           <Rings className="w-14 h-14" />
         </div>
       )}
