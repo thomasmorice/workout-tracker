@@ -1,12 +1,6 @@
 import { useWorkoutSessionService } from "../../services/useWorkoutSessionService";
 import Calendar from "../WorkoutSchedule/Calendar";
-import {
-  formatISO,
-  startOfMonth,
-  endOfMonth,
-  format,
-  isSameDay,
-} from "date-fns";
+import { formatISO, startOfMonth, endOfMonth, isSameDay } from "date-fns";
 import { useScheduleStore } from "../../store/ScheduleStore";
 import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -161,14 +155,14 @@ export default function RightSidebar({ onClose }: { onClose: () => void }) {
                     </div>
                   </div>
                   <AnimatePresence>
-                    {workoutSessionsFiltered && (
+                    {!isLoading && workoutSessionsFiltered && (
                       <motion.ol
                         className="relative border-l border-accent-content border-opacity-20"
                         variants={timelineContainerVariant}
                         initial="hidden"
                         animate="show"
                       >
-                        {workoutSessionsFiltered?.map((session) => {
+                        {workoutSessionsFiltered.map((session) => {
                           if (
                             (showSpecificDay &&
                               isSameDay(session.date, showSpecificDay)) ||
