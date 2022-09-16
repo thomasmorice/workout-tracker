@@ -14,11 +14,11 @@ import {
 } from "date-fns";
 import { Rings } from "react-loading-icons";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
-import { useScheduleStore } from "../../store/ScheduleStore";
+import { useSidebarStore } from "../../store/SidebarStore";
 import { InferQueryOutput } from "../../types/trpc";
 
 interface CalendarProps {
-  workoutSessions: InferQueryOutput<"workout-session.get-workout-sessions">;
+  workoutSessionEvents: InferQueryOutput<"event.get-events">;
   handleSelectDate?: (date: Date) => void;
   handleResetSelectDate?: () => void;
   date?: Date;
@@ -26,13 +26,13 @@ interface CalendarProps {
 }
 
 const Calendar = ({
-  workoutSessions,
+  workoutSessionEvents,
   handleSelectDate,
   handleResetSelectDate,
   isLoading,
 }: CalendarProps) => {
   const [selectedDate, set_selectedDate] = useState<Date | undefined>();
-  const { currentVisibleDate, set_currentVisibleDate } = useScheduleStore();
+  const { currentVisibleDate, set_currentVisibleDate } = useSidebarStore();
 
   useEffect(() => {
     if (selectedDate) {
@@ -116,9 +116,9 @@ const Calendar = ({
           >
             {format(currentDate, "d")}
             <div className="absolute bottom-0.5 left-0 w-full gap-0.5 flex justify-center">
-              {workoutSessions
-                .find((session) => isSameDay(session.date, currentDate))
-                ?.workoutResults.map((result) => {
+              {workoutSessionEvents
+                .find((session) => isSameDay(session.eventDate, currentDate))
+                ?.workoutSession?.workoutResults.map((result) => {
                   return (
                     <div
                       key={result.id}

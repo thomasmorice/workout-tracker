@@ -2,11 +2,15 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
-import { MdLogin } from "react-icons/md";
+import { MdLogin, MdOutlineSchedule } from "react-icons/md";
 import { Rings } from "react-loading-icons";
+import { useSidebarStore } from "../../../store/SidebarStore";
 import { NavigationItemsProps } from "./Navigation";
 
-export default function MobileNavbar({ items }: NavigationItemsProps) {
+export default function MobileNavbar({
+  items,
+  onOpenSidebar,
+}: NavigationItemsProps) {
   const { data: sessionData, status } = useSession();
   const router = useRouter();
 
@@ -41,6 +45,15 @@ export default function MobileNavbar({ items }: NavigationItemsProps) {
             </Link>
           );
         })}
+        <a
+          onClick={onOpenSidebar}
+          className={`
+                flex w-1/4 flex-col items-center gap-1 border-r border-base-200 px-4 py-2 text-xs transition-all duration-300
+              `}
+        >
+          <MdOutlineSchedule size="22px" />
+          Activities
+        </a>
       </>
     </div>
   );

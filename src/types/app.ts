@@ -34,3 +34,17 @@ export const CreateWorkoutResultInputSchema = z.object({
     id: z.number(), // Yep, id is mandatory in workout result, you can't add a result to a non existing workout..
   }),
 });
+
+export const CreateWorkoutSessionInputSchema = z.object({
+  id: z.number().optional(), // if not set: create else : edit
+  date: z.date(),
+  eventId: z.number().optional(),
+  workoutResults: z.array(CreateWorkoutResultInputSchema),
+});
+
+export const CreateWeighingInputSchema = z.object({
+  id: z.number().optional(), // if not set: create else : edit
+  eventId: z.number().optional(),
+  date: z.date(),
+  weight: z.number(),
+});

@@ -1,10 +1,8 @@
-import { useWorkoutSessionService } from "../../services/useWorkoutSessionService";
-import Calendar from "../WorkoutSchedule/Calendar";
+import Calendar from "../Activity/Calendar";
 import { formatISO, startOfMonth, endOfMonth, isSameDay } from "date-fns";
-import { useScheduleStore } from "../../store/ScheduleStore";
+import { useSidebarStore } from "../../store/SidebarStore";
 import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
-import TimelineSession from "../WorkoutSchedule/TimelineSession";
 import {
   MdArrowDropDown,
   MdNotifications,
@@ -16,18 +14,22 @@ import { AnimatePresence, motion } from "framer-motion";
 import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm/WorkoutSessionForm";
 import { useMemo, useState, useRef } from "react";
 import { useOnClickOutside, useLockedBody } from "usehooks-ts";
+import TimelineItem from "../Activity/TimelineItem";
+import { useEventService } from "../../services/useEventService";
 
 export default function RightSidebar({ onClose }: { onClose: () => void }) {
   const { data: sessionData, status } = useSession();
-  const { getWorkoutSessions } = useWorkoutSessionService();
+  const { getEvents } = useEventService();
+
   const {
     currentVisibleDate,
     selectedSession,
     createSession,
     closeSessionForm,
-  } = useScheduleStore();
+    isSidebarLocked,
+  } = useSidebarStore();
 
-  const { data: workoutSessions, isLoading } = getWorkoutSessions({
+  const { data: events, isLoading } = getEvents({
     dateFilter: {
       gte: formatISO(startOfMonth(currentVisibleDate)),
       lte: formatISO(endOfMonth(currentVisibleDate)),
@@ -57,23 +59,21 @@ export default function RightSidebar({ onClose }: { onClose: () => void }) {
     show: { x: 0 },
   };
 
-  const workoutSessionsFiltered = useMemo(() => {
-    if (workoutSessions?.length ?? 0 > 0) {
-      let tempSessions = workoutSessions;
-      if (showSpecificDay && tempSessions) {
-        tempSessions = [
-          ...tempSessions.filter((session) =>
-            isSameDay(session.date, showSpecificDay)
-          ),
-        ];
+  const getFilteredEvents = useMemo(() => {
+    if (events) {
+      if (showSpecificDay) {
+        return events.filter((event) =>
+          isSameDay(event.eventDate, showSpecificDay)
+        );
       }
-      return tempSessions;
+      return events;
     }
-    return null;
-  }, [workoutSessions, showSpecificDay]);
+  }, [events, showSpecificDay]);
 
   const containerRef = useRef(null);
-  useOnClickOutside(containerRef, onClose);
+  useOnClickOutside(containerRef, (e) => {
+    !isSidebarLocked && onClose();
+  });
 
   useLockedBody(true);
 
@@ -85,7 +85,8 @@ export default function RightSidebar({ onClose }: { onClose: () => void }) {
         initial="hidden"
         animate="show"
         variants={containerVariant}
-        className="fixed  overflow-y-scroll z-20  h-[calc(100%_-_3rem)] md:h-full w-full sm:w-96 bg-base-100 px-4 py-8 shadow-2xl shadow-base-300 right-0"
+        className={`fixed bottom-0 z-30 h-full md:h-full w-full sm:w-96 bg-base-100 px-4 py-8 shadow-2xl shadow-base-300 right-0
+         ${isSidebarLocked ? "" : "overflow-y-scroll"} `}
       >
         <div className="max-w-xs flex flex-col gap-7 mx-auto">
           {sessionData && (
@@ -126,7 +127,9 @@ export default function RightSidebar({ onClose }: { onClose: () => void }) {
                 <Calendar
                   handleSelectDate={(date) => set_showSpecificDay(date)}
                   handleResetSelectDate={() => set_showSpecificDay(undefined)}
-                  workoutSessions={workoutSessions ?? []}
+                  workoutSessionEvents={
+                    events?.filter((event) => event.workoutSession) ?? []
+                  }
                   isLoading={isLoading}
                 />
 
@@ -149,33 +152,27 @@ export default function RightSidebar({ onClose }: { onClose: () => void }) {
                           <a onClick={createSession}>Add new session</a>
                         </li>
                         <li>
-                          <a>Other</a>
+                          <a>Add weighing</a>
                         </li>
                       </ul>
                     </div>
                   </div>
                   <AnimatePresence>
-                    {!isLoading && workoutSessionsFiltered && (
+                    {!isLoading && getFilteredEvents && (
                       <motion.ol
                         className="relative border-l border-accent-content border-opacity-20"
                         variants={timelineContainerVariant}
                         initial="hidden"
                         animate="show"
                       >
-                        {workoutSessionsFiltered.map((session) => {
-                          if (
-                            (showSpecificDay &&
-                              isSameDay(session.date, showSpecificDay)) ||
-                            !showSpecificDay
-                          ) {
-                            return (
-                              <AnimatePresence key={session.id}>
-                                <motion.li variants={timelineItemVariant}>
-                                  <TimelineSession session={session} />
-                                </motion.li>
-                              </AnimatePresence>
-                            );
-                          }
+                        {getFilteredEvents.map((event) => {
+                          return (
+                            <AnimatePresence key={event.id}>
+                              <motion.li variants={timelineItemVariant}>
+                                <TimelineItem event={event} />
+                              </motion.li>
+                            </AnimatePresence>
+                          );
                         })}
                       </motion.ol>
                     )}

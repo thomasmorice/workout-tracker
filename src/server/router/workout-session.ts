@@ -1,19 +1,13 @@
 import { z } from "zod";
 import { createProtectedRouter } from "./protected-router";
 import { prisma } from "../db/client";
-import { CreateWorkoutResultInputSchema } from "../../types/app";
+import { CreateWorkoutSessionInputSchema } from "../../types/app";
 
 const WorkoutSessionSelect = {
   id: true,
-  date: true,
-  createdAt: true,
+  eventId: true,
+  event: true,
 };
-
-export const CreateWorkoutSessionInputSchema = z.object({
-  id: z.number().optional(), // if not set: create else : edit
-  date: z.date(),
-  workoutResults: z.array(CreateWorkoutResultInputSchema),
-});
 
 export const workoutSessionRouter = createProtectedRouter()
   .query("get-workout-sessions", {
@@ -27,7 +21,7 @@ export const workoutSessionRouter = createProtectedRouter()
     }),
     async resolve({ ctx, input }) {
       const { dateFilter } = input;
-      const workoutSessions = await prisma.workoutSession.findMany({
+      return await prisma.workoutSession.findMany({
         select: {
           ...WorkoutSessionSelect,
           workoutResults: {
@@ -42,17 +36,20 @@ export const workoutSessionRouter = createProtectedRouter()
         where: {
           athleteId: ctx.session.user.id,
           ...(dateFilter && {
-            date: {
-              lte: dateFilter.lte,
-              gte: dateFilter.gte,
+            event: {
+              eventDate: {
+                lte: dateFilter.lte,
+                gte: dateFilter.gte,
+              },
             },
           }),
         },
         orderBy: {
-          date: "desc",
+          event: {
+            eventDate: "desc",
+          },
         },
       });
-      return workoutSessions;
     },
   })
   .query("get-workout-session-by-id", {
@@ -83,14 +80,25 @@ export const workoutSessionRouter = createProtectedRouter()
   .mutation("addOrEdit", {
     input: CreateWorkoutSessionInputSchema,
     async resolve({ ctx, input }) {
-      console.log("INPUT", input);
+      let newOrUpdatedEvent = await prisma.event.upsert({
+        create: {
+          eventDate: input.date,
+        },
+        update: {
+          eventDate: input.date,
+        },
+        where: {
+          id: input.eventId ?? -1,
+        },
+      });
+
       let workoutSession = await prisma.workoutSession.upsert({
         create: {
-          date: input.date,
+          eventId: newOrUpdatedEvent.id,
           athleteId: ctx.session.user.id,
         },
         update: {
-          date: input.date,
+          eventId: input.eventId,
         },
         where: {
           id: input.id ?? -1,

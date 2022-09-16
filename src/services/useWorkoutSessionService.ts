@@ -44,7 +44,7 @@ export const useWorkoutSessionService = () => {
     "workout-session.addOrEdit",
     {
       async onSuccess() {
-        await utils.invalidateQueries(["workout-session.get-workout-sessions"]);
+        await utils.invalidateQueries(["event.get-events"]);
       },
       onError(e: unknown) {
         console.log("error", e);
@@ -55,7 +55,7 @@ export const useWorkoutSessionService = () => {
 
   const deleteWorkoutSession = trpc.useMutation("workout-session.delete", {
     async onSuccess() {
-      await utils.invalidateQueries(["workout-session.get-workout-sessions"]);
+      await utils.invalidateQueries(["event.get-events"]);
     },
     onError(e: unknown) {
       console.log("error", e);

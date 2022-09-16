@@ -9,7 +9,7 @@ export const useWorkoutResultService = () => {
     "workout-result.addOrEditMany",
     {
       async onSuccess() {
-        await utils.invalidateQueries(["workout-session.get-workout-sessions"]);
+        await utils.invalidateQueries(["event.get-events"]);
       },
       onError(e: unknown) {
         console.log("error", e);
