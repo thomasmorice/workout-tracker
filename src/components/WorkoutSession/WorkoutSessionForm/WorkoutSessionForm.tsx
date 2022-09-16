@@ -7,7 +7,6 @@ import {
 } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { CreateWorkoutSessionInputSchema } from "../../../server/router/workout-session";
 import WorkoutSelectField from "../../Workout/WorkoutSelectField";
 import { useWorkoutSessionService } from "../../../services/useWorkoutSessionService";
 import { useToastStore } from "../../../store/ToastStore";
@@ -18,11 +17,18 @@ import { useRouter } from "next/router";
 import { Reorder } from "framer-motion";
 import WorkoutSessionResultItem from "./WorkoutSessionResultItem";
 import { InferMutationInput, InferQueryOutput } from "../../../types/trpc";
-import { WorkoutResultWithWorkout } from "../../../types/app";
+import {
+  CreateWorkoutSessionInputSchema,
+  WorkoutResultWithWorkout,
+} from "../../../types/app";
 import { isBefore } from "date-fns";
+import { useSidebarStore } from "../../../store/SidebarStore";
+import Portal from "../../Portal/Portal";
 
 interface WorkoutSessionFormProps {
-  existingWorkoutSession?: InferQueryOutput<"workout-session.get-workout-session-by-id">;
+  existingWorkoutSession?:
+    | InferQueryOutput<"event.get-events">[number]["workoutSession"]
+    | InferQueryOutput<"workout-session.get-workout-session-by-id">;
   onSuccess?: () => void;
 }
 const WorkoutSessionForm = ({
@@ -35,16 +41,28 @@ WorkoutSessionFormProps) => {
   const { createOrEditWorkoutSession } = useWorkoutSessionService();
   const { createOrEditMultipleWorkoutResult, deleteMultipleWorkoutResult } =
     useWorkoutResultService();
+
+  const { set_isSidebarLocked } = useSidebarStore();
+
   const defaultValues = useMemo(() => {
     return {
       id: existingWorkoutSession?.id ?? undefined,
-      date: existingWorkoutSession?.date ?? new Date(),
+      date: existingWorkoutSession?.event.eventDate ?? new Date(),
       workoutResults: existingWorkoutSession?.workoutResults ?? undefined,
+      eventId: existingWorkoutSession?.eventId ?? undefined,
     };
   }, []);
 
   const [editWorkoutResultIndex, set_editWorkoutResultIndex] =
     useState<number>(-1);
+
+  useEffect(() => {
+    if (editWorkoutResultIndex === -1) {
+      set_isSidebarLocked(false);
+    } else {
+      set_isSidebarLocked(true);
+    }
+  }, [editWorkoutResultIndex]);
 
   const {
     handleSubmit,
@@ -217,16 +235,20 @@ WorkoutSessionFormProps) => {
         )}
 
         {editWorkoutResultIndex !== -1 && (
-          <WorkoutResultForm
-            onSave={(workoutResult) => {
-              updateWorkoutResults(editWorkoutResultIndex, workoutResult);
-              set_editWorkoutResultIndex(-1);
-            }}
-            onClose={() => set_editWorkoutResultIndex(-1)}
-            workoutResult={
-              workoutResults[editWorkoutResultIndex] as WorkoutResultWithWorkout
-            }
-          />
+          <Portal>
+            <WorkoutResultForm
+              onSave={(workoutResult) => {
+                updateWorkoutResults(editWorkoutResultIndex, workoutResult);
+                set_editWorkoutResultIndex(-1);
+              }}
+              onClose={() => set_editWorkoutResultIndex(-1)}
+              workoutResult={
+                workoutResults[
+                  editWorkoutResultIndex
+                ] as WorkoutResultWithWorkout
+              }
+            />
+          </Portal>
         )}
       </form>
     </>

@@ -67,7 +67,7 @@ const Workout: NextPage = () => {
             {workout.workoutResults?.map((result) => (
               <div key={result.id}>
                 <div className="text-lg mt-2">
-                  {format(result.workoutSession.date, "MMMM yyyy")}
+                  {format(result.workoutSession.event.eventDate, "MMMM yyyy")}
                   <p className="text-xs mt-2">{result.description}</p>
 
                   <p className="">{result.totalReps} reps</p>

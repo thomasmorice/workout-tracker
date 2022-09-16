@@ -9,8 +9,9 @@ import { zonedTimeToUtc } from "date-fns-tz";
 import { WorkoutResultWithWorkout } from "../types/app";
 import { InferQueryOutput } from "../types/trpc";
 
-type SessionType =
-  InferQueryOutput<"workout-session.get-workout-sessions">[number];
+type SessionType = NonNullable<
+  InferQueryOutput<"event.get-events">[number]["workoutSession"]
+>;
 
 export const getSessionTotalTime = (session: SessionType) => {
   return session.workoutResults.reduce(
@@ -19,20 +20,20 @@ export const getSessionTotalTime = (session: SessionType) => {
   );
 };
 
-export const sessionHasBenchmarkeableWorkout = (session: SessionType) => {
-  session.workoutResults.some(
-    (result) => result.time || result.totalReps || result.weight
-  );
+export const resultHasBenchmarkeableWorkout = (
+  result: WorkoutResultWithWorkout | SessionType["workoutResults"][number]
+) => {
+  return result.time || result.totalReps || result.weight;
 };
 
 export const workoutResultIsFilled = (
   result: WorkoutResultWithWorkout | SessionType["workoutResults"][number]
 ) => {
-  return result.time || result.totalReps || result.weight || result.description;
+  return resultHasBenchmarkeableWorkout(result) || result.description;
 };
 
 export const sessionHasResults = (session: SessionType) => {
-  if (isBefore(session.date, Date.now())) {
+  if (isBefore(session.event.eventDate, Date.now())) {
     if (
       session.workoutResults.some((result) => workoutResultIsFilled(result))
     ) {
@@ -43,24 +44,26 @@ export const sessionHasResults = (session: SessionType) => {
 };
 
 export const getSessionTitle = (session: SessionType) => {
-  return isBefore(new Date(), session.date)
+  return isBefore(new Date(), session.event.eventDate)
     ? "Session planned"
     : sessionHasResults(session)
     ? "Result registered"
     : "Session registered";
 };
 
-export const getSessionDate = (session: SessionType) => {
-  if (isBefore(session.date, Date.now())) {
-    if (Math.abs(differenceInDays(session.date, Date.now())) > 4) {
+export const getActivityDate = (
+  event: InferQueryOutput<"event.get-events">[number]
+) => {
+  if (isBefore(event.eventDate, Date.now())) {
+    if (Math.abs(differenceInDays(event.eventDate, Date.now())) > 4) {
       return format(
-        zonedTimeToUtc(session.date, "Europe/Stockholm"),
+        zonedTimeToUtc(event.eventDate, "Europe/Stockholm"),
         "LLLL do, u 'at' p"
       );
     } else {
-      return `${formatDistance(new Date(), session.date)} ago`;
+      return `${formatDistance(new Date(), event.eventDate)} ago`;
     }
   } else {
-    return `In ${formatDistance(new Date(), session.date)}`;
+    return `In ${formatDistance(new Date(), event.eventDate)}`;
   }
 };

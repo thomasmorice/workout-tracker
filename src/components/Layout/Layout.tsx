@@ -30,13 +30,15 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div>
       <ToastMessage />
-      <Navigation />
+      <Navigation onOpenSidebar={() => set_isRightSidebarOpened(true)} />
       <AnimatePresence>
         {isRightSidebarOpened && (
           <RightSidebar onClose={() => set_isRightSidebarOpened(false)} />
         )}
       </AnimatePresence>
       {workoutFormState && <WorkoutForm />}
+      <div id="portal" />
+      {/* {workoutSessionFormState && Workout} */}
 
       <main className={`px-5 sm:px-8 md:ml-80`}>
         <div className="flex w-full justify-between py-5 items-center">
@@ -71,7 +73,7 @@ export default function Layout({ children }: LayoutProps) {
                     className="btn btn-ghost flex gap-2"
                   >
                     <MdMenuOpen size={24} />
-                    <div className="hidden md:flex">Schedule</div>
+                    <div className="hidden md:flex">Activities</div>
                   </button>
                 </div>
               ) : (

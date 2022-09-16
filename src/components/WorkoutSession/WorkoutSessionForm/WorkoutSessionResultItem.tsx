@@ -12,7 +12,10 @@ import { useEffect, useMemo, useState } from "react";
 import { WorkoutResultWithWorkout } from "../../../types/app";
 import { format } from "date-fns";
 import { moods } from "../../MoodSelector/MoodSelector";
-import { workoutResultIsFilled } from "../../../utils/utils";
+import {
+  resultHasBenchmarkeableWorkout,
+  workoutResultIsFilled,
+} from "../../../utils/utils";
 
 interface WorkoutSessionResultItemProps {
   result: WorkoutResultWithWorkout;
@@ -161,7 +164,7 @@ export default function WorkoutSessionResultItem({
               <div className="whitespace-pre-wrap text-xs opacity-80">
                 {result.description}
               </div>
-              {workoutResultIsFilled(result) && (
+              {resultHasBenchmarkeableWorkout(result) && (
                 <div className="badge badge-primary">
                   {result.time && format(result.time * 1000, "mm:ss' minutes'")}
                   {result.totalReps && `${result.totalReps} reps`}

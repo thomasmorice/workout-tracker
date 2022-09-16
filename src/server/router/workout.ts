@@ -49,7 +49,7 @@ export const workoutRouter = createProtectedRouter()
                 ...WorkoutResultsSelect,
                 workoutSession: {
                   select: {
-                    date: true,
+                    event: true,
                   },
                 },
               },

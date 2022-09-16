@@ -9,6 +9,7 @@ import MobileNavbar from "./MobileNavbar";
 import DesktopSidebar from "./DesktopSidebar";
 
 export interface NavigationItemsProps {
+  onOpenSidebar?: () => void;
   items: {
     icon: IconType;
     label: string;
@@ -16,7 +17,11 @@ export interface NavigationItemsProps {
   }[];
 }
 
-export default function Navigation() {
+export default function Navigation({
+  onOpenSidebar,
+}: {
+  onOpenSidebar: () => void;
+}) {
   const NavigationItems: NavigationItemsProps["items"] = [
     {
       icon: MdOutlineDashboard,
@@ -30,7 +35,7 @@ export default function Navigation() {
     },
     // {
     //   icon: MdOutlineSchedule,
-    //   label: "Schedule",
+    //   label: "Activities",
     //   href: "/schedule",
     // },
     {
@@ -48,7 +53,7 @@ export default function Navigation() {
       </div>
       {/* Mobile Nav */}
       <div className="block md:hidden">
-        <MobileNavbar items={NavigationItems} />
+        <MobileNavbar onOpenSidebar={onOpenSidebar} items={NavigationItems} />
       </div>
     </>
   );

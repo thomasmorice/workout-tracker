@@ -41,26 +41,29 @@ model Workout {
 
 model WorkoutSession {
     id             Int             @id @default(autoincrement())
-    date           DateTime
-    createdAt      DateTime        @default(now())
-    updatedAt      DateTime        @updatedAt
     workoutResults WorkoutResult[]
-    // event          Event?          @relation(fields: [eventId], references: [id])
-    // eventId        Int?            @unique
     athlete        User            @relation(fields: [athleteId], references: [id])
     athleteId      String          @default("cl6jsjxy00006uyo8h2v8fr2e")
-    Event          Event?
+    event          Event           @relation(fields: [eventId], references: [id])
+    eventId        Int             @unique
 }
 
 model Event {
-    id               Int             @id @default(autoincrement())
-    workoutSession   WorkoutSession? @relation(fields: [workoutSessionId], references: [id])
-    workoutSessionId Int?            @unique
-    profile          Profile?        @relation(fields: [profileId], references: [id])
-    profileId        Int?            @unique
-    eventDate        DateTime
-    createdAt        DateTime        @default(now())
-    updatedAt        DateTime        @updatedAt
+    id             Int             @id @default(autoincrement())
+    workoutSession WorkoutSession?
+    weighting      Weighing?
+    eventDate      DateTime        @default(now())
+    createdAt      DateTime        @default(now())
+    updatedAt      DateTime        @updatedAt
+}
+
+model Weighing {
+    id      Int    @id @default(autoincrement())
+    weight  Float
+    event   Event  @relation(fields: [eventId], references: [id])
+    eventId Int    @unique
+    user    User   @relation(fields: [userId], references: [id])
+    userId  String @default("cl6jsjxy00006uyo8h2v8fr2e")
 }
 
 model WorkoutResult {
@@ -79,11 +82,6 @@ model WorkoutResult {
     shouldRecommendWorkoutAgain Boolean        @default(false)
     createdAt                   DateTime       @default(now())
     updatedAt                   DateTime       @updatedAt
-}
-
-model Profile {
-    id    Int    @id @default(autoincrement())
-    event Event?
 }
 
 enum Difficulty {
@@ -154,6 +152,7 @@ model User {
     sessions        Session[]
     workouts        Workout[]
     workoutSessions WorkoutSession[]
+    weightings      Weighing[]
 }
 
 model VerificationToken {
