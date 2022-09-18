@@ -80,33 +80,30 @@ export const workoutSessionRouter = createProtectedRouter()
   .mutation("addOrEdit", {
     input: CreateWorkoutSessionInputSchema,
     async resolve({ ctx, input }) {
-      let newOrUpdatedEvent = await prisma.event.upsert({
+      return await prisma.workoutSession.upsert({
         create: {
-          eventDate: input.date,
+          athlete: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
+          event: {
+            create: {
+              eventDate: input.date,
+            },
+          },
         },
         update: {
-          eventDate: input.date,
-        },
-        where: {
-          id: input.eventId ?? -1,
-        },
-      });
-
-      let workoutSession = await prisma.workoutSession.upsert({
-        create: {
-          eventId: newOrUpdatedEvent.id,
-          athleteId: ctx.session.user.id,
-        },
-        update: {
-          eventId: input.eventId,
+          event: {
+            update: {
+              eventDate: input.date,
+            },
+          },
         },
         where: {
           id: input.id ?? -1,
         },
-        // select: WorkoutSessionSelect,
       });
-
-      return workoutSession;
     },
   })
   .mutation("delete", {

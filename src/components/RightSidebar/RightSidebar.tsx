@@ -1,21 +1,19 @@
-import Calendar from "../Activity/Calendar";
-import { formatISO, startOfMonth, endOfMonth, isSameDay } from "date-fns";
 import { useSidebarStore } from "../../store/SidebarStore";
 import Image from "next/image";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import {
   MdArrowDropDown,
   MdNotifications,
-  MdAdd,
   MdOutlineKeyboardBackspace,
   MdClose,
 } from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
-import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm/WorkoutSessionForm";
-import { useMemo, useState, useRef } from "react";
+import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm";
+import { useRef } from "react";
 import { useOnClickOutside, useLockedBody } from "usehooks-ts";
-import TimelineItem from "../Activity/TimelineItem";
 import { useEventService } from "../../services/useEventService";
+import ActivityDashboard from "../Activity/ActivityDashboard";
+import WeighingForm from "../Weighing/WeighingForm";
 
 export default function RightSidebar({ onClose }: { onClose: () => void }) {
   const { data: sessionData, status } = useSession();
@@ -24,30 +22,10 @@ export default function RightSidebar({ onClose }: { onClose: () => void }) {
   const {
     currentVisibleDate,
     selectedSession,
-    createSession,
     closeSessionForm,
     isSidebarLocked,
+    selectedWeighing,
   } = useSidebarStore();
-
-  const { data: events, isLoading } = getEvents({
-    dateFilter: {
-      gte: formatISO(startOfMonth(currentVisibleDate)),
-      lte: formatISO(endOfMonth(currentVisibleDate)),
-    },
-  });
-
-  const [showSpecificDay, set_showSpecificDay] = useState<Date>();
-
-  const timelineContainerVariant = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
 
   const timelineItemVariant = {
     hidden: { opacity: 0, x: 80 },
@@ -58,17 +36,6 @@ export default function RightSidebar({ onClose }: { onClose: () => void }) {
     hidden: { x: "100%" },
     show: { x: 0 },
   };
-
-  const getFilteredEvents = useMemo(() => {
-    if (events) {
-      if (showSpecificDay) {
-        return events.filter((event) =>
-          isSameDay(event.eventDate, showSpecificDay)
-        );
-      }
-      return events;
-    }
-  }, [events, showSpecificDay]);
 
   const containerRef = useRef(null);
   useOnClickOutside(containerRef, (e) => {
@@ -122,63 +89,8 @@ export default function RightSidebar({ onClose }: { onClose: () => void }) {
           )}
 
           <AnimatePresence>
-            {!selectedSession ? (
-              <>
-                <Calendar
-                  handleSelectDate={(date) => set_showSpecificDay(date)}
-                  handleResetSelectDate={() => set_showSpecificDay(undefined)}
-                  workoutSessionEvents={
-                    events?.filter((event) => event.workoutSession) ?? []
-                  }
-                  isLoading={isLoading}
-                />
-
-                <div className="divider m-0"></div>
-                <div>
-                  <div className="flex gap-3 items-center mb-7">
-                    <h2 className="h2">Activity</h2>
-                    <div className="dropdown ">
-                      <label
-                        tabIndex={0}
-                        className="btn btn-sm btn-outline btn-circle"
-                      >
-                        <MdAdd size={22} />
-                      </label>
-                      <ul
-                        tabIndex={0}
-                        className="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 text-sm"
-                      >
-                        <li>
-                          <a onClick={createSession}>Add new session</a>
-                        </li>
-                        <li>
-                          <a>Add weighing</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <AnimatePresence>
-                    {!isLoading && getFilteredEvents && (
-                      <motion.ol
-                        className="relative border-l border-accent-content border-opacity-20"
-                        variants={timelineContainerVariant}
-                        initial="hidden"
-                        animate="show"
-                      >
-                        {getFilteredEvents.map((event) => {
-                          return (
-                            <AnimatePresence key={event.id}>
-                              <motion.li variants={timelineItemVariant}>
-                                <TimelineItem event={event} />
-                              </motion.li>
-                            </AnimatePresence>
-                          );
-                        })}
-                      </motion.ol>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </>
+            {!selectedSession && !selectedWeighing ? (
+              <ActivityDashboard />
             ) : (
               <motion.div
                 variants={timelineItemVariant}
@@ -193,14 +105,18 @@ export default function RightSidebar({ onClose }: { onClose: () => void }) {
                     className="group-hover:-translate-x-1 transition-transform"
                     size={16}
                   />
-                  Session Details
+                  {selectedSession ? "Session" : "Weighing"} Form
                 </h2>
-                <WorkoutSessionForm
-                  onSuccess={closeSessionForm}
-                  existingWorkoutSession={
-                    selectedSession !== -1 ? selectedSession : undefined
-                  }
-                />
+                {selectedSession ? (
+                  <WorkoutSessionForm
+                    onSuccess={closeSessionForm}
+                    existingWorkoutSession={
+                      selectedSession !== -1 ? selectedSession : undefined
+                    }
+                  />
+                ) : (
+                  <WeighingForm onSuccess={closeSessionForm} />
+                )}
               </motion.div>
             )}
           </AnimatePresence>

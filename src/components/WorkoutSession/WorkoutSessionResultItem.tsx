@@ -9,13 +9,13 @@ import {
   MdOutlineArrowDropUp,
 } from "react-icons/md";
 import { useEffect, useMemo, useState } from "react";
-import { WorkoutResultWithWorkout } from "../../../types/app";
+import { WorkoutResultWithWorkout } from "../../types/app";
 import { format } from "date-fns";
-import { moods } from "../../MoodSelector/MoodSelector";
+import { moods } from "../MoodSelector/MoodSelector";
 import {
   resultHasBenchmarkeableWorkout,
   workoutResultIsFilled,
-} from "../../../utils/utils";
+} from "../../utils/utils";
 
 interface WorkoutSessionResultItemProps {
   result: WorkoutResultWithWorkout;

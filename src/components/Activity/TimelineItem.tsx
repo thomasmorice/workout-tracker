@@ -73,7 +73,7 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
               ) : (
                 <div className="flex gap-1.5 items-center">
                   <MdMonitorWeight className="opacity-50" size={16} />
-                  <div className="">{event.weighting?.weight}KG</div>
+                  <div className="">{event.weighing?.weight}KG</div>
                 </div>
               )}
             </div>
