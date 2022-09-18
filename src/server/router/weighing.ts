@@ -44,28 +44,25 @@ export const weighingRouter = createProtectedRouter()
   .mutation("addOrEdit", {
     input: CreateWeighingInputSchema,
     async resolve({ ctx, input }) {
-      let newOrUpdatedEvent = await prisma.event.upsert({
-        create: {
-          eventDate: input.date,
-        },
-        update: {
-          eventDate: input.date,
-        },
-        where: {
-          id: input.eventId,
-        },
-      });
-      return prisma.weighing.upsert({
+      return await prisma.weighing.upsert({
         create: {
           weight: input.weight,
-          eventId: newOrUpdatedEvent.id,
+          event: {
+            create: {
+              eventDate: input.date,
+            },
+          },
         },
         update: {
           weight: input.weight,
-          eventId: input.eventId,
+          event: {
+            update: {
+              eventDate: input.date,
+            },
+          },
         },
         where: {
-          id: input.id,
+          id: input.id ?? -1,
         },
       });
     },

@@ -22,7 +22,7 @@ export const eventRouter = createProtectedRouter().query("get-events", {
     const events = await prisma.event.findMany({
       select: {
         ...EventSelect,
-        weighting: true,
+        weighing: true,
         workoutSession: {
           include: {
             event: true,
@@ -42,7 +42,7 @@ export const eventRouter = createProtectedRouter().query("get-events", {
             },
           },
           {
-            weighting: {
+            weighing: {
               userId: ctx.session.user.id,
             },
           },

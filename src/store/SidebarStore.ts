@@ -1,26 +1,32 @@
 import create from "zustand";
 import { InferQueryOutput } from "../types/trpc";
 
+type SessionType =
+  InferQueryOutput<"event.get-events">[number]["workoutSession"];
+type WeighingType = InferQueryOutput<"event.get-events">[number]["weighing"];
+
+type SidebarStateType =
+  | "dashboard"
+  | "add-session"
+  | "edit-session"
+  | "add-weighing"
+  | "edit-weighing"
+  | "edit-session-result";
+
 interface SidebarState {
+  sidebarCurrentState?: SidebarStateType;
+  isSidebarOpened: () => void;
   currentVisibleDate: Date;
   set_currentVisibleDate: (date: Date) => void;
   isSidebarLocked: boolean;
   set_isSidebarLocked: (locked: boolean) => void;
+  addWeighing: () => void;
+  editWeighing: (weighing: WeighingType) => void;
+  selectedWeighing?: WeighingType | -1;
   createSession: () => void;
-  editSession: (
-    session: InferQueryOutput<"event.get-events">[number]["workoutSession"]
-  ) => void;
-  selectedSession?:
-    | InferQueryOutput<"event.get-events">[number]["workoutSession"]
-    | -1;
+  editSession: (session: SessionType) => void;
+  selectedSession?: SessionType | -1;
   closeSessionForm: () => void;
-  // isEditingSessionResult: () => boolean;
-  // editSessionResult: (
-  //   result: InferQueryOutput<"workout-session.get-workout-sessions">[number]["workoutResults"][number]
-  // ) => void;
-  // selectedSessionResult?:
-  //   | InferQueryOutput<"workout-session.get-workout-sessions">[number]["workoutResults"][number]
-  //   | -1;
 }
 
 const useSidebarStore = create<SidebarState>()((set, get) => ({
@@ -30,6 +36,10 @@ const useSidebarStore = create<SidebarState>()((set, get) => ({
     set({
       currentVisibleDate: date,
     });
+  },
+  isSidebarOpened: () => {
+    const { sidebarCurrentState } = get();
+    return !!sidebarCurrentState;
   },
   createSession: () => {
     set({
@@ -44,6 +54,7 @@ const useSidebarStore = create<SidebarState>()((set, get) => ({
   closeSessionForm: () => {
     set({
       selectedSession: undefined,
+      selectedWeighing: undefined,
     });
   },
   set_isSidebarLocked: (locked) => {
@@ -51,15 +62,16 @@ const useSidebarStore = create<SidebarState>()((set, get) => ({
       isSidebarLocked: locked,
     });
   },
-  // editSessionResult: (sessionResult) => {
-  //   set({
-  //     selectedSessionResult: sessionResult,
-  //   });
-  // },
-  // isEditingSessionResult: () => {
-  //   const { selectedSessionResult } = get();
-  //   return selectedSessionResult !== -1;
-  // },
+  addWeighing: () => {
+    set({
+      selectedWeighing: -1,
+    });
+  },
+  editWeighing: (weighing) => {
+    set({
+      selectedWeighing: weighing,
+    });
+  },
 }));
 
 export { useSidebarStore };

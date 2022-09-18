@@ -7,23 +7,23 @@ import {
 } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import WorkoutSelectField from "../../Workout/WorkoutSelectField";
-import { useWorkoutSessionService } from "../../../services/useWorkoutSessionService";
-import { useToastStore } from "../../../store/ToastStore";
+import WorkoutSelectField from "../Workout/WorkoutSelectField";
+import { useWorkoutSessionService } from "../../services/useWorkoutSessionService";
+import { useToastStore } from "../../store/ToastStore";
 import { z } from "zod";
-import WorkoutResultForm from "../../WorkoutResult/WorkoutResultForm";
-import { useWorkoutResultService } from "../../../services/useWorkoutResultService";
+import WorkoutResultForm from "../WorkoutResult/WorkoutResultForm";
+import { useWorkoutResultService } from "../../services/useWorkoutResultService";
 import { useRouter } from "next/router";
 import { Reorder } from "framer-motion";
 import WorkoutSessionResultItem from "./WorkoutSessionResultItem";
-import { InferMutationInput, InferQueryOutput } from "../../../types/trpc";
+import { InferMutationInput, InferQueryOutput } from "../../types/trpc";
 import {
   CreateWorkoutSessionInputSchema,
   WorkoutResultWithWorkout,
-} from "../../../types/app";
+} from "../../types/app";
 import { isBefore } from "date-fns";
-import { useSidebarStore } from "../../../store/SidebarStore";
-import Portal from "../../Portal/Portal";
+import { useSidebarStore } from "../../store/SidebarStore";
+import Portal from "../Portal/Portal";
 
 interface WorkoutSessionFormProps {
   existingWorkoutSession?:
