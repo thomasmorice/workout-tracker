@@ -3,8 +3,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { MdLogin, MdOutlineSchedule } from "react-icons/md";
-import { Rings } from "react-loading-icons";
-import { useSidebarStore } from "../../../store/SidebarStore";
 import { NavigationItemsProps } from "./Navigation";
 
 export default function MobileNavbar({

@@ -2,10 +2,12 @@ import { createProtectedRouter } from "./protected-router";
 import { prisma } from "../db/client";
 import { z } from "zod";
 import { CreateWeighingInputSchema } from "../../types/app";
+import { TRPCError } from "@trpc/server";
 
 export const weighingRouter = createProtectedRouter()
   .query("getWeightings", {
     input: z.object({
+      take: z.number(),
       dateFilter: z
         .object({
           lte: z.string(),
@@ -14,7 +16,7 @@ export const weighingRouter = createProtectedRouter()
         .nullish(),
     }),
     resolve({ ctx, input }) {
-      const { dateFilter } = input;
+      const { dateFilter, take } = input;
       return prisma.weighing.findMany({
         select: {
           id: true,
@@ -38,6 +40,9 @@ export const weighingRouter = createProtectedRouter()
             eventDate: "desc",
           },
         },
+        ...(take && {
+          take: take,
+        }),
       });
     },
   })
@@ -46,7 +51,13 @@ export const weighingRouter = createProtectedRouter()
     async resolve({ ctx, input }) {
       return await prisma.weighing.upsert({
         create: {
+          user: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
           weight: input.weight,
+
           event: {
             create: {
               eventDate: input.date,

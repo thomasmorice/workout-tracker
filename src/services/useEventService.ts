@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 
@@ -35,7 +36,17 @@ export const useEventService = () => {
     );
   };
 
+  const deleteEvent = trpc.useMutation("event.delete", {
+    async onSuccess() {
+      await utils.invalidateQueries(["event.get-events"]);
+    },
+    onError(e: unknown) {
+      throw e as TRPCError;
+    },
+  });
+
   return {
     getEvents,
+    deleteEvent,
   };
 };

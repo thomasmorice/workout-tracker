@@ -1,4 +1,3 @@
-import { useSidebarStore } from "../../store/SidebarStore";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import {
@@ -11,21 +10,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm";
 import { useRef } from "react";
 import { useOnClickOutside, useLockedBody } from "usehooks-ts";
-import { useEventService } from "../../services/useEventService";
 import ActivityDashboard from "../Activity/ActivityDashboard";
 import WeighingForm from "../Weighing/WeighingForm";
+import { useEventStore } from "../../store/EventStore";
 
 export default function RightSidebar({ onClose }: { onClose: () => void }) {
   const { data: sessionData, status } = useSession();
-  const { getEvents } = useEventService();
 
-  const {
-    currentVisibleDate,
-    selectedSession,
-    closeSessionForm,
-    isSidebarLocked,
-    selectedWeighing,
-  } = useSidebarStore();
+  const { eventFormState, closeForm } = useEventStore();
 
   const timelineItemVariant = {
     hidden: { opacity: 0, x: 80 },
@@ -39,7 +31,8 @@ export default function RightSidebar({ onClose }: { onClose: () => void }) {
 
   const containerRef = useRef(null);
   useOnClickOutside(containerRef, (e) => {
-    !isSidebarLocked && onClose();
+    // Should we close the sidebar when clicking outside of it?
+    // !isSidebarLocked && onClose();
   });
 
   useLockedBody(true);
@@ -52,8 +45,7 @@ export default function RightSidebar({ onClose }: { onClose: () => void }) {
         initial="hidden"
         animate="show"
         variants={containerVariant}
-        className={`fixed bottom-0 z-30 h-full md:h-full w-full sm:w-96 bg-base-100 px-4 py-8 shadow-2xl shadow-base-300 right-0
-         ${isSidebarLocked ? "" : "overflow-y-scroll"} `}
+        className={`fixed bottom-0 z-30 h-full md:h-full w-full sm:w-96 bg-base-100 px-4 py-8 shadow-2xl shadow-base-300 right-0 overflow-y-scroll`}
       >
         <div className="max-w-xs flex flex-col gap-7 mx-auto">
           {sessionData && (
@@ -79,7 +71,7 @@ export default function RightSidebar({ onClose }: { onClose: () => void }) {
                 </button>
                 <button
                   type="button"
-                  className="btn btn-ghost btn-circle sm:hidden"
+                  className="btn btn-ghost btn-circle"
                   onClick={onClose}
                 >
                   <MdClose size="24" />
@@ -89,7 +81,7 @@ export default function RightSidebar({ onClose }: { onClose: () => void }) {
           )}
 
           <AnimatePresence>
-            {!selectedSession && !selectedWeighing ? (
+            {!eventFormState ? (
               <ActivityDashboard />
             ) : (
               <motion.div
@@ -98,24 +90,20 @@ export default function RightSidebar({ onClose }: { onClose: () => void }) {
                 animate="show"
               >
                 <h2
-                  onClick={closeSessionForm}
+                  onClick={closeForm}
                   className="h2 flex gap-3 items-center group cursor-pointer"
                 >
                   <MdOutlineKeyboardBackspace
                     className="group-hover:-translate-x-1 transition-transform"
                     size={16}
                   />
-                  {selectedSession ? "Session" : "Weighing"} Form
+                  {eventFormState.includes("session") ? "Session" : "Weighing"}{" "}
+                  Form
                 </h2>
-                {selectedSession ? (
-                  <WorkoutSessionForm
-                    onSuccess={closeSessionForm}
-                    existingWorkoutSession={
-                      selectedSession !== -1 ? selectedSession : undefined
-                    }
-                  />
+                {eventFormState.includes("session") ? (
+                  <WorkoutSessionForm onSuccess={closeForm} />
                 ) : (
-                  <WeighingForm onSuccess={closeSessionForm} />
+                  <WeighingForm onSuccess={closeForm} />
                 )}
               </motion.div>
             )}

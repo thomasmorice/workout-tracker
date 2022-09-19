@@ -1,9 +1,8 @@
 import { signIn, signOut, useSession } from "next-auth/react";
-import { useWorkoutFormStore } from "../../store/WorkoutFormStore";
+import { useWorkoutStore } from "../../store/WorkoutStore";
 import WorkoutForm from "../Workout/WorkoutForm";
 import Logo from "./Logo";
 import Navigation from "./Navigation/Navigation";
-import Image from "next/image";
 import ToastMessage from "./ToastMessage";
 import { Rings } from "react-loading-icons";
 import { useRouter } from "next/router";
@@ -18,7 +17,7 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
   const { data: sessionData, status } = useSession();
-  const { state: workoutFormState } = useWorkoutFormStore();
+  const { state: workoutFormState } = useWorkoutStore();
   const [currentPath, set_currentPath] = useState<String[]>();
   const [isRightSidebarOpened, set_isRightSidebarOpened] = useState(false);
 

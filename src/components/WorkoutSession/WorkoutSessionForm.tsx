@@ -22,17 +22,17 @@ import {
   WorkoutResultWithWorkout,
 } from "../../types/app";
 import { isBefore } from "date-fns";
-import { useSidebarStore } from "../../store/SidebarStore";
 import Portal from "../Portal/Portal";
+import { useEventStore } from "../../store/EventStore";
 
 interface WorkoutSessionFormProps {
-  existingWorkoutSession?:
-    | InferQueryOutput<"event.get-events">[number]["workoutSession"]
-    | InferQueryOutput<"workout-session.get-workout-session-by-id">;
+  // existingWorkoutSession?:
+  //   | InferQueryOutput<"event.get-events">[number]["workoutSession"]
+  //   | InferQueryOutput<"workout-session.get-workout-session-by-id">;
   onSuccess?: () => void;
 }
 const WorkoutSessionForm = ({
-  existingWorkoutSession,
+  // existingWorkoutSession,
   onSuccess,
 }: // editMode = false,
 WorkoutSessionFormProps) => {
@@ -42,27 +42,19 @@ WorkoutSessionFormProps) => {
   const { createOrEditMultipleWorkoutResult, deleteMultipleWorkoutResult } =
     useWorkoutResultService();
 
-  const { set_isSidebarLocked } = useSidebarStore();
+  const { sessionBeingEdited } = useEventStore();
 
   const defaultValues = useMemo(() => {
     return {
-      id: existingWorkoutSession?.id ?? undefined,
-      date: existingWorkoutSession?.event.eventDate ?? new Date(),
-      workoutResults: existingWorkoutSession?.workoutResults ?? undefined,
-      eventId: existingWorkoutSession?.eventId ?? undefined,
+      id: sessionBeingEdited?.id ?? undefined,
+      date: sessionBeingEdited?.event.eventDate ?? new Date(),
+      workoutResults: sessionBeingEdited?.workoutResults ?? undefined,
+      eventId: sessionBeingEdited?.eventId ?? undefined,
     };
   }, []);
 
   const [editWorkoutResultIndex, set_editWorkoutResultIndex] =
     useState<number>(-1);
-
-  useEffect(() => {
-    if (editWorkoutResultIndex === -1) {
-      set_isSidebarLocked(false);
-    } else {
-      set_isSidebarLocked(true);
-    }
-  }, [editWorkoutResultIndex]);
 
   const {
     handleSubmit,
@@ -103,7 +95,7 @@ WorkoutSessionFormProps) => {
       closeMessage(message);
     }
 
-    const resultsToDelete = existingWorkoutSession?.workoutResults
+    const resultsToDelete = sessionBeingEdited?.workoutResults
       .filter((existingRes) =>
         workoutSession?.workoutResults.every((res) => res.id !== existingRes.id)
       )
@@ -118,7 +110,7 @@ WorkoutSessionFormProps) => {
     addMessage({
       type: "success",
       message: `Session ${
-        existingWorkoutSession ? "edited" : "created"
+        sessionBeingEdited ? "edited" : "created"
       } successfully`,
     });
     onSuccess && onSuccess();

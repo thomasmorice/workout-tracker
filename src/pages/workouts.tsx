@@ -7,7 +7,7 @@ import { useIntersectionObserver, useDebounce } from "usehooks-ts";
 import WorkoutCard from "../components/Workout/WorkoutCard";
 import WorkoutCardSkeleton from "../components/Workout/WorkoutCardSkeleton";
 import { useWorkoutService } from "../services/useWorkoutService";
-import { useWorkoutFormStore } from "../store/WorkoutFormStore";
+import { useWorkoutStore } from "../store/WorkoutStore";
 import { MdSearch } from "react-icons/md";
 
 const Workouts: NextPage = () => {
@@ -15,7 +15,7 @@ const Workouts: NextPage = () => {
   const ref = useRef<HTMLDivElement | null>(null);
   const entry = useIntersectionObserver(ref, {});
 
-  const { showWorkoutForm } = useWorkoutFormStore();
+  const { showWorkoutForm } = useWorkoutStore();
   const { getInfiniteWorkouts } = useWorkoutService();
 
   const [classifiedOnly, set_classifiedOnly] = useState(true);
@@ -95,10 +95,10 @@ const Workouts: NextPage = () => {
                   className="input absolute w-full left-0 px-12 bg-base-200"
                 />
 
-                <div className="z-10">
+                {/* <div className="z-10">
                   <kbd className="kbd bg-base-100">⌘</kbd>
                   <kbd className="kbd bg-base-100">K</kbd>
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -130,7 +130,7 @@ const Workouts: NextPage = () => {
                     .map((_, i) => <WorkoutCardSkeleton key={i} />)}
             </Masonry>
 
-            <div className="bg-white mb-10 w-1/2 h-10" ref={ref}></div>
+            <div className="mb-10 w-1/2 h-10" ref={ref}></div>
 
             {isFetching &&
               hasNextPage &&

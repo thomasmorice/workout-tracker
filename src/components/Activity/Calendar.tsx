@@ -14,8 +14,8 @@ import {
 } from "date-fns";
 import { Rings } from "react-loading-icons";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
-import { useSidebarStore } from "../../store/SidebarStore";
 import { InferQueryOutput } from "../../types/trpc";
+import { useActivityStore } from "../../store/ActivityStore";
 
 interface CalendarProps {
   workoutSessionEvents: InferQueryOutput<"event.get-events">;
@@ -32,7 +32,7 @@ const Calendar = ({
   isLoading,
 }: CalendarProps) => {
   const [selectedDate, set_selectedDate] = useState<Date | undefined>();
-  const { currentVisibleDate, set_currentVisibleDate } = useSidebarStore();
+  const { currentMonth, set_currentMonth } = useActivityStore();
 
   useEffect(() => {
     if (selectedDate) {
@@ -45,11 +45,11 @@ const Calendar = ({
   const getHeader = () => {
     return (
       <div className="flex items-center justify-between mb-1">
-        <h2 className="h2">{format(currentVisibleDate, "MMMM, yyyy")}</h2>
+        <h2 className="h2">{format(currentMonth, "MMMM, yyyy")}</h2>
         <div className="flex gap-3">
           <div
             onClick={() => {
-              set_currentVisibleDate(subMonths(currentVisibleDate, 1));
+              set_currentMonth(subMonths(currentMonth, 1));
             }}
             className="btn btn-sm btn-circle btn-outline"
           >
@@ -58,7 +58,7 @@ const Calendar = ({
 
           <div
             onClick={() => {
-              set_currentVisibleDate(addMonths(currentVisibleDate, 1));
+              set_currentMonth(addMonths(currentMonth, 1));
             }}
             className="btn btn-sm btn-circle btn-outline"
           >
@@ -70,7 +70,7 @@ const Calendar = ({
   };
 
   const getWeekDaysNames = () => {
-    const weekStartDate = startOfWeek(currentVisibleDate);
+    const weekStartDate = startOfWeek(currentMonth);
     const weekDays = [];
     for (let day = 0; day < 7; day++) {
       weekDays.push(
@@ -142,8 +142,8 @@ const Calendar = ({
   };
 
   const getDates = () => {
-    const startOfTheSelectedMonth = startOfMonth(currentVisibleDate);
-    const endOfTheSelectedMonth = endOfMonth(currentVisibleDate);
+    const startOfTheSelectedMonth = startOfMonth(currentMonth);
+    const endOfTheSelectedMonth = endOfMonth(currentMonth);
     const startDate = subDays(startOfWeek(startOfTheSelectedMonth), 0);
     const endDate = addDays(endOfWeek(endOfTheSelectedMonth), 0);
 
@@ -152,9 +152,7 @@ const Calendar = ({
     const allWeeks = [];
 
     while (currentDate <= endDate) {
-      allWeeks.push(
-        generateDatesForCurrentWeek(currentDate, currentVisibleDate)
-      );
+      allWeeks.push(generateDatesForCurrentWeek(currentDate, currentMonth));
       currentDate = addDays(currentDate, 7);
     }
 
@@ -165,7 +163,7 @@ const Calendar = ({
     );
   };
 
-  if (!currentVisibleDate) return null;
+  if (!currentMonth) return null;
   return (
     <section className={`relative`}>
       {getHeader()}

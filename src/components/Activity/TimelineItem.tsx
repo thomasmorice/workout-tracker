@@ -1,4 +1,3 @@
-import { useWorkoutSessionService } from "../../services/useWorkoutSessionService";
 import { useToastStore } from "../../store/ToastStore";
 import ConfirmModal from "../Layout/Navigation/Modal/ConfirmModal";
 import { useState } from "react";
@@ -15,29 +14,34 @@ import {
   getSessionTitle,
   getSessionTotalTime,
 } from "../../utils/utils";
-import { useSidebarStore } from "../../store/SidebarStore";
 import { isBefore } from "date-fns";
+import { useEventService } from "../../services/useEventService";
+import { useEventStore } from "../../store/EventStore";
 
 interface TimelineSessionProps {
   event: InferQueryOutput<"event.get-events">[number];
 }
 
 export default function TimelineItem({ event }: TimelineSessionProps) {
-  const { deleteWorkoutSession } = useWorkoutSessionService();
+  const { deleteEvent } = useEventService();
   const { addMessage, closeMessage } = useToastStore();
-  const [showConfirmDeleteSessionModal, set_showConfirmDeleteSessionModal] =
+  const [showConfirmDeleteEventModal, set_showConfirmDeleteEventModal] =
     useState(false);
 
-  const { editSession } = useSidebarStore();
+  const { openWeighingForm, openSessionForm } = useEventStore();
 
   return (
     <>
-      <div className="mb-8 ml-4 group cursor-pointer">
+      <div className="mb-12 ml-4 cursor-pointer">
         <div
-          onClick={() =>
-            event.workoutSession && editSession(event.workoutSession)
-          }
-          className=""
+          onClick={() => {
+            if (event.workoutSession) {
+              openSessionForm(event.workoutSession);
+            } else {
+              openWeighingForm(event.weighing);
+            }
+          }}
+          className="group"
         >
           <div
             className={`absolute transition-all w-3 h-3 rounded-full -left-1.5 border border-opacity-10
@@ -79,44 +83,46 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
             </div>
           </div>
         </div>
-        {event.workoutSession && (
-          <div className="mt-2">
-            <button
-              onClick={() => set_showConfirmDeleteSessionModal(true)}
-              type="button"
-              className="btn btn-error btn-outline btn-xs w-fit"
-            >
+
+        <div className="mt-4">
+          <button
+            onClick={() => set_showConfirmDeleteEventModal(true)}
+            type="button"
+            className="btn btn-error btn-outline btn-xs w-fit"
+          >
+            <div className="flex items-center gap-2">
               <MdDelete />
-            </button>
-          </div>
-        )}
+            </div>
+          </button>
+        </div>
       </div>
 
-      {showConfirmDeleteSessionModal && (
+      {showConfirmDeleteEventModal && (
         <ConfirmModal
           onConfirm={async () => {
-            if (event.workoutSession) {
-              const message = addMessage({
-                type: "pending",
-                message: "Deleting session and results associated",
-              });
-              await deleteWorkoutSession.mutateAsync({
-                id: event.workoutSession.id,
-              });
-              addMessage({
-                type: "success",
-                message: "Session deleted successfully",
-              });
-              closeMessage(message);
-              set_showConfirmDeleteSessionModal(false);
-            }
+            const message = addMessage({
+              type: "pending",
+              message: "Deleting...",
+            });
+            await deleteEvent.mutateAsync({
+              id: event.id,
+            });
+            addMessage({
+              type: "success",
+              message: "Deleted successfully",
+            });
+            closeMessage(message);
+            set_showConfirmDeleteEventModal(false);
           }}
-          onClose={() => set_showConfirmDeleteSessionModal(false)}
-          title="Confirm delete session"
+          onClose={() => set_showConfirmDeleteEventModal(false)}
+          title={`Confirm delete ${event.weighing ? "weighing" : "session"}`}
         >
           <p>
-            Are you sure you wanna delete this workout session and all the
-            results associated?
+            Are you sure you wanna delete this{" "}
+            {event.workoutSession
+              ? "workout session and all the results associated"
+              : "weighing"}{" "}
+            ?
           </p>
         </ConfirmModal>
       )}
