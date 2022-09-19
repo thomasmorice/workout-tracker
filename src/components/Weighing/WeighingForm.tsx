@@ -3,20 +3,22 @@ import DatePicker from "react-datepicker";
 import { z } from "zod";
 import { CreateWeighingInputSchema } from "../../types/app";
 import { InferMutationInput, InferQueryOutput } from "../../types/trpc";
-import { useWeighingService } from "../../services/useWeightingService";
+import { useWeighingService } from "../../services/useWeighingService";
 import { useToastStore } from "../../store/ToastStore";
+import { useEventStore } from "../../store/EventStore";
 
 interface WeighingFormProps {
-  existingWeighing?: InferQueryOutput<"weighing.getWeightings">[number];
+  // existingWeighing?: InferQueryOutput<"event.get-events">[number]["weighing"];
   onSuccess: () => void;
 }
 
 export default function WeighingForm({
-  existingWeighing,
+  // existingWeighing,
   onSuccess,
 }: WeighingFormProps) {
   const { addMessage, closeMessage } = useToastStore();
   const { createOrEditWeighing } = useWeighingService();
+  const { weighingBeingEdited } = useEventStore();
 
   const handleCreateOrEdit: SubmitHandler<
     z.infer<typeof CreateWeighingInputSchema>
@@ -24,14 +26,18 @@ export default function WeighingForm({
     await createOrEditWeighing.mutateAsync(weighing);
     addMessage({
       type: "success",
-      message: `Weighing ${existingWeighing ? "edited" : "added"} successfully`,
+      message: `Weighing ${
+        weighingBeingEdited ? "edited" : "added"
+      } successfully`,
     });
     onSuccess && onSuccess();
   };
 
   const defaultValues: z.infer<typeof CreateWeighingInputSchema> = {
-    date: existingWeighing?.event.eventDate ?? new Date(),
-    weight: existingWeighing?.weight ?? 0,
+    id: weighingBeingEdited?.id ?? undefined,
+    eventId: weighingBeingEdited?.eventId ?? undefined,
+    date: weighingBeingEdited?.event.eventDate ?? new Date(),
+    weight: weighingBeingEdited?.weight ?? 0,
   };
 
   const {
@@ -99,7 +105,7 @@ export default function WeighingForm({
             className={`btn mt-2 ${isSubmitting ? "loading" : ""}`}
             type="submit"
           >
-            {`${existingWeighing ? "Edit" : "Add"} weighing`}
+            {`${weighingBeingEdited ? "Edit" : "Add"} weighing`}
           </button>
         </div>
       </div>

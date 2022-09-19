@@ -4,9 +4,11 @@ import Head from "next/head";
 import { AiFillBell } from "react-icons/ai";
 import { BsArrowUpRight } from "react-icons/bs";
 import Image from "next/image";
+import WeighingItem from "../components/Dashboard/WeighingItem";
 
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
+
   return (
     <>
       <Head>
@@ -74,12 +76,12 @@ const Home: NextPage = () => {
             </div>
           </div>
 
-          <div className="tabs tabs-boxed mt-3 w-fit sm:mt-5">
+          {/* <div className="tabs tabs-boxed mt-3 w-fit sm:mt-5">
             <a className="tab">Weekly</a>
             <a className="tab tab-active">Monthly</a>
             <a className="tab">Yearly</a>
-          </div>
-          <div className="flex w-full flex-wrap gap-4 py-3 sm:gap-8 sm:py-5">
+          </div> */}
+          <div className="flex w-full flex-wrap gap-4 py-3 sm:gap-8 sm:py-5 mt-12">
             <div className="stats stats-vertical bg-base-200 shadow lg:stats-horizontal">
               <div className="flex max-w-[160px] items-center justify-center bg-primary p-3 text-center text-primary-content">
                 Personal records
@@ -92,13 +94,7 @@ const Home: NextPage = () => {
                 </div>
               </div>
             </div>
-            <div className="stats bg-base-200 shadow">
-              <div className="stat ">
-                <div className="stat-title">Total workout time</div>
-                <div className="stat-value">12h32</div>
-                <div className="stat-desc">21% more than last month</div>
-              </div>
-            </div>
+            <WeighingItem />
 
             <div className="stats bg-base-200 shadow">
               <div className="stat">

@@ -3,19 +3,21 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import { MdAdd } from "react-icons/md";
 import { useEventService } from "../../services/useEventService";
-import { useSidebarStore } from "../../store/SidebarStore";
+import { useActivityStore } from "../../store/ActivityStore";
+import { useEventStore } from "../../store/EventStore";
 import Calendar from "./Calendar";
 import TimelineItem from "./TimelineItem";
 
 export default function ActivityDashboard() {
-  const { currentVisibleDate, addWeighing, createSession } = useSidebarStore();
+  const { openWeighingForm, openSessionForm } = useEventStore();
+  const { currentMonth } = useActivityStore();
 
   const { getEvents } = useEventService();
 
   const { data: events, isLoading } = getEvents({
     dateFilter: {
-      gte: formatISO(startOfMonth(currentVisibleDate)),
-      lte: formatISO(endOfMonth(currentVisibleDate)),
+      gte: formatISO(startOfMonth(currentMonth)),
+      lte: formatISO(endOfMonth(currentMonth)),
     },
   });
 
@@ -35,11 +37,6 @@ export default function ActivityDashboard() {
   const timelineItemVariant = {
     hidden: { opacity: 0, x: 80 },
     show: { opacity: 1, x: 0 },
-  };
-
-  const containerVariant = {
-    hidden: { x: "100%" },
-    show: { x: 0 },
   };
 
   const timelineContainerVariant = {
@@ -77,10 +74,10 @@ export default function ActivityDashboard() {
               className="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 text-sm"
             >
               <li>
-                <a onClick={createSession}>Add new session</a>
+                <a onClick={() => openSessionForm()}>Add new session</a>
               </li>
               <li>
-                <a onClick={addWeighing}>Add weighing</a>
+                <a onClick={() => openWeighingForm()}>Add weighing</a>
               </li>
             </ul>
           </div>

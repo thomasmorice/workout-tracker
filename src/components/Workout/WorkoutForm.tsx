@@ -5,7 +5,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
 import { useWorkoutService } from "../../services/useWorkoutService";
 import { useToastStore } from "../../store/ToastStore";
-import { useWorkoutFormStore } from "../../store/WorkoutFormStore";
+import { useWorkoutStore } from "../../store/WorkoutStore";
 import { enumToString } from "../../utils/formatting";
 import Modal from "../Layout/Navigation/Modal/Modal";
 import ConfirmModal from "../Layout/Navigation/Modal/ConfirmModal";
@@ -18,7 +18,7 @@ export default function WorkoutForm() {
     workout: existingWorkout,
     closeWorkoutForm,
     handleWorkoutFormError,
-  } = useWorkoutFormStore();
+  } = useWorkoutStore();
 
   const { createWorkout, editWorkout, deleteWorkout } = useWorkoutService();
 

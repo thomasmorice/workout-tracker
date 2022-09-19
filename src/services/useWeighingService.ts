@@ -7,6 +7,7 @@ interface WeightingProps {
     lte: string;
     gte: string;
   };
+  take: number;
 }
 
 export const useWeighingService = () => {
@@ -22,12 +23,13 @@ export const useWeighingService = () => {
     },
   });
 
-  const getWeightings = ({ dateFilter }: WeightingProps) => {
+  const getWeighings = ({ dateFilter, take }: WeightingProps) => {
     return trpc.useQuery(
       [
         "weighing.getWeightings",
         {
           dateFilter,
+          take,
         },
       ],
       {
@@ -36,8 +38,14 @@ export const useWeighingService = () => {
     );
   };
 
+  // const getTwoLatestWeighing = () => {
+  //   return trpc.useQuery(["weighing.get-two-latest"], {
+  //     enabled: !!sessionData,
+  //   });
+  // };
+
   return {
     createOrEditWeighing,
-    getWeightings,
+    getWeighings,
   };
 };

@@ -16,7 +16,7 @@ interface WorkoutFormState {
   closeWorkoutForm: () => void;
 }
 
-const useWorkoutFormStore = create<WorkoutFormState>()((set, get) => ({
+const useWorkoutStore = create<WorkoutFormState>()((set, get) => ({
   showWorkoutForm: (state, workout) => {
     if (state !== "create" && !workout) {
       console.error(
@@ -57,4 +57,4 @@ const useWorkoutFormStore = create<WorkoutFormState>()((set, get) => ({
   },
 }));
 
-export { useWorkoutFormStore };
+export { useWorkoutStore };

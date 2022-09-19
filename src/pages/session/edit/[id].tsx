@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import WorkoutSessionForm from "../../../components/WorkoutSession/WorkoutSessionForm/WorkoutSessionForm";
+import WorkoutSessionForm from "../../../components/WorkoutSession/WorkoutSessionForm";
 import { useWorkoutSessionService } from "../../../services/useWorkoutSessionService";
 
 const Edit: NextPage = () => {
@@ -18,9 +18,9 @@ const Edit: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="mb-10">
-        {workoutSession && (
+        {/* {workoutSession && (
           <WorkoutSessionForm existingWorkoutSession={workoutSession} />
-        )}
+        )} */}
       </div>
     </>
   );
