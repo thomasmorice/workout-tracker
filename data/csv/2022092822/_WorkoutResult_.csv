@@ -1,0 +1,199 @@
+"id","workoutSessionId","workoutId","isRx","totalReps","time","rating","description","shouldRecommendWorkoutAgain","createdAt","updatedAt","weight","order"
+95,70,1669,NULL,NULL,373,NULL,"Far from RX but pretty ""ok"" result ",false,2022-09-01 14:27:31.560,2022-09-01 14:27:31.561,NULL,1
+71,45,1572,true,NULL,NULL,2,"Felt good on the strict ring muscle-ups, 3's and then 2's
+Hard on the one arm dumbell squat snatch, very tough",false,2022-08-22 14:43:26.375,2022-08-22 14:43:26.375,NULL,1
+72,45,1573,false,NULL,NULL,2,"Could not take 22.5KG on the one arm squat snatch
+I wanted to do the snatch so I chose 15KG, and the left side was still very hard
+I need to work on my shoulder mobility",false,2022-08-22 14:47:38.830,2022-08-22 14:47:38.830,NULL,2
+73,46,1575,NULL,NULL,NULL,4,Great session - started with 8 reps at 80KG and finished with 2 reps at 110KG,false,2022-08-23 22:37:47.265,2022-08-23 22:37:47.265,NULL,1
+74,46,1576,NULL,NULL,NULL,4,"Just started on the 7th round. Got a side stitch in the middle of the workout but kept going!
+Hard on the front squat",false,2022-08-23 22:37:47.265,2022-08-23 22:37:47.265,NULL,2
+96,71,1669,NULL,NULL,470,NULL,"Back to 40KG on the thrusters, but tough to finish",false,2022-09-01 14:28:47.716,2022-09-01 14:28:47.717,NULL,1
+84,53,1666,true,NULL,NULL,4,Added 25 kilos on supinated one rep max,false,2022-08-29 13:42:02.478,2022-09-01 07:27:37.826,25.0,1
+85,53,1663,NULL,NULL,NULL,4,Added 35 kilos as a one rep max dips with a belt,false,2022-08-29 13:42:02.478,2022-09-01 07:27:37.828,35.0,2
+86,53,1664,true,235,NULL,4,Almost going in for the 7th round. On a really good day I can maybe find the strength to reach the 7th round! Great workout overall,true,2022-08-29 13:42:02.478,2022-09-01 07:27:37.833,NULL,3
+67,42,1383,true,NULL,NULL,4,"Endurance but quite intense, finished with high pulse",true,2022-08-17 19:48:55.759,2022-09-01 09:16:56.071,NULL,1
+87,54,1668,true,NULL,NULL,4,"My plan: 
+- 8 reps at 35KG
+- 5 reps at 40KG
+- 3 reps at 50KG
+- 1 rep at 60KG
+- 1 rep at 63KG
+- 1 rep at 67KG  PERSONAL RECORD!",false,2022-08-30 20:22:21.035,2022-08-31 18:49:31.540,67.0,1
+101,61,1668,true,NULL,NULL,4,NULL,false,2022-09-01 18:43:09.483,2022-09-01 18:43:27.644,65.0,1
+88,54,1669,true,NULL,350,5,"Finished completely dead, had to recover for 10/15mn 
+The plan: 
+- 7-7-7 Thrusters and pullups
+- 5-5-5 Thrusters and pullups
+- 5-4 Thrusters and 3-3-3 pullups",true,2022-08-30 20:22:21.035,2022-08-31 18:49:31.541,NULL,2
+102,61,1669,true,NULL,372,4,Great improvement from last time!,false,2022-09-01 18:43:09.483,2022-09-01 18:43:27.644,NULL,2
+103,62,1673,true,NULL,NULL,NULL,First PR Deadlift,false,2022-09-01 18:50:37.362,2022-09-01 18:50:37.362,140.0,1
+104,62,1671,true,NULL,440,4,"The classic 2K row
+ofc I was dead at the end but finally beat my first score",false,2022-09-01 18:50:37.362,2022-09-01 18:50:37.362,NULL,2
+68,43,1673,NULL,NULL,NULL,4,"Did a PR today, 150KG one rep max deadlift!",true,2022-08-18 15:23:19.408,2022-08-18 16:00:00.759,150.0,1
+111,59,1660,true,NULL,NULL,4,Happy overall because of the PR but failed at 120KG unfortunately,false,2022-09-02 09:07:39.878,2022-09-02 19:33:13.834,115.0,1
+112,59,1671,NULL,NULL,439,4,"Really happy from the result! The exact finish time was 7:189
+Here is my approximate plan:
+> 1500m:  ~1mn55
+> 1000m:  ~1mn50
+> 500m:  ~1mn48
+> 0m:  ~1mn45",false,2022-09-02 09:07:39.878,2022-09-02 19:33:13.834,NULL,2
+42,26,57,false,NULL,NULL,3,Finished with 80KG on the clean and jerk. I should work on the split jerk.,false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,1
+43,25,58,true,144,NULL,4,"1st set: 5 rounds
+2nd set: 5 rounds and 3 Powercleans
+3rd set: 5 rounds and 6 Powercleans",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,2
+44,27,60,true,NULL,NULL,4,"Great endurance workout, did 4 rounds + 556 meters row. Try 9mn per round to get 3 extra minutes on the last round and finish the row",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,1
+45,28,63,false,NULL,NULL,4,Finished with 140KG Deadlift and 75KG Push press,true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,1
+46,28,64,true,NULL,195,5,"Very fast workout, super fun, rushing all the way",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,2
+47,29,67,true,NULL,NULL,3,"Long intense workout, especially on the B part.
+ A. 9 Rounds + 10 one-arm KB swings 
+ A. 6 Rounds + 17 KB swings",false,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298,NULL,1
+48,30,68,false,NULL,NULL,2,"Did 90KG backsquats all the way, focusing on quality - Not so easy",false,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298,NULL,1
+49,30,69,true,209,NULL,3,"Super fun workout, but was a bit unefficient on the wallballs. Went until 20 wallballs and 9 shuttle run",true,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298,NULL,2
+50,31,41,true,128,NULL,4,Finished the 15th round with a lot of struggle - outside on holiday in Edholma,true,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298,NULL,1
+51,32,70,true,NULL,NULL,3,"A - Backsquats: 80KG - 85KG - 90KG
+B - Z-Press: 15KG - 20KG - 20KG
+
+ A bit heavy on the Z-press",true,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298,NULL,1
+52,32,71,true,404,NULL,4,"8 Rounds + 4 squats, quite long but fun workout, tough on the squats towards the end",true,2022-08-06 11:56:39.082,2022-08-10 22:03:16.299,NULL,2
+53,33,72,true,NULL,NULL,2,"Really need to work on the deficit handstand pushup - usually doing only one.
+24KG on the Turkish get up, only one left - one right",true,2022-08-06 11:56:39.082,2022-08-10 22:03:16.299,NULL,1
+54,33,73,true,177,NULL,4,"Couldn't find a good pace, because it was warm and I felt tired, but lovely workout",true,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298,NULL,2
+55,34,73,true,214,NULL,NULL,"Open crossfit session, good score",true,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298,NULL,1
+56,35,74,true,NULL,NULL,3,"Lunges: 22.5KG then 26KG on the walking lunges
+Ring pushups: 20KG sandbag and 8 reps",false,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298,NULL,1
+57,35,75,true,365,NULL,2,"2 Rounds and until 6 reps of Bycicle crunches, very hard and long workout",true,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298,NULL,2
+58,36,44,false,NULL,NULL,3,"50 - 60 - 70 - 70 - 75 - 80KG
+Veeery hard on the powerclean at 80KG and not great form, but did it.",true,2022-08-07 11:53:11.139,2022-08-10 22:03:16.298,NULL,1
+59,36,49,true,NULL,643,4,Good push on the last double unders - Love this workout <3,true,2022-08-07 11:53:11.139,2022-08-10 22:03:16.298,NULL,2
+60,37,77,true,1232,NULL,3,"Nice workout, quite tough and not sure about the results
+
+A. 434 reps (almost 3 rounds)
+B. 798 reps (around 4.5 rounds)",true,2022-08-08 19:57:40.893,2022-08-10 22:03:16.298,NULL,1
+61,38,78,true,NULL,NULL,3,Backsquats: 70 - 75 - 80 - 90KG and Harop curl on the rower 😅,true,2022-08-10 22:03:16.298,2022-08-10 22:03:16.298,NULL,1
+62,38,79,true,100,NULL,2,"Almost 4 rounds, had a calf cramp at the end, very hard but very fun!
+I absolutely need to do it again, and maybe finish it someday",true,2022-08-10 22:03:16.298,2022-08-10 22:03:16.299,NULL,2
+63,39,1228,true,NULL,NULL,NULL,"25 Cal row - 20 KB Suitcase - 10 Skater squats - ≈40sec handstand hold - ≈20sec pullup hold",true,2022-08-13 08:51:48.836,2022-08-13 08:51:48.836,NULL,1
+64,40,1313,true,NULL,NULL,3,"Great should mobility workout 
+I wasn't very focused on kipping the core tight tho..",true,2022-08-14 21:01:28.757,2022-08-14 21:00:36.392,NULL,1
+65,40,79,true,112,NULL,NULL,"Did singles on the clusters and 4X3 on the Chest to bar
+Reached 4 rounds so closer to success!",true,2022-08-14 21:06:09.713,2022-08-14 21:06:00.965,NULL,2
+66,41,80,NULL,NULL,NULL,3,"Great mobility work, the berber squat is particularely nice to do",false,2022-08-15 19:22:54.260,2022-08-15 19:22:54.260,NULL,1
+69,43,1385,true,88,NULL,4,"Was supposed to be hardcore, especially because of the Kettlbells, but it was fun! 
+I should definitely do it again and do 5 rounds if possible",true,2022-08-18 15:24:01.118,2022-08-18 16:00:00.759,NULL,2
+70,44,1495,true,NULL,NULL,3,"Did 6 rounds + 1 bonus round, great team workout",false,2022-08-20 17:10:51.307,2022-08-20 17:10:51.307,NULL,1
+138,84,2099,NULL,NULL,NULL,NULL,NULL,false,2022-09-28 10:16:43.406,2022-09-28 10:16:43.407,NULL,1
+139,84,2083,NULL,NULL,NULL,NULL,NULL,false,2022-09-28 10:16:43.418,2022-09-28 10:16:43.419,NULL,2
+1,1,3,true,220,NULL,NULL,NULL,false,2022-08-06 11:56:39.079,2022-08-10 22:03:16.297,NULL,1
+89,67,1660,true,NULL,NULL,NULL,"Was before the back surgery, had back pain",false,2022-08-31 14:00:56.335,2022-09-01 12:40:03.090,80.0,1
+2,2,1,true,281,NULL,NULL,NULL,false,2022-08-06 11:56:39.079,2022-08-10 22:03:16.297,NULL,1
+3,3,1,true,260,NULL,NULL,NULL,false,2022-08-06 11:56:39.079,2022-08-10 22:03:16.297,NULL,1
+4,4,1,true,283,NULL,NULL,NULL,false,2022-08-06 11:56:39.079,2022-08-10 22:03:16.297,NULL,1
+90,67,1671,false,NULL,443,NULL,My first 2K Row,false,2022-08-31 14:00:56.335,2022-09-01 12:40:03.090,NULL,2
+97,60,1668,NULL,NULL,NULL,NULL,"",false,2022-09-01 14:48:14.048,2022-09-01 14:48:14.049,60.0,1
+98,60,1671,NULL,NULL,446,NULL,NULL,false,2022-09-01 14:48:14.049,2022-09-01 14:48:14.049,NULL,2
+105,63,1672,true,NULL,NULL,4,"Not my strength so it was hard
+Happy with 60KG but need to work on the technique",false,2022-09-02 08:43:45.079,2022-09-02 08:43:45.080,60.0,1
+106,63,1674,true,NULL,255,4,"First time doing grace, I was surprised by my result, was expecting worse",false,2022-09-02 08:43:45.080,2022-09-02 08:43:45.081,NULL,2
+113,72,1675,false,NULL,NULL,4,"Did some handstand while trying to push out of the wall
+Two rope climbs per round",false,2022-09-03 20:18:41.061,2022-09-04 19:39:49.049,NULL,1
+114,72,34,true,209,NULL,4,"Got tired on the shoulders after Wallballs
+Tough on the cardio in the Boxjump 
+Quite slow then on the Toes to bar
+Finished with 14 Snatch",true,2022-09-03 20:18:41.061,2022-09-04 19:39:49.055,NULL,2
+116,74,1771,NULL,NULL,NULL,3,Not a huge fan of Harop curls but did the workout. 16KG dumbbells on the split squats,false,2022-09-06 13:53:33.380,2022-09-07 19:40:39.272,NULL,1
+117,74,1772,true,285,NULL,4,"Finished the first part before the timecap, at around 6:15
+Second part was left unfinished, too tired in the legs on the WB lunges, but almost there. ",true,2022-09-06 13:53:33.380,2022-09-07 19:40:39.274,NULL,2
+120,76,1759,true,NULL,NULL,3,"Felt good, but 60KG on the Power cleans, then having to keep the 60KG barbell while the other is working out was hard 😵",false,2022-09-10 14:19:41.207,2022-09-10 14:19:41.208,NULL,1
+126,77,1872,true,NULL,NULL,4,"Good leg killer, could have done maybe 85/90KG on the 2 reps, or starting 10KG higher from the start
+
+10x50KG
+8x60KG
+6x65KG
+4x70KG
+2x80KG",true,2022-09-11 07:07:55.515,2022-09-12 19:18:06.820,NULL,1
+129,78,1875,true,355,NULL,3,"Did it RX but it was pretty hard especially on the dumbells powerclean, 30 is a lot 😅",false,2022-09-14 19:52:41.929,2022-09-14 19:52:41.930,NULL,1
+5,5,7,false,NULL,NULL,NULL,"First set of frontsquat at 60KG, then 80KG 3 times, and last set at 90KG",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,1
+6,5,8,true,NULL,640,NULL,NULL,false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,2
+7,6,9,false,NULL,NULL,NULL,Ring dips - Farmers carry at 32KG and skater squats trying to keep a good form all along,false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,1
+8,6,10,true,233,NULL,NULL,NULL,false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,2
+10,7,12,true,42,NULL,NULL,"2 Rounds + 3 DB Snatch (29 reps) & 2 rounds + 2 devils press (13 reps)",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,2
+11,8,15,true,346,NULL,5,"133 + 139 + 74",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,1
+135,82,1984,true,NULL,NULL,3,"60KG - 70KG - 80KG - 90KG
+Felt hard, especially 6x90KG",false,2022-09-21 08:02:49.225,2022-09-21 18:36:41.816,NULL,1
+136,82,1985,true,215,NULL,2,I was sick the days before so felt tired quite quickly. Still manage to do 4 rounds plus a bit more. ,true,2022-09-21 08:02:49.226,2022-09-21 18:36:41.817,NULL,2
+91,68,1668,false,NULL,NULL,NULL,First PR after the back surgery,false,2022-09-01 13:56:56.910,2022-09-01 13:56:56.910,62.5,1
+92,68,1671,NULL,NULL,458,NULL,A take on this tough workout after the surgery,false,2022-09-01 13:56:56.910,2022-09-01 13:56:56.911,NULL,2
+93,69,1666,NULL,NULL,NULL,NULL,NULL,false,2022-09-01 13:59:39.198,2022-09-01 13:59:39.198,10.0,1
+94,69,1669,NULL,NULL,546,NULL,"Wasn't done RX, but close - 40KG",false,2022-09-01 13:59:39.198,2022-09-01 13:59:39.198,NULL,2
+99,58,1660,true,NULL,NULL,NULL,Nice back Squat result - first time over 100Kg,false,2022-09-01 18:31:35.256,2022-09-01 18:32:18.214,100.0,1
+100,58,1669,true,NULL,382,4,"First time doing FRAN RX, great time!",false,2022-09-01 18:31:35.257,2022-09-01 18:32:18.214,NULL,2
+107,64,1650,true,NULL,NULL,4,Happy with the result,false,2022-09-02 08:45:06.758,2022-09-02 08:45:06.759,85.0,1
+108,65,1668,true,NULL,NULL,NULL,NULL,false,2022-09-02 08:47:56.630,2022-09-02 08:47:56.631,65.0,1
+109,65,1674,NULL,NULL,230,3,"Why I haven't done it RX :/ can't remember
+Used 60KG instead of 61 though",false,2022-09-02 08:47:56.630,2022-09-02 08:47:56.631,NULL,2
+110,66,1673,true,NULL,NULL,3,"",false,2022-09-02 08:48:59.911,2022-09-02 08:48:59.911,140.0,1
+119,75,1773,true,NULL,NULL,4,"Felt good, it's a pretty nice workout if I need to train shoulder strength along with endurance workout. 
+
+It was tricky sometimes to fit 8 devil's press but I managed 3 times",false,2022-09-08 21:22:04.609,2022-09-09 19:06:12.113,NULL,1
+128,77,1873,true,79,NULL,4,"Good workout but 2x22.5 dumbbells on the box is very heavy 😅
+
+1st round: 3 sets + 2 powercleans
+2nd round: 3 sets + 2 powercleans
+3rd round: 3 sets + 3 powercleans",true,2022-09-11 07:14:41.382,2022-09-12 19:18:06.821,NULL,2
+115,73,1766,true,551,NULL,4,"Nice endurance workout: 
+- 341 reps on the 1st part
+- 210 reps on the 2nd part
+Kept good breathing control overall, second part was a bit harder",true,2022-09-05 08:22:20.058,2022-09-07 09:16:59.492,NULL,1
+29,18,39,true,NULL,NULL,3,Finished with 80KG on the barbell and used a 24Kg kettlebell,false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,1
+30,18,40,true,320,NULL,4,"8 rounds exactly - it was very warm so hard and long exercise but fun",false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,2
+31,19,41,true,116,NULL,4,"Did it outside, but not sure the result is 116 or 102.. I was tired",false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,1
+32,20,42,true,NULL,NULL,NULL,Did 3 muscle-ups all the way until the last set where I did 5 straight,false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,1
+33,20,43,false,116,NULL,4,"Took 40Kg on the Bar, very hard especially on the overhead squat, felt pain on my wrist",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,2
+34,21,44,false,NULL,NULL,4,"50KG - 60KG - 65KG - 70KG - 75KG - 80KG
+Dropped the bar on the second low hang power clean at 80Kg",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,1
+35,21,45,true,174,NULL,4,Almost 5 rounds - finished at 12 Kb Swings on the 4th round - Hard to keep the cardio on a 'not too high' intensity,true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,2
+36,22,48,false,NULL,NULL,3,"3X40KG - 3X50KG - 3X55KG - 1X60KG - 1X60KG - 2X60KG",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,1
+37,22,49,true,NULL,670,3,"Fun workout, tough on the grip and front arm, but good pace on the double unders",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,2
+38,23,50,true,NULL,NULL,4,"Super nice and tough endurance/strength workout 
+
+ TGU:24KG 
+ Burpees Box jumps:4-6 
+ Gorilla rows:24KG 
+ Front rack carry:24KG 
+ Wall walks:3 reps 
+ Skater squats:5+5 
+ Farmers carry:32KG",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,1
+39,24,16,false,NULL,NULL,4,"Felt strong on the backsquat, 80-85-90-90-95 
+ 20KG on the Box for high boxjumps",false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,1
+40,24,32,true,221,NULL,2,"Tired from the first part on the legs, I might be able to push to five rounds for the next time",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,2
+41,25,53,true,NULL,1984,4,"Good endurance workout, hard on the burpees",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,1
+9,7,11,true,NULL,NULL,NULL,"3-2-2-2-2",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,1
+12,9,16,false,NULL,NULL,NULL,"60KG - 70KG - 80KG - 90KG - 90KG",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,1
+13,9,17,true,165,NULL,4,NULL,false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,2
+14,10,19,false,NULL,NULL,4,"2 to 3 HSPU and on the split squat: 30KG - 30KG - 35KG - 35KG - 40KG",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,1
+15,10,20,true,NULL,688,4,NULL,false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,2
+16,11,22,true,165,NULL,3,NULL,false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,1
+17,12,25,true,216,NULL,2,"Tough one, really hard on the wallballs",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,1
+18,13,26,false,NULL,NULL,NULL,Deadlift until 110KG,false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,1
+19,13,27,true,320,NULL,2,"Lots of breaks, tired quickly and couldn't keep the pace throughout",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,2
+20,14,29,false,NULL,NULL,NULL,NULL,false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,1
+21,14,30,true,66,NULL,1,"4 rounds feeling tired, not a lot of sleep those days",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,2
+22,15,31,false,NULL,NULL,4,"Started at 50KG, climbed until 105KG - Good feeling overall",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,1
+23,15,32,true,225,NULL,4,"5 Rounds approximately, can't remember but did wallballs before boxjumps because of crowded box",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,2
+24,16,33,false,NULL,NULL,3,Need to work on my squat snatch. Went until 50Kg but tough on the squat,false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,1
+25,16,34,true,206,NULL,4,"Went until 11 snatches. I Need to be a bit better at wallballs, I was missing the line sometimes. Harder on strength than cardio",false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.297,NULL,2
+26,17,35,false,NULL,NULL,3,"Started at 90KG, went until 4 reps of 120KG",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297,NULL,1
+27,17,36,false,NULL,NULL,3,Added 15KG on my back while doing ring push-ups on last 6 and 4 reps,false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,2
+28,17,37,true,270,NULL,4,"6 rounds exactly, pushed by Albin to challenge myself especially while I start back on the rower, pull before fixing the shoes",false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298,NULL,3
+130,79,1876,NULL,NULL,NULL,3,"Hard to follow the timing, took 16KG dumbells",false,2022-09-15 20:13:46.399,2022-09-18 11:49:58.102,NULL,1
+131,79,1877,true,152,NULL,4,"Great workout, I did break the power snatch quite quickly into two sets. But the lateral burpee slowed me down quite much.
+1st AMRAP: 4 round + 3 power snatches
+2nd AMRAP: 4 round + 5 power snatches",true,2022-09-15 20:13:46.402,2022-09-18 11:49:58.103,NULL,2
+133,81,1983,NULL,NULL,NULL,3,"Hard because I felt a bit heavy 
+- Strict ring muscle-ups: 3-2-2-2-3
+- Squat snatch: 30KG-35KG-40KG-45KG-45KG",false,2022-09-18 19:19:09.109,2022-09-19 17:33:26.112,NULL,1
+134,81,1975,true,NULL,682,4,"Better than I expected, hard on the squat snatch, tough on the grip/forearm",true,2022-09-18 19:19:09.110,2022-09-19 17:33:26.112,NULL,2
+137,83,2085,true,333,NULL,1,"So I was basically out of a week of bad food and no workout.
+
+Did 3 rounds on most of the workouts. Lost a lot of stamina on the Dumbell Power clean, on the double-unders and on the devils press",true,2022-09-26 09:54:26.313,2022-09-26 19:54:36.192,NULL,1
