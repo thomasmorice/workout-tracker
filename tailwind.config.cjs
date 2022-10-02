@@ -4,7 +4,7 @@ module.exports = {
   darkMode: ["class", '[data-theme="dark"]'],
   theme: {
     fontFamily: {
-      sans: ["Work Sans", "ui-sans-serif", "system-ui"],
+      sans: ["Nunito Sans", "ui-sans-serif", "system-ui"],
     },
   },
   safelist: [

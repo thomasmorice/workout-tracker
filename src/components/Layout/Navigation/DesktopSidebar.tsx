@@ -41,10 +41,10 @@ export default function DesktopSidebar({ items }: NavigationItemsProps) {
 
                 <div className="flex flex-col justify-center">
                   <div className="text-[16px] font-semibold leading-4 text-base-content opacity-80">
-                    Thomas M.
+                    {sessionData.user?.name}
                   </div>
                   <div className="text-sm font-light opacity-60">
-                    @thomasmorice
+                    {sessionData.user?.email}
                   </div>
                 </div>
               </div>

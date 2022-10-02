@@ -44,14 +44,12 @@ WorkoutSessionFormProps) => {
 
   const { sessionBeingEdited } = useEventStore();
 
-  const defaultValues = useMemo(() => {
-    return {
-      id: sessionBeingEdited?.id ?? undefined,
-      date: sessionBeingEdited?.event.eventDate ?? new Date(),
-      workoutResults: sessionBeingEdited?.workoutResults ?? undefined,
-      eventId: sessionBeingEdited?.eventId ?? undefined,
-    };
-  }, []);
+  const defaultValues = {
+    id: sessionBeingEdited?.id ?? undefined,
+    date: sessionBeingEdited?.event.eventDate ?? new Date(),
+    workoutResults: sessionBeingEdited?.workoutResults ?? undefined,
+    eventId: sessionBeingEdited?.eventId ?? undefined,
+  };
 
   const [editWorkoutResultIndex, set_editWorkoutResultIndex] =
     useState<number>(-1);
@@ -115,10 +113,6 @@ WorkoutSessionFormProps) => {
     });
     onSuccess && onSuccess();
   };
-
-  useEffect(() => {
-    reset(defaultValues);
-  }, [reset, defaultValues]);
 
   const {
     fields: workoutResults,

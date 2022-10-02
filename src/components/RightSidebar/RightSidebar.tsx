@@ -60,7 +60,7 @@ export default function RightSidebar({ onClose }: { onClose: () => void }) {
                     alt=""
                   />
                 </div>
-                <h4 className="text-lg font-semibold text-accent-content">
+                <h4 className="text-lg font-semibold text-accent-content truncate max-w-[130px]">
                   {sessionData.user?.name}
                 </h4>
                 <MdArrowDropDown size={22} />

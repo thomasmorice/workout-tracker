@@ -84,37 +84,6 @@ model WorkoutResult {
     updatedAt                   DateTime       @updatedAt
 }
 
-enum Difficulty {
-    GREEN
-    YELLOW
-    RED
-    BLACK
-}
-
-enum WorkoutType {
-    EMOM
-    AMRAP
-    FOR_TIME
-    ONE_REP_MAX
-}
-
-enum ElementType {
-    UNCLASSIFIED
-    WOD
-    STRENGTH_OR_SKILLS
-    GYMNASTICS
-    STRENGTH
-    INTENSE_MOBILITY
-    TEAMWOD
-    ENDURANCE
-    OLYMPIC_WEIGHTLIFTING
-}
-
-enum ProfileEventType {
-    WEIGHT
-    PERSONAL_RECORD
-}
-
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -153,6 +122,19 @@ model User {
     workouts        Workout[]
     workoutSessions WorkoutSession[]
     weighings       Weighing[]
+    following       Friends[]        @relation(name: "users")
+    followedBy      Friends[]        @relation(name: "friendUsers")
+}
+
+model Friends {
+    id           String            @id @default(cuid())
+    user         User              @relation(name: "users", fields: [userId], references: [id])
+    friend       User              @relation(name: "friendUsers", fields: [friendUserId], references: [id])
+    userId       String
+    friendUserId String
+    privileges   FriendPrivilege[]
+
+    @@unique([userId, friendUserId])
 }
 
 model VerificationToken {
@@ -161,4 +143,40 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+enum FriendPrivilege {
+    TAKE_UNCLASSIFIED_OWNERSHIP // can take ownership of unclassified events
+    CAN_ACCESS_CLASSIFIED
+}
+
+enum Difficulty {
+    GREEN
+    YELLOW
+    RED
+    BLACK
+}
+
+enum WorkoutType {
+    EMOM
+    AMRAP
+    FOR_TIME
+    ONE_REP_MAX
+}
+
+enum ElementType {
+    UNCLASSIFIED
+    WOD
+    STRENGTH_OR_SKILLS
+    GYMNASTICS
+    STRENGTH
+    INTENSE_MOBILITY
+    TEAMWOD
+    ENDURANCE
+    OLYMPIC_WEIGHTLIFTING
+}
+
+enum ProfileEventType {
+    WEIGHT
+    PERSONAL_RECORD
 }
