@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Masonry from "react-masonry-css";
 import { useIntersectionObserver, useDebounce } from "usehooks-ts";
 import WorkoutCard from "../components/Workout/WorkoutCard";
@@ -22,7 +22,7 @@ const Workouts: NextPage = () => {
   const [searchTerm, set_searchTerm] = useState("");
   const searchTermDebounced = useDebounce<string>(searchTerm, 500);
 
-  const { data, fetchNextPage, hasNextPage, isFetching, ...rest } =
+  const { data, fetchNextPage, hasNextPage, isFetching, isSuccess, ...rest } =
     getInfiniteWorkouts({
       showClassifiedWorkoutOnly: classifiedOnly,
       searchTerm: searchTermDebounced,
@@ -31,6 +31,10 @@ const Workouts: NextPage = () => {
   useEffect(() => {
     !!entry?.isIntersecting && hasNextPage && fetchNextPage();
   }, [entry, fetchNextPage, hasNextPage]);
+
+  const hasNoWorkouts = useMemo(() => {
+    return data?.pages[0]?.workouts?.length === 0 && isSuccess;
+  }, [data, isSuccess]);
 
   return (
     <>
@@ -64,43 +68,49 @@ const Workouts: NextPage = () => {
       </div>
       {sessionData && (
         <>
-          <div className="pt-8">
-            <div className="flex flex-wrap gap-2 items-center">
-              <div className="form-control items-start ">
-                <label className="label cursor-pointer gap-2">
-                  <span className="label-text">
-                    {classifiedOnly
-                      ? "Only classified workouts"
-                      : "All workouts"}
-                  </span>
+          <div className="">
+            {!hasNoWorkouts && (
+              <div className="flex flex-wrap gap-2 items-center pt-8">
+                <div className="form-control items-start ">
+                  <label className="label cursor-pointer gap-2">
+                    <span className="label-text">
+                      {classifiedOnly
+                        ? "Only classified workouts"
+                        : "All workouts"}
+                    </span>
+                    <input
+                      type="checkbox"
+                      onChange={(e) => set_classifiedOnly(e.target.checked)}
+                      className="toggle"
+                      checked={classifiedOnly}
+                    />
+                  </label>
+                </div>
+
+                <div className="input bg-base-200 w-full relative flex items-center justify-between">
+                  <label className="z-10" htmlFor="searchWorkoutInput">
+                    <MdSearch size={22} />
+                  </label>
                   <input
-                    type="checkbox"
-                    onChange={(e) => set_classifiedOnly(e.target.checked)}
-                    className="toggle"
-                    checked={classifiedOnly}
+                    id="searchWorkoutInput"
+                    type="search"
+                    placeholder="Search…"
+                    value={searchTerm}
+                    onChange={(e) => set_searchTerm(e.target.value)}
+                    className="input absolute w-full left-0 px-12 bg-base-200"
                   />
-                </label>
-              </div>
 
-              <div className="input bg-base-200 w-full relative flex items-center justify-between">
-                <label className="z-10" htmlFor="searchWorkoutInput">
-                  <MdSearch size={22} />
-                </label>
-                <input
-                  id="searchWorkoutInput"
-                  type="search"
-                  placeholder="Search…"
-                  value={searchTerm}
-                  onChange={(e) => set_searchTerm(e.target.value)}
-                  className="input absolute w-full left-0 px-12 bg-base-200"
-                />
-
-                {/* <div className="z-10">
+                  {/* <div className="z-10">
                   <kbd className="kbd bg-base-100">⌘</kbd>
                   <kbd className="kbd bg-base-100">K</kbd>
                 </div> */}
+                </div>
               </div>
-            </div>
+            )}
+
+            <h2 className="text-2xl text-accent-content font-bold flex gap-3 items-center group cursor-pointer mt-12">
+              Latest classified workouts
+            </h2>
 
             <Masonry
               breakpointCols={{
@@ -114,21 +124,26 @@ const Workouts: NextPage = () => {
               {data?.pages
                 ? data.pages.map((page) =>
                     page.workouts.map((workout) => (
-                      <WorkoutCard
-                        key={workout.id}
-                        onEdit={() => showWorkoutForm("edit", workout)}
-                        onDuplicate={() =>
-                          showWorkoutForm("duplicate", workout)
-                        }
-                        onDelete={() => showWorkoutForm("delete", workout)}
-                        workout={workout}
-                      />
+                      <div key={workout.id} className="mb-8">
+                        <WorkoutCard
+                          onEdit={() => showWorkoutForm("edit", workout)}
+                          onDuplicate={() =>
+                            showWorkoutForm("duplicate", workout)
+                          }
+                          onDelete={() => showWorkoutForm("delete", workout)}
+                          workout={workout}
+                        />
+                      </div>
                     ))
                   )
                 : Array(9)
                     .fill(0)
                     .map((_, i) => <WorkoutCardSkeleton key={i} />)}
             </Masonry>
+
+            {hasNoWorkouts && (
+              <p>No results found yet, start creating workouts</p>
+            )}
 
             <div className="mb-10 w-1/2 h-10" ref={ref}></div>
 

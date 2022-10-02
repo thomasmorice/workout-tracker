@@ -3,6 +3,7 @@ import Image from "next/image";
 import { MdDone, MdDelete, MdTimer, MdCopyAll, MdEdit } from "react-icons/md";
 import { InferQueryOutput } from "../../types/trpc";
 import { enumToString } from "../../utils/formatting";
+import { useSession } from "next-auth/react";
 
 interface WorkoutCardProps {
   workout: InferQueryOutput<"workout.get-infinite-workouts">["workouts"][number];
@@ -17,6 +18,7 @@ export default function WorkoutCard({
   onEdit,
   onDelete,
 }: WorkoutCardProps) {
+  const { data: sessionData } = useSession();
   return (
     <div className="group card mb-8 bg-base-200 transition-all hover:shadow-lg duration-300">
       <div className="card-body ">
@@ -68,7 +70,9 @@ export default function WorkoutCard({
             </div>
           )}
 
-          <div className={`badge rounded-none text-xs font-medium `}>
+          <div
+            className={`badge badge-primary rounded-none text-xs font-medium `}
+          >
             {enumToString(workout.elementType)}
           </div>
 
@@ -106,45 +110,49 @@ export default function WorkoutCard({
         </div>
 
         {/* Description */}
-        <div className="description whitespace-pre-wrap break-words text-[0.8rem] leading-relaxed font-medium opacity-70">
+        <div className="description whitespace-pre-wrap break-words text-[0.77rem] leading-relaxed font-medium opacity-70">
           {workout.description}
         </div>
 
-        {onEdit && onDuplicate && onDelete && (
-          <>
-            <div className="divider opacity-50"></div>
+        {onEdit &&
+          onDuplicate &&
+          onDelete &&
+          (workout.creator.id === sessionData?.user?.id ||
+            workout.elementType === "UNCLASSIFIED") && (
+            <>
+              <div className="divider opacity-50"></div>
 
-            {/* Card footer */}
+              {/* Card footer */}
 
-            <div className="card-actions justify-end ">
-              <div className="btn-group ">
-                <button
-                  type="button"
-                  onClick={onEdit}
-                  className="btn btn-sm btn-outline gap-x-2 text-xs"
-                >
-                  <MdEdit size={17} /> Edit
-                </button>
+              <div className="card-actions justify-end ">
+                <div className="btn-group ">
+                  <button
+                    type="button"
+                    onClick={onEdit}
+                    className="btn btn-sm btn-outline gap-x-2 text-xs"
+                  >
+                    <MdEdit size={17} /> Edit
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={onDuplicate}
-                  className="btn btn-sm btn-outline gap-x-2 text-xs"
-                >
-                  <MdCopyAll size={17} /> Duplicate
-                </button>
+                  <button
+                    type="button"
+                    onClick={onDuplicate}
+                    className="btn btn-sm btn-outline gap-x-2 text-xs"
+                  >
+                    <MdCopyAll size={17} /> Duplicate
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={onDelete}
-                  className="btn btn-sm btn-outline btn-error text-xs"
-                >
-                  <MdDelete size={17} />
-                </button>
+                  <button
+                    type="button"
+                    onClick={onDelete}
+                    className="btn btn-sm btn-outline btn-error text-xs"
+                  >
+                    <MdDelete size={17} />
+                  </button>
+                </div>
               </div>
-            </div>
-          </>
-        )}
+            </>
+          )}
       </div>
     </div>
   );

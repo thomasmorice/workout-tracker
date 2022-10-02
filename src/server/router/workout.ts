@@ -80,6 +80,7 @@ export const workoutRouter = createProtectedRouter()
       limit: z.number().min(1).max(100).nullish(),
       cursor: z.number().nullish(), // <-- "cursor" needs to exist, but can be any type
     }),
+
     async resolve({ ctx, input }) {
       const limit = input.limit ?? 20;
       const { cursor } = input;
@@ -133,7 +134,26 @@ export const workoutRouter = createProtectedRouter()
             },
           }),
         AND: {
-          creatorId: ctx.session.user.id,
+          OR: [
+            {
+              creatorId: ctx.session.user.id,
+            },
+
+            {
+              AND: [
+                {
+                  creator: {
+                    following: {
+                      some: {
+                        friendUserId: ctx.session.user.id,
+                      },
+                    },
+                  },
+                  // elementType: "UNCLASSIFIED",
+                },
+              ],
+            },
+          ],
         },
       };
 
