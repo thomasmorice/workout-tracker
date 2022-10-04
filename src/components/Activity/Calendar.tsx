@@ -44,14 +44,14 @@ const Calendar = ({
 
   const getHeader = () => {
     return (
-      <div className="flex items-center justify-between mb-1">
+      <div className="mb-3 flex items-center justify-between">
         <h2 className="h2">{format(currentMonth, "MMMM, yyyy")}</h2>
         <div className="flex gap-3">
           <div
             onClick={() => {
               set_currentMonth(subMonths(currentMonth, 1));
             }}
-            className="btn btn-sm btn-circle btn-outline"
+            className="btn btn-outline btn-circle btn-sm"
           >
             <AiOutlineLeft className="" />
           </div>
@@ -60,7 +60,7 @@ const Calendar = ({
             onClick={() => {
               set_currentMonth(addMonths(currentMonth, 1));
             }}
-            className="btn btn-sm btn-circle btn-outline"
+            className="btn btn-outline btn-circle btn-sm"
           >
             <AiOutlineRight className="navIcon" />
           </div>
@@ -80,7 +80,7 @@ const Calendar = ({
       );
     }
     return (
-      <div className="grid grid-cols-7 text-2xs font-light text-center opacity-80">
+      <div className="text-2xs grid grid-cols-7 text-center font-light opacity-80">
         {weekDays}
       </div>
     );
@@ -94,7 +94,7 @@ const Calendar = ({
       week.push(
         <div
           key={`${format(currentDate, "w")}-${day}`}
-          className={`relative cursor-pointer text-sm rounded-full h-9 my-1 flex items-center justify-center transition-colors 
+          className={`relative my-1 flex h-9 cursor-pointer items-center justify-center rounded-full text-sm transition-colors 
             ${day === 0 && ""}
             ${isSameMonth(clonedDate, activeDate) ? "" : "text-base-content"} 
           `}
@@ -106,23 +106,23 @@ const Calendar = ({
           }
         >
           <div
-            className={`flex w-9 h-9 rounded-full text-base-content dark:text-accent-content  items-center justify-center  hover:bg-primary-content hover:dark:text-primary ${
+            className={`flex h-9 w-9 items-center justify-center rounded-full  text-base-content hover:bg-primary-content  dark:text-accent-content hover:dark:text-primary ${
               isSameDay(currentDate, new Date())
                 ? "bg-primary"
                 : selectedDate &&
                   isSameDay(currentDate, selectedDate) &&
-                  "flex w-7 h-7 bg-primary-content dark:text-primary"
+                  "flex h-7 w-7 bg-primary-content dark:text-primary"
             }`}
           >
             {format(currentDate, "d")}
-            <div className="absolute bottom-0.5 left-0 w-full gap-0.5 flex justify-center">
+            <div className="absolute bottom-0.5 left-0 flex w-full justify-center gap-0.5">
               {workoutSessionEvents
                 .find((session) => isSameDay(session.eventDate, currentDate))
                 ?.workoutSession?.workoutResults.map((result) => {
                   return (
                     <div
                       key={result.id}
-                      className={`flex w-1 h-1 items-center justify-end  rounded-full bg-${
+                      className={`flex h-1 w-1 items-center justify-end  rounded-full bg-${
                         !result.workout.difficulty
                           ? "gray-400"
                           : result.workout.difficulty === "BLACK"
@@ -157,7 +157,7 @@ const Calendar = ({
     }
 
     return (
-      <div className="rounded-xl overflow-hidden">
+      <div className="overflow-hidden rounded-xl">
         <div className="grid grid-cols-7 gap-[1px]">{allWeeks}</div>
       </div>
     );
@@ -170,8 +170,8 @@ const Calendar = ({
       {getWeekDaysNames()}
       {getDates()}
       {isLoading && (
-        <div className="absolute h-[calc(100%_+_2rem)] w-[calc(100%_+_2rem)] -top-4 -left-4 bg-opacity-70 bg-base-200 rounded-xl flex items-center justify-center">
-          <Rings className="w-14 h-14" />
+        <div className="absolute -top-4 -left-4 flex h-[calc(100%_+_2rem)] w-[calc(100%_+_2rem)] items-center justify-center rounded-xl bg-base-200 bg-opacity-70">
+          <Rings className="h-14 w-14" />
         </div>
       )}
     </section>
