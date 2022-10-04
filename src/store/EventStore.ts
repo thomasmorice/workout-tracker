@@ -9,8 +9,10 @@ interface EventState {
     | "edit-session"
     | "add-weighing"
     | "edit-weighing";
+  sessionDate?: Date;
   openWeighingForm: (existingWeighing?: EventType["weighing"]) => void;
   openSessionForm: (existingSession?: EventType["workoutSession"]) => void;
+  openSessionFormOnSpecificDate: (date: Date) => void;
   closeForm: () => void;
   weighingBeingEdited?: EventType["weighing"];
   sessionBeingEdited?:
@@ -30,6 +32,12 @@ const useEventStore = create<EventState>()((set, get) => ({
         weighingBeingEdited: weighing,
       });
     }
+  },
+  openSessionFormOnSpecificDate: (date) => {
+    set({
+      eventFormState: "add-session",
+      sessionDate: date,
+    });
   },
   openSessionForm: (session) => {
     if (!session) {

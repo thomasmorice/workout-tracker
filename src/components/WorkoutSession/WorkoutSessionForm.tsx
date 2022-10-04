@@ -42,11 +42,11 @@ WorkoutSessionFormProps) => {
   const { createOrEditMultipleWorkoutResult, deleteMultipleWorkoutResult } =
     useWorkoutResultService();
 
-  const { sessionBeingEdited } = useEventStore();
+  const { sessionBeingEdited, sessionDate } = useEventStore();
 
   const defaultValues = {
     id: sessionBeingEdited?.id ?? undefined,
-    date: sessionBeingEdited?.event.eventDate ?? new Date(),
+    date: sessionBeingEdited?.event.eventDate ?? sessionDate ?? new Date(),
     workoutResults: sessionBeingEdited?.workoutResults ?? undefined,
     eventId: sessionBeingEdited?.eventId ?? undefined,
   };
@@ -174,13 +174,13 @@ WorkoutSessionFormProps) => {
           </div>
           {/* )} */}
           {workoutResults.length > 0 && (
-            <div className="form-control relative w-full flex-1 mt-2">
+            <div className="form-control relative mt-2 w-full flex-1">
               <label className="label">
                 <span className="label-text">
                   Session workouts {`(${workoutResults.length})`}
                 </span>
               </label>
-              <div className="text-sm flex flex-col gap-8">
+              <div className="flex flex-col gap-8 text-sm">
                 <Reorder.Group
                   values={workoutResults}
                   onReorder={(values) => replaceWorkoutResults(values)}
@@ -209,7 +209,7 @@ WorkoutSessionFormProps) => {
           )}
         </div>
         {isDirty && (
-          <div className="flex flex-col text-sm gap-2">
+          <div className="flex flex-col gap-2 text-sm">
             <button
               className={`btn mt-2 ${isSubmitting ? "loading" : ""}`}
               type="submit"
