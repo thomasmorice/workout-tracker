@@ -53,7 +53,7 @@ export default function DesktopSidebar({ items }: NavigationItemsProps) {
                 }`}
                     >
                       <a
-                        className={`flex w-full content-center  gap-3 ${
+                        className={`flex w-full items-center  gap-3 ${
                           isSidebarExpanded ? "" : "justify-center"
                         }`}
                       >
