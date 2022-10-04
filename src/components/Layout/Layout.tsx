@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import WorkoutForm from "../Workout/WorkoutForm";
@@ -10,6 +11,7 @@ import { MdLogin, MdMenuOpen } from "react-icons/md";
 import { useEffect, useState } from "react";
 import RightSidebar from "../RightSidebar/RightSidebar";
 import { AnimatePresence } from "framer-motion";
+import { useSidebarStore } from "../../store/SidebarStore";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -20,6 +22,7 @@ export default function Layout({ children }: LayoutProps) {
   const { state: workoutFormState } = useWorkoutStore();
   const [currentPath, set_currentPath] = useState<String[]>();
   const [isRightSidebarOpened, set_isRightSidebarOpened] = useState(false);
+  const { isSidebarExpanded } = useSidebarStore();
 
   useEffect(() => {
     const asPathWithoutQuery = router.pathname.split("?")[0];
@@ -30,18 +33,19 @@ export default function Layout({ children }: LayoutProps) {
     <div>
       <ToastMessage />
       <Navigation onOpenSidebar={() => set_isRightSidebarOpened(true)} />
-      <AnimatePresence>
-        {isRightSidebarOpened && (
-          <RightSidebar onClose={() => set_isRightSidebarOpened(false)} />
-        )}
-      </AnimatePresence>
+      <div className="hidden md:block">
+        <RightSidebar />
+      </div>
       {workoutFormState && <WorkoutForm />}
       <div id="portal" />
-      {/* {workoutSessionFormState && Workout} */}
 
-      <main className={`px-5 sm:px-8 md:ml-80`}>
-        <div className="flex w-full justify-between py-5 items-center">
-          <div className="hidden md:block text-sm breadcrumbs">
+      <main
+        className={`px-5 transition-all sm:px-8 md:mr-80 xl:mr-[340px] ${
+          isSidebarExpanded ? "md:ml-64" : "md:ml-16 xl:ml-20"
+        }`}
+      >
+        <div className="flex w-full items-center justify-between py-5">
+          <div className="breadcrumbs hidden text-sm md:block">
             <ul>
               <li className="capitalize" key={"home"}>
                 Home
@@ -64,18 +68,7 @@ export default function Layout({ children }: LayoutProps) {
             </>
           ) : (
             <>
-              {sessionData ? (
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => set_isRightSidebarOpened(true)}
-                    type="button"
-                    className="btn btn-ghost flex gap-2"
-                  >
-                    <MdMenuOpen size={24} />
-                    <div className="hidden md:flex">Activities</div>
-                  </button>
-                </div>
-              ) : (
+              {!sessionData ? (
                 <button
                   type="button"
                   onClick={() => signIn()}
@@ -84,6 +77,16 @@ export default function Layout({ children }: LayoutProps) {
                   <MdLogin size="22px" />
                   Login
                 </button>
+              ) : (
+                <div className="relative mr-2 h-12 w-12 rounded-full ring ring-base-200 md:hidden">
+                  <Image
+                    className="rounded-full"
+                    layout="fill"
+                    referrerPolicy="no-referrer"
+                    src={sessionData.user?.image ?? "https://i.pravatar.cc/300"}
+                    alt=""
+                  />
+                </div>
               )}
             </>
           )}

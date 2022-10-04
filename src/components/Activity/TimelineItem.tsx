@@ -32,7 +32,7 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
 
   return (
     <>
-      <div className="mb-12 ml-4 cursor-pointer">
+      <div className="mb-12 ml-5 cursor-pointer">
         <div
           onClick={() => {
             if (event.workoutSession) {
@@ -44,38 +44,38 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
           className="group"
         >
           <div
-            className={`absolute transition-all w-3 h-3 rounded-full -left-1.5 border border-opacity-10
+            className={`absolute -left-1.5 h-3 w-3 rounded-full border border-opacity-10 transition-all
           ${
             isBefore(event.eventDate, Date.now())
-              ? "bg-base-300 border-accent-content group-hover:bg-base-100"
-              : "bg-primary border-primary"
+              ? "border-accent-content bg-base-300 group-hover:bg-base-100"
+              : "border-primary bg-primary"
           }`}
           ></div>
-          <div className="gap-2 flex flex-col group-hover:translate-x-1 transition-transform">
-            <h3 className="font-semibold text-accent-content -mt-1.5 flex gap-2 items-center">
+          <div className="flex flex-col gap-2 transition-transform group-hover:translate-x-1">
+            <h3 className="-mt-1.5 flex items-center gap-2 font-semibold text-accent-content">
               {event.workoutSession
                 ? getSessionTitle(event.workoutSession)
                 : "Weighing"}
             </h3>
-            <div className=" font-light text-xs flex flex-col gap-2 ">
-              <div className="flex gap-1.5 items-center">
+            <div className=" flex flex-col gap-2 text-xs font-light ">
+              <div className="flex items-center gap-1.5">
                 <MdOutlineCalendarToday className="opacity-50" size={16} />
                 <time className="">{getActivityDate(event)}</time>
               </div>
               {event.workoutSession ? (
                 <>
-                  <div className="flex gap-1.5 items-center ">
+                  <div className="flex items-center gap-1.5 ">
                     <MdTimer className="opacity-50" size={16} />
                     {getSessionTotalTime(event.workoutSession)}mn session
                   </div>
 
-                  <div className="flex gap-1.5 items-center">
+                  <div className="flex items-center gap-1.5">
                     <MdChecklistRtl className="opacity-50" size={16} />
                     {event.workoutSession.workoutResults.length} workout(s)
                   </div>
                 </>
               ) : (
-                <div className="flex gap-1.5 items-center">
+                <div className="flex items-center gap-1.5">
                   <MdMonitorWeight className="opacity-50" size={16} />
                   <div className="">{event.weighing?.weight}KG</div>
                 </div>
@@ -88,7 +88,7 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
           <button
             onClick={() => set_showConfirmDeleteEventModal(true)}
             type="button"
-            className="btn btn-error btn-outline btn-xs w-fit"
+            className="btn btn-outline btn-error btn-xs w-fit"
           >
             <div className="flex items-center gap-2">
               <MdDelete />

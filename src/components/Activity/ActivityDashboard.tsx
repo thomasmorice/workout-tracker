@@ -35,15 +35,13 @@ export default function ActivityDashboard() {
   }, [events, showSpecificDay]);
 
   const timelineItemVariant = {
-    hidden: { opacity: 0, x: 80 },
+    hidden: { opacity: 0, x: -20 },
     show: { opacity: 1, x: 0 },
   };
 
   const timelineContainerVariant = {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 1 },
     show: {
-      opacity: 1,
-
       transition: {
         staggerChildren: 0.1,
       },
@@ -61,17 +59,17 @@ export default function ActivityDashboard() {
         isLoading={isLoading}
       />
 
-      <div className="divider m-0"></div>
+      <div className="divider my-6"></div>
       <div>
-        <div className="flex gap-3 items-center mb-7">
+        <div className="mb-7 flex items-center gap-3">
           <h2 className="h2">Activity</h2>
           <div className="dropdown ">
-            <label tabIndex={0} className="btn btn-sm btn-outline btn-circle">
+            <label tabIndex={0} className="btn btn-outline btn-circle btn-sm">
               <MdAdd size={22} />
             </label>
             <ul
               tabIndex={0}
-              className="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 text-sm"
+              className="dropdown-content menu rounded-box w-52 bg-base-200 p-2 text-sm shadow"
             >
               <li>
                 <a onClick={() => openSessionForm()}>Add new session</a>

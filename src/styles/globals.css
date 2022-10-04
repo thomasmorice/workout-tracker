@@ -6,4 +6,8 @@
   .h2 {
     @apply text-xl font-semibold text-accent-content;
   }
+
+  .sidebar-shadow {
+    box-shadow: rgba(0, 0, 0, 0.22) 0px 4px 22px;
+  }
 }

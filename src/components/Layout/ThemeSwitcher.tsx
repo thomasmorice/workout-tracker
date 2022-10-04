@@ -24,7 +24,7 @@ export default function ThemeSwitcher({
     <></>
   ) : (
     <div
-      className="flex cursor-pointer items-center gap-2"
+      className="flex w-full cursor-pointer items-center gap-2"
       onClick={toggleTheme}
     >
       <AnimatePresence exitBeforeEnter>
@@ -45,7 +45,7 @@ export default function ThemeSwitcher({
         >
           {theme === "dark" ? (
             <svg
-              className={` h-7 w-7 fill-yellow-400`}
+              className={` h-6 w-6 fill-yellow-400`}
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
             >
@@ -53,7 +53,7 @@ export default function ThemeSwitcher({
             </svg>
           ) : (
             <svg
-              className={`h-7 w-7  fill-violet-600
+              className={`h-6 w-6  fill-violet-600
           `}
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"

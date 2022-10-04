@@ -1,104 +1,103 @@
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRef } from "react";
-import { MdLogin, MdLogout } from "react-icons/md";
+import { MdLogin, MdOutlineMenuOpen, MdOutlineMenu } from "react-icons/md";
 import { Rings } from "react-loading-icons";
 import Logo from "../Logo";
 import { NavigationItemsProps } from "./Navigation";
-import Image from "next/image";
-import ThemeSwitcher from "../ThemeSwitcher";
+import { useSidebarStore } from "../../../store/SidebarStore";
 
 export default function DesktopSidebar({ items }: NavigationItemsProps) {
   const ref = useRef(null);
   const { data: sessionData, status } = useSession();
   const router = useRouter();
+  const { isSidebarExpanded, setIsSidebarExpanded } = useSidebarStore();
+
+  const classnames = {
+    menuListItem:
+      "btn btn-ghost cursor-pointer rounded-lg px-4 py-3 opacity-70 hover:opacity-90",
+  };
 
   return (
     <>
       <aside
         ref={ref}
-        className="fixed  z-50 h-full w-80 rounded-r-2xl bg-base-100 px-8 pt-8 shadow-2xl  shadow-base-300"
+        className={`shadow-zinc-900-700 sidebar-shadow fixed z-50  h-full bg-base-100 pt-6 transition-all ${
+          isSidebarExpanded ? "px-6" : "px-2"
+        } `}
       >
-        <Logo />
+        <div className={`${isSidebarExpanded ? "pt-5" : ""}`}>
+          <Logo />
+        </div>
 
-        <div className="divider px-8 py-4 opacity-60"></div>
+        <div
+          className={`divider opacity-60 ${isSidebarExpanded ? "py-8" : ""}`}
+        ></div>
 
-        <ul className="flex w-full flex-col gap-5 pt-2 text-sm">
+        <ul className="flex w-full flex-col gap-5 text-sm">
           {/* User */}
 
           {sessionData ? (
             <>
-              <div className="flex items-center gap-4">
-                <div className="mask mask-circle h-14 w-14 relative">
-                  <Image
-                    layout="fill"
-                    referrerPolicy="no-referrer"
-                    src={sessionData.user?.image ?? "https://i.pravatar.cc/300"}
-                    alt=""
-                  />
-                </div>
-
-                <div className="flex flex-col justify-center">
-                  <div className="text-[16px] font-semibold leading-4 text-base-content opacity-80">
-                    {sessionData.user?.name}
-                  </div>
-                  <div className="text-sm font-light opacity-60">
-                    {sessionData.user?.email}
-                  </div>
-                </div>
-              </div>
-
               {items.map((item) => {
                 const isSelected = item.href === router.asPath;
                 return (
                   <Link key={item.href} href={item.href}>
                     <li
-                      className={`btn  cursor-pointer rounded-lg px-4 py-3
+                      className={`btn  cursor-pointer rounded-lg  py-3
                 ${
                   isSelected
                     ? "btn-primary py-3 text-primary-content opacity-100"
                     : "btn-ghost  opacity-70 hover:opacity-90"
                 }`}
                     >
-                      <a className="flex w-full items-center gap-3">
+                      <a
+                        className={`flex w-full content-center  gap-3 ${
+                          isSidebarExpanded ? "" : "justify-center"
+                        }`}
+                      >
                         <>
-                          <item.icon size="18px" /> {item.label}
+                          <item.icon size="18px" />
+                          {isSidebarExpanded && item.label}
                         </>
                       </a>
                     </li>
                   </Link>
                 );
               })}
+
               <li
-                className={`btn  btn-ghost cursor-pointer rounded-lg px-4 py-3  opacity-70 hover:opacity-90`}
+                onClick={() => setIsSidebarExpanded(!isSidebarExpanded)}
+                className={classnames.menuListItem}
               >
-                <a
-                  onClick={() => signOut()}
-                  className="flex w-full items-center gap-3"
-                >
+                <a className="flex w-full items-center gap-3">
                   <>
-                    <MdLogout size="18px" />
-                    Sign out
+                    {isSidebarExpanded ? (
+                      <>
+                        <MdOutlineMenuOpen size="18px" /> Close
+                      </>
+                    ) : (
+                      <MdOutlineMenu size="18px" />
+                    )}
                   </>
                 </a>
               </li>
-              <ThemeSwitcher />
             </>
           ) : status !== "loading" ? (
-            <li
-              className={`btn  btn-ghost cursor-pointer rounded-lg px-4 py-3  opacity-70 hover:opacity-90`}
-            >
-              <a
-                onClick={() => signIn()}
-                className="flex w-full items-center gap-3"
-              >
-                <>
-                  <MdLogin size="18px" />
-                  Login
-                </>
-              </a>
-            </li>
+            <>
+              <li className={classnames.menuListItem}>
+                <a
+                  onClick={() => signIn()}
+                  className="flex w-full items-center gap-3"
+                >
+                  <>
+                    <MdLogin size="18px" />
+                    Login
+                  </>
+                </a>
+              </li>
+            </>
           ) : (
             <div className="flex items-center gap-x-2">
               <Rings />
