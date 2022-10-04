@@ -1,4 +1,12 @@
 import { env } from "./src/env/server.mjs";
+import withPWA from "next-pwa";
+
+const importWithPWA = withPWA({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === "development",
+});
 
 /**
  * Don't be scared of the generics here.
@@ -12,18 +20,12 @@ function defineNextConfig(config) {
   return config;
 }
 
-export default defineNextConfig({
-  reactStrictMode: true,
-  swcMinify: true,
-  images: {
-    domains: ["lh3.googleusercontent.com"],
-  },
-  webpack(config) {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: ["@svgr/webpack"],
-    });
-
-    return config;
-  },
-});
+export default defineNextConfig(
+  importWithPWA({
+    reactStrictMode: true,
+    swcMinify: true,
+    images: {
+      domains: ["lh3.googleusercontent.com"],
+    },
+  })
+);

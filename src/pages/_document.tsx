@@ -14,6 +14,9 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@100;200;300;400;500;600;700&display=swap"
           rel="stylesheet"
         />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icon.png"></link>
+        <meta name="theme-color" content="#6419E6" />
       </Head>
       <body className="min-h-screen">
         <Main />
