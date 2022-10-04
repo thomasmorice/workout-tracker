@@ -9,7 +9,8 @@ import Calendar from "./Calendar";
 import TimelineItem from "./TimelineItem";
 
 export default function ActivityDashboard() {
-  const { openWeighingForm, openSessionForm } = useEventStore();
+  const { openWeighingForm, openSessionForm, openSessionFormOnSpecificDate } =
+    useEventStore();
   const { currentMonth } = useActivityStore();
 
   const { getEvents } = useEventService();
@@ -72,7 +73,15 @@ export default function ActivityDashboard() {
               className="dropdown-content menu rounded-box w-52 bg-base-200 p-2 text-sm shadow"
             >
               <li>
-                <a onClick={() => openSessionForm()}>Add new session</a>
+                <a
+                  onClick={() =>
+                    showSpecificDay
+                      ? openSessionFormOnSpecificDate(showSpecificDay)
+                      : openSessionForm()
+                  }
+                >
+                  Add new session
+                </a>
               </li>
               <li>
                 <a onClick={() => openWeighingForm()}>Add weighing</a>
