@@ -4,6 +4,7 @@ import { useDebounce } from "usehooks-ts";
 import { useWorkoutService } from "../../services/useWorkoutService";
 import { InferQueryOutput } from "../../types/trpc";
 import WorkoutCard from "./WorkoutCard";
+import { MdClear } from "react-icons/md";
 
 interface WorkoutSelectProps {
   handleAddWorkout: (
@@ -44,7 +45,7 @@ export default function WorkoutSelectField({
     <>
       {(fetchedWorkouts?.pages[0]?.workouts.length ?? 0) > 0 &&
         searchTerm.length !== 0 && (
-          <div className="absolute z-30 top-14 bg-base-200 max-h-[520px] overflow-auto rounded-xl">
+          <div className="absolute top-14 z-30 max-h-[520px] overflow-auto rounded-xl bg-base-200">
             {fetchedWorkouts?.pages.map((workoutPage, pageIndex) => (
               <div className="flex flex-col" key={pageIndex}>
                 {workoutPage.workouts.map((workout) => (
@@ -67,33 +68,39 @@ export default function WorkoutSelectField({
   );
 
   return (
-    <div className="flex flex-col gap-2 relative">
+    <div className="relative flex flex-col gap-2">
       <input
-        className="input w-full pr-8 bg-base-200"
+        className="input w-full bg-base-200 pr-8"
         onFocus={() => set_showWorkoutSearchResult(true)}
+        onBlur={() => set_showWorkoutSearchResult(false)}
         ref={searchInput}
-        // onBlur={() => set_showWorkoutSearchResult(false)}
         type="search"
         placeholder={"search..."}
         value={searchTerm}
         onChange={(e) => set_searchTerm(e.target.value)}
       />
+      {searchTerm === "" && showWorkoutSearchResult && (
+        <ul
+          tabIndex={0}
+          className="dropdown-content menu text-2xs w-full rounded-lg bg-base-300 p-1 shadow md:w-64"
+        >
+          <li
+            onMouseDown={() => {
+              set_searchTerm(">latest");
+              searchInput.current?.focus();
+            }}
+          >
+            <a> Show latest classified workouts</a>
+          </li>
+        </ul>
+      )}
+
       {isFetching && (
         <div className="absolute top-0 right-1">
           <Rings className="w-12" />
         </div>
       )}
-      {showWorkoutSearchResult && workoutSearchResult}
-      <button
-        type="button"
-        onClick={() => {
-          set_searchTerm(">latest");
-          searchInput.current?.focus();
-        }}
-        className="btn btn-xs w-fit"
-      >
-        Latest workouts
-      </button>
+      {searchTerm !== "" && workoutSearchResult}
     </div>
   );
 }
