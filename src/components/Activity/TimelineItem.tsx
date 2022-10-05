@@ -14,9 +14,10 @@ import {
   getSessionTitle,
   getSessionTotalTime,
 } from "../../utils/utils";
-import { isBefore } from "date-fns";
+import { format, isBefore } from "date-fns";
 import { useEventService } from "../../services/useEventService";
 import { useEventStore } from "../../store/EventStore";
+import { zonedTimeToUtc } from "date-fns-tz";
 
 interface TimelineSessionProps {
   event: InferQueryOutput<"event.get-events">[number];
@@ -52,15 +53,23 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
           }`}
           ></div>
           <div className="flex flex-col gap-2 transition-transform group-hover:translate-x-1">
-            <h3 className="-mt-1.5 flex items-center gap-2 font-semibold text-accent-content">
+            <time className="-mt-0.5 flex items-center gap-2 text-sm text-accent-content">
+              {format(
+                zonedTimeToUtc(event.eventDate, "Europe/Stockholm"),
+                "LLLL do, u 'at' p"
+              )}
+            </time>
+            {/* <h3 className="-mt-1.5 flex items-center gap-2 font-semibold text-accent-content">
               {event.workoutSession
                 ? getSessionTitle(event.workoutSession)
                 : "Weighing"}
-            </h3>
+            </h3> */}
             <div className=" flex flex-col gap-2 text-xs font-light ">
               <div className="flex items-center gap-1.5">
-                <MdOutlineCalendarToday className="opacity-50" size={16} />
-                <time className="">{getActivityDate(event)}</time>
+                {/* <MdOutlineCalendarToday className="opacity-50" size={16} /> */}
+                {event.workoutSession
+                  ? getSessionTitle(event.workoutSession)
+                  : "Weighing"}
               </div>
               {event.workoutSession ? (
                 <>

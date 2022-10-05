@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   useForm,
   Controller,
@@ -144,7 +144,7 @@ WorkoutSessionFormProps) => {
               render={({ field }) => (
                 <DatePicker
                   className="input w-full bg-base-200"
-                  // disabled={!editMode}
+                  onFocus={(e) => (e.target.readOnly = true)}
                   showTimeInput
                   placeholderText="Select date"
                   onChange={(date: Date) => field.onChange(date)}
