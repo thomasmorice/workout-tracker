@@ -23,7 +23,7 @@ export default function WorkoutResultForm({
   return (
     <Modal onClose={onClose}>
       <>
-        <h3 className="text-xl font-bold capitalize mb-4">{`Enter a result for workout ${
+        <h3 className="mb-4 text-xl font-bold capitalize">{`Workout result ${
           workoutResult.workout.name || `#${workoutResult.workout.id}`
         }`}</h3>
 
@@ -67,7 +67,7 @@ export default function WorkoutResultForm({
           </div>
 
           <div className="form-control">
-            <label className="label justify-start gap-4 cursor-pointer">
+            <label className="label cursor-pointer justify-start gap-4">
               <input
                 type="checkbox"
                 className="toggle"
@@ -128,7 +128,7 @@ export default function WorkoutResultForm({
                   <span>seconds</span>
                 </label>
                 {editedWorkoutResult.time && (
-                  <span className="text-xs pt-2">
+                  <span className="pt-2 text-xs">
                     {!isNaN(editedWorkoutResult.time) &&
                       ` ${format(
                         editedWorkoutResult.time * 1000,
@@ -163,7 +163,7 @@ export default function WorkoutResultForm({
                   <span>Reps</span>
                 </label>
                 {workoutResult.workout.workoutType === "FOR_TIME" && (
-                  <span className="text-xs pt-2">{`(if you haven't finished the workout)`}</span>
+                  <span className="pt-2 text-xs">{`(if you haven't finished the workout)`}</span>
                 )}
               </div>
             )}
@@ -196,7 +196,7 @@ export default function WorkoutResultForm({
           <button
             type="button"
             onClick={() => onSave(editedWorkoutResult)}
-            className="mt-4 btn"
+            className="btn mt-4"
           >{`${editedWorkoutResult.id ? "Edit" : "Save"} result`}</button>
         </div>
       </>

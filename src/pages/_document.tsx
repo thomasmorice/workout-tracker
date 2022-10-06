@@ -19,7 +19,7 @@ export default function Document() {
         <meta name="theme-color" content="#6419E6" />
         <meta
           name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width"
+          content="initial-scale=1, user-scalable=no, width=device-width, height=device-height, viewport-fit=cover"
         />
       </Head>
       <body className="min-h-screen">

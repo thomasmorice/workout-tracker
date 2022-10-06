@@ -1,10 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { Rings } from "react-loading-icons";
 import { useDebounce } from "usehooks-ts";
 import { useWorkoutService } from "../../services/useWorkoutService";
 import { InferQueryOutput } from "../../types/trpc";
 import WorkoutCard from "./WorkoutCard";
-import { MdClear } from "react-icons/md";
 
 interface WorkoutSelectProps {
   handleAddWorkout: (

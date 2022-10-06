@@ -42,7 +42,7 @@ export default function WorkoutSessionResultItem({
     if (
       isDone &&
       (result.isRx ||
-        result.description !== "" ||
+        (result.description && result.description !== "") ||
         result.totalReps ||
         result.weight ||
         result.rating ||
@@ -75,77 +75,79 @@ export default function WorkoutSessionResultItem({
       }}
       onPointerDown={() => set_isDragging(true)}
       onPointerUp={() => set_isDragging(false)}
-      className="mb-5"
+      className="mb-12"
     >
-      <div className="relative card mb-2 bg-base-200 transition-all hover:shadow-lg duration-300">
-        <div className="card-body p-5">
-          {/* Drag & drop on desktop */}
-          <div
-            className={`absolute p-2 top-4 right-1.5  cursor-grab hidden md:flex ${
-              isDragging ? "z-50" : ""
-            }`}
-            onPointerDown={(event) => {
-              event.preventDefault();
-              dragControls.start(event);
-            }}
-          >
-            <MdDragIndicator className="w-7 h-7" />
-          </div>
-
-          {/* Move position on phone */}
-
-          <div className="md:hidden absolute right-4">
-            <div className="btn-group">
-              <button
-                disabled={!onMoveResultDown}
-                onClick={onMoveResultDown}
-                type="button"
-                className="btn btn-xs"
-              >
-                <MdOutlineArrowDropDown size="24px" />
-              </button>
-              <button
-                disabled={!onMoveResultUp}
-                onClick={onMoveResultUp}
-                type="button"
-                className="btn btn-xs"
-              >
-                <MdOutlineArrowDropUp size="24px" />
-              </button>
+      <div className="relative flex flex-col gap-7">
+        {/* Workout */}
+        <div className="card relative  z-20 bg-base-200 transition-all duration-300 hover:shadow-lg">
+          <div className="card-body p-4">
+            {/* Drag & drop on desktop */}
+            <div
+              className={`absolute top-4 right-1.5 hidden  cursor-grab p-2 md:flex ${
+                isDragging ? "z-50" : ""
+              }`}
+              onPointerDown={(event) => {
+                event.preventDefault();
+                dragControls.start(event);
+              }}
+            >
+              <MdDragIndicator className="h-7 w-7" />
             </div>
-          </div>
 
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-col gap-1 ">
-              <a
-                className="flex font-bold gap-2 hover:underline max-w-[calc(100%_-_5rem)]"
-                target="blank"
-                href={`/workout/${result.workoutId}`}
-              >
-                {result.workout.name && result.workout.name !== ""
-                  ? result.workout.name
-                  : `#${result.workout.id}`}
-                {/* <MdLink size={19} /> */}
-              </a>
-              <div className="text-sm opacity-80 flex items-center gap-x-0.5">
-                {result.workout.totalTime && (
-                  <>
-                    <MdTimer /> {`${result.workout.totalTime}mn`}
-                  </>
-                )}
+            {/* Move position on phone */}
+
+            <div className="absolute right-4 md:hidden">
+              <div className="btn-group">
+                <button
+                  disabled={!onMoveResultDown}
+                  onClick={onMoveResultDown}
+                  type="button"
+                  className="btn btn-xs"
+                >
+                  <MdOutlineArrowDropDown size="24px" />
+                </button>
+                <button
+                  disabled={!onMoveResultUp}
+                  onClick={onMoveResultUp}
+                  type="button"
+                  className="btn btn-xs"
+                >
+                  <MdOutlineArrowDropUp size="24px" />
+                </button>
               </div>
             </div>
 
-            <div
-              className={`text-xs opacity-50 font-light  whitespace-pre-wrap max-h-28 overflow-y-scroll`}
-            >
-              {result.workout.description}
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-1 ">
+                <a
+                  className="flex max-w-[calc(100%_-_5rem)] gap-2 font-bold hover:underline"
+                  target="blank"
+                  href={`/workout/${result.workoutId}`}
+                >
+                  {result.workout.name && result.workout.name !== ""
+                    ? result.workout.name
+                    : `#${result.workout.id}`}
+                  {/* <MdLink size={19} /> */}
+                </a>
+                <div className="flex items-center gap-x-0.5 text-sm opacity-80">
+                  {result.workout.totalTime && (
+                    <>
+                      <MdTimer /> {`${result.workout.totalTime}mn`}
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div
+                className={`text-2xs whitespace-pre-wrap font-light opacity-50`}
+              >
+                {result.workout.description}
+              </div>
             </div>
-          </div>
 
-          <div className="divider opacity-50 my-2"></div>
+            {/* <div className="divider my-2 opacity-50"></div> */}
 
-          {hasResults && (
+            {/* {hasResults && (
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-3">
                 {result.isRx && <div className="badge  badge-success">RX</div>}
@@ -172,31 +174,95 @@ export default function WorkoutSessionResultItem({
                 </div>
               )}
             </div>
-          )}
+          )} */}
 
-          <div className="card-actions justify-end mt-2">
+            {/* <div className="card-actions mt-2 justify-end">
             <div className="btn-group ">
               {isDone && (
                 <button
                   type="button"
                   onClick={onOpenWorkoutResultDetail}
-                  className="btn btn-sm btn-outline gap-x-2 text-xs"
+                  className="btn btn-outline btn-sm gap-x-2 text-xs"
                 >
-                  <MdEdit size={17} />{" "}
-                  {`${hasResults ? "Edit" : "Save"} the result`}
+                  <MdEdit size={17} /> {`Enter the result`}
                 </button>
               )}
 
               <button
                 type="button"
                 onClick={onRemoveWorkoutResult}
-                className="btn btn-sm btn-outline btn-error text-xs"
+                className="btn btn-outline btn-error btn-sm text-xs"
               >
                 <MdDelete size={17} />
               </button>
             </div>
+          </div> */}
           </div>
         </div>
+
+        <div className="border- absolute top-0 left-1/2 bottom-0 border-[1px] border-dashed border-base-content"></div>
+        {hasResults ? (
+          <div className="card relative bg-base-200 transition-all duration-300 hover:shadow-lg">
+            <div className="card-body">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-3">
+                  {result.isRx && (
+                    <div className="badge  badge-success">RX</div>
+                  )}
+                  {result.rating && (
+                    <div>
+                      <MoodIcon
+                        props={{
+                          size: "32px",
+                          className: "badge badge-success",
+                        }}
+                        moodIndex={result.rating}
+                      />
+                    </div>
+                  )}
+                </div>
+                <div className="whitespace-pre-wrap text-xs opacity-80">
+                  {result.description}
+                </div>
+                {resultHasBenchmarkeableWorkout(result) && (
+                  <div className="badge badge-primary">
+                    {result.time &&
+                      format(result.time * 1000, "mm:ss' minutes'")}
+                    {result.totalReps && `${result.totalReps} reps`}
+                    {result.weight && `${result.weight}KG`}
+                  </div>
+                )}
+              </div>
+
+              <div className="card-actions justify-end pt-5">
+                <div className="btn-group">
+                  <button
+                    type="button"
+                    onClick={onOpenWorkoutResultDetail}
+                    className="btn btn-outline btn-sm z-20 gap-x-2 text-xs"
+                  >
+                    <MdEdit size={17} /> {`Edit result`}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onRemoveWorkoutResult}
+                    className="btn btn-outline btn-error btn-sm text-xs"
+                  >
+                    <MdDelete size={17} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={onOpenWorkoutResultDetail}
+            className="btn btn-primary btn-sm z-20 gap-x-2 text-xs"
+          >
+            <MdEdit size={17} /> {`Enter the result`}
+          </button>
+        )}
       </div>
     </Reorder.Item>
   );
