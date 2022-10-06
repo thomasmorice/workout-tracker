@@ -45,10 +45,10 @@ export default function MoodSelector({
           type="button"
           onClick={() => onSelect(mood.key)}
           key={mood.key}
-          className="btn btn-ghost group"
+          className="btn btn-ghost btn-sm "
         >
           <mood.icon
-            size={36}
+            size={24}
             className={`group-hover:animate-bounce ${
               mood.key === selectedMood ? "text-violet-500" : ""
             }`}
