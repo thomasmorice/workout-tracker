@@ -38,7 +38,7 @@ export default function DesktopSidebar({ items }: NavigationItemsProps) {
         <ul className="flex w-full flex-col gap-5 text-sm">
           {/* User */}
 
-          {sessionData ? (
+          {sessionData && (
             <>
               {items.map((item) => {
                 const isSelected = item.href === router.asPath;
@@ -84,25 +84,6 @@ export default function DesktopSidebar({ items }: NavigationItemsProps) {
                 </a>
               </li>
             </>
-          ) : status !== "loading" ? (
-            <>
-              <li className={classnames.menuListItem}>
-                <a
-                  onClick={() => signIn()}
-                  className="flex w-full items-center gap-3"
-                >
-                  <>
-                    <MdLogin size="18px" />
-                    Login
-                  </>
-                </a>
-              </li>
-            </>
-          ) : (
-            <div className="flex items-center gap-x-2">
-              <Rings />
-              Loading data...
-            </div>
           )}
         </ul>
       </aside>

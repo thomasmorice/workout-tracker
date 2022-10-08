@@ -144,59 +144,6 @@ export default function WorkoutSessionResultItem({
                 {result.workout.description}
               </div>
             </div>
-
-            {/* <div className="divider my-2 opacity-50"></div> */}
-
-            {/* {hasResults && (
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                {result.isRx && <div className="badge  badge-success">RX</div>}
-                {result.rating && (
-                  <div>
-                    <MoodIcon
-                      props={{
-                        size: "32px",
-                        className: "badge badge-success",
-                      }}
-                      moodIndex={result.rating}
-                    />
-                  </div>
-                )}
-              </div>
-              <div className="whitespace-pre-wrap text-xs opacity-80">
-                {result.description}
-              </div>
-              {resultHasBenchmarkeableWorkout(result) && (
-                <div className="badge badge-primary">
-                  {result.time && format(result.time * 1000, "mm:ss' minutes'")}
-                  {result.totalReps && `${result.totalReps} reps`}
-                  {result.weight && `${result.weight}KG`}
-                </div>
-              )}
-            </div>
-          )} */}
-
-            {/* <div className="card-actions mt-2 justify-end">
-            <div className="btn-group ">
-              {isDone && (
-                <button
-                  type="button"
-                  onClick={onOpenWorkoutResultDetail}
-                  className="btn btn-outline btn-sm gap-x-2 text-xs"
-                >
-                  <MdEdit size={17} /> {`Enter the result`}
-                </button>
-              )}
-
-              <button
-                type="button"
-                onClick={onRemoveWorkoutResult}
-                className="btn btn-outline btn-error btn-sm text-xs"
-              >
-                <MdDelete size={17} />
-              </button>
-            </div>
-          </div> */}
           </div>
         </div>
 
@@ -233,7 +180,6 @@ export default function WorkoutSessionResultItem({
                   </div>
                 )}
               </div>
-
               <div className="card-actions justify-end pt-5">
                 <div className="btn-group">
                   <button

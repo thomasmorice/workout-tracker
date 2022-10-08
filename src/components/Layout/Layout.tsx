@@ -10,8 +10,8 @@ import { useRouter } from "next/router";
 import { MdLogin, MdMenuOpen } from "react-icons/md";
 import { useEffect, useState } from "react";
 import RightSidebar from "../RightSidebar/RightSidebar";
-import { AnimatePresence } from "framer-motion";
 import { useSidebarStore } from "../../store/SidebarStore";
+import AvatarButton from "../AvatarButton/AvatarButton";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -33,16 +33,19 @@ export default function Layout({ children }: LayoutProps) {
     <div>
       <ToastMessage />
       <Navigation onOpenSidebar={() => set_isRightSidebarOpened(true)} />
-      <div className="hidden md:block">
-        <RightSidebar />
-      </div>
+      {status === "authenticated" && (
+        <div className="hidden md:block">
+          <RightSidebar />
+        </div>
+      )}
       {workoutFormState && <WorkoutForm />}
       <div id="portal" />
 
       <main
-        className={`px-5 transition-all sm:px-8 md:mr-80 xl:mr-[340px] ${
-          isSidebarExpanded ? "md:ml-64" : "md:ml-16 xl:ml-20"
-        }`}
+        className={`px-5 transition-all sm:px-8 
+          ${isSidebarExpanded ? "md:ml-64" : "md:ml-16 xl:ml-20"}
+          ${status === "authenticated" ? "md:mr-80 xl:mr-[340px]" : ""}
+        `}
       >
         <div className="flex w-full items-center justify-between py-5">
           <div className="breadcrumbs hidden text-sm md:block">
@@ -72,20 +75,14 @@ export default function Layout({ children }: LayoutProps) {
                 <button
                   type="button"
                   onClick={() => signIn()}
-                  className="btn btn-ghost flex gap-x-2"
+                  className="btn btn-primary flex gap-x-2"
                 >
                   <MdLogin size="22px" />
                   Login
                 </button>
               ) : (
-                <div className="relative mr-2 h-12 w-12 rounded-full ring ring-base-200 md:hidden">
-                  <Image
-                    className="rounded-full"
-                    layout="fill"
-                    referrerPolicy="no-referrer"
-                    src={sessionData.user?.image ?? "https://i.pravatar.cc/300"}
-                    alt=""
-                  />
+                <div className="md:hidden">
+                  <AvatarButton />
                 </div>
               )}
             </>

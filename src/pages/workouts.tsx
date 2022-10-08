@@ -44,33 +44,13 @@ const Workouts: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="hero  rounded-3xl bg-base-200 py-16 ">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-3xl font-bold sm:text-5xl ">Workout list</h1>
-            <p className="py-6">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste,
-              perspiciatis consequuntur in, similique quo magnam molestiae non
-              delectus modi, beatae voluptatibus laboriosam.
-            </p>
+      <h1 className="h1 mt-6">Workout list</h1>
 
-            {sessionData && (
-              <button
-                type="button"
-                onClick={() => showWorkoutForm("create")}
-                className="btn btn-primary"
-              >
-                Create a new workout
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
       {sessionData && (
         <>
           <div className="">
             {!hasNoWorkouts && (
-              <div className="flex flex-wrap gap-2 items-center pt-8">
+              <div className="flex flex-wrap items-center gap-2 pt-8">
                 <div className="form-control items-start ">
                   <label className="label cursor-pointer gap-2">
                     <span className="label-text">
@@ -87,7 +67,7 @@ const Workouts: NextPage = () => {
                   </label>
                 </div>
 
-                <div className="input bg-base-200 w-full relative flex items-center justify-between">
+                <div className="input relative flex w-full items-center justify-between bg-base-200">
                   <label className="z-10" htmlFor="searchWorkoutInput">
                     <MdSearch size={22} />
                   </label>
@@ -97,7 +77,7 @@ const Workouts: NextPage = () => {
                     placeholder="Search…"
                     value={searchTerm}
                     onChange={(e) => set_searchTerm(e.target.value)}
-                    className="input absolute w-full left-0 px-12 bg-base-200"
+                    className="input absolute left-0 w-full bg-base-200 px-12"
                   />
 
                   {/* <div className="z-10">
@@ -108,7 +88,7 @@ const Workouts: NextPage = () => {
               </div>
             )}
 
-            <h2 className="text-2xl text-accent-content font-bold flex gap-3 items-center group cursor-pointer mt-12">
+            <h2 className="group mt-12 flex cursor-pointer items-center gap-3 text-2xl font-bold text-accent-content">
               Latest classified workouts
             </h2>
 
@@ -145,7 +125,7 @@ const Workouts: NextPage = () => {
               <p>No results found yet, start creating workouts</p>
             )}
 
-            <div className="mb-10 w-1/2 h-10" ref={ref}></div>
+            <div className="mb-10 h-10 w-1/2" ref={ref}></div>
 
             {isFetching &&
               hasNextPage &&

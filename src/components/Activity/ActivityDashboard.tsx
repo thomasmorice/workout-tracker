@@ -62,7 +62,7 @@ export default function ActivityDashboard() {
 
       <div className="divider my-6"></div>
       <div>
-        <div className="mb-7 flex items-center gap-3">
+        <div className="flex items-center gap-3">
           <h2 className="h2">Activity</h2>
           <div className="dropdown ">
             <label tabIndex={0} className="btn btn-outline btn-circle btn-sm">
@@ -89,26 +89,37 @@ export default function ActivityDashboard() {
             </ul>
           </div>
         </div>
-        <AnimatePresence>
-          {!isLoading && getFilteredEvents && (
-            <motion.ol
-              className="relative border-l border-accent-content border-opacity-20"
-              variants={timelineContainerVariant}
-              initial="hidden"
-              animate="show"
-            >
-              {getFilteredEvents.map((event) => {
-                return (
-                  <AnimatePresence key={event.id}>
-                    <motion.li variants={timelineItemVariant}>
-                      <TimelineItem event={event} />
-                    </motion.li>
-                  </AnimatePresence>
-                );
-              })}
-            </motion.ol>
-          )}
-        </AnimatePresence>
+        {showSpecificDay && (
+          <h3 className="mt-2">
+            {getFilteredEvents && getFilteredEvents.length > 0 ? (
+              <>{getFilteredEvents.length} session selected</>
+            ) : (
+              <>No workout on this specific day</>
+            )}
+          </h3>
+        )}
+        <div className="mt-7">
+          <AnimatePresence>
+            {!isLoading && getFilteredEvents && (
+              <motion.ol
+                className="relative border-l border-accent-content border-opacity-20"
+                variants={timelineContainerVariant}
+                initial="hidden"
+                animate="show"
+              >
+                {getFilteredEvents.map((event) => {
+                  return (
+                    <AnimatePresence key={event.id}>
+                      <motion.li variants={timelineItemVariant}>
+                        <TimelineItem event={event} />
+                      </motion.li>
+                    </AnimatePresence>
+                  );
+                })}
+              </motion.ol>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </>
   );

@@ -134,7 +134,7 @@ WorkoutSessionFormProps) => {
         onSubmit={handleSubmit(handleCreateOrEdit)}
       >
         <div className="flex flex-col gap-3">
-          <div className="form-control relative w-full flex-1">
+          <div className="form-control relative z-40 w-full flex-1">
             <label className="label">
               <span className="label-text">Session date</span>
             </label>
@@ -214,9 +214,9 @@ WorkoutSessionFormProps) => {
               className={`btn mt-2 ${isSubmitting ? "loading" : ""}`}
               type="submit"
             >
-              {`Save this session`}
+              {isBefore(getValues("date"), new Date()) ? "Save" : "Plan"}
+              {` this session`}
             </button>
-            Changes needs to be saved or the data will be lost
           </div>
         )}
 
@@ -225,6 +225,7 @@ WorkoutSessionFormProps) => {
             <WorkoutResultForm
               onSave={(workoutResult) => {
                 updateWorkoutResults(editWorkoutResultIndex, workoutResult);
+                handleSubmit(handleCreateOrEdit)();
                 set_editWorkoutResultIndex(-1);
               }}
               onClose={() => set_editWorkoutResultIndex(-1)}
