@@ -5,12 +5,10 @@ import {
   addDays,
   startOfMonth,
   endOfMonth,
-  endOfWeek,
   isSameMonth,
   isSameDay,
   subMonths,
   addMonths,
-  subDays,
 } from "date-fns";
 import { Rings } from "react-loading-icons";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
@@ -96,7 +94,11 @@ const Calendar = ({
           key={`${format(currentDate, "w")}-${day}`}
           className={`relative my-1 flex h-9 cursor-pointer items-center justify-center rounded-full text-sm transition-colors 
             ${day === 0 && ""}
-            ${isSameMonth(clonedDate, activeDate) ? "" : "text-base-content"} 
+            ${
+              isSameMonth(clonedDate, activeDate)
+                ? ""
+                : "text-base-content opacity-50"
+            } 
           `}
           onClick={() =>
             !selectedDate ||
@@ -111,7 +113,7 @@ const Calendar = ({
                 ? "bg-primary"
                 : selectedDate &&
                   isSameDay(currentDate, selectedDate) &&
-                  "flex h-7 w-7 bg-primary-content dark:text-primary"
+                  "flex h-9 w-9 bg-primary-content dark:text-primary"
             }`}
           >
             {format(currentDate, "d")}
@@ -144,8 +146,8 @@ const Calendar = ({
   const getDates = () => {
     const startOfTheSelectedMonth = startOfMonth(currentMonth);
     const endOfTheSelectedMonth = endOfMonth(currentMonth);
-    const startDate = subDays(startOfWeek(startOfTheSelectedMonth), 0);
-    const endDate = addDays(endOfWeek(endOfTheSelectedMonth), 0);
+    const startDate = startOfWeek(startOfTheSelectedMonth);
+    const endDate = startOfWeek(endOfTheSelectedMonth);
 
     let currentDate = startDate;
 

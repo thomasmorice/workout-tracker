@@ -131,7 +131,10 @@ export default function WorkoutForm() {
             >
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text">Name</span>
+                  <span className="label-text">
+                    Name{""}
+                    <span className="text-2xs ml-2 opacity-60">optional</span>
+                  </span>
                 </label>
                 <input
                   className="input placeholder:opacity-50"
@@ -155,10 +158,13 @@ export default function WorkoutForm() {
                 />
               </div>
 
-              <div className="flex gap-4 flex-wrap w-full">
+              <div className="flex w-full flex-wrap gap-4">
                 <div className="form-control relative flex-1">
                   <label className="label">
-                    <span className="label-text">Difficulty</span>
+                    <span className="label-text">
+                      Difficulty
+                      <span className="text-2xs ml-2 opacity-60">optional</span>
+                    </span>
                   </label>
                   <select
                     {...register("difficulty", {
@@ -177,7 +183,10 @@ export default function WorkoutForm() {
 
                 <div className="form-control relative flex-1">
                   <label className="label">
-                    <span className="label-text">Type of element</span>
+                    <span className="label-text">
+                      Type of element
+                      <span className="text-2xs ml-2 opacity-60">optional</span>
+                    </span>
                   </label>
                   <select
                     {...register("elementType", {
@@ -196,7 +205,10 @@ export default function WorkoutForm() {
 
               <div className="form-control relative flex-1">
                 <label className="label">
-                  <span className="label-text">Type of workout</span>
+                  <span className="label-text">
+                    Type of workout
+                    <span className="text-2xs ml-2 opacity-60">optional</span>
+                  </span>
                 </label>
                 <select
                   {...register("workoutType", {
@@ -217,7 +229,10 @@ export default function WorkoutForm() {
 
               <div className="form-control relative w-full">
                 <label className="label">
-                  <span className="label-text">Total time</span>
+                  <span className="label-text">
+                    Total time
+                    <span className="text-2xs ml-2 opacity-60">optional</span>
+                  </span>
                 </label>
                 <div className="flex flex-wrap items-center gap-2">
                   <input
@@ -247,7 +262,7 @@ export default function WorkoutForm() {
                 </div>
               </div>
 
-              <div className="mt-3 flex justify-end gap-4 flex-wrap">
+              <div className="mt-3 flex flex-wrap justify-end gap-4">
                 <button
                   className={`btn mt-2 ${isSubmitting ? "loading" : ""}`}
                   type="submit"

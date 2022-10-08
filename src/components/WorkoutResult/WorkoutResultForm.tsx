@@ -2,8 +2,6 @@ import Modal from "../Layout/Navigation/Modal/Modal";
 import TextareaAutosize from "react-textarea-autosize";
 import { useEffect, useState } from "react";
 import MoodSelector from "../MoodSelector/MoodSelector";
-import { format } from "date-fns";
-import { InferMutationInput, InferQueryOutput } from "../../types/trpc";
 import { WorkoutResultWithWorkout } from "../../types/app";
 
 export interface WorkoutResultFormProps {
@@ -19,6 +17,32 @@ export default function WorkoutResultForm({
 }: WorkoutResultFormProps) {
   const [editedWorkoutResult, set_editedWorkoutResult] =
     useState(workoutResult);
+
+  const [resultTotalTimeMn, set_resultTotalTimeMn] = useState(
+    workoutResult.time ? Math.floor(workoutResult.time / 60) + "" : ""
+  );
+  const [resultTotalTimeSec, set_resultTotalTimeSec] = useState(
+    workoutResult.time ? (workoutResult.time % 60) + "" : ""
+  );
+
+  useEffect(() => {
+    if (parseInt(resultTotalTimeMn)) {
+      // if (!parseInt(resultTotalTimeSec)) {
+      //   set_resultTotalTimeSec("0");
+      // }
+      set_editedWorkoutResult({
+        ...editedWorkoutResult,
+        time:
+          parseInt(resultTotalTimeMn) * 60 +
+          (parseInt(resultTotalTimeSec) || 0),
+      });
+    } else {
+      set_editedWorkoutResult({
+        ...editedWorkoutResult,
+        time: null,
+      });
+    }
+  }, [resultTotalTimeMn, resultTotalTimeSec]);
 
   return (
     <Modal onClose={onClose}>
@@ -104,7 +128,7 @@ export default function WorkoutResultForm({
             </label>
           </div>
 
-          <div className="flex">
+          <div className="flex flex-wrap gap-y-4">
             {workoutResult.workout.workoutType === "FOR_TIME" && (
               <div className="form-control w-full">
                 <label className="label">
@@ -114,26 +138,29 @@ export default function WorkoutResultForm({
                 <label className="input-group">
                   <input
                     id="input-time"
-                    className="input max-w-[110px] flex-1 placeholder:opacity-50"
-                    placeholder="122"
+                    className="input max-w-[60px] flex-1 placeholder:opacity-50"
+                    placeholder="12"
                     type={"number"}
-                    value={editedWorkoutResult.time ?? ""}
-                    onChange={(e) =>
-                      set_editedWorkoutResult({
-                        ...editedWorkoutResult,
-                        time: parseInt(e.target.value ?? null),
-                      })
-                    }
+                    value={resultTotalTimeMn}
+                    onChange={(e) => set_resultTotalTimeMn(e.target.value)}
                   />
-                  <span>seconds</span>
+                  <span>mn</span>
+
+                  <input
+                    id="input-time"
+                    className="input ml-2 max-w-[60px] flex-1 placeholder:opacity-50"
+                    placeholder="45"
+                    type={"number"}
+                    value={resultTotalTimeSec}
+                    onChange={(e) => set_resultTotalTimeSec(e.target.value)}
+                  />
+                  <span>sec</span>
                 </label>
+
                 {editedWorkoutResult.time && (
                   <span className="pt-2 text-xs">
                     {!isNaN(editedWorkoutResult.time) &&
-                      ` ${format(
-                        editedWorkoutResult.time * 1000,
-                        "mm:ss' minutes'"
-                      )}`}
+                      editedWorkoutResult.time}
                   </span>
                 )}
               </div>
@@ -197,7 +224,9 @@ export default function WorkoutResultForm({
             type="button"
             onClick={() => onSave(editedWorkoutResult)}
             className="btn mt-4"
-          >{`${editedWorkoutResult.id ? "Edit" : "Save"} result`}</button>
+          >
+            Save this result
+          </button>
         </div>
       </>
     </Modal>

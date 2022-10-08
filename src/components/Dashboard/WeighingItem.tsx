@@ -39,7 +39,7 @@ export default function WeighingItem() {
           <div className="stat-title flex items-center gap-2 leading-none">
             <MdMonitorWeight size={26} />
             <div className="flex flex-col gap-0.5">
-              <span className="text-accent-content">Latest weight</span>
+              <span className="text-lg leading-none">Latest weight</span>
               <div className="text-2xs">
                 {getLatestWeight
                   ? `${formatDistance(
@@ -54,7 +54,7 @@ export default function WeighingItem() {
             {getLatestWeight ? (
               `${getLatestWeight.weight}Kg`
             ) : (
-              <div className="text-xs flex gap-0.5 items-center">
+              <div className="flex items-center gap-0.5 text-xs">
                 <Rings />
                 Fetching data
               </div>
