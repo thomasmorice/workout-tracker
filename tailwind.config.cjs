@@ -23,7 +23,23 @@ module.exports = {
     "text-red-600",
   ],
   daisyui: {
-    themes: ["cupcake", "dark", "light", "cmyk"],
+    themes: [
+      "light",
+      "dark",
+      // {
+      //   dark: {
+      //     primary: "#BBAB8D",
+      //     secondary: "#577371",
+      //     accent: "#749E1F",
+      //     neutral: "#16102D",
+      //     "base-100": "#221D37",
+      //     info: "#4EB6CA",
+      //     success: "#66E5AA",
+      //     warning: "#C19915",
+      //     error: "#F75636",
+      //   },
+      // },
+    ],
   },
   plugins: [require("daisyui")],
 };

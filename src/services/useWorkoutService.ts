@@ -1,3 +1,4 @@
+import { WorkoutType } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
@@ -5,8 +6,10 @@ import { trpc } from "../utils/trpc";
 
 interface InfiniteWorkoutsProps {
   showClassifiedWorkoutOnly?: boolean;
+  withResults?: boolean;
   searchTerm?: string;
   enabled?: boolean;
+  workoutTypes?: WorkoutType[];
   ids?: {
     in?: number[];
     notIn?: number[];
@@ -46,8 +49,10 @@ export const useWorkoutService = () => {
 
   const getInfiniteWorkouts = ({
     showClassifiedWorkoutOnly = true,
+    workoutTypes,
     searchTerm,
     enabled = true,
+    withResults = false,
     ids,
   }: InfiniteWorkoutsProps) => {
     let filteredSearchTerm = searchTerm;
@@ -61,7 +66,8 @@ export const useWorkoutService = () => {
       [
         "workout.get-infinite-workouts",
         {
-          elementTypes: [],
+          workoutTypes,
+          withResults,
           classifiedOnly: showClassifiedWorkoutOnly,
           searchTerm: filteredSearchTerm,
           limit: 12,

@@ -14,6 +14,7 @@ export const WorkoutResultsSelect = {
   shouldRecommendWorkoutAgain: true,
   createdAt: true,
   workoutSession: true,
+  weight: true,
 };
 
 export const WorkoutResultsExtras = {

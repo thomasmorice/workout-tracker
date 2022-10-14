@@ -24,7 +24,7 @@ const Activities: NextPage = () => {
             {eventFormState.includes("session") ? "Session" : "Weighing"} Form
           </h2>
           {eventFormState.includes("session") ? (
-            <WorkoutSessionForm onSuccess={closeForm} />
+            <WorkoutSessionForm />
           ) : (
             <WeighingForm onSuccess={closeForm} />
           )}

@@ -227,6 +227,7 @@ WorkoutSessionFormProps) => {
                 updateWorkoutResults(editWorkoutResultIndex, workoutResult);
                 handleSubmit(handleCreateOrEdit)();
                 set_editWorkoutResultIndex(-1);
+                reset();
               }}
               onClose={() => set_editWorkoutResultIndex(-1)}
               workoutResult={

@@ -44,61 +44,67 @@ const Workouts: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1 className="h1 mt-6">Workout list</h1>
+      <h1 className="h1 mt-3">Workout list</h1>
 
       {sessionData && (
         <>
           <div className="">
-            {!hasNoWorkouts && (
-              <div className="flex flex-wrap items-center gap-2 pt-8">
-                <div className="form-control items-start ">
-                  <label className="label cursor-pointer gap-2">
-                    <span className="label-text">
-                      {classifiedOnly
-                        ? "Only classified workouts"
-                        : "All workouts"}
-                    </span>
-                    <input
-                      type="checkbox"
-                      onChange={(e) => set_classifiedOnly(e.target.checked)}
-                      className="toggle"
-                      checked={classifiedOnly}
-                    />
-                  </label>
-                </div>
-
-                <div className="input relative flex w-full items-center justify-between bg-base-200">
-                  <label className="z-10" htmlFor="searchWorkoutInput">
-                    <MdSearch size={22} />
-                  </label>
+            <div className="flex flex-wrap items-center gap-2 pt-8">
+              <div className="form-control items-start ">
+                <label className="label cursor-pointer gap-2">
+                  <span className="label-text">
+                    {classifiedOnly
+                      ? "Only classified workouts"
+                      : "All workouts"}
+                  </span>
                   <input
-                    id="searchWorkoutInput"
-                    type="search"
-                    placeholder="Search…"
-                    value={searchTerm}
-                    onChange={(e) => set_searchTerm(e.target.value)}
-                    className="input absolute left-0 w-full bg-base-200 px-12"
+                    type="checkbox"
+                    onChange={(e) => set_classifiedOnly(e.target.checked)}
+                    className="toggle"
+                    checked={classifiedOnly}
                   />
+                </label>
+              </div>
 
-                  {/* <div className="z-10">
+              <div className="input relative flex w-full items-center justify-between bg-base-200">
+                <label className="z-10" htmlFor="searchWorkoutInput">
+                  <MdSearch size={22} />
+                </label>
+                <input
+                  id="searchWorkoutInput"
+                  type="search"
+                  placeholder="Search…"
+                  value={searchTerm}
+                  onChange={(e) => set_searchTerm(e.target.value)}
+                  className="input absolute left-0 w-full bg-base-200 px-12"
+                />
+
+                {/* <div className="z-10">
                   <kbd className="kbd bg-base-100">⌘</kbd>
                   <kbd className="kbd bg-base-100">K</kbd>
                 </div> */}
-                </div>
               </div>
-            )}
+            </div>
 
             <h2 className="group mt-12 flex cursor-pointer items-center gap-3 text-2xl font-bold text-accent-content">
-              Latest classified workouts
+              {`Latest ${classifiedOnly ? "classified" : ""} workouts`}
             </h2>
+
+            <button
+              type="button"
+              onClick={() => showWorkoutForm("create")}
+              className="btn btn-primary mt-6 mb-2"
+            >
+              Create a new workout
+            </button>
 
             <Masonry
               breakpointCols={{
-                default: 3,
-                1400: 2,
-                1120: 1,
+                default: 2,
+                1226: 2,
+                720: 1,
               }}
-              className="-ml-8 flex w-auto pt-4 "
+              className="-ml-8 flex w-auto pt-6 "
               columnClassName="pl-8 bg-clip-padding "
             >
               {data?.pages

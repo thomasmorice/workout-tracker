@@ -10,12 +10,21 @@ const WorkoutSessionSelect = {
 };
 
 export const workoutSessionRouter = createProtectedRouter()
+  .query("count-all-sessions", {
+    async resolve({ ctx }) {
+      return await prisma.workoutSession.count({
+        where: {
+          athleteId: ctx.session.user.id,
+        },
+      });
+    },
+  })
   .query("get-workout-sessions", {
     input: z.object({
       dateFilter: z
         .object({
-          lte: z.string(),
-          gte: z.string(),
+          lte: z.string().optional(),
+          gte: z.string().optional(),
         })
         .nullish(),
     }),
@@ -38,8 +47,12 @@ export const workoutSessionRouter = createProtectedRouter()
           ...(dateFilter && {
             event: {
               eventDate: {
-                lte: dateFilter.lte,
-                gte: dateFilter.gte,
+                ...(dateFilter.lte && {
+                  lte: dateFilter.lte,
+                }),
+                ...(dateFilter.gte && {
+                  gte: dateFilter.gte,
+                }),
               },
             },
           }),

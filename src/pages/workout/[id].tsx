@@ -1,10 +1,9 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useWorkoutService } from "../../services/useWorkoutService";
-import Image from "next/image";
-import formatDistance from "date-fns/formatDistance";
 import { useSession } from "next-auth/react";
 import { format } from "date-fns";
+import WorkoutCard from "../../components/Workout/WorkoutCard";
 
 const Workout: NextPage = () => {
   const router = useRouter();
@@ -13,66 +12,59 @@ const Workout: NextPage = () => {
   const { getWorkoutById } = useWorkoutService();
   const { data: workout, isFetching } = getWorkoutById(id);
 
+  const secondsToMinutesAndSeconds = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    return {
+      minutes,
+      seconds: time - minutes * 60,
+    };
+  };
+
   if (isFetching || sessionStatus === "loading") {
     return <>Loading...</>;
   }
   if (!sessionData) {
     return <>Not connected</>;
   }
+
   return (
     <>
       {workout ? (
         <>
-          <div
-            style={{}}
-            // className="hero relative rounded-3xl overflow-hidden bg-[url('/workout-bg.avif')]"
-            className="hero relative rounded-3xl overflow-hidden"
-          >
-            <div className="hero-overlay bg-opacity-60 bg-base-300"></div>
-            <div className="hero-content text-center py-16 ">
-              <div className="flex justify-between items-center">
-                {/* Author */}
-                <div className="flex items-center gap-3 absolute left-5 top-5 text-left">
-                  <div className="mask mask-circle relative h-10 w-10 ">
-                    <Image
-                      layout="fill"
-                      referrerPolicy="no-referrer"
-                      src={workout.creator.image ?? "https://i.pravatar.cc/300"}
-                      alt="Workout creator"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <div className="text-lg leading-tight">
-                      {workout?.creator.name}
-                    </div>
-                    <div className={`text-xs opacity-50 font-light`}>
-                      Created{" "}
-                      {formatDistance(new Date(), new Date(workout.createdAt))}{" "}
-                      ago
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="max-w-md pt-8">
-                <h1 className="text-3xl font-bold sm:text-5xl">
-                  {workout.name ? workout.name : `Workout #${workout.id}`}
-                </h1>
-                <p className="py-6 whitespace-pre-wrap text-sm">
-                  {workout.description}
-                </p>
-              </div>
+          <h1 className="h1 mt-3 mb-8">Workout details</h1>
+          <h2 className="h2 mt-3 mb-8">
+            <div className="card-title text-2xl">
+              {workout.name ? workout.name : `#${workout.id}`}
             </div>
-          </div>
+          </h2>
+          <WorkoutCard workout={workout} />
           <div className="mt-4">
+            <h2 className="h2 mt-3 mb-8">Workout results</h2>
             {workout.workoutResults?.map((result) => (
               <div key={result.id}>
-                <div className="text-lg mt-2">
-                  {format(result.workoutSession.event.eventDate, "MMMM yyyy")}
-                  <p className="text-xs mt-2">{result.description}</p>
-
-                  <p className="">{result.totalReps} reps</p>
+                <div className="mt-4 ">
+                  <div className="text-accent-content">
+                    {format(
+                      result.workoutSession.event.eventDate,
+                      "do MMMM yyyy"
+                    )}
+                  </div>
+                  <p className="mt-2 whitespace-pre-wrap text-sm">
+                    {result.description}
+                  </p>
+                  {result.totalReps && (
+                    <p className="">{result.totalReps} reps</p>
+                  )}
+                  {(result.time || result.totalReps || result.weight) && (
+                    <div className="badge badge-primary mt-4">
+                      {result.time &&
+                        format(result.time * 1000, "mm:ss' minutes'")}
+                      {result.totalReps && `${result.totalReps} reps`}
+                      {result.weight && `${result.weight}KG`}
+                    </div>
+                  )}
                 </div>
-                <div className="divider opacity-50 my-2"></div>
+                <div className="divider my-2 opacity-50"></div>
               </div>
             ))}
           </div>
@@ -82,7 +74,7 @@ const Workout: NextPage = () => {
           <div className="text-2xl">
             Workout is unreacheable 😢 you might be
           </div>
-          <ul className="list-decimal mt-3 ml-10 text-md">
+          <ul className="text-md mt-3 ml-10 list-decimal">
             <li className="list-item">
               accessing a workout that does not exists
             </li>

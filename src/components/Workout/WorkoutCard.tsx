@@ -1,9 +1,17 @@
 import { format } from "date-fns";
 import Image from "next/image";
-import { MdDone, MdDelete, MdTimer, MdCopyAll, MdEdit } from "react-icons/md";
+import {
+  MdDone,
+  MdDelete,
+  MdTimer,
+  MdCopyAll,
+  MdEdit,
+  MdOpenInNew,
+} from "react-icons/md";
 import { InferQueryOutput } from "../../types/trpc";
 import { enumToString } from "../../utils/formatting";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 interface WorkoutCardProps {
   workout: InferQueryOutput<"workout.get-infinite-workouts">["workouts"][number];
@@ -20,9 +28,17 @@ export default function WorkoutCard({
 }: WorkoutCardProps) {
   const { data: sessionData } = useSession();
   return (
-    <div className="group card mb-8 bg-base-200 transition-all hover:shadow-lg duration-300">
+    <div
+      style={
+        {
+          // boxShadow: "-22px -22px 30px #232832, 22px 22px 30px #313846",
+          // background: "linear-gradient(315deg, #2d3340, #262b36)",
+        }
+      }
+      className="group card mb-8 border border-base-content border-opacity-10 bg-gradient-to-br from-base-200 to-base-100 shadow-xl"
+    >
       <div className="card-body ">
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           {/* Author */}
           <div className="flex items-center gap-3">
             <div className="mask mask-circle relative h-10 w-10 ">
@@ -37,7 +53,7 @@ export default function WorkoutCard({
               <div className="text-lg leading-tight">
                 {workout?.creator.name}
               </div>
-              <div className={`text-xs opacity-50 font-light`}>
+              <div className={`text-xs font-light opacity-50`}>
                 Created on the{" "}
                 {/* {formatDistance(new Date(), new Date(workout.createdAt))} ago */}
                 {format(workout.createdAt, "do MMMM yyyy")}
@@ -85,15 +101,20 @@ export default function WorkoutCard({
           )}
         </div>
 
-        <div className="divider opacity-50 my-2"></div>
+        <div className="divider my-2 opacity-50"></div>
 
         {/* Title */}
         <div className="card-title text-2xl">
-          {workout.name ? workout.name : `#${workout.id}`}
+          <Link href={`/workout/${workout.id}`}>
+            <a className="flex items-center gap-2 transition-colors hover:text-primary-content">
+              {workout.name ? workout.name : `#${workout.id}`}
+              <MdOpenInNew size={17} />
+            </a>
+          </Link>
         </div>
 
         {/* Timecap and workout type */}
-        <div className="flex gap-1 items-center">
+        <div className="flex items-center gap-1">
           {workout.totalTime && (
             <>
               <MdTimer /> {workout.totalTime}mn
@@ -110,7 +131,7 @@ export default function WorkoutCard({
         </div>
 
         {/* Description */}
-        <div className="description whitespace-pre-wrap break-words text-[0.77rem] leading-relaxed font-medium opacity-70">
+        <div className="description whitespace-pre-wrap break-words text-[0.77rem] font-medium leading-relaxed opacity-70">
           {workout.description}
         </div>
 
@@ -129,7 +150,7 @@ export default function WorkoutCard({
                   <button
                     type="button"
                     onClick={onEdit}
-                    className="btn btn-sm btn-outline gap-x-2 text-xs"
+                    className="btn btn-outline btn-sm gap-x-2 text-xs"
                   >
                     <MdEdit size={17} /> Edit
                   </button>
@@ -137,7 +158,7 @@ export default function WorkoutCard({
                   <button
                     type="button"
                     onClick={onDuplicate}
-                    className="btn btn-sm btn-outline gap-x-2 text-xs"
+                    className="btn btn-outline btn-sm gap-x-2 text-xs"
                   >
                     <MdCopyAll size={17} /> Duplicate
                   </button>
@@ -145,7 +166,7 @@ export default function WorkoutCard({
                   <button
                     type="button"
                     onClick={onDelete}
-                    className="btn btn-sm btn-outline btn-error text-xs"
+                    className="btn btn-outline btn-error btn-sm text-xs"
                   >
                     <MdDelete size={17} />
                   </button>

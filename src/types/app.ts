@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Difficulty, ElementType, Prisma, WorkoutType } from "@prisma/client";
+import { Difficulty, ElementType, WorkoutType } from "@prisma/client";
 import { InferMutationInput, InferQueryOutput } from "./trpc";
 
 export type WorkoutResultWithWorkout =
