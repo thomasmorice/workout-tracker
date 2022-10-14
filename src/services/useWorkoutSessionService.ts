@@ -3,8 +3,8 @@ import { trpc } from "../utils/trpc";
 
 interface WorkoutSessionsProps {
   dateFilter?: {
-    lte: string;
-    gte: string;
+    lte?: string;
+    gte?: string;
   };
 }
 
@@ -24,6 +24,12 @@ export const useWorkoutSessionService = () => {
         enabled: !!sessionData,
       }
     );
+  };
+
+  const countAllSessions = () => {
+    return trpc.useQuery(["workout-session.count-all-sessions"], {
+      enabled: !!sessionData,
+    });
   };
 
   const getWorkoutSessionById = (id: number) => {
@@ -64,6 +70,7 @@ export const useWorkoutSessionService = () => {
   });
 
   return {
+    countAllSessions,
     getWorkoutSessions,
     createOrEditWorkoutSession,
     getWorkoutSessionById,

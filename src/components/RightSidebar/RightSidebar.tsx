@@ -12,7 +12,7 @@ export default function RightSidebar() {
   return (
     <>
       <aside
-        className={`sidebar-shadow fixed bottom-0 right-0 z-30 h-full w-80 overflow-y-scroll px-7  py-8 md:h-full`}
+        className={`fixed bottom-0 right-0 z-30 h-full w-80 overflow-y-scroll border-l border-base-content border-opacity-10  px-7  py-8 shadow-xl md:h-full`}
       >
         <div className="mx-auto flex max-w-xs flex-col">
           <div className="flex items-center justify-between">

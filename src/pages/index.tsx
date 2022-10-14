@@ -3,11 +3,31 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { AiFillBell } from "react-icons/ai";
 import { BsArrowUpRight } from "react-icons/bs";
+import { IoMdMedal } from "react-icons/io";
 import Image from "next/image";
 import WeighingItem from "../components/Dashboard/WeighingItem";
+import { useWorkoutSessionService } from "../services/useWorkoutSessionService";
+import { useWorkoutService } from "../services/useWorkoutService";
+import { formatISO } from "date-fns";
+import Rings from "react-loading-icons/dist/esm/components/rings";
 
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
+  const { countAllSessions, getWorkoutSessions } = useWorkoutSessionService();
+  const { getInfiniteWorkouts } = useWorkoutService();
+
+  const { data: allSessionsCount, isLoading } = countAllSessions();
+  const { data: personalRecordWorkouts } = getInfiniteWorkouts({
+    workoutTypes: ["ONE_REP_MAX"],
+    withResults: true,
+  });
+  const { data: upcomingWorkoutSession } = getWorkoutSessions({
+    dateFilter: {
+      gte: formatISO(new Date()),
+    },
+  });
+
+  console.log("personalRecordWorkouts", personalRecordWorkouts);
 
   return (
     <>
@@ -51,6 +71,7 @@ const Home: NextPage = () => {
         </div>
       ) : (
         <>
+          <h1 className="h1 mb-8">Dashboard</h1>
           <div className="flex flex-col  items-center gap-5 rounded-3xl bg-base-200 py-14 px-3 sm:flex-row sm:items-center sm:px-8">
             <div className="avatar">
               <div className="mask mask-circle">
@@ -70,37 +91,65 @@ const Home: NextPage = () => {
               <div className="dimmed flex  gap-1 font-light">
                 <AiFillBell className="hidden sm:block" size="20" />
                 <p className="flex-1 text-center sm:text-left">
-                  You have 2 new messages and 15 new tasks
+                  {upcomingWorkoutSession?.length ? (
+                    <>
+                      You have {upcomingWorkoutSession?.length} session(s)
+                      planned in the future.
+                    </>
+                  ) : (
+                    <>You have currently no session planned in the future</>
+                  )}
                 </p>
               </div>
             </div>
           </div>
 
-          {/* <div className="tabs tabs-boxed mt-3 w-fit sm:mt-5">
-            <a className="tab">Weekly</a>
-            <a className="tab tab-active">Monthly</a>
-            <a className="tab">Yearly</a>
-          </div> */}
-          <div className="flex w-full flex-wrap gap-4 py-3 sm:gap-8 sm:py-5 mt-12">
-            <div className="stats stats-vertical bg-base-200 shadow lg:stats-horizontal">
-              <div className="flex max-w-[160px] items-center justify-center bg-primary p-3 text-center text-primary-content">
-                Personal records
-              </div>
-              <div className="stat">
-                <div className="stat-title">Deadlift</div>
-                <div className="stat-value">142KG</div>
-                <div className="stat-desc flex items-center gap-x-1 text-success-content">
-                  <BsArrowUpRight /> 2KG (10%)
+          <h2 className="h2 mt-12">Latest personal records</h2>
+          <div className="flex w-full flex-wrap gap-4 py-3 sm:gap-8 sm:py-5">
+            <div className="stats stats-vertical  bg-base-200 shadow lg:stats-horizontal">
+              <div className="flex items-center justify-center bg-primary p-3 text-center text-primary-content">
+                {/* <IoMdMedal size={27} /> */}
+                <div className="stat-title whitespace-pre-wrap">
+                  {personalRecordWorkouts?.pages[0]?.workouts[0]?.name}
                 </div>
               </div>
+              <div className="stat">
+                <div className="stat-value">
+                  {
+                    personalRecordWorkouts?.pages[0]?.workouts[0]
+                      ?.workoutResults[0]?.weight
+                  }
+                  KG
+                </div>
+                {personalRecordWorkouts?.pages[0]?.workouts[0]
+                  ?.workoutResults[1]?.weight &&
+                  personalRecordWorkouts?.pages[0]?.workouts[0]
+                    ?.workoutResults[0]?.weight && (
+                    <div className="stat-desc flex items-center gap-x-1 text-base-content">
+                      {}
+                      <BsArrowUpRight />{" "}
+                      {personalRecordWorkouts?.pages[0]?.workouts[0]
+                        ?.workoutResults[0]?.weight -
+                        personalRecordWorkouts?.pages[0]?.workouts[0]
+                          ?.workoutResults[1]?.weight}
+                      KG
+                    </div>
+                  )}
+              </div>
             </div>
+
             <WeighingItem />
 
             <div className="stats bg-base-200 shadow">
               <div className="stat">
-                <div className="stat-title">Difficulty repartition</div>
-                <div className="stat-value"></div>
-                <div className="stat-desc">21% more than last month</div>
+                <div className="stat-title">
+                  Number of sessions
+                  <br /> since the beginning
+                </div>
+                <div className="stat-value">
+                  {isLoading ? <Rings /> : `${allSessionsCount}`}
+                </div>
+                {/* <div className="stat-desc">21% more than last month</div> */}
               </div>
             </div>
 

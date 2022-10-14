@@ -23,7 +23,7 @@ export default function DesktopSidebar({ items }: NavigationItemsProps) {
     <>
       <aside
         ref={ref}
-        className={`shadow-zinc-900-700 sidebar-shadow fixed z-50  h-full bg-base-100 pt-6 transition-all ${
+        className={`fixed z-50 h-full  border-r border-base-content border-opacity-10 bg-base-100 pt-6 shadow-xl transition-all ${
           isSidebarExpanded ? "px-6" : "px-2"
         } `}
       >

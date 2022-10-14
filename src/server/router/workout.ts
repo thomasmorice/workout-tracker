@@ -32,6 +32,24 @@ export const WorkoutExtras = {
   },
 };
 
+const SelectWorkout = {
+  ...WorkoutExtras,
+  ...WorkoutSelect,
+  // workoutResults: withResults ?? false,
+  // ...(withResults && {
+  workoutResults: {
+    select: {
+      ...WorkoutResultsSelect,
+      workoutSession: {
+        select: {
+          event: true,
+        },
+      },
+    },
+  },
+  // }),
+};
+
 export const workoutRouter = createProtectedRouter()
   .query("get-workout-by-id", {
     input: z.object({
@@ -40,22 +58,7 @@ export const workoutRouter = createProtectedRouter()
     async resolve({ ctx, input }) {
       const { id } = input;
       const workout = await prisma.workout.findFirst({
-        select: {
-          ...WorkoutExtras,
-          ...WorkoutSelect,
-          ...{
-            workoutResults: {
-              select: {
-                ...WorkoutResultsSelect,
-                workoutSession: {
-                  select: {
-                    event: true,
-                  },
-                },
-              },
-            },
-          },
-        },
+        select: SelectWorkout,
         where: {
           AND: {
             id: id,
@@ -69,8 +72,11 @@ export const workoutRouter = createProtectedRouter()
   .query("get-infinite-workouts", {
     input: z.object({
       elementTypes: z.nativeEnum(ElementType).array().nullish(),
+      workoutTypes: z.nativeEnum(WorkoutType).array().nullish(),
+      withResults: z.boolean().nullish(),
       classifiedOnly: z.boolean().nullish(),
       searchTerm: z.string().nullish(),
+
       ids: z
         .object({
           in: z.array(z.number()).nullish(),
@@ -84,15 +90,26 @@ export const workoutRouter = createProtectedRouter()
     async resolve({ ctx, input }) {
       const limit = input.limit ?? 20;
       const { cursor } = input;
-      const { elementTypes, classifiedOnly, searchTerm, ids } = input;
+      const {
+        elementTypes,
+        workoutTypes,
+        withResults,
+        classifiedOnly,
+        searchTerm,
+        ids,
+      } = input;
 
       const where: Prisma.WorkoutWhereInput = {
-        ...(elementTypes &&
-          elementTypes.length > 0 && {
-            elementType: {
-              in: elementTypes,
-            },
-          }),
+        ...(elementTypes?.length && {
+          elementType: {
+            in: elementTypes,
+          },
+        }),
+        ...(workoutTypes?.length && {
+          workoutType: {
+            in: workoutTypes,
+          },
+        }),
         ...(classifiedOnly && {
           NOT: {
             elementType: "UNCLASSIFIED",
@@ -157,15 +174,9 @@ export const workoutRouter = createProtectedRouter()
         },
       };
 
-      console.log("where", where);
-
       const workouts = await prisma.workout.findMany({
         take: limit + 1,
-        select: {
-          ...WorkoutExtras,
-          ...WorkoutSelect,
-        },
-
+        select: SelectWorkout,
         where: where,
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: [
