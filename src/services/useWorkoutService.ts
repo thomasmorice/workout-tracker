@@ -14,6 +14,8 @@ interface InfiniteWorkoutsProps {
     in?: number[];
     notIn?: number[];
   };
+  orderResults?: Object[];
+  limit?: number;
 }
 
 export const useWorkoutService = () => {
@@ -54,6 +56,8 @@ export const useWorkoutService = () => {
     enabled = true,
     withResults = false,
     ids,
+    orderResults,
+    limit,
   }: InfiniteWorkoutsProps) => {
     let filteredSearchTerm = searchTerm;
     if (searchTerm?.includes(">")) {
@@ -70,8 +74,9 @@ export const useWorkoutService = () => {
           withResults,
           classifiedOnly: showClassifiedWorkoutOnly,
           searchTerm: filteredSearchTerm,
-          limit: 12,
+          limit: limit || 12,
           ids,
+          orderResults,
         },
       ],
       {

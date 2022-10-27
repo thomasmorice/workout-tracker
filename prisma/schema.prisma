@@ -162,6 +162,7 @@ enum WorkoutType {
     AMRAP
     FOR_TIME
     ONE_REP_MAX
+    X_REP_MAX
 }
 
 enum ElementType {

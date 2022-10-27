@@ -26,17 +26,9 @@ import Portal from "../Portal/Portal";
 import { useEventStore } from "../../store/EventStore";
 
 interface WorkoutSessionFormProps {
-  // existingWorkoutSession?:
-  //   | InferQueryOutput<"event.get-events">[number]["workoutSession"]
-  //   | InferQueryOutput<"workout-session.get-workout-session-by-id">;
   onSuccess?: () => void;
 }
-const WorkoutSessionForm = ({
-  // existingWorkoutSession,
-  onSuccess,
-}: // editMode = false,
-WorkoutSessionFormProps) => {
-  const router = useRouter();
+const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
   const { addMessage, closeMessage } = useToastStore();
   const { createOrEditWorkoutSession } = useWorkoutSessionService();
   const { createOrEditMultipleWorkoutResult, deleteMultipleWorkoutResult } =
@@ -227,7 +219,6 @@ WorkoutSessionFormProps) => {
                 updateWorkoutResults(editWorkoutResultIndex, workoutResult);
                 handleSubmit(handleCreateOrEdit)();
                 set_editWorkoutResultIndex(-1);
-                reset();
               }}
               onClose={() => set_editWorkoutResultIndex(-1)}
               workoutResult={

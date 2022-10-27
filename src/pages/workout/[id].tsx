@@ -12,14 +12,6 @@ const Workout: NextPage = () => {
   const { getWorkoutById } = useWorkoutService();
   const { data: workout, isFetching } = getWorkoutById(id);
 
-  const secondsToMinutesAndSeconds = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    return {
-      minutes,
-      seconds: time - minutes * 60,
-    };
-  };
-
   if (isFetching || sessionStatus === "loading") {
     return <>Loading...</>;
   }
