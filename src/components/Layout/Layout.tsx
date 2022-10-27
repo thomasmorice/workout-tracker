@@ -42,7 +42,7 @@ export default function Layout({ children }: LayoutProps) {
       <div id="portal" />
 
       <main
-        className={`px-5 transition-all sm:px-8 
+        className={`px-5 pb-24 transition-all sm:px-8 md:pb-0 
           ${isSidebarExpanded ? "md:ml-64" : "md:ml-16 xl:ml-20"}
           ${status === "authenticated" ? "md:mr-80 xl:mr-[340px]" : ""}
         `}

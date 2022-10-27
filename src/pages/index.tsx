@@ -2,32 +2,49 @@ import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { AiFillBell } from "react-icons/ai";
-import { BsArrowUpRight } from "react-icons/bs";
-import { IoMdMedal } from "react-icons/io";
 import Image from "next/image";
 import WeighingItem from "../components/Dashboard/WeighingItem";
 import { useWorkoutSessionService } from "../services/useWorkoutSessionService";
 import { useWorkoutService } from "../services/useWorkoutService";
 import { formatISO } from "date-fns";
-import Rings from "react-loading-icons/dist/esm/components/rings";
+import { Rings } from "react-loading-icons";
+import PersonalRecordItem from "../components/Dashboard/PersonalRecordItem";
+import { useWeighingService } from "../services/useWeighingService";
 
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
   const { countAllSessions, getWorkoutSessions } = useWorkoutSessionService();
   const { getInfiniteWorkouts } = useWorkoutService();
+  const { getWeighings } = useWeighingService();
 
-  const { data: allSessionsCount, isLoading } = countAllSessions();
-  const { data: personalRecordWorkouts } = getInfiniteWorkouts({
-    workoutTypes: ["ONE_REP_MAX"],
-    withResults: true,
+  const { data: latestWeighings, isLoading: isLoadingWeights } = getWeighings({
+    take: 8,
   });
+  const { data: allSessionsCount, isLoading: isLoadingCountSession } =
+    countAllSessions();
+  const { data: personalRecordWorkouts, isLoading: isLoadingPersonalRecords } =
+    getInfiniteWorkouts({
+      workoutTypes: ["ONE_REP_MAX"],
+      orderResults: [
+        {
+          weight: "desc",
+        },
+        {
+          time: "asc",
+        },
+        {
+          totalReps: "desc",
+        },
+      ],
+      limit: 8,
+      withResults: true,
+    });
+
   const { data: upcomingWorkoutSession } = getWorkoutSessions({
     dateFilter: {
       gte: formatISO(new Date()),
     },
   });
-
-  console.log("personalRecordWorkouts", personalRecordWorkouts);
 
   return (
     <>
@@ -104,52 +121,37 @@ const Home: NextPage = () => {
             </div>
           </div>
 
-          <h2 className="h2 mt-12">Latest personal records</h2>
+          <h2 className="h2 mt-10 mb-4">Latest personal records</h2>
           <div className="flex w-full flex-wrap gap-4 py-3 sm:gap-8 sm:py-5">
-            <div className="stats stats-vertical  bg-base-200 shadow lg:stats-horizontal">
-              <div className="flex items-center justify-center bg-primary p-3 text-center text-primary-content">
-                {/* <IoMdMedal size={27} /> */}
-                <div className="stat-title whitespace-pre-wrap">
-                  {personalRecordWorkouts?.pages[0]?.workouts[0]?.name}
-                </div>
-              </div>
-              <div className="stat">
-                <div className="stat-value">
-                  {
-                    personalRecordWorkouts?.pages[0]?.workouts[0]
-                      ?.workoutResults[0]?.weight
-                  }
-                  KG
-                </div>
-                {personalRecordWorkouts?.pages[0]?.workouts[0]
-                  ?.workoutResults[1]?.weight &&
-                  personalRecordWorkouts?.pages[0]?.workouts[0]
-                    ?.workoutResults[0]?.weight && (
-                    <div className="stat-desc flex items-center gap-x-1 text-base-content">
-                      {}
-                      <BsArrowUpRight />{" "}
-                      {personalRecordWorkouts?.pages[0]?.workouts[0]
-                        ?.workoutResults[0]?.weight -
-                        personalRecordWorkouts?.pages[0]?.workouts[0]
-                          ?.workoutResults[1]?.weight}
-                      KG
-                    </div>
-                  )}
-              </div>
-            </div>
+            {isLoadingPersonalRecords ? (
+              <Rings />
+            ) : (
+              personalRecordWorkouts &&
+              personalRecordWorkouts.pages[0]?.workouts.map((workout) => (
+                <PersonalRecordItem
+                  key={workout.id}
+                  personalRecordWorkout={workout}
+                />
+              ))
+            )}
+          </div>
 
-            <WeighingItem />
+          <h2 className="h2 mt-10 mb-4">Others</h2>
+          <div className="flex w-full flex-wrap gap-4 py-3 sm:gap-8 sm:py-5">
+            {isLoadingWeights && <Rings />}
+            {latestWeighings?.length && (
+              <WeighingItem weighings={latestWeighings} />
+            )}
 
-            <div className="stats bg-base-200 shadow">
+            {/* <div className="stats bg-base-200 shadow">
               <div className="stat">
                 <div className="stat-title">
                   Number of sessions
                   <br /> since the beginning
                 </div>
                 <div className="stat-value">
-                  {isLoading ? <Rings /> : `${allSessionsCount}`}
+                  {isLoadingCountSession ? <Rings /> : `${allSessionsCount}`}
                 </div>
-                {/* <div className="stat-desc">21% more than last month</div> */}
               </div>
             </div>
 
@@ -159,7 +161,7 @@ const Home: NextPage = () => {
                 <div className="stat-value ">4.3</div>
                 <div className="stat-desc">Pretty happy</div>
               </div>
-            </div>
+            </div> */}
           </div>
         </>
       )}

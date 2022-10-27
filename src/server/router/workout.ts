@@ -1,9 +1,9 @@
 import {
   Difficulty,
   ElementType,
-  Prisma,
   Workout,
   WorkoutType,
+  Prisma,
 } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -35,8 +35,6 @@ export const WorkoutExtras = {
 const SelectWorkout = {
   ...WorkoutExtras,
   ...WorkoutSelect,
-  // workoutResults: withResults ?? false,
-  // ...(withResults && {
   workoutResults: {
     select: {
       ...WorkoutResultsSelect,
@@ -47,8 +45,27 @@ const SelectWorkout = {
       },
     },
   },
-  // }),
 };
+
+// const SelectWorkout = (withResults: boolean = true) => {
+//   return {
+//     ...WorkoutExtras,
+//     ...WorkoutSelect,
+//     workoutResults: withResults ? WorkoutResultsSelect : false,
+//     // ...(withResults && {
+//     // workoutResults: {
+//     //   select: {
+//     //     ...WorkoutResultsSelect,
+//     //     workoutSession: {
+//     //       select: {
+//     //         event: true,
+//     //       },
+//     //     },
+//     //   },
+//     // },
+//     // }),
+//   };
+// };
 
 export const workoutRouter = createProtectedRouter()
   .query("get-workout-by-id", {
@@ -76,7 +93,8 @@ export const workoutRouter = createProtectedRouter()
       withResults: z.boolean().nullish(),
       classifiedOnly: z.boolean().nullish(),
       searchTerm: z.string().nullish(),
-
+      orderResults: z.array(z.any()).nullish(),
+      // orderResults: z.array(z.any()).nullish(),
       ids: z
         .object({
           in: z.array(z.number()).nullish(),
@@ -97,6 +115,7 @@ export const workoutRouter = createProtectedRouter()
         classifiedOnly,
         searchTerm,
         ids,
+        orderResults,
       } = input;
 
       const where: Prisma.WorkoutWhereInput = {
@@ -176,13 +195,32 @@ export const workoutRouter = createProtectedRouter()
 
       const workouts = await prisma.workout.findMany({
         take: limit + 1,
-        select: SelectWorkout,
+        select: {
+          ...WorkoutExtras,
+          ...WorkoutSelect,
+          workoutResults: {
+            select: {
+              ...WorkoutResultsSelect,
+              workoutSession: {
+                select: {
+                  event: true,
+                },
+              },
+            },
+
+            ...(orderResults && {
+              orderBy: orderResults,
+            }),
+          },
+        },
         where: where,
         cursor: cursor ? { id: cursor } : undefined,
+
         orderBy: [
           {
             createdAt: "desc",
           },
+
           {
             id: "desc",
           },
