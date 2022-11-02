@@ -42,7 +42,14 @@ export default function RightSidebar() {
                 </h2>
                 {eventFormState.includes("session") ? (
                   <WorkoutSessionForm
-                    onSuccess={() => console.log("success")}
+                    onSuccess={() => {
+                      if (
+                        eventFormState === "add-session" ||
+                        eventFormState === "add-weighing"
+                      ) {
+                        closeForm();
+                      }
+                    }}
                   />
                 ) : (
                   <WeighingForm onSuccess={closeForm} />
