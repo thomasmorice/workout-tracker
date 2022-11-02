@@ -23,7 +23,7 @@ function defineNextConfig(config) {
 export default defineNextConfig(
   importWithPWA({
     reactStrictMode: true,
-    swcMinify: true,
+    swcMinify: false,
     images: {
       domains: ["lh3.googleusercontent.com"],
     },
