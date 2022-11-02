@@ -196,30 +196,30 @@ export default function WorkoutResultForm({
             )}
           </div>
 
-          {workoutResult.workout.workoutType === "ONE_REP_MAX" ||
-            (workoutResult.workout.workoutType === "X_REP_MAX" && (
-              <div className="form-control w-full">
-                <label className="label">
-                  <span className="label-text">Weight</span>
-                </label>
-                <label className="input-group">
-                  <input
-                    id="input-rep-max"
-                    className="input max-w-[110px] flex-1 placeholder:opacity-50"
-                    onChange={(e) =>
-                      set_editedWorkoutResult({
-                        ...editedWorkoutResult,
-                        weight: parseFloat(e.target.value ?? null),
-                      })
-                    }
-                    placeholder="120"
-                    type={"number"}
-                    value={editedWorkoutResult.weight ?? ""}
-                  />
-                  <span>Kg</span>
-                </label>
-              </div>
-            ))}
+          {(workoutResult.workout.workoutType === "ONE_REP_MAX" ||
+            workoutResult.workout.workoutType === "X_REP_MAX") && (
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Weight</span>
+              </label>
+              <label className="input-group">
+                <input
+                  id="input-rep-max"
+                  className="input max-w-[110px] flex-1 placeholder:opacity-50"
+                  onChange={(e) =>
+                    set_editedWorkoutResult({
+                      ...editedWorkoutResult,
+                      weight: parseFloat(e.target.value ?? null),
+                    })
+                  }
+                  placeholder="120"
+                  type={"number"}
+                  value={editedWorkoutResult.weight ?? ""}
+                />
+                <span>Kg</span>
+              </label>
+            </div>
+          )}
 
           <button
             type="button"
