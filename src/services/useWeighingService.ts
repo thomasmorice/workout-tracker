@@ -38,14 +38,23 @@ export const useWeighingService = () => {
     );
   };
 
-  // const getTwoLatestWeighing = () => {
-  //   return trpc.useQuery(["weighing.get-two-latest"], {
-  //     enabled: !!sessionData,
-  //   });
-  // };
+  const getWeighingById = (id: number) => {
+    return trpc.useQuery(
+      [
+        "weighing.getWeighingById",
+        {
+          id,
+        },
+      ],
+      {
+        enabled: !!sessionData && id !== -1,
+      }
+    );
+  };
 
   return {
     createOrEditWeighing,
     getWeighings,
+    getWeighingById,
   };
 };

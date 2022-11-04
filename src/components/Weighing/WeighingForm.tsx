@@ -6,6 +6,8 @@ import { InferMutationInput, InferQueryOutput } from "../../types/trpc";
 import { useWeighingService } from "../../services/useWeighingService";
 import { useToastStore } from "../../store/ToastStore";
 import { useEventStore } from "../../store/EventStore";
+import { useEffect, useState } from "react";
+import { Rings } from "react-loading-icons";
 
 interface WeighingFormProps {
   // existingWeighing?: InferQueryOutput<"event.get-events">[number]["weighing"];
@@ -17,8 +19,12 @@ export default function WeighingForm({
   onSuccess,
 }: WeighingFormProps) {
   const { addMessage, closeMessage } = useToastStore();
-  const { createOrEditWeighing } = useWeighingService();
-  const { weighingBeingEdited } = useEventStore();
+  const { getWeighingById, createOrEditWeighing } = useWeighingService();
+  const { eventBeingEdited, eventDate } = useEventStore();
+
+  const { data: existingWeighing, isLoading } = getWeighingById(
+    eventBeingEdited || -1
+  );
 
   const handleCreateOrEdit: SubmitHandler<
     z.infer<typeof CreateWeighingInputSchema>
@@ -26,19 +32,21 @@ export default function WeighingForm({
     await createOrEditWeighing.mutateAsync(weighing);
     addMessage({
       type: "success",
-      message: `Weighing ${
-        weighingBeingEdited ? "edited" : "added"
-      } successfully`,
+      message: `Weighing ${eventBeingEdited ? "edited" : "added"} successfully`,
     });
     onSuccess && onSuccess();
   };
 
-  const defaultValues: z.infer<typeof CreateWeighingInputSchema> = {
-    id: weighingBeingEdited?.id ?? undefined,
-    eventId: weighingBeingEdited?.eventId ?? undefined,
-    date: weighingBeingEdited?.event.eventDate ?? new Date(),
-    weight: weighingBeingEdited?.weight ?? 0,
-  };
+  const [defaultValues, set_defaultValues] = useState({});
+
+  useEffect(() => {
+    set_defaultValues({
+      id: existingWeighing?.id ?? undefined,
+      eventId: existingWeighing?.event.id ?? undefined,
+      date: existingWeighing?.event.eventDate ?? eventDate ?? new Date(),
+      weight: existingWeighing?.weight ?? 0,
+    });
+  }, [existingWeighing, eventDate]);
 
   const {
     handleSubmit,
@@ -49,6 +57,14 @@ export default function WeighingForm({
   } = useForm<InferMutationInput<"weighing.addOrEdit">>({
     defaultValues,
   });
+
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues, reset]);
+
+  if (isLoading) {
+    return <Rings className="h-14 w-14" />;
+  }
 
   return (
     <form
@@ -85,7 +101,7 @@ export default function WeighingForm({
             <input
               id="input-rep-max"
               step={0.1}
-              className="input max-w-[110px] flex-1 placeholder:opacity-50  bg-base-200"
+              className="input max-w-[110px] flex-1 bg-base-200  placeholder:opacity-50"
               {...register("weight", {
                 setValueAs: (v) => {
                   return v === null || v === ""
@@ -100,12 +116,12 @@ export default function WeighingForm({
           </label>
         </div>
 
-        <div className="mt-3 flex justify-end gap-4 flex-wrap">
+        <div className="mt-3 flex flex-wrap justify-end gap-4">
           <button
             className={`btn mt-2 ${isSubmitting ? "loading" : ""}`}
             type="submit"
           >
-            {`${weighingBeingEdited ? "Edit" : "Add"} weighing`}
+            {`${eventBeingEdited ? "Edit" : "Add"} weighing`}
           </button>
         </div>
       </div>

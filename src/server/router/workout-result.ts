@@ -63,8 +63,10 @@ export const workoutResultRouter = createProtectedRouter()
             workoutId: result.workout.id,
             workoutSessionId: input.workoutSessionId,
           };
-          console.log("pickedResult", pickedResult);
           return prisma.workoutResult.upsert({
+            include: {
+              workout: true,
+            },
             create: {
               ...pickedResult,
             },

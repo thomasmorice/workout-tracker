@@ -52,7 +52,7 @@ export default function DesktopSidebar({ items }: NavigationItemsProps) {
                     : "btn-ghost  opacity-70 hover:opacity-90"
                 }`}
                     >
-                      <a
+                      <div
                         className={`flex w-full items-center  gap-3 ${
                           isSidebarExpanded ? "" : "justify-center"
                         }`}
@@ -61,7 +61,7 @@ export default function DesktopSidebar({ items }: NavigationItemsProps) {
                           <item.icon size="18px" />
                           {isSidebarExpanded && item.label}
                         </>
-                      </a>
+                      </div>
                     </li>
                   </Link>
                 );

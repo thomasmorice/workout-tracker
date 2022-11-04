@@ -94,6 +94,17 @@ export const workoutSessionRouter = createProtectedRouter()
     input: CreateWorkoutSessionInputSchema,
     async resolve({ ctx, input }) {
       return await prisma.workoutSession.upsert({
+        select: {
+          ...WorkoutSessionSelect,
+          workoutResults: {
+            orderBy: {
+              order: "asc",
+            },
+            include: {
+              workout: true,
+            },
+          },
+        },
         create: {
           athlete: {
             connect: {

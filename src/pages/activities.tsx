@@ -6,10 +6,10 @@ import WorkoutSessionForm from "../components/WorkoutSession/WorkoutSessionForm"
 import { useEventStore } from "../store/EventStore";
 
 const Activities: NextPage = () => {
-  const { eventFormState, closeForm } = useEventStore();
+  const { eventTypeToEdit, closeForm } = useEventStore();
   return (
     <div className="pt-2 pb-10">
-      {!eventFormState ? (
+      {!eventTypeToEdit ? (
         <ActivityDashboard />
       ) : (
         <div>
@@ -21,9 +21,10 @@ const Activities: NextPage = () => {
               className="transition-transform group-hover:-translate-x-1"
               size={16}
             />
-            {eventFormState.includes("session") ? "Session" : "Weighing"} Form
+            {eventTypeToEdit === "workout-session" ? "Session" : "Weighing"}{" "}
+            Form
           </h2>
-          {eventFormState.includes("session") ? (
+          {eventTypeToEdit === "workout-session" ? (
             <WorkoutSessionForm />
           ) : (
             <WeighingForm onSuccess={closeForm} />

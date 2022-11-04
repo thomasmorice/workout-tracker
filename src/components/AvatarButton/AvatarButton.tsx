@@ -1,4 +1,4 @@
-import Image from "next/future/image";
+import Image from "next/image";
 import { MdArrowDropDown } from "react-icons/md";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Rings } from "react-loading-icons";
@@ -20,7 +20,7 @@ export default function AvatarButton({}: AvatarButtonProps) {
           {sessionData ? (
             <label
               tabIndex={0}
-              className="btn btn-ghost btn-lg px-2 normal-case"
+              className="btn-ghost btn-lg btn px-2 normal-case"
             >
               <div className="flex items-center gap-3">
                 <Image
@@ -40,7 +40,7 @@ export default function AvatarButton({}: AvatarButtonProps) {
               </div>
             </label>
           ) : (
-            <button onClick={() => signIn()} className="btn btn-primary">
+            <button onClick={() => signIn()} className="btn-primary btn">
               Login
             </button>
           )}

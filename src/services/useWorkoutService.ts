@@ -10,6 +10,7 @@ interface InfiniteWorkoutsProps {
   searchTerm?: string;
   enabled?: boolean;
   workoutTypes?: WorkoutType[];
+  onlyFetchMine?: boolean;
   ids?: {
     in?: number[];
     notIn?: number[];
@@ -53,6 +54,7 @@ export const useWorkoutService = () => {
     showClassifiedWorkoutOnly = true,
     workoutTypes,
     searchTerm,
+    onlyFetchMine,
     enabled = true,
     withResults = false,
     ids,
@@ -75,6 +77,7 @@ export const useWorkoutService = () => {
           classifiedOnly: showClassifiedWorkoutOnly,
           searchTerm: filteredSearchTerm,
           limit: limit || 12,
+          onlyFetchMine,
           ids,
           orderResults,
         },
