@@ -9,8 +9,7 @@ import Calendar from "./Calendar";
 import TimelineItem from "./TimelineItem";
 
 export default function ActivityDashboard() {
-  const { openWeighingForm, openSessionForm, openSessionFormOnSpecificDate } =
-    useEventStore();
+  const { addOrEditEvent } = useEventStore();
   const { currentMonth } = useActivityStore();
 
   const { getEvents } = useEventService();
@@ -65,7 +64,7 @@ export default function ActivityDashboard() {
         <div className="flex items-center gap-3">
           <h2 className="h2">Activity</h2>
           <div className="dropdown ">
-            <label tabIndex={0} className="btn btn-outline btn-circle btn-sm">
+            <label tabIndex={0} className="btn-outline btn btn-sm btn-circle">
               <MdAdd size={22} />
             </label>
             <ul
@@ -75,16 +74,26 @@ export default function ActivityDashboard() {
               <li>
                 <a
                   onClick={() =>
-                    showSpecificDay
-                      ? openSessionFormOnSpecificDate(showSpecificDay)
-                      : openSessionForm()
+                    addOrEditEvent({
+                      type: "workout-session",
+                      date: showSpecificDay,
+                    })
                   }
                 >
                   Add new session
                 </a>
               </li>
               <li>
-                <a onClick={() => openWeighingForm()}>Add weighing</a>
+                <a
+                  onClick={() =>
+                    addOrEditEvent({
+                      type: "weighting",
+                      date: showSpecificDay,
+                    })
+                  }
+                >
+                  Add weighing
+                </a>
               </li>
             </ul>
           </div>

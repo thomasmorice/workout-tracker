@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import Image from "next/future/image";
+import Image from "next/image";
 import Head from "next/head";
 import { useSession } from "next-auth/react";
 import AvatarButton from "../components/AvatarButton/AvatarButton";

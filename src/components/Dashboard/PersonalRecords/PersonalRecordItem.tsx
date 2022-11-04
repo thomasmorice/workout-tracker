@@ -5,10 +5,10 @@ import {
   MdStarRate,
 } from "react-icons/md";
 import { useEffect, useMemo, useCallback } from "react";
-import { InferQueryOutput } from "../../types/trpc";
+import { InferQueryOutput } from "../../../types/trpc";
 import { format } from "date-fns";
 
-import DashboardItem from "./DashboardItem";
+import DashboardItem from "../DashboardItem";
 
 type PersonalRecordWorkoutType = {
   personalRecordWorkout: InferQueryOutput<"workout.get-infinite-workouts">["workouts"][number];

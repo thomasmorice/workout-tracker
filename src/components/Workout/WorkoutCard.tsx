@@ -75,7 +75,7 @@ export default function WorkoutCard({
         <div className="badges flex flex-wrap gap-2 pt-4 uppercase">
           {workout.difficulty && (
             <div
-              className={`badge badge-outline rounded-none text-xs font-medium text-${workout.difficulty.toLowerCase()}-600
+              className={`badge-outline badge rounded-none text-xs font-medium text-${workout.difficulty.toLowerCase()}-600
             ${
               workout.difficulty === "BLACK"
                 ? "border-white bg-black text-white"
@@ -87,14 +87,14 @@ export default function WorkoutCard({
           )}
 
           <div
-            className={`badge badge-primary rounded-none text-xs font-medium `}
+            className={`badge-primary badge rounded-none text-xs font-medium `}
           >
             {enumToString(workout.elementType)}
           </div>
 
           {workout.isDoableAtHome && (
             <div
-              className={`badge badge-outline badge-secondary rounded-none text-xs font-medium`}
+              className={`badge-secondary badge-outline badge rounded-none text-xs font-medium`}
             >
               Doable at home
             </div>
@@ -106,10 +106,10 @@ export default function WorkoutCard({
         {/* Title */}
         <div className="card-title text-2xl">
           <Link href={`/workout/${workout.id}`}>
-            <a className="flex items-center gap-2 transition-colors hover:text-primary-content">
+            <div className="flex items-center gap-2 transition-colors hover:text-primary-content">
               {workout.name ? workout.name : `#${workout.id}`}
               <MdOpenInNew size={17} />
-            </a>
+            </div>
           </Link>
         </div>
 
@@ -150,7 +150,7 @@ export default function WorkoutCard({
                   <button
                     type="button"
                     onClick={onEdit}
-                    className="btn btn-outline btn-sm gap-x-2 text-xs"
+                    className="btn-outline btn btn-sm gap-x-2 text-xs"
                   >
                     <MdEdit size={17} /> Edit
                   </button>
@@ -158,7 +158,7 @@ export default function WorkoutCard({
                   <button
                     type="button"
                     onClick={onDuplicate}
-                    className="btn btn-outline btn-sm gap-x-2 text-xs"
+                    className="btn-outline btn btn-sm gap-x-2 text-xs"
                   >
                     <MdCopyAll size={17} /> Duplicate
                   </button>
@@ -166,7 +166,7 @@ export default function WorkoutCard({
                   <button
                     type="button"
                     onClick={onDelete}
-                    className="btn btn-outline btn-error btn-sm text-xs"
+                    className="btn-outline btn btn-error btn-sm text-xs"
                   >
                     <MdDelete size={17} />
                   </button>

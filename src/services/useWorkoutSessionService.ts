@@ -41,7 +41,7 @@ export const useWorkoutSessionService = () => {
         },
       ],
       {
-        enabled: !!sessionData,
+        enabled: !!sessionData && id !== -1,
       }
     );
   };

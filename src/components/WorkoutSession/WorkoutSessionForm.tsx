@@ -30,18 +30,26 @@ interface WorkoutSessionFormProps {
 }
 const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
   const { addMessage, closeMessage } = useToastStore();
-  const { createOrEditWorkoutSession } = useWorkoutSessionService();
+  const { createOrEditWorkoutSession, getWorkoutSessionById } =
+    useWorkoutSessionService();
   const { createOrEditMultipleWorkoutResult, deleteMultipleWorkoutResult } =
     useWorkoutResultService();
 
-  const { sessionBeingEdited, sessionDate } = useEventStore();
+  const { eventBeingEdited, eventDate, addOrEditEvent } = useEventStore();
 
-  const defaultValues = {
-    id: sessionBeingEdited?.id ?? undefined,
-    date: sessionBeingEdited?.event.eventDate ?? sessionDate ?? new Date(),
-    workoutResults: sessionBeingEdited?.workoutResults ?? undefined,
-    eventId: sessionBeingEdited?.eventId ?? undefined,
-  };
+  const { data: existingWorkoutSession, refetch: refetchWorkoutSession } =
+    getWorkoutSessionById(eventBeingEdited || -1);
+
+  const [defaultValues, set_defaultValues] = useState({});
+
+  useEffect(() => {
+    set_defaultValues({
+      id: existingWorkoutSession?.id ?? undefined,
+      date: existingWorkoutSession?.event.eventDate ?? eventDate ?? new Date(),
+      workoutResults: existingWorkoutSession?.workoutResults ?? undefined,
+      eventId: existingWorkoutSession?.eventId ?? undefined,
+    });
+  }, [existingWorkoutSession, eventDate]);
 
   const [editWorkoutResultIndex, set_editWorkoutResultIndex] =
     useState<number>(-1);
@@ -59,6 +67,10 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
   >({
     defaultValues,
   });
+
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues, reset]);
 
   const handleCreateOrEdit: SubmitHandler<
     z.infer<typeof CreateWorkoutSessionInputSchema>
@@ -85,7 +97,7 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
       closeMessage(message);
     }
 
-    const resultsToDelete = sessionBeingEdited?.workoutResults
+    const resultsToDelete = existingWorkoutSession?.workoutResults
       .filter((existingRes) =>
         workoutSession?.workoutResults.every((res) => res.id !== existingRes.id)
       )
@@ -100,8 +112,13 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
     addMessage({
       type: "success",
       message: `Session ${
-        sessionBeingEdited ? "edited" : "created"
+        existingWorkoutSession ? "edited" : "created"
       } successfully`,
+    });
+
+    addOrEditEvent({
+      type: "workout-session",
+      eventId: savedWorkoutSession.id,
     });
     onSuccess && onSuccess();
   };

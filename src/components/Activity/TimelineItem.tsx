@@ -29,18 +29,19 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
   const [showConfirmDeleteEventModal, set_showConfirmDeleteEventModal] =
     useState(false);
 
-  const { openWeighingForm, openSessionForm } = useEventStore();
+  const { addOrEditEvent } = useEventStore();
 
   return (
     <>
       <div className="mb-12 ml-5 cursor-pointer">
         <div
           onClick={() => {
-            if (event.workoutSession) {
-              openSessionForm(event.workoutSession);
-            } else {
-              openWeighingForm(event.weighing);
-            }
+            addOrEditEvent({
+              eventId: event.workoutSession
+                ? event.workoutSession.id
+                : event.weighing?.id,
+              type: event.workoutSession ? "workout-session" : "weighting",
+            });
           }}
           className="group"
         >
@@ -97,7 +98,7 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
           <button
             onClick={() => set_showConfirmDeleteEventModal(true)}
             type="button"
-            className="btn btn-outline btn-error btn-xs w-fit"
+            className="btn-outline btn btn-error btn-xs w-fit"
           >
             <div className="flex items-center gap-2">
               <MdDelete />

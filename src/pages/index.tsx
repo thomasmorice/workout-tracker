@@ -8,13 +8,14 @@ import { useWorkoutSessionService } from "../services/useWorkoutSessionService";
 import { useWorkoutService } from "../services/useWorkoutService";
 import { formatISO } from "date-fns";
 import { Rings } from "react-loading-icons";
-import PersonalRecordItem from "../components/Dashboard/PersonalRecordItem";
+import PersonalRecordItem from "../components/Dashboard/PersonalRecords/PersonalRecordItem";
 import { useWeighingService } from "../services/useWeighingService";
+import PersonalRecords from "../components/Dashboard/PersonalRecords/PersonalRecords";
 
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
   const { countAllSessions, getWorkoutSessions } = useWorkoutSessionService();
-  const { getInfiniteWorkouts } = useWorkoutService();
+
   const { getWeighings } = useWeighingService();
 
   const { data: latestWeighings, isLoading: isLoadingWeights } = getWeighings({
@@ -22,23 +23,6 @@ const Home: NextPage = () => {
   });
   const { data: allSessionsCount, isLoading: isLoadingCountSession } =
     countAllSessions();
-  const { data: personalRecordWorkouts, isLoading: isLoadingPersonalRecords } =
-    getInfiniteWorkouts({
-      workoutTypes: ["ONE_REP_MAX"],
-      orderResults: [
-        {
-          weight: "desc",
-        },
-        {
-          time: "asc",
-        },
-        {
-          totalReps: "desc",
-        },
-      ],
-      limit: 8,
-      withResults: true,
-    });
 
   const { data: upcomingWorkoutSession } = getWorkoutSessions({
     dateFilter: {
@@ -121,48 +105,22 @@ const Home: NextPage = () => {
             </div>
           </div>
 
-          <h2 className="h2 mt-10 mb-4">Latest personal records</h2>
-          <div className="flex w-full flex-wrap gap-4 py-3 sm:gap-8 sm:py-5">
-            {isLoadingPersonalRecords ? (
-              <Rings />
-            ) : (
-              personalRecordWorkouts &&
-              personalRecordWorkouts.pages[0]?.workouts.map((workout) => (
-                <PersonalRecordItem
-                  key={workout.id}
-                  personalRecordWorkout={workout}
-                />
-              ))
-            )}
-          </div>
+          <PersonalRecords />
 
           <h2 className="h2 mt-10 mb-4">Others</h2>
-          <div className="flex w-full flex-wrap gap-4 py-3 sm:gap-8 sm:py-5">
-            {isLoadingWeights && <Rings />}
-            {latestWeighings?.length && (
+          {isLoadingWeights ? (
+            <Rings />
+          ) : latestWeighings?.length ? (
+            <div className="flex w-full flex-wrap gap-4 py-3 sm:gap-8 sm:py-5">
               <WeighingItem weighings={latestWeighings} />
-            )}
-
-            {/* <div className="stats bg-base-200 shadow">
-              <div className="stat">
-                <div className="stat-title">
-                  Number of sessions
-                  <br /> since the beginning
-                </div>
-                <div className="stat-value">
-                  {isLoadingCountSession ? <Rings /> : `${allSessionsCount}`}
-                </div>
-              </div>
             </div>
-
-            <div className="stats max-h-32 bg-base-200 shadow">
-              <div className="stat">
-                <div className="stat-title">Average feeling</div>
-                <div className="stat-value ">4.3</div>
-                <div className="stat-desc">Pretty happy</div>
-              </div>
-            </div> */}
-          </div>
+          ) : (
+            <p>
+              Seems like you haven&apos;t added any weight yet, use{" "}
+              <span className="text-accent-content">the activity section </span>{" "}
+              to add your latest weight and start tracking it regularely
+            </p>
+          )}
         </>
       )}
     </>

@@ -21,37 +21,36 @@ export default function MobileNavbar({ items }: NavigationItemsProps) {
       <>
         {items.map((item) => {
           return (
-            <Link key={item.href} href={item.href}>
-              <a
-                className={`
-                flex w-1/4 flex-col items-center gap-1 border-r border-base-200 px-4 py-2 text-xs transition-all duration-300
-                ${
-                  isLinkActive(item.href)
-                    ? "rounded-t-lg bg-primary text-primary-content"
-                    : ""
-                }
-              `}
-              >
-                <item.icon size="22px" />
-                {item.label}
-              </a>
+            <Link
+              className={`
+            flex w-1/4 flex-col items-center gap-1 border-r border-base-200 px-4 py-2 text-xs transition-all duration-300
+            ${
+              isLinkActive(item.href)
+                ? "rounded-t-lg bg-primary text-primary-content"
+                : ""
+            }
+          `}
+              key={item.href}
+              href={item.href}
+            >
+              <item.icon size="22px" />
+              {item.label}
             </Link>
           );
         })}
-        <Link href={"/activities"}>
-          <a
-            className={`
-                flex w-1/4 flex-col items-center gap-1 border-r border-base-200 px-4 py-2 text-xs transition-all duration-300
-                ${
-                  isLinkActive("/activities")
-                    ? "rounded-t-lg bg-primary text-primary-content"
-                    : ""
-                }
-              `}
-          >
-            <MdOutlineSchedule size="22px" />
-            Activities
-          </a>
+        <Link
+          className={`
+                    flex w-1/4 flex-col items-center gap-1 border-r border-base-200 px-4 py-2 text-xs transition-all duration-300
+                    ${
+                      isLinkActive("/activities")
+                        ? "rounded-t-lg bg-primary text-primary-content"
+                        : ""
+                    }
+                  `}
+          href={"/activities"}
+        >
+          <MdOutlineSchedule size="22px" />
+          Activities
         </Link>
       </>
     </div>

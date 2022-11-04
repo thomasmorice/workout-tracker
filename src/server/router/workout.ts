@@ -95,6 +95,7 @@ export const workoutRouter = createProtectedRouter()
       searchTerm: z.string().nullish(),
       orderResults: z.array(z.any()).nullish(),
       // orderResults: z.array(z.any()).nullish(),
+      onlyFetchMine: z.boolean().nullish(),
       ids: z
         .object({
           in: z.array(z.number()).nullish(),
@@ -111,7 +112,7 @@ export const workoutRouter = createProtectedRouter()
       const {
         elementTypes,
         workoutTypes,
-        withResults,
+        onlyFetchMine,
         classifiedOnly,
         searchTerm,
         ids,
@@ -174,17 +175,19 @@ export const workoutRouter = createProtectedRouter()
             {
               creatorId: ctx.session.user.id,
             },
-
             {
               AND: [
                 {
-                  creator: {
-                    following: {
-                      some: {
-                        friendUserId: ctx.session.user.id,
+                  ...(!onlyFetchMine && {
+                    creator: {
+                      following: {
+                        some: {
+                          friendUserId: ctx.session.user.id,
+                        },
                       },
                     },
-                  },
+                  }),
+
                   // elementType: "UNCLASSIFIED",
                 },
               ],

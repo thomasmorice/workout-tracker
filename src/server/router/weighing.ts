@@ -46,6 +46,31 @@ export const weighingRouter = createProtectedRouter()
       });
     },
   })
+  .query("getWeighingById", {
+    input: z.object({
+      id: z.number(),
+    }),
+    resolve({ ctx, input }) {
+      const { id } = input;
+      return prisma.weighing.findFirst({
+        select: {
+          id: true,
+          event: true,
+          user: true,
+          weight: true,
+        },
+        where: {
+          id: id,
+          userId: ctx.session.user.id,
+        },
+        orderBy: {
+          event: {
+            eventDate: "desc",
+          },
+        },
+      });
+    },
+  })
   .mutation("addOrEdit", {
     input: CreateWeighingInputSchema,
     async resolve({ ctx, input }) {
