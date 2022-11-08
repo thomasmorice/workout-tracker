@@ -81,17 +81,27 @@ export default function WorkoutSessionResultItem({
         {/* Workout */}
         <div className="card relative  z-20 bg-base-200 transition-all duration-300 hover:shadow-lg">
           <div className="card-body p-4">
-            {/* Drag & drop on desktop */}
             <div
-              className={`absolute top-4 right-1.5 hidden  cursor-grab p-2 md:flex ${
-                isDragging ? "z-50" : ""
-              }`}
-              onPointerDown={(event) => {
-                event.preventDefault();
-                dragControls.start(event);
-              }}
+              className={`absolute top-3 right-3 hidden  cursor-grab items-center gap-2 p-2 md:flex`}
             >
-              <MdDragIndicator className="h-7 w-7" />
+              {/* Drag & drop on desktop */}
+              <div
+                className={`flex ${isDragging ? "z-50" : ""}`}
+                onPointerDown={(event) => {
+                  event.preventDefault();
+                  dragControls.start(event);
+                }}
+              >
+                <MdDragIndicator className="h-7 w-7" />
+              </div>
+
+              <button
+                onClick={onRemoveWorkoutResult}
+                type="button"
+                className="btn btn-error btn-xs btn-circle"
+              >
+                <MdDelete size="18px" />
+              </button>
             </div>
 
             {/* Move position on phone */}
@@ -102,7 +112,7 @@ export default function WorkoutSessionResultItem({
                   disabled={!onMoveResultDown}
                   onClick={onMoveResultDown}
                   type="button"
-                  className="btn btn-xs"
+                  className="btn btn-sm"
                 >
                   <MdOutlineArrowDropDown size="24px" />
                 </button>
@@ -110,9 +120,16 @@ export default function WorkoutSessionResultItem({
                   disabled={!onMoveResultUp}
                   onClick={onMoveResultUp}
                   type="button"
-                  className="btn btn-xs"
+                  className="btn btn-sm"
                 >
                   <MdOutlineArrowDropUp size="24px" />
+                </button>
+                <button
+                  onClick={onRemoveWorkoutResult}
+                  type="button"
+                  className="btn btn-error btn-sm"
+                >
+                  <MdDelete size="20px" />
                 </button>
               </div>
             </div>
@@ -181,22 +198,15 @@ export default function WorkoutSessionResultItem({
                 )}
               </div>
               <div className="card-actions justify-end pt-5">
-                <div className="btn-group">
-                  <button
-                    type="button"
-                    onClick={onOpenWorkoutResultDetail}
-                    className="btn btn-outline btn-sm z-20 gap-x-2 text-xs"
-                  >
-                    <MdEdit size={17} /> {`Edit result`}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={onRemoveWorkoutResult}
-                    className="btn btn-outline btn-error btn-sm text-xs"
-                  >
-                    <MdDelete size={17} />
-                  </button>
-                </div>
+                {/* <div className="btn-group"> */}
+                <button
+                  type="button"
+                  onClick={onOpenWorkoutResultDetail}
+                  className="btn-outline btn btn-sm z-20 gap-x-2 text-xs"
+                >
+                  <MdEdit size={17} /> {`Edit result`}
+                </button>
+                {/* </div> */}
               </div>
             </div>
           </div>
@@ -204,7 +214,7 @@ export default function WorkoutSessionResultItem({
           <button
             type="button"
             onClick={onOpenWorkoutResultDetail}
-            className="btn btn-primary btn-sm z-20 gap-x-2 text-xs"
+            className="btn btn-primary z-20 gap-x-2 text-xs"
           >
             <MdEdit size={17} /> {`Enter the result`}
           </button>

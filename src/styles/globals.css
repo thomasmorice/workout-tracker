@@ -4,10 +4,19 @@
 
 @layer components {
   .h1 {
-    @apply text-4xl font-bold text-accent-content;
+    @apply text-xl font-bold text-accent-content md:hidden;
+  }
+  .h1.desktop {
+    @apply hidden text-4xl md:block;
   }
   .h2 {
-    @apply text-xl font-semibold text-accent-content;
+    @apply text-xl font-semibold;
+  }
+
+  .input,
+  .textarea,
+  .select {
+    @apply bg-base-200;
   }
 
   .sidebar-shadow {

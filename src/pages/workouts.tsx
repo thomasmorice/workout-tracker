@@ -44,12 +44,12 @@ const Workouts: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1 className="h1 mt-3">Workout list</h1>
+      <h1 className="h1 desktop mt-3">Workout list</h1>
 
       {sessionData && (
         <>
           <div className="">
-            <div className="flex flex-wrap items-center gap-2 pt-8">
+            <div className="flex flex-wrap items-center gap-2 md:pt-6">
               <div className="form-control items-start ">
                 <label className="label cursor-pointer gap-2">
                   <span className="label-text">

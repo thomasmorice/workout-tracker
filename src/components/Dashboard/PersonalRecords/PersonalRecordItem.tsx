@@ -57,9 +57,7 @@ export default function PersonalRecordItem({
     <>
       <DashboardItem
         title={personalRecordWorkout.name ?? ""}
-        graph={{
-          data: resultsByDate().map((wr) => wr.weight ?? 0),
-        }}
+        graphNumbers={resultsByDate().map((wr) => wr.weight ?? 0)}
       >
         <>
           <div className="text-2xs -mt-0.5 text-base-content">

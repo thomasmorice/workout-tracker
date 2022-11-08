@@ -1,10 +1,10 @@
 import { formatDistance } from "date-fns";
 import { useMemo } from "react";
 import { MdMonitorWeight } from "react-icons/md";
-import { useWeighingService } from "../../services/useWeighingService";
+import { useWeighingService } from "../../../services/useWeighingService";
 import { Rings } from "react-loading-icons";
-import DashboardItem from "./DashboardItem";
-import { InferQueryOutput } from "../../types/trpc";
+import DashboardItem from "../DashboardItem";
+import { InferQueryOutput } from "../../../types/trpc";
 
 type WeighingItemProps = {
   weighings: InferQueryOutput<"weighing.getWeightings">;
@@ -34,10 +34,8 @@ export default function WeighingItem({ weighings }: WeighingItemProps) {
   return (
     <>
       <DashboardItem
-        graph={{
-          data: weighings.map((weighting) => weighting.weight),
-        }}
-        title="Latest weight"
+        graphNumbers={weighings.map((weighting) => weighting.weight)}
+        title="Latest weightings"
       >
         <div className="relative z-10 flex items-center gap-2">
           <div className="text-2xl font-bold text-accent-content">

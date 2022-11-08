@@ -139,7 +139,7 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
   return (
     <>
       <form
-        className="mt-5 flex flex-col pb-10"
+        className="flex flex-col pb-10 md:pt-5"
         onSubmit={handleSubmit(handleCreateOrEdit)}
       >
         <div className="flex flex-col gap-3">

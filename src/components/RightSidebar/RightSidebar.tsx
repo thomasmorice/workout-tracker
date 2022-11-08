@@ -12,7 +12,7 @@ export default function RightSidebar() {
   return (
     <>
       <aside
-        className={`fixed bottom-0 right-0 z-30 h-full w-80 overflow-y-scroll border-l border-base-content border-opacity-10  px-7  py-8 shadow-xl md:h-full`}
+        className={`fixed bottom-0 right-0 z-30 h-full w-80 overflow-y-scroll border-l border-base-content border-opacity-10  px-7  py-4 shadow-xl md:h-full`}
       >
         <div className="mx-auto flex max-w-xs flex-col">
           <div className="flex items-center justify-between">
@@ -31,7 +31,7 @@ export default function RightSidebar() {
               <div>
                 <h2
                   onClick={closeForm}
-                  className="h2 group  flex cursor-pointer items-center gap-3"
+                  className="h2 group hidden cursor-pointer items-center gap-3 md:flex"
                 >
                   <MdOutlineKeyboardBackspace
                     className="transition-transform group-hover:-translate-x-1"

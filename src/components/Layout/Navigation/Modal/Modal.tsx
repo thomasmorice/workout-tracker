@@ -30,16 +30,16 @@ export default function Modal({
       >
         <div
           id="modal-bg"
-          className="fixed w-full h-full top-0 bottom-0 left-0 backdrop-blur-[3px] bg-opacity-20 z-50 bg-black"
+          className="fixed top-0 bottom-0 left-0 z-50 h-full w-full bg-black bg-opacity-20 backdrop-blur-[3px]"
         ></div>
         <div
           ref={ref}
-          className="relative max-h-[85%] modal-box w-full bg-base-200 sm:max-h-[calc(100vh_-_5rem)] sm:w-[580px] sm:max-w-5xl z-50"
+          className="modal-box relative z-50 max-h-[85%] w-full sm:max-h-[calc(100vh_-_5rem)] sm:w-[580px] sm:max-w-5xl"
         >
           {withCloseButton && (
             <label
               onClick={onClose}
-              className="btn btn-circle btn-sm absolute right-2 top-2"
+              className="btn btn-sm btn-circle absolute right-2 top-2"
             >
               ✕
             </label>

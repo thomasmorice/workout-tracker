@@ -7,11 +7,16 @@ import Navigation from "./Navigation/Navigation";
 import ToastMessage from "./ToastMessage";
 import { Rings } from "react-loading-icons";
 import { useRouter } from "next/router";
-import { MdLogin, MdMenuOpen } from "react-icons/md";
-import { useEffect, useState } from "react";
+import {
+  MdLogin,
+  MdMenuOpen,
+  MdOutlineKeyboardBackspace,
+} from "react-icons/md";
+import { useEffect, useMemo, useState } from "react";
 import RightSidebar from "../RightSidebar/RightSidebar";
 import { useSidebarStore } from "../../store/SidebarStore";
 import AvatarButton from "../AvatarButton/AvatarButton";
+import { useEventStore } from "../../store/EventStore";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -21,7 +26,8 @@ export default function Layout({ children }: LayoutProps) {
   const { data: sessionData, status } = useSession();
   const { state: workoutFormState } = useWorkoutStore();
   const [currentPath, set_currentPath] = useState<String[]>();
-  const [isRightSidebarOpened, set_isRightSidebarOpened] = useState(false);
+  const { eventTypeToEdit, closeForm, eventBeingEdited } = useEventStore();
+
   const { isSidebarExpanded } = useSidebarStore();
 
   useEffect(() => {
@@ -29,10 +35,33 @@ export default function Layout({ children }: LayoutProps) {
     set_currentPath(asPathWithoutQuery?.split("/").filter((v) => v.length > 0));
   }, [router.pathname]);
 
+  const getMobileBreadcrumb = useMemo(() => {
+    if (!currentPath) {
+      return <> Loading </>;
+    } else if (!currentPath.length) {
+      return <>Dashboard</>;
+    } else if (currentPath.includes("workouts")) {
+      return <>Workouts</>;
+    } else if (currentPath.includes("activities")) {
+      if (!eventTypeToEdit) {
+        return <>Activities</>;
+      } else {
+        return (
+          <div onClick={closeForm} className="flex items-center gap-2 text-lg">
+            <MdOutlineKeyboardBackspace className="h-8 w-8" />{" "}
+            {eventTypeToEdit === "workout-session"
+              ? "Workout session"
+              : "Weighing"}
+          </div>
+        );
+      }
+    }
+  }, [currentPath, eventTypeToEdit, closeForm]);
+
   return (
     <div>
       <ToastMessage />
-      <Navigation onOpenSidebar={() => set_isRightSidebarOpened(true)} />
+      <Navigation />
       {status === "authenticated" && (
         <div className="hidden md:block">
           <RightSidebar />
@@ -47,47 +76,49 @@ export default function Layout({ children }: LayoutProps) {
           ${status === "authenticated" ? "md:mr-80 xl:mr-[340px]" : ""}
         `}
       >
-        <div className="flex w-full items-center justify-between py-5">
-          <div className="breadcrumbs hidden text-sm md:block">
-            <ul>
-              <li className="capitalize" key={"home"}>
-                Home
+        <div className="breadcrumbs hidden pt-10 text-sm md:flex">
+          <ul>
+            <li className="capitalize" key={"home"}>
+              Home
+            </li>
+            {currentPath?.map((path, index) => (
+              <li className="" key={index}>
+                <a className="capitalize">{path}</a>
               </li>
-              {currentPath?.map((path, index) => (
-                <li key={index}>
-                  <a className="capitalize">{path}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="md:hidden">
-            <Logo />
-          </div>
-          {status === "loading" ? (
-            <>
-              <div className="flex items-center gap-x-2">
-                <Rings className="text-xl" />
-              </div>
-            </>
-          ) : (
-            <>
-              {!sessionData ? (
-                <button
-                  type="button"
-                  onClick={() => signIn()}
-                  className="btn btn-primary flex gap-x-2"
-                >
-                  <MdLogin size="22px" />
-                  Login
-                </button>
-              ) : (
-                <div className="md:hidden">
-                  <AvatarButton />
-                </div>
-              )}
-            </>
-          )}
+            ))}
+          </ul>
         </div>
+
+        <div className=" mb-4 h-20 md:hidden">
+          <div className="fixed inset-x-0 z-50 flex w-full items-center justify-between border-b border-base-200 bg-base-100 py-1 px-4 pr-2">
+            <h1 className="h1 mobile">{getMobileBreadcrumb}</h1>
+            {status === "loading" ? (
+              <>
+                <div className="flex items-center gap-x-2">
+                  <Rings className="text-xl" />
+                </div>
+              </>
+            ) : (
+              <>
+                {!sessionData ? (
+                  <button
+                    type="button"
+                    onClick={() => signIn()}
+                    className="btn btn-primary flex gap-x-2"
+                  >
+                    <MdLogin size="22px" />
+                    Login
+                  </button>
+                ) : (
+                  <div className="md:hidden">
+                    <AvatarButton />
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+
         {children}
       </main>
     </div>
