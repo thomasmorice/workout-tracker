@@ -44,7 +44,7 @@ export default function WorkoutSelectField({
     <>
       {(fetchedWorkouts?.pages[0]?.workouts.length ?? 0) > 0 &&
         searchTerm.length !== 0 && (
-          <div className="absolute top-14 z-30 max-h-[520px] overflow-auto rounded-xl bg-base-100">
+          <div className="absolute top-14 z-30 max-h-[380px] overflow-auto rounded-xl bg-base-300 px-4 pt-6">
             {fetchedWorkouts?.pages.map((workoutPage, pageIndex) => (
               <div className="flex flex-col" key={pageIndex}>
                 {workoutPage.workouts.map((workout) => (

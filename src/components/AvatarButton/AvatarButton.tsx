@@ -16,11 +16,11 @@ export default function AvatarButton({}: AvatarButtonProps) {
           Fetching data
         </div>
       ) : (
-        <div className="dropdown">
+        <div className={`dropdown max-md:dropdown-end`}>
           {sessionData ? (
             <label
               tabIndex={0}
-              className="btn-ghost btn-lg btn px-2 normal-case"
+              className="btn btn-ghost btn-lg px-2 normal-case"
             >
               <div className="flex items-center gap-3">
                 <Image
@@ -32,15 +32,15 @@ export default function AvatarButton({}: AvatarButtonProps) {
                   alt=""
                 />
                 <div className="flex items-center gap-1">
-                  <h4 className="max-w-[130px] truncate font-medium text-accent-content">
+                  {/* <h4 className="max-w-[130px] truncate font-medium text-accent-content">
                     {sessionData.user?.name}
-                  </h4>
+                  </h4> */}
                   <MdArrowDropDown size={22} />
                 </div>
               </div>
             </label>
           ) : (
-            <button onClick={() => signIn()} className="btn-primary btn">
+            <button onClick={() => signIn()} className="btn btn-primary">
               Login
             </button>
           )}

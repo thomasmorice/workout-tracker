@@ -81,13 +81,13 @@ export default function WeighingForm({
             name="date"
             render={({ field }) => (
               <DatePicker
-                className="input w-full bg-base-200"
+                className="input w-full"
                 // disabled={!editMode}
                 showTimeInput
                 placeholderText="Select date"
                 onChange={(date: Date) => field.onChange(date)}
                 selected={field.value}
-                popperPlacement="top"
+                popperPlacement="bottom"
                 dateFormat="MMMM d, h:mm aa"
               />
             )}
@@ -101,7 +101,7 @@ export default function WeighingForm({
             <input
               id="input-rep-max"
               step={0.1}
-              className="input max-w-[110px] flex-1 bg-base-200  placeholder:opacity-50"
+              className="input max-w-[110px] flex-1 placeholder:opacity-50"
               {...register("weight", {
                 setValueAs: (v) => {
                   return v === null || v === ""
@@ -121,7 +121,7 @@ export default function WeighingForm({
             className={`btn mt-2 ${isSubmitting ? "loading" : ""}`}
             type="submit"
           >
-            {`${eventBeingEdited ? "Edit" : "Add"} weighing`}
+            {`${existingWeighing ? "Edit" : "Add"} weighing`}
           </button>
         </div>
       </div>

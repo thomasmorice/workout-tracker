@@ -13,17 +13,6 @@ const Activities: NextPage = () => {
         <ActivityDashboard />
       ) : (
         <div>
-          <h2
-            onClick={closeForm}
-            className="h2 group flex cursor-pointer items-center gap-3"
-          >
-            <MdOutlineKeyboardBackspace
-              className="transition-transform group-hover:-translate-x-1"
-              size={16}
-            />
-            {eventTypeToEdit === "workout-session" ? "Session" : "Weighing"}{" "}
-            Form
-          </h2>
           {eventTypeToEdit === "workout-session" ? (
             <WorkoutSessionForm />
           ) : (

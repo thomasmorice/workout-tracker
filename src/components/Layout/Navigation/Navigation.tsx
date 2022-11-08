@@ -9,7 +9,6 @@ import MobileNavbar from "./MobileNavbar";
 import DesktopSidebar from "./DesktopSidebar";
 
 export interface NavigationItemsProps {
-  onOpenSidebar?: () => void;
   items: {
     icon: IconType;
     label: string;
@@ -17,11 +16,7 @@ export interface NavigationItemsProps {
   }[];
 }
 
-export default function Navigation({
-  onOpenSidebar,
-}: {
-  onOpenSidebar: () => void;
-}) {
+export default function Navigation() {
   const NavigationItems: NavigationItemsProps["items"] = [
     {
       icon: MdOutlineDashboard,
@@ -53,7 +48,7 @@ export default function Navigation({
       </div>
       {/* Mobile Nav */}
       <div className="block md:hidden">
-        <MobileNavbar onOpenSidebar={onOpenSidebar} items={NavigationItems} />
+        <MobileNavbar items={NavigationItems} />
       </div>
     </>
   );

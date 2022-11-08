@@ -7,8 +7,9 @@ import {
   Title,
   Tooltip,
   Legend,
+  ChartData,
 } from "chart.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 
 ChartJS.register(
@@ -22,85 +23,108 @@ ChartJS.register(
 );
 
 type DashboardItemProps = {
-  title: string;
+  title?: string;
   children: React.ReactNode;
-  graph: {
-    data: number[];
-  };
+  graphNumbers?: number[];
+  theme?: "base" | "colored";
 };
 
 export default function DashboardItem({
   title,
   children,
-  graph,
+  graphNumbers,
+  theme,
 }: DashboardItemProps) {
-  const data = {
-    labels: graph.data.map((_, index) => index),
-    datasets: [
-      {
-        fill: "origin",
-        backgroundColor: `hsl(${getComputedStyle(
-          document.documentElement
-        ).getPropertyValue("--s")}`,
-        borderColor: `hsl(${getComputedStyle(
-          document.documentElement
-        ).getPropertyValue("--s")}`,
-        tension: 0.3,
-        borderWidth: 2,
-        data: graph.data,
-      },
-    ],
-  };
+  const [graphData, set_graphData] = useState<ChartData<"line", number[]>>();
+  const [chartOptions, set_chartOptions] = useState({});
 
-  const chartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-    tooltips: {
-      // enabled: false,
-    },
-    elements: {
-      point: {
-        radius: 0,
-      },
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false,
+  useEffect(() => {
+    if (graphNumbers) {
+      set_graphData({
+        labels: graphNumbers.map((_, index) => index),
+        datasets: [
+          {
+            fill: "origin",
+            backgroundColor: `hsl(${getComputedStyle(
+              document.documentElement
+            ).getPropertyValue("--s")}`,
+            borderColor: `hsl(${getComputedStyle(
+              document.documentElement
+            ).getPropertyValue("--s")}`,
+            tension: 0.3,
+            borderWidth: 3,
+            data: graphNumbers,
+          },
+        ],
+      });
+
+      set_chartOptions({
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false,
+          },
         },
-        display: false,
-        ticks: {
-          display: false,
+        tooltips: {
+          // enabled: false,
         },
-      },
-      y: {
-        grid: {
-          display: false,
+        elements: {
+          point: {
+            radius: 0,
+          },
         },
-        display: false,
-        title: {
-          display: false,
+        scales: {
+          x: {
+            grid: {
+              display: false,
+            },
+            display: false,
+            ticks: {
+              display: false,
+            },
+          },
+          y: {
+            grid: {
+              display: false,
+            },
+            display: false,
+            title: {
+              display: false,
+            },
+            ticks: {
+              display: false,
+            },
+            suggestedMin: Math.min(...graphNumbers),
+            suggestedMax: Math.max(...graphNumbers),
+          },
         },
-        ticks: {
-          display: false,
-        },
-        suggestedMin: Math.min(...graph.data),
-        suggestedMax: Math.max(...graph.data),
-      },
-    },
-  };
+      });
+    }
+  }, [graphNumbers]);
 
   return (
-    <div className="relative w-64 overflow-hidden rounded-xl bg-base-200 p-5 pb-16 shadow-sm">
-      <div className="text-base text-base-content ">{title}</div>
+    <div
+      className={`relative flex min-h-[112px] min-w-[256px] flex-col justify-between overflow-hidden rounded-xl p-5 shadow-sm ${
+        !theme || theme === "base" ? `bg-base-200` : "bg-secondary"
+      }`}
+    >
+      {title && (
+        <div
+          className={`text-lg font-semibold text-accent-content  ${
+            !theme || theme === "base"
+              ? "text-base-content"
+              : "text-secondary-content"
+          } `}
+        >
+          {title}
+        </div>
+      )}
       {children}
-      {graph.data && (
-        <div className="absolute inset-x-0 bottom-0  z-0">
-          <Line height={80} data={data} options={chartOptions} />
+      {graphData && (
+        <div className="h-12">
+          <div className="absolute inset-x-0 bottom-0 z-0  ">
+            <Line height={80} data={graphData} options={chartOptions} />
+          </div>
         </div>
       )}
     </div>
