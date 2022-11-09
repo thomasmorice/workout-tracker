@@ -86,7 +86,7 @@ const Home: NextPage = () => {
             </div>
           </div>
 
-          {/* <SessionInsights /> */}
+          <SessionInsights />
           <PersonalRecordsInsights />
           <WeighingsInsights />
         </>
