@@ -17,6 +17,7 @@ export const useWeighingService = () => {
   const createOrEditWeighing = trpc.useMutation("weighing.addOrEdit", {
     async onSuccess() {
       await utils.invalidateQueries(["event.get-events"]);
+      await utils.invalidateQueries(["weighing.getWeightings"]);
     },
     onError(e: unknown) {
       throw e as TRPCError;

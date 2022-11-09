@@ -29,11 +29,20 @@ export default function WeighingForm({
   const handleCreateOrEdit: SubmitHandler<
     z.infer<typeof CreateWeighingInputSchema>
   > = async (weighing: z.infer<typeof CreateWeighingInputSchema>) => {
-    await createOrEditWeighing.mutateAsync(weighing);
-    addMessage({
-      type: "success",
-      message: `Weighing ${eventBeingEdited ? "edited" : "added"} successfully`,
-    });
+    try {
+      await createOrEditWeighing.mutateAsync(weighing);
+      addMessage({
+        type: "success",
+        message: `Weighing ${
+          eventBeingEdited ? "edited" : "added"
+        } successfully`,
+      });
+    } catch {
+      addMessage({
+        message: "Error while adding the weight, probably missing the value",
+        type: "error",
+      });
+    }
     onSuccess && onSuccess();
   };
 
@@ -44,7 +53,7 @@ export default function WeighingForm({
       id: existingWeighing?.id ?? undefined,
       eventId: existingWeighing?.event.id ?? undefined,
       date: existingWeighing?.event.eventDate ?? eventDate ?? new Date(),
-      weight: existingWeighing?.weight ?? 0,
+      weight: existingWeighing?.weight ?? "",
     });
   }, [existingWeighing, eventDate]);
 
