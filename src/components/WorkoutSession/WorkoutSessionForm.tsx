@@ -158,7 +158,7 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
                   placeholderText="Select date"
                   onChange={(date: Date) => field.onChange(date)}
                   selected={field.value}
-                  popperPlacement="top"
+                  popperPlacement="bottom"
                   dateFormat="MMMM d, h:mm aa"
                 />
               )}

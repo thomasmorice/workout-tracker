@@ -36,8 +36,10 @@ export default function Layout({ children }: LayoutProps) {
   }, [router.pathname]);
 
   const getMobileBreadcrumb = useMemo(() => {
-    if (!currentPath) {
-      return <> Loading </>;
+    if (status === "unauthenticated") {
+      return <>Workout tracker</>;
+    } else if (status === "loading" || !currentPath) {
+      return <Rings />;
     } else if (!currentPath.length) {
       return <>Dashboard</>;
     } else if (currentPath.includes("workouts")) {
@@ -56,7 +58,7 @@ export default function Layout({ children }: LayoutProps) {
         );
       }
     }
-  }, [currentPath, eventTypeToEdit, closeForm]);
+  }, [currentPath, eventTypeToEdit, closeForm, status]);
 
   return (
     <div>
@@ -90,7 +92,7 @@ export default function Layout({ children }: LayoutProps) {
         </div>
 
         <div className=" mb-4 h-20 md:hidden">
-          <div className="fixed inset-x-0 z-50 flex w-full items-center justify-between border-b border-base-200 bg-base-100 py-1 px-4 pr-2">
+          <div className="fixed inset-x-0 z-50 flex w-full items-center justify-between bg-base-100 py-2 px-4 pr-2 shadow-lg">
             <h1 className="h1 mobile">{getMobileBreadcrumb}</h1>
             {status === "loading" ? (
               <>
@@ -104,7 +106,7 @@ export default function Layout({ children }: LayoutProps) {
                   <button
                     type="button"
                     onClick={() => signIn()}
-                    className="btn btn-primary flex gap-x-2"
+                    className="btn-primary btn flex gap-x-2"
                   >
                     <MdLogin size="22px" />
                     Login

@@ -34,7 +34,9 @@ export default function WeighingItem({ weighings }: WeighingItemProps) {
   return (
     <>
       <DashboardItem
-        graphNumbers={weighings.map((weighting) => weighting.weight)}
+        graphNumbers={[...weighings]
+          .reverse()
+          .map((weighting) => weighting.weight)}
         title="Latest weightings"
       >
         <div className="relative z-10 flex items-center gap-2">
