@@ -20,9 +20,9 @@ const Profile: NextPage = () => {
 
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h1 className="h1 mb-8">Your profile</h1>
+      <h1 className="h1 desktop mb-8">My profile</h1>
 
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <Image
           width={62}
           height={62}

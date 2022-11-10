@@ -44,6 +44,8 @@ export default function Layout({ children }: LayoutProps) {
       return <>Dashboard</>;
     } else if (currentPath.includes("workouts")) {
       return <>Workouts</>;
+    } else if (currentPath.includes("profile")) {
+      return <>My profile</>;
     } else if (currentPath.includes("activities")) {
       if (!eventTypeToEdit) {
         return <>Activities</>;
@@ -104,7 +106,7 @@ export default function Layout({ children }: LayoutProps) {
         </div>
 
         <div className=" mb-4 h-20 md:hidden">
-          <div className="fixed inset-x-0 z-50 flex w-full items-center justify-between bg-base-100 py-2 px-4 pr-2 shadow-lg">
+          <div className="fixed inset-x-0 z-50 flex w-full items-center justify-between bg-base-100 py-0 px-4 pr-2 shadow-lg">
             <h1 className="h1 mobile">{getMobileBreadcrumb}</h1>
             {status === "loading" ? (
               <>
