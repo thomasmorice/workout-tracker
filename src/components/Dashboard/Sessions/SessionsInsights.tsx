@@ -31,20 +31,14 @@ export default function SessionInsights() {
         isLoading={isLoadingCountSession}
         title="Session metrics"
       >
-        {allSessionsCount ? (
-          <div className="flex w-full flex-wrap gap-4 py-3 sm:gap-8 sm:py-5">
-            <DashboardAddItem
-              title="Add a session"
-              onClick={() => set_showAddSessionModal(true)}
-            />
-          </div>
-        ) : (
-          <p>
-            No session registered yet{" "}
-            <span className="text-accent-content">the activity section </span>{" "}
-            to add a new session
-          </p>
-        )}
+        <div className="flex w-full flex-wrap gap-4 py-3 sm:gap-8 sm:py-5">
+          <DashboardAddItem
+            title="Add a session"
+            onClick={() => set_showAddSessionModal(true)}
+          />
+
+          {allSessionsCount ? <> </> : <></>}
+        </div>
       </DashboardItemList>
     </>
   );

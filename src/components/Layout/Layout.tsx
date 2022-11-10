@@ -78,17 +78,29 @@ export default function Layout({ children }: LayoutProps) {
           ${status === "authenticated" ? "md:mr-80 xl:mr-[340px]" : ""}
         `}
       >
-        <div className="breadcrumbs hidden pt-10 text-sm md:flex">
-          <ul>
-            <li className="capitalize" key={"home"}>
-              Home
-            </li>
-            {currentPath?.map((path, index) => (
-              <li className="" key={index}>
-                <a className="capitalize">{path}</a>
+        <div className="hidden items-center justify-between py-6 md:flex">
+          <div className="breadcrumbs  text-sm ">
+            <ul>
+              <li className="capitalize" key={"home"}>
+                Home
               </li>
-            ))}
-          </ul>
+              {currentPath?.map((path, index) => (
+                <li className="" key={index}>
+                  <a className="capitalize">{path}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {status === "unauthenticated" && (
+            <button
+              type="button"
+              onClick={() => signIn()}
+              className="btn btn-primary flex gap-x-2"
+            >
+              <MdLogin size="22px" />
+              Login
+            </button>
+          )}
         </div>
 
         <div className=" mb-4 h-20 md:hidden">
@@ -106,15 +118,13 @@ export default function Layout({ children }: LayoutProps) {
                   <button
                     type="button"
                     onClick={() => signIn()}
-                    className="btn-primary btn flex gap-x-2"
+                    className="btn btn-primary flex gap-x-2"
                   >
                     <MdLogin size="22px" />
                     Login
                   </button>
                 ) : (
-                  <div className="md:hidden">
-                    <AvatarButton />
-                  </div>
+                  <AvatarButton />
                 )}
               </>
             )}

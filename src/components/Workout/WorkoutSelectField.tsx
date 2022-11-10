@@ -41,33 +41,32 @@ export default function WorkoutSelectField({
 
   // Workout Search Results
   const workoutSearchResult = (
-    <>
+    <div className="h-40 ">
       {(fetchedWorkouts?.pages[0]?.workouts.length ?? 0) > 0 &&
         searchTerm.length !== 0 && (
-          <div className="absolute top-14 z-30 max-h-[380px] overflow-auto rounded-xl bg-base-300 px-4 pt-6">
+          <div className="absolute top-14 z-30 max-h-[380px] w-full overflow-auto rounded-xl bg-base-300 px-4 pt-6">
             {fetchedWorkouts?.pages.map((workoutPage, pageIndex) => (
               <div className="flex flex-col" key={pageIndex}>
                 {workoutPage.workouts.map((workout) => (
-                  <div
-                    onClick={() => {
+                  <WorkoutCard
+                    key={workout.id}
+                    onSelect={() => {
                       set_searchTerm("");
                       handleAddWorkout(workout);
                     }}
-                    key={workout.id}
-                    className="cursor-pointer"
-                  >
-                    <WorkoutCard workout={workout} />
-                  </div>
+                    condensed
+                    workout={workout}
+                  />
                 ))}
               </div>
             ))}
           </div>
         )}
-    </>
+    </div>
   );
 
   return (
-    <div className="relative flex flex-col gap-2">
+    <div className="relative flex w-full flex-col gap-2">
       <input
         className="input w-full bg-base-200 pr-8"
         onFocus={() => set_showWorkoutSearchResult(true)}
@@ -81,7 +80,7 @@ export default function WorkoutSelectField({
       {searchTerm === "" && showWorkoutSearchResult && (
         <ul
           tabIndex={0}
-          className="dropdown-content menu text-2xs w-full rounded-lg bg-base-300 p-1 shadow md:w-64"
+          className="dropdown-content menu text-2xs w-full rounded-lg bg-base-300 p-1 shadow"
         >
           <li
             onMouseDown={() => {
