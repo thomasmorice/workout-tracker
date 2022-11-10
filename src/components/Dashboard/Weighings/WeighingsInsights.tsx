@@ -3,7 +3,6 @@ import { useWeighingService } from "../../../services/useWeighingService";
 import Modal from "../../Layout/Navigation/Modal/Modal";
 import WeighingForm from "../../Weighing/WeighingForm";
 import DashboardAddItem from "../DashboardAddItem";
-import DashboardItem from "../DashboardItem";
 import DashboardItemList from "../DashboardItemList";
 import WeighingItem from "./WeighingItem";
 
@@ -20,27 +19,21 @@ export default function WeighingInsights() {
         <Modal onClose={() => set_showAddWeightModal(false)}>
           <>
             <h3 className="text-lg font-bold">Add a weighing</h3>
-            <WeighingForm onSuccess={() => console.log("success")} />
+            <WeighingForm onSuccess={() => set_showAddWeightModal(false)} />
           </>
         </Modal>
       )}
 
       <DashboardItemList isLoading={isLoadingWeights} title="Weight metrics">
-        {latestWeighings?.length ? (
-          <div className="flex w-full flex-wrap gap-4 py-3 sm:gap-8 sm:py-5">
-            <DashboardAddItem
-              title="Add weighing"
-              onClick={() => set_showAddWeightModal(true)}
-            />
+        <div className="flex w-full flex-wrap gap-4 py-3 sm:gap-8 sm:py-5">
+          <DashboardAddItem
+            title="Add a weighing"
+            onClick={() => set_showAddWeightModal(true)}
+          />
+          {latestWeighings && latestWeighings.length > 0 && (
             <WeighingItem weighings={latestWeighings} />
-          </div>
-        ) : (
-          <p>
-            Seems like you haven&apos;t added any weight yet, use{" "}
-            <span className="text-accent-content">the activity section </span>{" "}
-            to add your latest weight and start tracking it regularely
-          </p>
-        )}
+          )}
+        </div>
       </DashboardItemList>
     </>
   );
