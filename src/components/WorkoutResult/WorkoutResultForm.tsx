@@ -158,13 +158,6 @@ export default function WorkoutResultForm({
                     />
                     <span>sec</span>
                   </label>
-
-                  {editedWorkoutResult.time && (
-                    <span className="pt-2 text-xs">
-                      {!isNaN(editedWorkoutResult.time) &&
-                        editedWorkoutResult.time}
-                    </span>
-                  )}
                 </div>
               )}
 
