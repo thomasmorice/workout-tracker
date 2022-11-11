@@ -174,11 +174,10 @@ export default function WorkoutSessionResultItem({
                     <div className="badge  badge-success">RX</div>
                   )}
                   {result.rating && (
-                    <div>
+                    <div className="badge badge-success">
                       <MoodIcon
                         props={{
-                          size: "32px",
-                          className: "badge badge-success",
+                          size: "18px",
                         }}
                         moodIndex={result.rating}
                       />
