@@ -19,7 +19,7 @@ export default function DashboardItemList({
           <Rings /> Fetching data
         </div>
       ) : (
-        children
+        <>{children}</>
       )}
     </>
   );
