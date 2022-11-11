@@ -263,8 +263,11 @@ export default function WorkoutForm() {
               </div>
 
               <div className="mt-3 flex flex-wrap justify-end gap-4">
+                <button className="btn btn-error" onClick={closeWorkoutForm}>
+                  Cancel
+                </button>
                 <button
-                  className={`btn mt-2 ${isSubmitting ? "loading" : ""}`}
+                  className={`btn ${isSubmitting ? "loading" : ""}`}
                   type="submit"
                 >
                   {`${state} workout`}
