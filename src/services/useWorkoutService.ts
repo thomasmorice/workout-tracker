@@ -16,6 +16,7 @@ interface InfiniteWorkoutsProps {
     notIn?: number[];
   };
   orderResults?: Object[];
+  orderByMostlyDone?: boolean;
   limit?: number;
 }
 
@@ -59,6 +60,7 @@ export const useWorkoutService = () => {
     withResults = false,
     ids,
     orderResults,
+    orderByMostlyDone,
     limit,
   }: InfiniteWorkoutsProps) => {
     let filteredSearchTerm = searchTerm;
@@ -80,6 +82,7 @@ export const useWorkoutService = () => {
           onlyFetchMine,
           ids,
           orderResults,
+          orderByMostlyDone,
         },
       ],
       {
