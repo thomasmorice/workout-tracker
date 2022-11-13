@@ -24,8 +24,12 @@ export default function WeighingInsights() {
         </Modal>
       )}
 
-      <DashboardItemList isLoading={isLoadingWeights} title="Weight metrics">
-        <div className="flex w-full flex-wrap gap-4 py-3 sm:gap-8 sm:py-5">
+      <DashboardItemList
+        loadingMessage="fetching weighings"
+        isLoading={isLoadingWeights}
+        title="Weight metrics"
+      >
+        <>
           <DashboardAddItem
             title="Add a weighing"
             onClick={() => set_showAddWeightModal(true)}
@@ -33,7 +37,7 @@ export default function WeighingInsights() {
           {latestWeighings && latestWeighings.length > 0 && (
             <WeighingItem weighings={latestWeighings} />
           )}
-        </div>
+        </>
       </DashboardItemList>
     </>
   );

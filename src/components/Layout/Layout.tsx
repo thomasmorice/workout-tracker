@@ -36,10 +36,8 @@ export default function Layout({ children }: LayoutProps) {
   }, [router.pathname]);
 
   const getMobileBreadcrumb = useMemo(() => {
-    if (status === "unauthenticated") {
+    if (status === "unauthenticated" || !currentPath) {
       return <>Workout tracker</>;
-    } else if (status === "loading" || !currentPath) {
-      return <Rings />;
     } else if (!currentPath.length) {
       return <>Dashboard</>;
     } else if (currentPath.includes("workouts")) {

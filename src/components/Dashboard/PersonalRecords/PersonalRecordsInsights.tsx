@@ -30,9 +30,10 @@ export default function PersonalRecordsInsights({}) {
       personalRecordWorkouts?.pages[0]?.workouts?.length ? (
         <DashboardItemList
           isLoading={isLoading}
+          loadingMessage="fetching personal records"
           title="Latest personal records"
         >
-          <div className="flex w-full gap-4 overflow-x-scroll py-3 sm:gap-8 sm:py-5">
+          <>
             {personalRecordWorkouts &&
               personalRecordWorkouts.pages[0]?.workouts.map((workout) => (
                 <PersonalRecordItem
@@ -40,7 +41,7 @@ export default function PersonalRecordsInsights({}) {
                   personalRecordWorkout={workout}
                 />
               ))}
-          </div>
+          </>
         </DashboardItemList>
       ) : (
         <> </>

@@ -19,6 +19,27 @@ export const workoutSessionRouter = createProtectedRouter()
       });
     },
   })
+  .query("get-sessions-for-insights", {
+    async resolve({ ctx }) {
+      return await prisma.workoutSession.findMany({
+        select: {
+          event: {
+            select: {
+              eventDate: true,
+            },
+          },
+        },
+        where: {
+          athleteId: ctx.session.user.id,
+        },
+        orderBy: {
+          event: {
+            eventDate: "asc",
+          },
+        },
+      });
+    },
+  })
   .query("get-workout-sessions", {
     input: z.object({
       dateFilter: z

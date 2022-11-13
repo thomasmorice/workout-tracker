@@ -32,6 +32,12 @@ export const useWorkoutSessionService = () => {
     });
   };
 
+  const getSessionForInsights = () => {
+    return trpc.useQuery(["workout-session.get-sessions-for-insights"], {
+      enabled: !!sessionData,
+    });
+  };
+
   const getWorkoutSessionById = (id: number) => {
     return trpc.useQuery(
       [
@@ -71,6 +77,7 @@ export const useWorkoutSessionService = () => {
 
   return {
     countAllSessions,
+    getSessionForInsights,
     getWorkoutSessions,
     createOrEditWorkoutSession,
     getWorkoutSessionById,

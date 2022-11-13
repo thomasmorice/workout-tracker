@@ -52,7 +52,7 @@ export default function DashboardItem({
               document.documentElement
             ).getPropertyValue("--s")}`,
             tension: 0.3,
-            borderWidth: 3,
+            borderWidth: 2,
             data: graphNumbers,
           },
         ],

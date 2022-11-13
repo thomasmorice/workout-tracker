@@ -4,6 +4,7 @@ import { useDebounce } from "usehooks-ts";
 import { useWorkoutService } from "../../services/useWorkoutService";
 import { InferQueryOutput } from "../../types/trpc";
 import WorkoutCard from "./WorkoutCard";
+import { MdClose } from "react-icons/md";
 
 interface WorkoutSelectProps {
   handleAddWorkout: (
@@ -41,17 +42,29 @@ export default function WorkoutSelectField({
 
   // Workout Search Results
   const workoutSearchResult = (
-    <div className="h-40 ">
+    <div className="">
       {(fetchedWorkouts?.pages[0]?.workouts.length ?? 0) > 0 &&
         searchTerm.length !== 0 && (
-          <div className="absolute top-14 z-30 max-h-[380px] w-full overflow-auto rounded-xl bg-base-300 px-4 pt-6">
+          <div className="absolute top-14 z-30 max-h-[380px] w-full overflow-auto rounded-xl bg-base-300 px-4 pt-12">
+            <div className="flex justify-end ">
+              <div className="fixed z-40 -mt-10">
+                <button
+                  type="button"
+                  onClick={() => {
+                    set_searchTerm("");
+                  }}
+                  className="btn btn-error btn-sm btn-circle"
+                >
+                  <MdClose />
+                </button>
+              </div>
+            </div>
             {fetchedWorkouts?.pages.map((workoutPage, pageIndex) => (
               <div className="flex flex-col" key={pageIndex}>
                 {workoutPage.workouts.map((workout) => (
                   <WorkoutCard
                     key={workout.id}
                     onSelect={() => {
-                      set_searchTerm("");
                       handleAddWorkout(workout);
                     }}
                     condensed

@@ -2,7 +2,6 @@ import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { AiFillBell } from "react-icons/ai";
-import Image from "next/image";
 import { useWorkoutSessionService } from "../services/useWorkoutSessionService";
 import { formatISO } from "date-fns";
 import PersonalRecordsInsights from "../components/Dashboard/PersonalRecords/PersonalRecordsInsights";
@@ -12,7 +11,7 @@ import SessionInsights from "../components/Dashboard/Sessions/SessionsInsights";
 
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
-  const { countAllSessions, getWorkoutSessions } = useWorkoutSessionService();
+  const { getWorkoutSessions } = useWorkoutSessionService();
 
   const { data: upcomingWorkoutSession } = getWorkoutSessions({
     dateFilter: {

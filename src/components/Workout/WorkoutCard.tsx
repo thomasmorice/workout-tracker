@@ -46,7 +46,7 @@ export default function WorkoutCard({
             <div className="flex items-center justify-between gap-2 leading-none transition-colors hover:text-primary-content">
               {workout.name ? workout.name : `#${workout.id}`}
               <button
-                className="btn btn-sm btn-circle"
+                className="btn btn-primary btn-sm btn-circle"
                 type="button"
                 onClick={onSelect && onSelect}
               >

@@ -94,7 +94,7 @@ export const workoutRouter = createProtectedRouter()
       classifiedOnly: z.boolean().nullish(),
       searchTerm: z.string().nullish(),
       orderResults: z.array(z.any()).nullish(),
-      // orderResults: z.array(z.any()).nullish(),
+      orderByMostlyDone: z.boolean().nullish(),
       onlyFetchMine: z.boolean().nullish(),
       ids: z
         .object({
@@ -116,8 +116,11 @@ export const workoutRouter = createProtectedRouter()
         classifiedOnly,
         searchTerm,
         ids,
+        orderByMostlyDone,
         orderResults,
       } = input;
+
+      console.log("orderByMostlyDone?", orderByMostlyDone);
 
       const where: Prisma.WorkoutWhereInput = {
         ...(elementTypes?.length && {
@@ -210,24 +213,32 @@ export const workoutRouter = createProtectedRouter()
                 },
               },
             },
-
-            ...(orderResults && {
-              orderBy: orderResults,
-            }),
+            // ...(orderResults && {
+            //   orderBy: orderResults,
+            // }),
           },
         },
         where: where,
         cursor: cursor ? { id: cursor } : undefined,
 
-        orderBy: [
-          {
-            createdAt: "desc",
+        ...(orderByMostlyDone && {
+          orderBy: {
+            workoutResults: {
+              _count: "desc",
+            },
           },
+        }),
 
-          {
-            id: "desc",
-          },
-        ],
+        ...(!orderByMostlyDone && {
+          orderBy: [
+            {
+              id: "desc",
+            },
+            {
+              createdAt: "desc",
+            },
+          ],
+        }),
       });
       let nextCursor: typeof cursor | null = null;
       if (workouts.length > limit) {
