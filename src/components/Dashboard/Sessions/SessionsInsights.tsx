@@ -8,6 +8,8 @@ import DashboardAddItem from "../DashboardAddItem";
 import DashboardItem from "../DashboardItem";
 import DashboardItemList from "../DashboardItemList";
 import { useWorkoutService } from "../../../services/useWorkoutService";
+import { MdFavorite } from "react-icons/md";
+import Link from "next/link";
 
 export default function SessionInsights() {
   const [showAddSessionModal, set_showAddSessionModal] = useState(false);
@@ -79,7 +81,7 @@ export default function SessionInsights() {
 
       <DashboardItemList
         loadingMessage="fetching metrics"
-        isLoading={isLoading}
+        isLoading={isLoading || isLoadingMostlyDoneWorkout}
         title="Workout/session metrics"
       >
         <>
@@ -93,35 +95,37 @@ export default function SessionInsights() {
 
           {sessionsForInsights && sessionsForInsights.length > 0 && (
             <>
-              <DashboardItem title="Total sessions">
-                {/* <div className="text-2xs">total</div> */}
-                <div className="relative z-10 flex items-center gap-2">
-                  <div className="text-2xl font-bold text-accent-content">
-                    {sessionsForInsights.length}
+              <DashboardItem title="Sessions insights">
+                <div className="">
+                  <div className="relative z-10 flex items-center gap-2">
+                    <div className="text-2xl font-bold text-accent-content">
+                      {sessionsForInsights.length}
+                    </div>
+                    total sessions
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="text-2xl font-bold text-accent-content">
+                      {sessionsThisMonth}
+                    </div>
+                    done this month
                   </div>
                 </div>
               </DashboardItem>
-              <DashboardItem title="Top 3 workouts">
-                {/* <div className="text-2xs">total</div> */}
-                <div className="relative z-10 flex flex-col gap-1">
-                  <div className="mt-3 text-sm font-bold text-accent-content ">
-                    1. {mostlyDoneWorkouts?.pages[0]?.workouts[0]?.name}
-                    <span>
-                      {` (${mostlyDoneWorkouts?.pages[0]?.workouts[0]?.workoutResults.length} times)`}
-                    </span>
-                  </div>
-                  <div className="text-sm font-bold text-accent-content">
-                    2. {mostlyDoneWorkouts?.pages[0]?.workouts[1]?.name}
-                    <span>
-                      {` (${mostlyDoneWorkouts?.pages[0]?.workouts[1]?.workoutResults.length} times)`}
-                    </span>
-                  </div>
-                  <div className="text-sm font-bold text-accent-content">
-                    3. {mostlyDoneWorkouts?.pages[0]?.workouts[2]?.name}
-                    <span>
-                      {` (${mostlyDoneWorkouts?.pages[0]?.workouts[2]?.workoutResults.length} times)`}
-                    </span>
-                  </div>
+              <DashboardItem title="Favorite workouts">
+                <div className="relative z-10 mt-3 flex flex-col gap-0.5 text-sm">
+                  {mostlyDoneWorkouts?.pages[0]?.workouts.map((workout) => (
+                    <Link
+                      key={workout.id}
+                      href={`/workout/${workout.id}`}
+                      className="flex items-center gap-2"
+                    >
+                      <>
+                        <MdFavorite className="text-primary-content" />
+                        {workout?.name || `#${workout.id}`}
+                        {` (${workout?.workoutResults.length} times)`}
+                      </>
+                    </Link>
+                  ))}
                 </div>
               </DashboardItem>
               <DashboardItem
@@ -137,14 +141,13 @@ export default function SessionInsights() {
                   </div>
                 </div>
               </DashboardItem>
-              <DashboardItem title="Sessions this month">
-                {/* <div className="text-2xs"></div> */}
+              {/* <DashboardItem title="Sessions this month">
                 <div className="relative z-10 flex items-center gap-2">
                   <div className="text-2xl font-bold text-accent-content">
                     {sessionsThisMonth}
                   </div>
                 </div>
-              </DashboardItem>
+              </DashboardItem> */}
             </>
           )}
         </>
