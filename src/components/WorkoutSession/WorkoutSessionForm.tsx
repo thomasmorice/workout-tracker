@@ -221,7 +221,11 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
           <div className="flex flex-col gap-2 text-sm">
             <button
               className={`btn mt-2 ${isSubmitting ? "loading" : ""}`}
-              type="submit"
+              type="button"
+              onClick={async () => {
+                await handleSubmit(handleCreateOrEdit)();
+                onSuccess && onSuccess();
+              }}
             >
               {isBefore(getValues("date"), new Date()) ? "Save" : "Plan"}
               {` this session`}
