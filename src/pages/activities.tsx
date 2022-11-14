@@ -14,7 +14,7 @@ const Activities: NextPage = () => {
       ) : (
         <div>
           {eventTypeToEdit === "workout-session" ? (
-            <WorkoutSessionForm />
+            <WorkoutSessionForm onSuccess={closeForm} />
           ) : (
             <WeighingForm onSuccess={closeForm} />
           )}

@@ -5,6 +5,7 @@ import { useWorkoutService } from "../../services/useWorkoutService";
 import { InferQueryOutput } from "../../types/trpc";
 import WorkoutCard from "./WorkoutCard";
 import { MdClose } from "react-icons/md";
+import { useToastStore } from "../../store/ToastStore";
 
 interface WorkoutSelectProps {
   handleAddWorkout: (
@@ -21,6 +22,8 @@ export default function WorkoutSelectField({
   const [searchTerm, set_searchTerm] = useState("");
   const [showWorkoutSearchResult, set_showWorkoutSearchResult] =
     useState(false);
+
+  const { addMessage } = useToastStore();
 
   const searchTermDebounced = useDebounce<string>(searchTerm, 500);
 
@@ -65,6 +68,11 @@ export default function WorkoutSelectField({
                   <WorkoutCard
                     key={workout.id}
                     onSelect={() => {
+                      addMessage({
+                        message: "Workout added",
+                        type: "info",
+                        closeAfter: 1000,
+                      });
                       handleAddWorkout(workout);
                     }}
                     condensed
