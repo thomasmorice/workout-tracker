@@ -9,6 +9,7 @@ import WorkoutCardSkeleton from "../components/Workout/WorkoutCardSkeleton";
 import { useWorkoutService } from "../services/useWorkoutService";
 import { useWorkoutStore } from "../store/WorkoutStore";
 import { MdSearch } from "react-icons/md";
+import Header from "../components/Layout/Header";
 
 const Workouts: NextPage = () => {
   const { data: sessionData } = useSession();
@@ -44,7 +45,7 @@ const Workouts: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1 className="h1 desktop mt-3">Workout list</h1>
+      <Header h1={"Workout list"} />
 
       {sessionData && (
         <>

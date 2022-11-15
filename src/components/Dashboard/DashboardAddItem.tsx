@@ -13,14 +13,14 @@ export default function DashboardAddItem({
   return (
     <div
       onClick={onClick}
-      className="flex cursor-pointer transition-transform hover:scale-105"
+      className="flex min-w-[165px] cursor-pointer pl-1 transition-transform hover:scale-105"
     >
-      <DashboardItem theme="colored">
-        <div className="flex h-full w-full flex-col items-center justify-center text-lg font-bold text-secondary-content">
+      <div className={`rounded-xl bg-secondary px-5 py-3`}>
+        <div className="flex h-full w-full flex-col items-center justify-center text-center text-base font-bold text-secondary-content">
           {title}
-          <MdAdd className="mt-1 h-8 w-8 transition-all" />
+          <MdAdd className="h-7 w-7 transition-all" />
         </div>
-      </DashboardItem>
+      </div>
     </div>
   );
 }

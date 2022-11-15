@@ -4,6 +4,7 @@ import { useWorkoutService } from "../../services/useWorkoutService";
 import { useSession } from "next-auth/react";
 import { format } from "date-fns";
 import WorkoutCard from "../../components/Workout/WorkoutCard";
+import Header from "../../components/Layout/Header";
 
 const Workout: NextPage = () => {
   const router = useRouter();
@@ -23,12 +24,9 @@ const Workout: NextPage = () => {
     <>
       {workout ? (
         <>
-          <h1 className="h1 mt-3 mb-8">Workout details</h1>
-          <h2 className="h2 mt-3 mb-8">
-            <div className="card-title text-2xl">
-              {workout.name ? workout.name : `#${workout.id}`}
-            </div>
-          </h2>
+          <Header
+            h1={`${workout.name ? workout.name : `#${workout.id}`} details`}
+          />
           <WorkoutCard workout={workout} />
           <div className="mt-4">
             <h2 className="h2 mt-3 mb-8">Workout results</h2>

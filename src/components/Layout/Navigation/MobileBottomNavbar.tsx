@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { MdOutlineSchedule } from "react-icons/md";
 import { NavigationItemsProps } from "./Navigation";
 
-export default function MobileNavbar({ items }: NavigationItemsProps) {
+export default function MobileBottomNavbar({ items }: NavigationItemsProps) {
   const router = useRouter();
 
   const isLinkActive = useMemo(() => {
