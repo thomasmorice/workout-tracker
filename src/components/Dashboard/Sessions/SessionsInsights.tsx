@@ -1,10 +1,7 @@
 import { useMemo, useState } from "react";
 import { format, isSameMonth, differenceInYears } from "date-fns";
 import { useWorkoutSessionService } from "../../../services/useWorkoutSessionService";
-import { useEventStore } from "../../../store/EventStore";
-import Modal from "../../Layout/Navigation/Modal/Modal";
-import WorkoutSessionForm from "../../WorkoutSession/WorkoutSessionForm";
-import DashboardAddItem from "../DashboardAddItem";
+
 import DashboardItem from "../DashboardItem";
 import DashboardItemList from "../DashboardItemList";
 import { useWorkoutService } from "../../../services/useWorkoutService";
@@ -12,7 +9,6 @@ import { MdFavorite } from "react-icons/md";
 import Link from "next/link";
 
 export default function SessionInsights() {
-  const [showAddSessionModal, set_showAddSessionModal] = useState(false);
   const { getInfiniteWorkouts } = useWorkoutService();
   const { getSessionForInsights } = useWorkoutSessionService();
   const { data: sessionsForInsights, isLoading } = getSessionForInsights();
@@ -22,7 +18,6 @@ export default function SessionInsights() {
       limit: 3,
       orderByMostlyDone: true,
     });
-  const { closeForm } = useEventStore();
 
   const sessionsThisMonth = useMemo(() => {
     return sessionsForInsights?.reduce((acc: number, session) => {
@@ -67,32 +62,12 @@ export default function SessionInsights() {
 
   return (
     <>
-      {showAddSessionModal && (
-        <Modal
-          withCloseButton={true}
-          onClose={() => set_showAddSessionModal(false)}
-        >
-          <>
-            <h3 className="text-lg font-bold">Add a session</h3>
-            <WorkoutSessionForm onSuccess={() => console.log("success")} />
-          </>
-        </Modal>
-      )}
-
       <DashboardItemList
         loadingMessage="fetching metrics"
         isLoading={isLoading || isLoadingMostlyDoneWorkout}
         title="Workout/session metrics"
       >
         <>
-          <DashboardAddItem
-            title="Add a session"
-            onClick={() => {
-              closeForm(); // This will close the workout session form in case it has been opened in the "activities" section
-              set_showAddSessionModal(true);
-            }}
-          />
-
           {sessionsForInsights && sessionsForInsights.length > 0 && (
             <>
               <DashboardItem title="Sessions insights">

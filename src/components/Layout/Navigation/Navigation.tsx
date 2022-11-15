@@ -5,7 +5,7 @@ import {
   MdOutlineDashboard,
   MdOutlineAccountCircle,
 } from "react-icons/md";
-import MobileNavbar from "./MobileNavbar";
+import MobileBottomNavbar from "./MobileBottomNavbar";
 import DesktopSidebar from "./DesktopSidebar";
 
 export interface NavigationItemsProps {
@@ -48,7 +48,7 @@ export default function Navigation() {
       </div>
       {/* Mobile Nav */}
       <div className="block md:hidden">
-        <MobileNavbar items={NavigationItems} />
+        <MobileBottomNavbar items={NavigationItems} />
       </div>
     </>
   );

@@ -8,6 +8,8 @@ import PersonalRecordsInsights from "../components/Dashboard/PersonalRecords/Per
 import WeighingsInsights from "../components/Dashboard/Weighings/WeighingsInsights";
 import { useEffect } from "react";
 import SessionInsights from "../components/Dashboard/Sessions/SessionsInsights";
+import Header from "../components/Layout/Header";
+import QuickActions from "../components/Dashboard/QuickActions/QuickActions";
 
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
@@ -46,24 +48,18 @@ const Home: NextPage = () => {
       </Head>
 
       {!sessionData ? (
-        <div className="hero rounded-3xl bg-base-200 py-16 ">
-          <div className="hero-content text-center">
-            <div className="max-w-md">
-              <h1 className="text-3xl font-bold sm:text-5xl">
-                Workout tracker
-              </h1>
-              <p className="py-6">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste,
-                perspiciatis consequuntur in, similique quo magnam molestiae non
-                delectus modi, beatae voluptatibus laboriosam. Cum, neque iste
-                minus debitis inventore excepturi pariatur!
-              </p>
-            </div>
-          </div>
-        </div>
+        <>
+          <Header h1={"Workout tracker"} />
+          <p className="py-6">
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste,
+            perspiciatis consequuntur in, similique quo magnam molestiae non
+            delectus modi, beatae voluptatibus laboriosam. Cum, neque iste minus
+            debitis inventore excepturi pariatur!
+          </p>
+        </>
       ) : (
         <>
-          <h1 className="h1 desktop mb-8">Dashboard</h1>
+          <Header h1={"Dashboard"} />
           <div className="flex flex-col  items-center gap-5 rounded-3xl bg-base-200 py-14 px-3 sm:flex-row sm:items-center sm:px-8">
             <div className="flex flex-col gap-2">
               <h3 className="text-center text-xl font-semibold text-base-content sm:text-left sm:text-3xl">
@@ -84,7 +80,7 @@ const Home: NextPage = () => {
               </div>
             </div>
           </div>
-
+          <QuickActions />
           <SessionInsights />
           <PersonalRecordsInsights />
           <WeighingsInsights />

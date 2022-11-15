@@ -43,16 +43,7 @@ export default function RightSidebar() {
                   Form
                 </h2>
                 {eventTypeToEdit === "workout-session" ? (
-                  <WorkoutSessionForm
-                  // onSuccess={() => {
-                  //   if (
-                  //     eventFormState === "add-session" ||
-                  //     eventFormState === "add-weighing"
-                  //   ) {
-                  //     closeForm();
-                  //   }
-                  // }}
-                  />
+                  <WorkoutSessionForm onSuccess={closeForm} />
                 ) : (
                   <WeighingForm onSuccess={closeForm} />
                 )}
