@@ -120,7 +120,6 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
       type: "workout-session",
       eventId: savedWorkoutSession.id,
     });
-    onSuccess && onSuccess();
   };
 
   const {
