@@ -10,9 +10,11 @@ import { useEffect } from "react";
 import SessionInsights from "../components/Dashboard/Sessions/SessionsInsights";
 import Header from "../components/Layout/Header";
 import QuickActions from "../components/Dashboard/QuickActions/QuickActions";
+import Lottie from "lottie-react";
+import bicepsCurlAnimation from "../assets/lottie-biceps-curl-animation.json";
 
 const Home: NextPage = () => {
-  const { data: sessionData } = useSession();
+  const { data: sessionData, status } = useSession();
   const { getWorkoutSessions } = useWorkoutSessionService();
 
   const { data: upcomingWorkoutSession } = getWorkoutSessions({
@@ -50,12 +52,20 @@ const Home: NextPage = () => {
       {!sessionData ? (
         <>
           <Header h1={"Workout tracker"} />
-          <p className="py-6">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste,
-            perspiciatis consequuntur in, similique quo magnam molestiae non
-            delectus modi, beatae voluptatibus laboriosam. Cum, neque iste minus
-            debitis inventore excepturi pariatur!
-          </p>
+          {status === "loading" ? (
+            <>
+              <Lottie animationData={bicepsCurlAnimation} loop={true} />
+              <p className="text-center">
+                Do some biceps curl while your information are being loaded :)
+              </p>
+            </>
+          ) : (
+            <p className="py-6">
+              Welcome to your favorite workout tracking app. Please login first
+              in order to start creating your first workout, or use the
+              pre-existing ones to plan your very first session.
+            </p>
+          )}
         </>
       ) : (
         <>

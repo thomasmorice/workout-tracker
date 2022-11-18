@@ -34,7 +34,7 @@ export const useWeighingService = () => {
         },
       ],
       {
-        enabled: !!sessionData,
+        enabled: sessionData?.user !== undefined,
       }
     );
   };
@@ -48,7 +48,7 @@ export const useWeighingService = () => {
         },
       ],
       {
-        enabled: !!sessionData && id !== -1,
+        enabled: sessionData?.user !== undefined && id !== -1,
       }
     );
   };

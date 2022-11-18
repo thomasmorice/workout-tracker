@@ -21,20 +21,20 @@ export const useWorkoutSessionService = () => {
         },
       ],
       {
-        enabled: !!sessionData,
+        enabled: sessionData?.user !== undefined,
       }
     );
   };
 
   const countAllSessions = () => {
     return trpc.useQuery(["workout-session.count-all-sessions"], {
-      enabled: !!sessionData,
+      enabled: sessionData?.user !== undefined,
     });
   };
 
   const getSessionForInsights = () => {
     return trpc.useQuery(["workout-session.get-sessions-for-insights"], {
-      enabled: !!sessionData,
+      enabled: sessionData?.user !== undefined,
     });
   };
 
@@ -47,7 +47,7 @@ export const useWorkoutSessionService = () => {
         },
       ],
       {
-        enabled: !!sessionData && id !== -1,
+        enabled: sessionData?.user !== undefined && id !== -1,
       }
     );
   };

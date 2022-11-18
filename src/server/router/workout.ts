@@ -232,10 +232,10 @@ export const workoutRouter = createProtectedRouter()
         ...(!orderByMostlyDone && {
           orderBy: [
             {
-              id: "desc",
+              createdAt: "desc",
             },
             {
-              createdAt: "desc",
+              id: "desc",
             },
           ],
         }),

@@ -87,7 +87,7 @@ export const useWorkoutService = () => {
       ],
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
-        enabled: !!sessionData && enabled,
+        enabled: enabled && sessionData?.user !== undefined,
       }
     );
   };
@@ -101,7 +101,10 @@ export const useWorkoutService = () => {
           id: workoutId,
         },
       ],
-      { enabled: !!sessionData && !!id, refetchOnWindowFocus: false }
+      {
+        enabled: !!id && sessionData?.user !== undefined,
+        refetchOnWindowFocus: false,
+      }
     );
   };
 

@@ -39,15 +39,7 @@ export default function WorkoutSessionResultItem({
   const [isDragging, set_isDragging] = useState(false);
 
   const hasResults = useMemo(() => {
-    if (
-      isDone &&
-      (result.isRx ||
-        (result.description && result.description !== "") ||
-        result.totalReps ||
-        result.weight ||
-        result.rating ||
-        result.time)
-    ) {
+    if (isDone && workoutResultIsFilled(result)) {
       return true;
     }
     return false;
@@ -98,7 +90,7 @@ export default function WorkoutSessionResultItem({
               <button
                 onClick={onRemoveWorkoutResult}
                 type="button"
-                className="btn btn-error btn-xs btn-circle"
+                className="btn-error btn-xs btn-circle btn"
               >
                 <MdDelete size="18px" />
               </button>
@@ -171,10 +163,10 @@ export default function WorkoutSessionResultItem({
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3">
                   {result.isRx && (
-                    <div className="badge  badge-success">RX</div>
+                    <div className="badge-success  badge">RX</div>
                   )}
                   {result.rating && (
-                    <div className="badge badge-success">
+                    <div className="badge-success badge">
                       <MoodIcon
                         props={{
                           size: "18px",
@@ -188,7 +180,7 @@ export default function WorkoutSessionResultItem({
                   {result.description}
                 </div>
                 {resultHasBenchmarkeableWorkout(result) && (
-                  <div className="badge badge-primary">
+                  <div className="badge-primary badge">
                     {result.time &&
                       format(result.time * 1000, "mm:ss' minutes'")}
                     {result.totalReps && `${result.totalReps} reps`}

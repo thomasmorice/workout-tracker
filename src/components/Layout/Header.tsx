@@ -19,7 +19,7 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
     <>
       <div className=" mb-4 h-20 md:hidden">
         <div className="fixed inset-x-0 z-50 flex w-full items-center justify-between bg-base-100 py-0 px-4 pr-2 shadow-lg">
-          <h1 className="h1 mobile flex items-center gap-2 ">
+          <h1 className="h1 mobile flex items-center gap-2">
             {onGoBack && (
               <div onClick={onGoBack} className="text-lg">
                 <MdOutlineKeyboardBackspace className="h-8 w-8" />{" "}
@@ -39,7 +39,7 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
                 <button
                   type="button"
                   onClick={() => signIn()}
-                  className="btn btn-primary flex gap-x-2"
+                  className="btn btn-primary my-2 flex gap-x-2"
                 >
                   <MdLogin size="22px" />
                   Login

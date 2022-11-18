@@ -4,9 +4,13 @@ import GoogleProvider from "next-auth/providers/google";
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "../../../server/db/client";
-import { env } from "../../../env/server.mjs";
 
 export const authOptions: NextAuthOptions = {
+  session: {
+    updateAge: 24 * 60 * 60 * 4, // 4 days
+    // strategy: "jwt",
+    // maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
   // Include user.id on session
   callbacks: {
     session({ session, user }) {
