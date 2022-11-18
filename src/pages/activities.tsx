@@ -1,4 +1,5 @@
 import { NextPage } from "next";
+import { useEffect } from "react";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import ActivityDashboard from "../components/Activity/ActivityDashboard";
 import Header from "../components/Layout/Header";

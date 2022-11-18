@@ -13,7 +13,6 @@ import { useToastStore } from "../../store/ToastStore";
 import { z } from "zod";
 import WorkoutResultForm from "../WorkoutResult/WorkoutResultForm";
 import { useWorkoutResultService } from "../../services/useWorkoutResultService";
-import { useRouter } from "next/router";
 import { Reorder } from "framer-motion";
 import WorkoutSessionResultItem from "./WorkoutSessionResultItem";
 import { InferMutationInput, InferQueryOutput } from "../../types/trpc";
@@ -24,6 +23,10 @@ import {
 import { isBefore } from "date-fns";
 import Portal from "../Portal/Portal";
 import { useEventStore } from "../../store/EventStore";
+import {
+  sessionHasResultsFilled,
+  workoutResultIsFilled,
+} from "../../utils/utils";
 
 interface WorkoutSessionFormProps {
   onSuccess?: () => void;
@@ -116,10 +119,13 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
       } successfully`,
     });
 
-    addOrEditEvent({
-      type: "workout-session",
-      eventId: savedWorkoutSession.id,
-    });
+    if (
+      workoutSession.workoutResults.every((result) =>
+        workoutResultIsFilled(result)
+      )
+    ) {
+      onSuccess && onSuccess();
+    }
   };
 
   const {

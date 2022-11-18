@@ -12,13 +12,13 @@ export default function RightSidebar() {
   return (
     <>
       <aside
-        className={`fixed bottom-0 right-0 z-30 h-full w-80 overflow-y-scroll border-l border-base-content border-opacity-10  px-7  py-4 shadow-xl md:h-full`}
+        className={`fixed bottom-0 right-0 z-30 h-full w-80 overflow-y-auto overflow-x-hidden border-l border-base-content border-opacity-10  px-7  py-4 shadow-xl md:h-full`}
       >
         <div className="mx-auto flex max-w-xs flex-col">
           <div className="flex items-center justify-between">
             <AvatarButton />
             <div>
-              <button type="button" className="btn btn-ghost btn-circle">
+              <button type="button" className="btn-ghost btn-circle btn">
                 <MdNotifications size="24" />
               </button>
             </div>

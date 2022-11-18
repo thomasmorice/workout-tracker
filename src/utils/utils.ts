@@ -26,16 +26,21 @@ export const resultHasBenchmarkeableWorkout = (
   return result.time || result.totalReps || result.weight;
 };
 
-export const workoutResultIsFilled = (
-  result: WorkoutResultWithWorkout | SessionType["workoutResults"][number]
-) => {
-  return resultHasBenchmarkeableWorkout(result) || result.description;
+export const workoutResultIsFilled = (result: any) => {
+  return (
+    result.isRx ||
+    (result.description && result.description !== "") ||
+    result.totalReps ||
+    result.weight ||
+    result.rating ||
+    result.time
+  );
 };
 
-export const sessionHasResults = (session: SessionType) => {
+export const sessionHasResultsFilled = (session: SessionType) => {
   if (isBefore(session.event.eventDate, Date.now())) {
     if (
-      session.workoutResults.some((result) => workoutResultIsFilled(result))
+      session.workoutResults.every((result) => workoutResultIsFilled(result))
     ) {
       return true;
     }
@@ -46,7 +51,7 @@ export const sessionHasResults = (session: SessionType) => {
 export const getSessionTitle = (session: SessionType) => {
   return isBefore(new Date(), session.event.eventDate)
     ? "Session planned"
-    : sessionHasResults(session)
+    : sessionHasResultsFilled(session)
     ? "Result registered"
     : "Session registered";
 };

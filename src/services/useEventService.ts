@@ -31,7 +31,7 @@ export const useEventService = () => {
         },
       ],
       {
-        enabled: !!sessionData,
+        enabled: sessionData?.user !== undefined,
       }
     );
   };
