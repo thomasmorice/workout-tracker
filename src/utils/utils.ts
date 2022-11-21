@@ -20,9 +20,7 @@ export const getSessionTotalTime = (session: SessionType) => {
   );
 };
 
-export const resultHasBenchmarkeableWorkout = (
-  result: WorkoutResultWithWorkout | SessionType["workoutResults"][number]
-) => {
+export const resultHasBenchmarkeableWorkout = (result: any) => {
   return result.time || result.totalReps || result.weight;
 };
 

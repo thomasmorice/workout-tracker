@@ -124,7 +124,17 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
         workoutResultIsFilled(result)
       )
     ) {
-      onSuccess && onSuccess();
+      onSuccess
+        ? onSuccess()
+        : addOrEditEvent({
+            type: "workout-session",
+            eventId: savedWorkoutSession.id,
+          });
+    } else {
+      addOrEditEvent({
+        type: "workout-session",
+        eventId: savedWorkoutSession.id,
+      });
     }
   };
 

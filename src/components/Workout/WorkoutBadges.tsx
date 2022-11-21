@@ -9,7 +9,7 @@ export const DifficultyBadge = ({
     <>
       {difficulty && (
         <div
-          className={`badge badge-outline rounded-none text-xs font-medium text-${difficulty.toLowerCase()}-600
+          className={`badge badge-outline text-xs font-medium text-${difficulty.toLowerCase()}-600
       ${difficulty === "BLACK" ? "border-white bg-black text-white" : ""}`}
         >
           {difficulty}

@@ -71,7 +71,7 @@ export default function WorkoutSessionResultItem({
     >
       <div className="relative flex flex-col gap-7">
         {/* Workout */}
-        <div className="card relative  z-20 bg-base-200 transition-all duration-300 hover:shadow-lg">
+        <div className="card relative  z-20 bg-base-200 transition-all duration-300">
           <div className="card-body p-4">
             <div
               className={`absolute top-3 right-3 hidden  cursor-grab items-center gap-2 p-2 md:flex`}
@@ -90,7 +90,7 @@ export default function WorkoutSessionResultItem({
               <button
                 onClick={onRemoveWorkoutResult}
                 type="button"
-                className="btn-error btn-xs btn-circle btn"
+                className="btn btn-error btn-xs btn-circle"
               >
                 <MdDelete size="18px" />
               </button>
@@ -136,7 +136,6 @@ export default function WorkoutSessionResultItem({
                   {result.workout.name && result.workout.name !== ""
                     ? result.workout.name
                     : `#${result.workout.id}`}
-                  {/* <MdLink size={19} /> */}
                 </a>
                 <div className="flex items-center gap-x-0.5 text-sm opacity-80">
                   {result.workout.totalTime && (
@@ -158,15 +157,15 @@ export default function WorkoutSessionResultItem({
 
         <div className="border- absolute top-0 left-1/2 bottom-0 border-[1px] border-dashed border-base-content"></div>
         {hasResults ? (
-          <div className="card relative bg-base-200 transition-all duration-300 hover:shadow-lg">
+          <div className="card relative bg-base-200 transition-all duration-300">
             <div className="card-body">
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3">
                   {result.isRx && (
-                    <div className="badge-success  badge">RX</div>
+                    <div className="badge  badge-success">RX</div>
                   )}
                   {result.rating && (
-                    <div className="badge-success badge">
+                    <div className="badge badge-success">
                       <MoodIcon
                         props={{
                           size: "18px",
@@ -180,7 +179,7 @@ export default function WorkoutSessionResultItem({
                   {result.description}
                 </div>
                 {resultHasBenchmarkeableWorkout(result) && (
-                  <div className="badge-primary badge">
+                  <div className="badge badge-primary">
                     {result.time &&
                       format(result.time * 1000, "mm:ss' minutes'")}
                     {result.totalReps && `${result.totalReps} reps`}
@@ -189,7 +188,6 @@ export default function WorkoutSessionResultItem({
                 )}
               </div>
               <div className="card-actions justify-end pt-5">
-                {/* <div className="btn-group"> */}
                 <button
                   type="button"
                   onClick={onOpenWorkoutResultDetail}
@@ -197,7 +195,6 @@ export default function WorkoutSessionResultItem({
                 >
                   <MdEdit size={17} /> {`Edit result`}
                 </button>
-                {/* </div> */}
               </div>
             </div>
           </div>
