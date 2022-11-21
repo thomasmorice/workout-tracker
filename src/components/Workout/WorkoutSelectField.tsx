@@ -46,22 +46,20 @@ export default function WorkoutSelectField({
   // Workout Search Results
   const workoutSearchResult = (
     <div className="">
+      <div className="absolute top-2 right-3 z-40">
+        <button
+          type="button"
+          onClick={() => {
+            set_searchTerm("");
+          }}
+          className="btn btn-error btn-sm btn-circle"
+        >
+          <MdClose size={19} />
+        </button>
+      </div>
       {(fetchedWorkouts?.pages[0]?.workouts.length ?? 0) > 0 &&
         searchTerm.length !== 0 && (
-          <div className="absolute top-14 z-30 max-h-[380px] w-full overflow-auto rounded-xl bg-base-300 px-4 pt-12">
-            <div className="flex justify-end ">
-              <div className="fixed z-40 -mt-10">
-                <button
-                  type="button"
-                  onClick={() => {
-                    set_searchTerm("");
-                  }}
-                  className="btn btn-error btn-sm btn-circle"
-                >
-                  <MdClose />
-                </button>
-              </div>
-            </div>
+          <div className="absolute top-14 z-30 max-h-[380px] w-full overflow-auto rounded-xl bg-base-200 px-4 pt-2">
             {fetchedWorkouts?.pages.map((workoutPage, pageIndex) => (
               <div className="flex flex-col" key={pageIndex}>
                 {workoutPage.workouts.map((workout) => (

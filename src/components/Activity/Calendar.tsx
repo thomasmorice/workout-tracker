@@ -49,7 +49,7 @@ const Calendar = ({
             onClick={() => {
               set_currentMonth(subMonths(currentMonth, 1));
             }}
-            className="btn btn-outline btn-circle btn-sm"
+            className="btn-outline btn-sm btn-circle btn"
           >
             <AiOutlineLeft className="" />
           </div>
@@ -58,7 +58,7 @@ const Calendar = ({
             onClick={() => {
               set_currentMonth(addMonths(currentMonth, 1));
             }}
-            className="btn btn-outline btn-circle btn-sm"
+            className="btn-outline btn-sm btn-circle btn"
           >
             <AiOutlineRight className="navIcon" />
           </div>

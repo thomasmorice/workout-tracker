@@ -39,7 +39,7 @@ export default function WorkoutCard({
     useState(false);
 
   return (
-    <div className="group card mb-4 rounded-md border border-base-content border-opacity-10 bg-gradient-to-br from-base-200 to-base-100 shadow-xl">
+    <div className="box group card mb-4 rounded-2xl">
       {condensed ? (
         <div className="card-body p-5 pb-0">
           <div className="flex flex-col gap-2">
@@ -57,12 +57,10 @@ export default function WorkoutCard({
             <div className={`text-xs`}>
               Created{" "}
               <span className="text-accent-content">
-                {format(workout.createdAt, "do MMMM yyyy")}
+                {format(workout.createdAt, "MM/dd/yyyy")}
               </span>
             </div>
-            <div
-              className={`badge badge-primary rounded-none text-xs font-medium `}
-            >
+            <div className={`badge badge-primary text-xs font-medium `}>
               {enumToString(workout.elementType)}
             </div>
             <div className="divider my-0.5 opacity-50"></div>
@@ -115,7 +113,7 @@ export default function WorkoutCard({
                   <div className={`text-xs font-light opacity-50`}>
                     Created on the{" "}
                     {/* {formatDistance(new Date(), new Date(workout.createdAt))} ago */}
-                    {format(workout.createdAt, "do MMMM yyyy")}
+                    {format(workout.createdAt, "MM/dd/yyyy")}
                   </div>
                 </div>
               </div>
@@ -134,7 +132,7 @@ export default function WorkoutCard({
             <div className="badges flex flex-wrap gap-2 pt-4 uppercase">
               {workout.difficulty && (
                 <div
-                  className={`badge badge-outline rounded-none text-xs font-medium text-${workout.difficulty.toLowerCase()}-600
+                  className={`badge badge-outline text-xs font-medium text-${workout.difficulty.toLowerCase()}-600
           ${
             workout.difficulty === "BLACK"
               ? "border-white bg-black text-white"
@@ -145,15 +143,13 @@ export default function WorkoutCard({
                 </div>
               )}
 
-              <div
-                className={`badge badge-primary rounded-none text-xs font-medium `}
-              >
+              <div className={`badge badge-primary text-xs font-medium `}>
                 {enumToString(workout.elementType)}
               </div>
 
               {workout.isDoableAtHome && (
                 <div
-                  className={`badge badge-secondary badge-outline rounded-none text-xs font-medium`}
+                  className={`badge badge-secondary badge-outline text-xs font-medium`}
                 >
                   Doable at home
                 </div>
@@ -163,7 +159,7 @@ export default function WorkoutCard({
             <div className="divider my-2 opacity-50"></div>
 
             {/* Title */}
-            <div className="card-title text-2xl">
+            <div className="card-title text-xl md:text-2xl">
               <Link href={`/workout/${workout.id}`}>
                 <div className="flex items-center gap-2 transition-colors hover:text-primary-content">
                   {workout.name ? workout.name : `#${workout.id}`}
@@ -190,7 +186,7 @@ export default function WorkoutCard({
             </div>
 
             {/* Description */}
-            <div className="description whitespace-pre-wrap break-words text-[0.77rem] font-medium leading-relaxed opacity-70">
+            <div className="description mt-2 whitespace-pre-wrap break-words text-[0.75rem] leading-relaxed opacity-70">
               {workout.description}
             </div>
 

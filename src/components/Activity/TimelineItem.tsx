@@ -9,11 +9,7 @@ import {
   MdDelete,
   MdMonitorWeight,
 } from "react-icons/md";
-import {
-  getActivityDate,
-  getSessionTitle,
-  getSessionTotalTime,
-} from "../../utils/utils";
+import { getSessionTitle, getSessionTotalTime } from "../../utils/utils";
 import { format, isBefore } from "date-fns";
 import { useEventService } from "../../services/useEventService";
 import { useEventStore } from "../../store/EventStore";

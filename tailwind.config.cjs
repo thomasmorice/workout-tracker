@@ -21,6 +21,7 @@ module.exports = {
     "text-yellow-600",
     "border-red-600",
     "text-red-600",
+    "bg-gray-400",
   ],
   daisyui: {
     themes: [
