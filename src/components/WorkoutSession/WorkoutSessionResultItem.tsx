@@ -16,6 +16,7 @@ import {
   resultHasBenchmarkeableWorkout,
   workoutResultIsFilled,
 } from "../../utils/utils";
+import WorkoutResultCard from "../WorkoutResult/WorkoutResultCard";
 
 interface WorkoutSessionResultItemProps {
   result: WorkoutResultWithWorkout;
@@ -44,17 +45,6 @@ export default function WorkoutSessionResultItem({
     }
     return false;
   }, [result, isDone]);
-
-  const MoodIcon = ({
-    moodIndex,
-    props,
-  }: {
-    moodIndex: number;
-    props: any;
-  }) => {
-    const Icon = moods.find((mood) => mood.key === moodIndex)?.icon;
-    return <>{Icon && <Icon {...props} />}</>;
-  };
 
   return (
     <Reorder.Item
@@ -157,47 +147,10 @@ export default function WorkoutSessionResultItem({
 
         <div className="border- absolute top-0 left-1/2 bottom-0 border-[1px] border-dashed border-base-content"></div>
         {hasResults ? (
-          <div className="card relative bg-base-200 transition-all duration-300">
-            <div className="card-body">
-              <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-3">
-                  {result.isRx && (
-                    <div className="badge  badge-success">RX</div>
-                  )}
-                  {result.rating && (
-                    <div className="badge badge-success">
-                      <MoodIcon
-                        props={{
-                          size: "18px",
-                        }}
-                        moodIndex={result.rating}
-                      />
-                    </div>
-                  )}
-                </div>
-                <div className="whitespace-pre-wrap text-xs opacity-80">
-                  {result.description}
-                </div>
-                {resultHasBenchmarkeableWorkout(result) && (
-                  <div className="badge badge-primary">
-                    {result.time &&
-                      format(result.time * 1000, "mm:ss' minutes'")}
-                    {result.totalReps && `${result.totalReps} reps`}
-                    {result.weight && `${result.weight}KG`}
-                  </div>
-                )}
-              </div>
-              <div className="card-actions justify-end pt-5">
-                <button
-                  type="button"
-                  onClick={onOpenWorkoutResultDetail}
-                  className="btn-outline btn btn-sm z-20 gap-x-2 text-xs"
-                >
-                  <MdEdit size={17} /> {`Edit result`}
-                </button>
-              </div>
-            </div>
-          </div>
+          <WorkoutResultCard
+            onEdit={onOpenWorkoutResultDetail}
+            result={result}
+          />
         ) : (
           <button
             type="button"

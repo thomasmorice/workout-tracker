@@ -1,6 +1,7 @@
 import { IconType } from "react-icons/lib";
 import {
   MdOutlineSchedule,
+  MdHome,
   MdPadding,
   MdOutlineDashboard,
   MdOutlineAccountCircle,
@@ -19,7 +20,7 @@ export interface NavigationItemsProps {
 export default function Navigation() {
   const NavigationItems: NavigationItemsProps["items"] = [
     {
-      icon: MdOutlineDashboard,
+      icon: MdHome,
       label: "Dashboard",
       href: "/",
     },
