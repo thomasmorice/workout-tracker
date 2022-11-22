@@ -18,7 +18,9 @@ import Link from "next/link";
 import { useState } from "react";
 
 interface WorkoutCardProps {
-  workout: InferQueryOutput<"workout.get-infinite-workouts">["workouts"][number];
+  workout:
+    | InferQueryOutput<"workout.get-infinite-workouts">["workouts"][number]
+    | InferQueryOutput<"workout.get-workout-by-id">;
   condensed?: boolean;
   onDuplicate?: () => void;
   onEdit?: () => void;

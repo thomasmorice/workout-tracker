@@ -74,8 +74,10 @@ export const workoutRouter = createProtectedRouter()
     }),
     async resolve({ ctx, input }) {
       const { id } = input;
-      const workout = await prisma.workout.findFirst({
-        select: SelectWorkout,
+      return await prisma.workout.findFirstOrThrow({
+        select: {
+          ...SelectWorkout,
+        },
         where: {
           AND: {
             id: id,
@@ -83,7 +85,6 @@ export const workoutRouter = createProtectedRouter()
           },
         },
       });
-      return workout;
     },
   })
   .query("get-infinite-workouts", {
@@ -202,21 +203,7 @@ export const workoutRouter = createProtectedRouter()
       const workouts = await prisma.workout.findMany({
         take: limit + 1,
         select: {
-          ...WorkoutExtras,
-          ...WorkoutSelect,
-          workoutResults: {
-            select: {
-              ...WorkoutResultsSelect,
-              workoutSession: {
-                select: {
-                  event: true,
-                },
-              },
-            },
-            // ...(orderResults && {
-            //   orderBy: orderResults,
-            // }),
-          },
+          ...SelectWorkout,
         },
         where: where,
         cursor: cursor ? { id: cursor } : undefined,

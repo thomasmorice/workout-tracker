@@ -15,20 +15,15 @@ export default function MobileBottomNavbar({ items }: NavigationItemsProps) {
 
   return (
     <div
-      style={{ boxShadow: "0px -1px 5px 0px rgba(0,0,0,0.3)" }}
-      className="fixed inset-x-0 bottom-0 z-40 flex w-full items-center rounded-t-xl bg-base-100 shadow-black drop-shadow-xl"
+      // style={{ boxShadow: "0px -1px 5px 0px rgba(0,0,0,0.3)" }}
+      className="fixed inset-x-0 bottom-0 z-40 flex h-16 w-full items-center border-t border-t-white border-opacity-10 bg-base-100"
     >
       <>
         {items.map((item) => {
           return (
             <Link
-              className={`
-            flex w-1/4 flex-col items-center gap-1 border-r border-base-200 px-4 py-2 text-xs transition-all duration-300
-            ${
-              isLinkActive(item.href)
-                ? "rounded-t-lg bg-primary text-primary-content"
-                : ""
-            }
+              className={`text-2xs flex h-full w-1/4 flex-col items-center justify-center gap-0.5 
+            ${isLinkActive(item.href) ? "bg-base-200 text-primary-content" : ""}
           `}
               key={item.href}
               href={item.href}
@@ -39,11 +34,11 @@ export default function MobileBottomNavbar({ items }: NavigationItemsProps) {
           );
         })}
         <Link
-          className={`
-                    flex w-1/4 flex-col items-center gap-1 border-r border-base-200 px-4 py-2 text-xs transition-all duration-300
+          className={`text-2xs flex h-full w-1/4 flex-col items-center justify-center gap-0.5
+                    
                     ${
                       isLinkActive("/activities")
-                        ? "rounded-t-lg bg-primary text-primary-content"
+                        ? "bg-base-200 text-primary-content"
                         : ""
                     }
                   `}

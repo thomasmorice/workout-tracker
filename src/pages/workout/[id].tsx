@@ -8,23 +8,13 @@ import { Rings } from "react-loading-icons";
 import { MdEdit } from "react-icons/md";
 import { resultHasBenchmarkeableWorkout } from "../../utils/utils";
 import { moods } from "../../components/MoodSelector/MoodSelector";
+import WorkoutResultCard from "../../components/WorkoutResult/WorkoutResultCard";
 
 const Workout: NextPage = () => {
   const router = useRouter();
   const id = parseInt(router.query.id as string, 10);
   const { getWorkoutById } = useWorkoutService();
   const { data: workout, isFetching } = getWorkoutById(id);
-
-  const MoodIcon = ({
-    moodIndex,
-    props,
-  }: {
-    moodIndex: number;
-    props: any;
-  }) => {
-    const Icon = moods.find((mood) => mood.key === moodIndex)?.icon;
-    return <>{Icon && <Icon {...props} />}</>;
-  };
 
   return (
     <>
@@ -53,46 +43,11 @@ const Workout: NextPage = () => {
                       new Date(b.workoutSession.event.eventDate).getDate()
                   )
                   .map((result) => (
-                    <div key={result.id}>
-                      <div className="card relative bg-base-200 transition-all duration-300">
-                        <div className="card-body">
-                          <div className="flex flex-col gap-4">
-                            <div className="text-sm text-accent-content">
-                              {`Event date:  ${format(
-                                result.workoutSession.event.eventDate,
-                                "do MMMM yyyy"
-                              )}`}
-                            </div>
-                            <div className="flex items-center gap-3">
-                              {result.isRx && (
-                                <div className="badge  badge-success">RX</div>
-                              )}
-                              {result.rating && (
-                                <div className="badge badge-success">
-                                  <MoodIcon
-                                    props={{
-                                      size: "18px",
-                                    }}
-                                    moodIndex={result.rating}
-                                  />
-                                </div>
-                              )}
-                            </div>
-                            <div className="whitespace-pre-wrap text-xs opacity-80">
-                              {result.description}
-                            </div>
-                            {resultHasBenchmarkeableWorkout(result) && (
-                              <div className="badge badge-primary">
-                                {result.time &&
-                                  format(result.time * 1000, "mm:ss' minutes'")}
-                                {result.totalReps && `${result.totalReps} reps`}
-                                {result.weight && `${result.weight}KG`}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <WorkoutResultCard
+                      eventDate={result.workoutSession.event.eventDate}
+                      key={result.id}
+                      result={result}
+                    />
                   ))}
               </div>
             </div>
