@@ -4,8 +4,8 @@
   "display": "standalone",
   "scope": "/",
   "start_url": "/",
-  "name": "Workout Tracker",
-  "short_name": "Workout Tracker",
+  "name": "WOD Tracker",
+  "short_name": "WOD Tracker",
   "description": "Workout tracker build especially for Crossfit type of workouts. Plan your session, follow your progress and reach your goals",
   "icons": [
     {
