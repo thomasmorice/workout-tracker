@@ -9,9 +9,9 @@ export default function Logo() {
       <div className="flex h-11 flex-row items-center gap-4">
         <div
           className="
-relative flex items-center justify-center rounded-lg bg-primary p-3 font-bold text-primary-content"
+relative flex h-12 w-full items-center justify-center rounded-lg bg-primary font-bold text-primary-content"
         >
-          <Image src={"/logo.svg"} height={28} width={28} alt={""} />
+          <Image src={"/logo-white.svg"} height={36} width={36} alt={""} />
         </div>
 
         {isSidebarExpanded && (
