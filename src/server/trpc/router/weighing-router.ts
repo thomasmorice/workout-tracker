@@ -1,23 +1,23 @@
-import { createProtectedRouter } from "./protected-router";
-import { prisma } from "../db/client";
 import { z } from "zod";
-import { CreateWeighingInputSchema } from "../../types/app";
-import { TRPCError } from "@trpc/server";
+import { CreateWeighingInputSchema } from "../../../types/app";
+import { router, protectedProcedure } from "../trpc";
 
-export const weighingRouter = createProtectedRouter()
-  .query("getWeightings", {
-    input: z.object({
-      take: z.number(),
-      dateFilter: z
-        .object({
-          lte: z.string(),
-          gte: z.string(),
-        })
-        .nullish(),
-    }),
-    resolve({ ctx, input }) {
+export const weighingRouter = router({
+  getWeighings: protectedProcedure
+    .input(
+      z.object({
+        take: z.number(),
+        dateFilter: z
+          .object({
+            lte: z.string(),
+            gte: z.string(),
+          })
+          .nullish(),
+      })
+    )
+    .query(({ input, ctx }) => {
       const { dateFilter, take } = input;
-      return prisma.weighing.findMany({
+      return ctx.prisma.weighing.findMany({
         select: {
           id: true,
           event: true,
@@ -44,15 +44,16 @@ export const weighingRouter = createProtectedRouter()
           take: take,
         }),
       });
-    },
-  })
-  .query("getWeighingById", {
-    input: z.object({
-      id: z.number(),
     }),
-    resolve({ ctx, input }) {
+  getWeighingById: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      })
+    )
+    .query(({ ctx, input }) => {
       const { id } = input;
-      return prisma.weighing.findFirst({
+      return ctx.prisma.weighing.findFirst({
         select: {
           id: true,
           event: true,
@@ -69,12 +70,11 @@ export const weighingRouter = createProtectedRouter()
           },
         },
       });
-    },
-  })
-  .mutation("addOrEdit", {
-    input: CreateWeighingInputSchema,
-    async resolve({ ctx, input }) {
-      return await prisma.weighing.upsert({
+    }),
+  addOrEdit: protectedProcedure
+    .input(CreateWeighingInputSchema)
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.weighing.upsert({
         create: {
           user: {
             connect: {
@@ -101,5 +101,7 @@ export const weighingRouter = createProtectedRouter()
           id: input.id ?? -1,
         },
       });
-    },
-  });
+    }),
+});
+
+export type WeighingRouterType = typeof weighingRouter;

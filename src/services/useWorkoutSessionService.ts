@@ -13,13 +13,11 @@ export const useWorkoutSessionService = () => {
   const utils = trpc.useContext();
 
   const getWorkoutSessions = ({ dateFilter }: WorkoutSessionsProps) => {
-    return trpc.useQuery(
-      [
-        "workout-session.get-workout-sessions",
-        {
-          dateFilter,
-        },
-      ],
+    return trpc.workoutSession.getWorkoutSessions.useQuery(
+      {
+        dateFilter,
+      },
+
       {
         enabled: sessionData?.user !== undefined,
       }
@@ -27,47 +25,41 @@ export const useWorkoutSessionService = () => {
   };
 
   const countAllSessions = () => {
-    return trpc.useQuery(["workout-session.count-all-sessions"], {
+    return trpc.workoutSession.countAllSessions.useQuery(undefined, {
       enabled: sessionData?.user !== undefined,
     });
   };
 
   const getSessionForInsights = () => {
-    return trpc.useQuery(["workout-session.get-sessions-for-insights"], {
+    return trpc.workoutSession.getSessionsForInsights.useQuery(undefined, {
       enabled: sessionData?.user !== undefined,
     });
   };
 
   const getWorkoutSessionById = (id: number) => {
-    return trpc.useQuery(
-      [
-        "workout-session.get-workout-session-by-id",
-        {
-          id,
-        },
-      ],
+    return trpc.workoutSession.getWorkoutSessionById.useQuery(
+      {
+        id,
+      },
       {
         enabled: sessionData?.user !== undefined && id !== -1,
       }
     );
   };
 
-  const createOrEditWorkoutSession = trpc.useMutation(
-    "workout-session.addOrEdit",
-    {
-      async onSuccess() {
-        await utils.invalidateQueries(["event.get-events"]);
-      },
-      onError(e: unknown) {
-        console.log("error", e);
-        // throw e as TRPCError;
-      },
-    }
-  );
-
-  const deleteWorkoutSession = trpc.useMutation("workout-session.delete", {
+  const createOrEditWorkoutSession = trpc.workoutSession.addOrEdit.useMutation({
     async onSuccess() {
-      await utils.invalidateQueries(["event.get-events"]);
+      await utils.event.getEvents.invalidate();
+    },
+    onError(e: unknown) {
+      console.log("error", e);
+      // throw e as TRPCError;
+    },
+  });
+
+  const deleteWorkoutSession = trpc.workoutSession.delete.useMutation({
+    async onSuccess() {
+      await utils.event.getEvents.invalidate();
     },
     onError(e: unknown) {
       console.log("error", e);

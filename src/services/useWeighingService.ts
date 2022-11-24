@@ -14,10 +14,10 @@ export const useWeighingService = () => {
   const utils = trpc.useContext();
   const { data: sessionData } = useSession();
 
-  const createOrEditWeighing = trpc.useMutation("weighing.addOrEdit", {
+  const createOrEditWeighing = trpc.weighing.addOrEdit.useMutation({
     async onSuccess() {
-      await utils.invalidateQueries(["event.get-events"]);
-      await utils.invalidateQueries(["weighing.getWeightings"]);
+      await utils.event.invalidate();
+      await utils.weighing.invalidate();
     },
     onError(e: unknown) {
       throw e as TRPCError;
@@ -25,14 +25,11 @@ export const useWeighingService = () => {
   });
 
   const getWeighings = ({ dateFilter, take }: WeightingProps) => {
-    return trpc.useQuery(
-      [
-        "weighing.getWeightings",
-        {
-          dateFilter,
-          take,
-        },
-      ],
+    return trpc.weighing.getWeighings.useQuery(
+      {
+        dateFilter,
+        take,
+      },
       {
         enabled: sessionData?.user !== undefined,
       }
@@ -40,13 +37,10 @@ export const useWeighingService = () => {
   };
 
   const getWeighingById = (id: number) => {
-    return trpc.useQuery(
-      [
-        "weighing.getWeighingById",
-        {
-          id,
-        },
-      ],
+    return trpc.weighing.getWeighingById.useQuery(
+      {
+        id,
+      },
       {
         enabled: sessionData?.user !== undefined && id !== -1,
       }

@@ -1,14 +1,15 @@
+import { inferRouterOutputs } from "@trpc/server";
 import { format } from "date-fns";
 import { MdEdit } from "react-icons/md";
-import { WorkoutResultWithWorkout } from "../../types/app";
-import { InferQueryOutput } from "../../types/trpc";
+import { WorkoutRouterType } from "../../server/trpc/router/workout-router";
+import { WorkoutResultInputsWithWorkout } from "../../types/app";
 import { resultHasBenchmarkeableWorkout } from "../../utils/utils";
 import { moods } from "../MoodSelector/MoodSelector";
 
 interface WorkoutResultCardProps {
   result:
-    | InferQueryOutput<"workout.get-workout-by-id">["workoutResults"][number]
-    | WorkoutResultWithWorkout;
+    | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"]["workoutResults"][number]
+    | WorkoutResultInputsWithWorkout;
   eventDate?: Date;
   onEdit?: () => void;
   onOpen?: () => void;

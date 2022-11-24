@@ -12,11 +12,12 @@ import {
 } from "date-fns";
 import { Rings } from "react-loading-icons";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
-import { InferQueryOutput } from "../../types/trpc";
 import { useActivityStore } from "../../store/ActivityStore";
+import { inferRouterOutputs } from "@trpc/server";
+import { EventRouterType } from "../../server/trpc/router/event-router";
 
 interface CalendarProps {
-  workoutSessionEvents: InferQueryOutput<"event.get-events">;
+  workoutSessionEvents: inferRouterOutputs<EventRouterType>["getEvents"];
   handleSelectDate?: (date: Date) => void;
   handleResetSelectDate?: () => void;
   date?: Date;
@@ -49,7 +50,7 @@ const Calendar = ({
             onClick={() => {
               set_currentMonth(subMonths(currentMonth, 1));
             }}
-            className="btn-outline btn-sm btn-circle btn"
+            className="btn-outline btn btn-sm btn-circle"
           >
             <AiOutlineLeft className="" />
           </div>
@@ -58,7 +59,7 @@ const Calendar = ({
             onClick={() => {
               set_currentMonth(addMonths(currentMonth, 1));
             }}
-            className="btn-outline btn-sm btn-circle btn"
+            className="btn-outline btn btn-sm btn-circle"
           >
             <AiOutlineRight className="navIcon" />
           </div>

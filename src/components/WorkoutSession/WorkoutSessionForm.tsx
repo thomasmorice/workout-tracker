@@ -15,10 +15,9 @@ import WorkoutResultForm from "../WorkoutResult/WorkoutResultForm";
 import { useWorkoutResultService } from "../../services/useWorkoutResultService";
 import { Reorder } from "framer-motion";
 import WorkoutSessionResultItem from "./WorkoutSessionResultItem";
-import { InferMutationInput, InferQueryOutput } from "../../types/trpc";
 import {
   CreateWorkoutSessionInputSchema,
-  WorkoutResultWithWorkout,
+  WorkoutResultInputsWithWorkout,
 } from "../../types/app";
 import { isBefore } from "date-fns";
 import Portal from "../Portal/Portal";
@@ -27,6 +26,8 @@ import {
   sessionHasResultsFilled,
   workoutResultIsFilled,
 } from "../../utils/utils";
+import { inferRouterInputs } from "@trpc/server";
+import { WorkoutSessionRouterType } from "../../server/trpc/router/workout-session-router";
 
 interface WorkoutSessionFormProps {
   onSuccess?: () => void;
@@ -64,8 +65,8 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
     control,
     formState: { isSubmitting, isDirty },
   } = useForm<
-    InferMutationInput<"workout-session.addOrEdit"> & {
-      workoutResults: WorkoutResultWithWorkout[];
+    inferRouterInputs<WorkoutSessionRouterType>["addOrEdit"] & {
+      workoutResults: WorkoutResultInputsWithWorkout[];
     }
   >({
     defaultValues,
@@ -260,7 +261,7 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
               workoutResult={
                 workoutResults[
                   editWorkoutResultIndex
-                ] as WorkoutResultWithWorkout
+                ] as WorkoutResultInputsWithWorkout
               }
             />
           </Portal>

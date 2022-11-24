@@ -1,9 +1,7 @@
 import { useToastStore } from "../../store/ToastStore";
 import ConfirmModal from "../Layout/Navigation/Modal/ConfirmModal";
 import { useState } from "react";
-import { InferQueryOutput } from "../../types/trpc";
 import {
-  MdOutlineCalendarToday,
   MdTimer,
   MdChecklistRtl,
   MdDelete,
@@ -14,9 +12,11 @@ import { format, isBefore } from "date-fns";
 import { useEventService } from "../../services/useEventService";
 import { useEventStore } from "../../store/EventStore";
 import { zonedTimeToUtc } from "date-fns-tz";
+import { inferRouterOutputs } from "@trpc/server";
+import { EventRouterType } from "../../server/trpc/router/event-router";
 
 interface TimelineSessionProps {
-  event: InferQueryOutput<"event.get-events">[number];
+  event: inferRouterOutputs<EventRouterType>["getEvents"][number];
 }
 
 export default function TimelineItem({ event }: TimelineSessionProps) {

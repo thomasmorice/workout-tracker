@@ -1,30 +1,22 @@
-import { useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 
 export const useWorkoutResultService = () => {
-  const { data: sessionData } = useSession();
   const utils = trpc.useContext();
 
-  const createOrEditMultipleWorkoutResult = trpc.useMutation(
-    "workout-result.addOrEditMany",
-    {
+  const createOrEditMultipleWorkoutResult =
+    trpc.workoutResult.addOrEditMany.useMutation({
       async onSuccess() {
-        await utils.invalidateQueries(["event.get-events"]);
+        await utils.event.invalidate();
       },
       onError(e: unknown) {
         console.log("error", e);
-        // throw e as TRPCError;
       },
-    }
-  );
+    });
 
-  const deleteMultipleWorkoutResult = trpc.useMutation(
-    "workout-result.deleteMany",
+  const deleteMultipleWorkoutResult = trpc.workoutResult.deleteMany.useMutation(
     {
       async onSuccess() {
-        await utils.invalidateQueries([
-          "workout-session.get-workout-session-by-id",
-        ]);
+        await utils.workoutSession.getWorkoutSessionById.invalidate();
       },
       onError(e: unknown) {
         console.log("error", e);

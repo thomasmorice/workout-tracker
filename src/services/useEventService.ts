@@ -13,32 +13,18 @@ export const useEventService = () => {
   const utils = trpc.useContext();
   const { data: sessionData } = useSession();
 
-  // const createEvent = trpc.useMutation("event.add", {
-  //   async onSuccess() {
-  //     await utils.invalidateQueries(["workout.get-infinite-workouts"]);
-  //   },
-  //   onError(e: unknown) {
-  //     throw e as TRPCError;
-  //   },
-  // });
-
   const getEvents = ({ dateFilter }: EventProps) => {
-    return trpc.useQuery(
-      [
-        "event.get-events",
-        {
-          dateFilter,
-        },
-      ],
+    return trpc.event.getEvents.useQuery(
       {
-        enabled: sessionData?.user !== undefined,
-      }
+        dateFilter,
+      },
+      { enabled: sessionData?.user !== undefined }
     );
   };
 
-  const deleteEvent = trpc.useMutation("event.delete", {
+  const deleteEvent = trpc.event.delete.useMutation({
     async onSuccess() {
-      await utils.invalidateQueries(["event.get-events"]);
+      await utils.event.getEvents.invalidate();
     },
     onError(e: unknown) {
       throw e as TRPCError;

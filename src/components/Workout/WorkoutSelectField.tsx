@@ -2,14 +2,15 @@ import { useState, useRef } from "react";
 import { Rings } from "react-loading-icons";
 import { useDebounce } from "usehooks-ts";
 import { useWorkoutService } from "../../services/useWorkoutService";
-import { InferQueryOutput } from "../../types/trpc";
 import WorkoutCard from "./WorkoutCard";
 import { MdClose } from "react-icons/md";
 import { useToastStore } from "../../store/ToastStore";
+import { inferRouterOutputs } from "@trpc/server";
+import { WorkoutRouterType } from "../../server/trpc/router/workout-router";
 
 interface WorkoutSelectProps {
   handleAddWorkout: (
-    workout: InferQueryOutput<"workout.get-infinite-workouts">["workouts"][number]
+    workout: inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
   ) => void;
   selectedIds?: number[];
 }
@@ -99,7 +100,7 @@ export default function WorkoutSelectField({
       {searchTerm === "" && showWorkoutSearchResult && (
         <ul
           tabIndex={0}
-          className="dropdown-content menu text-2xs w-full rounded-lg bg-base-300 p-1 shadow"
+          className="text-2xs dropdown-content menu w-full rounded-lg bg-base-300 p-1 shadow"
         >
           <li
             onMouseDown={() => {

@@ -8,6 +8,7 @@ import { MdLogin } from "react-icons/md";
 import { useEffect, useState } from "react";
 import RightSidebar from "../RightSidebar/RightSidebar";
 import { useSidebarStore } from "../../store/SidebarStore";
+import Head from "next/head";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -26,50 +27,58 @@ export default function Layout({ children }: LayoutProps) {
   }, [router.pathname]);
 
   return (
-    <div>
-      <ToastMessage />
-      <Navigation />
-      {status === "authenticated" && (
-        <div className="hidden md:block">
-          <RightSidebar />
-        </div>
-      )}
-      {workoutFormState && <WorkoutForm />}
-      <div id="portal" />
+    <>
+      <Head>
+        <meta
+          name="viewport"
+          content="initial-scale=1, user-scalable=no, width=device-width, height=device-height, viewport-fit=cover"
+        />
+      </Head>
+      <div>
+        <ToastMessage />
+        <Navigation />
+        {status === "authenticated" && (
+          <div className="hidden md:block">
+            <RightSidebar />
+          </div>
+        )}
+        {workoutFormState && <WorkoutForm />}
+        <div id="portal" />
 
-      <main
-        className={`px-5 pb-24 transition-all sm:px-8 md:pb-0 
+        <main
+          className={`px-5 pb-24 transition-all sm:px-8 md:pb-0 
           ${isSidebarExpanded ? "md:ml-64" : "md:ml-16 xl:ml-24"}
           ${status === "authenticated" ? "md:mr-80 xl:mr-[340px]" : ""}
         `}
-      >
-        <div className="hidden items-center justify-between py-6 md:flex">
-          <div className="breadcrumbs  text-sm ">
-            <ul>
-              <li className="capitalize" key={"home"}>
-                Home
-              </li>
-              {currentPath?.map((path, index) => (
-                <li className="" key={index}>
-                  <a className="capitalize">{path}</a>
+        >
+          <div className="hidden items-center justify-between py-6 md:flex">
+            <div className="breadcrumbs  text-sm ">
+              <ul>
+                <li className="capitalize" key={"home"}>
+                  Home
                 </li>
-              ))}
-            </ul>
+                {currentPath?.map((path, index) => (
+                  <li className="" key={index}>
+                    <a className="capitalize">{path}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {status === "unauthenticated" && (
+              <button
+                type="button"
+                onClick={() => signIn()}
+                className="btn-primary btn flex gap-x-2"
+              >
+                <MdLogin size="22px" />
+                Login
+              </button>
+            )}
           </div>
-          {status === "unauthenticated" && (
-            <button
-              type="button"
-              onClick={() => signIn()}
-              className="btn btn-primary flex gap-x-2"
-            >
-              <MdLogin size="22px" />
-              Login
-            </button>
-          )}
-        </div>
 
-        {children}
-      </main>
-    </div>
+          {children}
+        </main>
+      </div>
+    </>
   );
 }

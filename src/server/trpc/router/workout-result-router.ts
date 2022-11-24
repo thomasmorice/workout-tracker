@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { CreateWorkoutResultInputSchema } from "../../types/app";
-import { prisma } from "../db/client";
-import { createProtectedRouter } from "./protected-router";
+import { CreateWorkoutResultInputSchema } from "../../../types/app";
+import { router, protectedProcedure } from "../trpc";
 
 export const WorkoutResultsSelect = {
   id: true,
@@ -24,14 +23,16 @@ export const WorkoutResultsExtras = {
   },
 };
 
-export const workoutResultRouter = createProtectedRouter()
-  .query("get-workout-results-by-workout-id", {
-    input: z.object({
-      workoutId: z.number(),
-    }),
-    async resolve({ ctx, input }) {
+export const workoutResultRouter = router({
+  getWorkoutResultsByWorkoutId: protectedProcedure
+    .input(
+      z.object({
+        workoutId: z.number(),
+      })
+    )
+    .query(({ ctx, input }) => {
       const { workoutId } = input;
-      const workoutResults = await prisma.workoutResult.findMany({
+      const workoutResults = ctx.prisma.workoutResult.findMany({
         select: {
           ...WorkoutResultsSelect,
         },
@@ -40,15 +41,16 @@ export const workoutResultRouter = createProtectedRouter()
         },
       });
       return workoutResults;
-    },
-  })
-  .mutation("addOrEditMany", {
-    input: z.object({
-      workoutResults: z.array(CreateWorkoutResultInputSchema),
-      workoutSessionId: z.number(),
     }),
-    async resolve({ ctx, input }) {
-      const workoutResults = await prisma.$transaction(
+  addOrEditMany: protectedProcedure
+    .input(
+      z.object({
+        workoutResults: z.array(CreateWorkoutResultInputSchema),
+        workoutSessionId: z.number(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.$transaction(
         input.workoutResults.map((result, index) => {
           const pickedResult = {
             description: result.description,
@@ -63,7 +65,7 @@ export const workoutResultRouter = createProtectedRouter()
             workoutId: result.workout.id,
             workoutSessionId: input.workoutSessionId,
           };
-          return prisma.workoutResult.upsert({
+          return ctx.prisma.workoutResult.upsert({
             include: {
               workout: true,
             },
@@ -79,15 +81,15 @@ export const workoutResultRouter = createProtectedRouter()
           });
         })
       );
-      return workoutResults;
-    },
-  })
-  .mutation("deleteMany", {
-    input: z.object({
-      ids: z.array(z.number()),
     }),
-    async resolve({ ctx, input }) {
-      await prisma.workoutResult.deleteMany({
+  deleteMany: protectedProcedure
+    .input(
+      z.object({
+        ids: z.array(z.number()),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      ctx.prisma.workoutResult.deleteMany({
         where: {
           id: {
             in: input.ids,
@@ -95,5 +97,7 @@ export const workoutResultRouter = createProtectedRouter()
         },
       });
       return input.ids;
-    },
-  });
+    }),
+});
+
+export type WorkoutResultRouterType = typeof workoutResultRouter;

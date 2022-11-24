@@ -2,12 +2,12 @@ import Modal from "../Layout/Navigation/Modal/Modal";
 import TextareaAutosize from "react-textarea-autosize";
 import { useEffect, useState } from "react";
 import MoodSelector from "../MoodSelector/MoodSelector";
-import { WorkoutResultWithWorkout } from "../../types/app";
+import { WorkoutResultInputsWithWorkout } from "../../types/app";
 import Portal from "../Portal/Portal";
 
 export interface WorkoutResultFormProps {
-  workoutResult: WorkoutResultWithWorkout;
-  onSave: (result: WorkoutResultWithWorkout) => void;
+  workoutResult: WorkoutResultInputsWithWorkout;
+  onSave: (result: WorkoutResultInputsWithWorkout) => void;
   onClose: () => void;
 }
 
