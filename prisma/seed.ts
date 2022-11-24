@@ -1,18 +1,15 @@
 import { Difficulty, ElementType, PrismaClient } from "@prisma/client";
 import workoutsUnclassified from "../data/workouts-unclassified.json" assert { type: "json" };
+import { prisma } from "../src/server/db/client";
 
-const prisma = new PrismaClient({
-  datasources: { db: { url: process.env.DATABASE_URL } },
-});
-
-const getTypedDifficulty = (difficulty) => {
+const getTypedDifficulty = (difficulty: any) => {
   if (difficulty && difficulty.toUpperCase() in Difficulty) {
     return difficulty.toUpperCase();
   }
   return undefined;
 };
 
-const getTypedElementType = (elementType) => {
+const getTypedElementType = (elementType: any) => {
   if (elementType && elementType.toUpperCase() in ElementType) {
     return elementType.toUpperCase();
   }
@@ -45,4 +42,12 @@ async function main() {
   await prisma.$disconnect();
 }
 
-main();
+main()
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
