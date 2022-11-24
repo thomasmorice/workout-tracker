@@ -23,8 +23,6 @@ const Home: NextPage = () => {
     },
   });
 
-  useEffect(() => {}, []);
-
   return (
     <>
       <Head>

@@ -11,16 +11,17 @@ import {
   MdOutlineExpandLess,
   MdAdd,
 } from "react-icons/md";
-import { InferQueryOutput } from "../../types/trpc";
 import { enumToString } from "../../utils/formatting";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
+import { WorkoutRouter } from "../../server/trpc/router/workout-router";
+import { inferRouterOutputs } from "@trpc/server";
 
 interface WorkoutCardProps {
   workout:
-    | InferQueryOutput<"workout.get-infinite-workouts">["workouts"][number]
-    | InferQueryOutput<"workout.get-workout-by-id">;
+    | inferRouterOutputs<WorkoutRouter>["getInfiniteWorkout"]["workouts"][number]
+    | inferRouterOutputs<WorkoutRouter>["getWorkoutById"];
   condensed?: boolean;
   onDuplicate?: () => void;
   onEdit?: () => void;
@@ -48,7 +49,7 @@ export default function WorkoutCard({
             <div className="flex items-center justify-between gap-2 leading-none transition-colors hover:text-primary-content">
               {workout.name ? workout.name : `#${workout.id}`}
               <button
-                className="btn btn-primary btn-sm btn-circle"
+                className="btn-primary btn-sm btn-circle btn"
                 type="button"
                 onClick={onSelect && onSelect}
               >
@@ -62,7 +63,7 @@ export default function WorkoutCard({
                 {format(workout.createdAt, "MM/dd/yyyy")}
               </span>
             </div>
-            <div className={`badge badge-primary text-xs font-medium `}>
+            <div className={`badge-primary badge text-xs font-medium `}>
               {enumToString(workout.elementType)}
             </div>
             <div className="divider my-0.5 opacity-50"></div>
@@ -134,7 +135,7 @@ export default function WorkoutCard({
             <div className="badges flex flex-wrap gap-2 pt-4 uppercase">
               {workout.difficulty && (
                 <div
-                  className={`badge badge-outline text-xs font-medium text-${workout.difficulty.toLowerCase()}-600
+                  className={`badge-outline badge text-xs font-medium text-${workout.difficulty.toLowerCase()}-600
           ${
             workout.difficulty === "BLACK"
               ? "border-white bg-black text-white"
@@ -145,13 +146,13 @@ export default function WorkoutCard({
                 </div>
               )}
 
-              <div className={`badge badge-primary text-xs font-medium `}>
+              <div className={`badge-primary badge text-xs font-medium `}>
                 {enumToString(workout.elementType)}
               </div>
 
               {workout.isDoableAtHome && (
                 <div
-                  className={`badge badge-secondary badge-outline text-xs font-medium`}
+                  className={`badge-secondary badge-outline badge text-xs font-medium`}
                 >
                   Doable at home
                 </div>

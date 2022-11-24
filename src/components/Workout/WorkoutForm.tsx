@@ -1,5 +1,5 @@
 import { Difficulty, ElementType, WorkoutType } from "@prisma/client";
-import { TRPCError } from "@trpc/server";
+import { inferRouterInputs, TRPCError } from "@trpc/server";
 import { useEffect, useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
@@ -9,7 +9,7 @@ import { useWorkoutStore } from "../../store/WorkoutStore";
 import { enumToString } from "../../utils/formatting";
 import Modal from "../Layout/Navigation/Modal/Modal";
 import ConfirmModal from "../Layout/Navigation/Modal/ConfirmModal";
-import { InferMutationInput } from "../../types/trpc";
+import { WorkoutRouterType } from "../../server/trpc/router/workout-router";
 
 export default function WorkoutForm() {
   const { addMessage, closeMessage } = useToastStore();
@@ -22,18 +22,19 @@ export default function WorkoutForm() {
 
   const { createWorkout, editWorkout, deleteWorkout } = useWorkoutService();
 
-  const defaultValues: InferMutationInput<"workout.add"> = useMemo(() => {
-    return {
-      id: existingWorkout?.id ?? undefined,
-      name: existingWorkout?.name ?? "",
-      description: existingWorkout?.description ?? "",
-      difficulty: existingWorkout?.difficulty ?? null,
-      totalTime: existingWorkout?.totalTime ?? null,
-      workoutType: existingWorkout?.workoutType ?? null,
-      elementType: existingWorkout?.elementType ?? "UNCLASSIFIED",
-      isDoableAtHome: existingWorkout?.isDoableAtHome ?? false,
-    };
-  }, [existingWorkout]);
+  const defaultValues: inferRouterInputs<WorkoutRouterType>["add"] =
+    useMemo(() => {
+      return {
+        id: existingWorkout?.id ?? undefined,
+        name: existingWorkout?.name ?? "",
+        description: existingWorkout?.description ?? "",
+        difficulty: existingWorkout?.difficulty ?? null,
+        totalTime: existingWorkout?.totalTime ?? null,
+        workoutType: existingWorkout?.workoutType ?? null,
+        elementType: existingWorkout?.elementType ?? "UNCLASSIFIED",
+        isDoableAtHome: existingWorkout?.isDoableAtHome ?? false,
+      };
+    }, [existingWorkout]);
 
   const {
     register,
@@ -41,25 +42,25 @@ export default function WorkoutForm() {
     reset,
     formState: { isSubmitting },
   } = useForm<
-    InferMutationInput<"workout.add"> | InferMutationInput<"workout.edit">
+    | inferRouterInputs<WorkoutRouterType>["add"]
+    | inferRouterInputs<WorkoutRouterType>["edit"]
   >({
     defaultValues,
   });
 
   const handleSave: SubmitHandler<
-    InferMutationInput<"workout.edit"> | InferMutationInput<"workout.add">
-  > = async (
-    workout:
-      | InferMutationInput<"workout.edit">
-      | InferMutationInput<"workout.add">
-  ) => {
+    | inferRouterInputs<WorkoutRouterType>["add"]
+    | inferRouterInputs<WorkoutRouterType>["edit"]
+  > = async (workout) => {
     const toastId = addMessage({
       type: "pending",
       message: `${state} workout`,
     });
     try {
       if (state === "edit") {
-        editWorkout.mutateAsync(workout as InferMutationInput<"workout.edit">);
+        editWorkout.mutateAsync(
+          workout as inferRouterInputs<WorkoutRouterType>["edit"]
+        );
         addMessage({
           type: "success",
           message: "Workout edited successfully",
@@ -81,7 +82,7 @@ export default function WorkoutForm() {
   };
 
   const handleDelete = async (
-    workout: InferMutationInput<"workout.delete">
+    workout: inferRouterInputs<WorkoutRouterType>["delete"]
   ) => {
     const toastId = addMessage({
       message: "Deleting workout",

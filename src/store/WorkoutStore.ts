@@ -1,16 +1,16 @@
-import { TRPCError } from "@trpc/server";
+import { inferRouterOutputs, TRPCError } from "@trpc/server";
 import create from "zustand";
-import { InferQueryOutput } from "../types/trpc";
+import { WorkoutRouterType } from "../server/trpc/router/workout-router";
 import { useToastStore } from "./ToastStore";
 
 type StateType = "create" | "duplicate" | "edit" | "delete";
 
 interface WorkoutFormState {
   state?: StateType;
-  workout?: InferQueryOutput<"workout.get-infinite-workouts">["workouts"][number];
+  workout?: inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
   showWorkoutForm: (
     state: StateType,
-    existingWorkout?: InferQueryOutput<"workout.get-infinite-workouts">["workouts"][number]
+    existingWorkout?: inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
   ) => void;
   handleWorkoutFormError: (e: TRPCError) => void;
   closeWorkoutForm: () => void;

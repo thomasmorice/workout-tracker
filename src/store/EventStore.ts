@@ -1,18 +1,19 @@
+import { inferRouterOutputs } from "@trpc/server";
 import create from "zustand";
-import { InferQueryOutput } from "../types/trpc";
+import { EventRouterType } from "../server/trpc/router/event-router";
 
 type EventType = "weighting" | "workout-session";
 
 interface AddOrEditEventProps {
   type: EventType;
-  eventId?: InferQueryOutput<"event.get-events">[number]["id"];
+  eventId?: inferRouterOutputs<EventRouterType>["getEvents"][number]["id"];
   date?: Date;
 }
 interface EventState {
   eventTypeToEdit?: EventType;
   eventDate?: Date;
   closeForm: () => void;
-  eventBeingEdited?: InferQueryOutput<"event.get-events">[number]["id"];
+  eventBeingEdited?: inferRouterOutputs<EventRouterType>["getEvents"][number]["id"];
   addOrEditEvent: ({ type, eventId, date }: AddOrEditEventProps) => void;
 }
 

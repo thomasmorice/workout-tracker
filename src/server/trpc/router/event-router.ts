@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { createProtectedRouter } from "./protected-router";
-import { prisma } from "../db/client";
+import { router, protectedProcedure } from "../trpc";
 
 const EventSelect = {
   id: true,
@@ -8,19 +7,21 @@ const EventSelect = {
   createdAt: true,
 };
 
-export const eventRouter = createProtectedRouter()
-  .query("get-events", {
-    input: z.object({
-      dateFilter: z
-        .object({
-          lte: z.string(),
-          gte: z.string(),
-        })
-        .nullish(),
-    }),
-    async resolve({ ctx, input }) {
+export const eventRouter = router({
+  getEvents: protectedProcedure
+    .input(
+      z.object({
+        dateFilter: z
+          .object({
+            lte: z.string(),
+            gte: z.string(),
+          })
+          .nullish(),
+      })
+    )
+    .query(({ input, ctx }) => {
       const { dateFilter } = input;
-      return await prisma.event.findMany({
+      return ctx.prisma.event.findMany({
         select: {
           ...EventSelect,
           weighing: {
@@ -63,15 +64,16 @@ export const eventRouter = createProtectedRouter()
           eventDate: "desc",
         },
       });
-    },
-  })
-  .mutation("delete", {
-    input: z.object({
-      id: z.number(),
     }),
-    async resolve({ input }) {
+  delete: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
       const { id } = input;
-      await prisma.event.delete({
+      ctx.prisma.event.delete({
         where: { id },
         include: {
           weighing: true,
@@ -85,5 +87,7 @@ export const eventRouter = createProtectedRouter()
       return {
         id,
       };
-    },
-  });
+    }),
+});
+
+export type EventRouterType = typeof eventRouter;

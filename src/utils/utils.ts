@@ -1,3 +1,4 @@
+import { inferRouterOutputs } from "@trpc/server";
 import {
   differenceInDays,
   format,
@@ -6,11 +7,12 @@ import {
   isBefore,
 } from "date-fns";
 import { zonedTimeToUtc } from "date-fns-tz";
-import { WorkoutResultWithWorkout } from "../types/app";
-import { InferQueryOutput } from "../types/trpc";
+import { EventRouterType } from "../server/trpc/router/event-router";
+import { WorkoutRouterType } from "../server/trpc/router/workout-router";
+import { WorkoutResultInputsWithWorkout } from "../types/app";
 
 type SessionType = NonNullable<
-  InferQueryOutput<"event.get-events">[number]["workoutSession"]
+  inferRouterOutputs<EventRouterType>["getEvents"][number]["workoutSession"]
 >;
 
 export const getSessionTotalTime = (session: SessionType) => {
@@ -20,7 +22,11 @@ export const getSessionTotalTime = (session: SessionType) => {
   );
 };
 
-export const resultHasBenchmarkeableWorkout = (result: any) => {
+export const resultHasBenchmarkeableWorkout = (
+  result:
+    | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"]["workoutResults"][number]
+    | WorkoutResultInputsWithWorkout
+) => {
   return result.time || result.totalReps || result.weight;
 };
 
@@ -55,7 +61,7 @@ export const getSessionTitle = (session: SessionType) => {
 };
 
 export const getActivityDate = (
-  event: InferQueryOutput<"event.get-events">[number]
+  event: inferRouterOutputs<EventRouterType>["getEvents"][number]
 ) => {
   if (isBefore(event.eventDate, Date.now())) {
     if (Math.abs(differenceInDays(event.eventDate, Date.now())) > 4) {

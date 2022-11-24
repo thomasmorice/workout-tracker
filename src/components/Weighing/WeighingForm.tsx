@@ -2,12 +2,13 @@ import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import { z } from "zod";
 import { CreateWeighingInputSchema } from "../../types/app";
-import { InferMutationInput, InferQueryOutput } from "../../types/trpc";
 import { useWeighingService } from "../../services/useWeighingService";
 import { useToastStore } from "../../store/ToastStore";
 import { useEventStore } from "../../store/EventStore";
 import { useEffect, useState } from "react";
 import { Rings } from "react-loading-icons";
+import { inferRouterInputs } from "@trpc/server";
+import { WeighingRouterType } from "../../server/trpc/router/weighing-router";
 
 interface WeighingFormProps {
   // existingWeighing?: InferQueryOutput<"event.get-events">[number]["weighing"];
@@ -63,7 +64,7 @@ export default function WeighingForm({
     register,
     control,
     formState: { isSubmitting, isDirty },
-  } = useForm<InferMutationInput<"weighing.addOrEdit">>({
+  } = useForm<inferRouterInputs<WeighingRouterType>["addOrEdit"]>({
     defaultValues,
   });
 

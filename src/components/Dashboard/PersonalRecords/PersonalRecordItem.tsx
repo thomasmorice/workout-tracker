@@ -5,13 +5,14 @@ import {
   MdStarRate,
 } from "react-icons/md";
 import { useEffect, useMemo, useCallback } from "react";
-import { InferQueryOutput } from "../../../types/trpc";
 import { format } from "date-fns";
 
 import DashboardItem from "../DashboardItem";
+import { inferRouterOutputs } from "@trpc/server";
+import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
 
 type PersonalRecordWorkoutType = {
-  personalRecordWorkout: InferQueryOutput<"workout.get-infinite-workouts">["workouts"][number];
+  personalRecordWorkout: inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
 };
 
 export default function PersonalRecordItem({

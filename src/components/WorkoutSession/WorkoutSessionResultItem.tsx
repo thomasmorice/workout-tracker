@@ -9,7 +9,7 @@ import {
   MdOutlineArrowDropUp,
 } from "react-icons/md";
 import { useEffect, useMemo, useState } from "react";
-import { WorkoutResultWithWorkout } from "../../types/app";
+import { WorkoutResultInputsWithWorkout } from "../../types/app";
 import { format } from "date-fns";
 import { moods } from "../MoodSelector/MoodSelector";
 import {
@@ -19,7 +19,7 @@ import {
 import WorkoutResultCard from "../WorkoutResult/WorkoutResultCard";
 
 interface WorkoutSessionResultItemProps {
-  result: WorkoutResultWithWorkout;
+  result: WorkoutResultInputsWithWorkout;
   isDone: boolean;
   onOpenWorkoutResultDetail: () => void;
   onRemoveWorkoutResult: () => void;
@@ -87,7 +87,6 @@ export default function WorkoutSessionResultItem({
             </div>
 
             {/* Move position on phone */}
-
             <div className="absolute right-4 md:hidden">
               <div className="btn-group">
                 <button
@@ -105,13 +104,6 @@ export default function WorkoutSessionResultItem({
                   className="btn btn-sm"
                 >
                   <MdOutlineArrowDropUp size="24px" />
-                </button>
-                <button
-                  onClick={onRemoveWorkoutResult}
-                  type="button"
-                  className="btn btn-error btn-sm"
-                >
-                  <MdDelete size="20px" />
                 </button>
               </div>
             </div>
@@ -142,10 +134,19 @@ export default function WorkoutSessionResultItem({
                 {result.workout.description}
               </div>
             </div>
+            <div className="card-actions items-center justify-end">
+              <button
+                onClick={onRemoveWorkoutResult}
+                type="button"
+                className="btn btn-error btn-sm items-center gap-2"
+              >
+                <MdDelete size="20px" /> Delete
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="border- absolute top-0 left-1/2 bottom-0 border-[1px] border-dashed border-base-content"></div>
+        <div className="absolute top-0 left-1/2 bottom-0 border-[1px] border-dashed border-base-content"></div>
         {hasResults ? (
           <WorkoutResultCard
             onEdit={onOpenWorkoutResultDetail}

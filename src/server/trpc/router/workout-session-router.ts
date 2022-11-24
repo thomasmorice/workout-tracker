@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { createProtectedRouter } from "./protected-router";
-import { prisma } from "../db/client";
-import { CreateWorkoutSessionInputSchema } from "../../types/app";
+import { CreateWorkoutSessionInputSchema } from "../../../types/app";
+import { router, protectedProcedure } from "../trpc";
 
 const WorkoutSessionSelect = {
   id: true,
@@ -9,49 +8,47 @@ const WorkoutSessionSelect = {
   event: true,
 };
 
-export const workoutSessionRouter = createProtectedRouter()
-  .query("count-all-sessions", {
-    async resolve({ ctx }) {
-      return await prisma.workoutSession.count({
-        where: {
-          athleteId: ctx.session.user.id,
-        },
-      });
-    },
-  })
-  .query("get-sessions-for-insights", {
-    async resolve({ ctx }) {
-      return await prisma.workoutSession.findMany({
-        select: {
-          event: {
-            select: {
-              eventDate: true,
-            },
+export const workoutSessionRouter = router({
+  countAllSessions: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.workoutSession.count({
+      where: {
+        athleteId: ctx.session.user.id,
+      },
+    });
+  }),
+  getSessionsForInsights: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.workoutSession.findMany({
+      select: {
+        event: {
+          select: {
+            eventDate: true,
           },
         },
-        where: {
-          athleteId: ctx.session.user.id,
+      },
+      where: {
+        athleteId: ctx.session.user.id,
+      },
+      orderBy: {
+        event: {
+          eventDate: "asc",
         },
-        orderBy: {
-          event: {
-            eventDate: "asc",
-          },
-        },
-      });
-    },
-  })
-  .query("get-workout-sessions", {
-    input: z.object({
-      dateFilter: z
-        .object({
-          lte: z.string().optional(),
-          gte: z.string().optional(),
-        })
-        .nullish(),
-    }),
-    async resolve({ ctx, input }) {
+      },
+    });
+  }),
+  getWorkoutSessions: protectedProcedure
+    .input(
+      z.object({
+        dateFilter: z
+          .object({
+            lte: z.string().optional(),
+            gte: z.string().optional(),
+          })
+          .nullish(),
+      })
+    )
+    .query(({ ctx, input }) => {
       const { dateFilter } = input;
-      return await prisma.workoutSession.findMany({
+      return ctx.prisma.workoutSession.findMany({
         select: {
           ...WorkoutSessionSelect,
           workoutResults: {
@@ -84,15 +81,16 @@ export const workoutSessionRouter = createProtectedRouter()
           },
         },
       });
-    },
-  })
-  .query("get-workout-session-by-id", {
-    input: z.object({
-      id: z.number(),
     }),
-    async resolve({ ctx, input }) {
+  getWorkoutSessionById: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      })
+    )
+    .query(({ ctx, input }) => {
       const { id } = input;
-      const workoutSession = prisma.workoutSession.findFirst({
+      return ctx.prisma.workoutSession.findFirst({
         select: {
           ...WorkoutSessionSelect,
           workoutResults: {
@@ -108,13 +106,11 @@ export const workoutSessionRouter = createProtectedRouter()
           id: id,
         },
       });
-      return workoutSession;
-    },
-  })
-  .mutation("addOrEdit", {
-    input: CreateWorkoutSessionInputSchema,
-    async resolve({ ctx, input }) {
-      return await prisma.workoutSession.upsert({
+    }),
+  addOrEdit: protectedProcedure
+    .input(CreateWorkoutSessionInputSchema)
+    .mutation(({ input, ctx }) => {
+      return ctx.prisma.workoutSession.upsert({
         select: {
           ...WorkoutSessionSelect,
           workoutResults: {
@@ -149,22 +145,25 @@ export const workoutSessionRouter = createProtectedRouter()
           id: input.id ?? -1,
         },
       });
-    },
-  })
-  .mutation("delete", {
-    input: z.object({
-      id: z.number(),
     }),
-    async resolve({ ctx, input }) {
+  delete: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      })
+    )
+    .mutation(({ input, ctx }) => {
       const { id } = input;
-      await prisma.workoutResult.deleteMany({
+      ctx.prisma.workoutResult.deleteMany({
         where: {
           workoutSessionId: id,
         },
       });
-      await prisma.workoutSession.delete({ where: { id: id } });
+      ctx.prisma.workoutSession.delete({ where: { id: id } });
       return {
         id,
       };
-    },
-  });
+    }),
+});
+
+export type WorkoutSessionRouterType = typeof workoutSessionRouter;

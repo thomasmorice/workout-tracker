@@ -1,16 +1,12 @@
-import {
-  Difficulty,
-  ElementType,
-  Workout,
-  WorkoutType,
-  Prisma,
-} from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { CreateWorkoutInputSchema } from "../../types/app";
-import { prisma } from "../db/client";
-import { createProtectedRouter } from "./protected-router";
-import { WorkoutResultsSelect } from "./workout-result";
+import {
+  CreateWorkoutInputSchema,
+  GetAllWorkoutsInputSchema,
+} from "../../../types/app";
+import { router, protectedProcedure } from "../trpc";
+import { WorkoutResultsSelect } from "./workout-result-router";
 
 export const WorkoutSelect = {
   id: true,
@@ -47,34 +43,16 @@ const SelectWorkout = {
   },
 };
 
-// const SelectWorkout = (withResults: boolean = true) => {
-//   return {
-//     ...WorkoutExtras,
-//     ...WorkoutSelect,
-//     workoutResults: withResults ? WorkoutResultsSelect : false,
-//     // ...(withResults && {
-//     // workoutResults: {
-//     //   select: {
-//     //     ...WorkoutResultsSelect,
-//     //     workoutSession: {
-//     //       select: {
-//     //         event: true,
-//     //       },
-//     //     },
-//     //   },
-//     // },
-//     // }),
-//   };
-// };
-
-export const workoutRouter = createProtectedRouter()
-  .query("get-workout-by-id", {
-    input: z.object({
-      id: z.number(),
-    }),
-    async resolve({ ctx, input }) {
+export const workoutRouter = router({
+  getWorkoutById: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      })
+    )
+    .query(({ ctx, input }) => {
       const { id } = input;
-      return await prisma.workout.findFirstOrThrow({
+      return ctx.prisma.workout.findFirstOrThrow({
         select: {
           ...SelectWorkout,
         },
@@ -85,29 +63,10 @@ export const workoutRouter = createProtectedRouter()
           },
         },
       });
-    },
-  })
-  .query("get-infinite-workouts", {
-    input: z.object({
-      elementTypes: z.nativeEnum(ElementType).array().nullish(),
-      workoutTypes: z.nativeEnum(WorkoutType).array().nullish(),
-      withResults: z.boolean().nullish(),
-      classifiedOnly: z.boolean().nullish(),
-      searchTerm: z.string().nullish(),
-      orderResults: z.array(z.any()).nullish(),
-      orderByMostlyDone: z.boolean().nullish(),
-      onlyFetchMine: z.boolean().nullish(),
-      ids: z
-        .object({
-          in: z.array(z.number()).nullish(),
-          notIn: z.array(z.number()).nullish(),
-        })
-        .nullish(),
-      limit: z.number().min(1).max(100).nullish(),
-      cursor: z.number().nullish(), // <-- "cursor" needs to exist, but can be any type
     }),
-
-    async resolve({ ctx, input }) {
+  getInfiniteWorkout: protectedProcedure
+    .input(GetAllWorkoutsInputSchema)
+    .query(async ({ ctx, input }) => {
       const limit = input.limit ?? 20;
       const { cursor } = input;
       const {
@@ -120,9 +79,6 @@ export const workoutRouter = createProtectedRouter()
         orderByMostlyDone,
         orderResults,
       } = input;
-
-      console.log("orderByMostlyDone?", orderByMostlyDone);
-
       const where: Prisma.WorkoutWhereInput = {
         ...(elementTypes?.length && {
           elementType: {
@@ -191,7 +147,6 @@ export const workoutRouter = createProtectedRouter()
                       },
                     },
                   }),
-
                   // elementType: "UNCLASSIFIED",
                 },
               ],
@@ -199,15 +154,13 @@ export const workoutRouter = createProtectedRouter()
           ],
         },
       };
-
-      const workouts = await prisma.workout.findMany({
+      const workouts = await ctx.prisma.workout.findMany({
         take: limit + 1,
         select: {
           ...SelectWorkout,
         },
         where: where,
         cursor: cursor ? { id: cursor } : undefined,
-
         ...(orderByMostlyDone && {
           orderBy: {
             workoutResults: {
@@ -215,7 +168,6 @@ export const workoutRouter = createProtectedRouter()
             },
           },
         }),
-
         ...(!orderByMostlyDone && {
           orderBy: [
             {
@@ -232,57 +184,57 @@ export const workoutRouter = createProtectedRouter()
         const nextItem = workouts.pop();
         nextCursor = nextItem?.id;
       }
-
       return {
         workouts,
         nextCursor,
       };
-    },
-  })
-  .mutation("add", {
-    input: CreateWorkoutInputSchema,
-    async resolve({ ctx, input }) {
+    }),
+  add: protectedProcedure
+    .input(CreateWorkoutInputSchema)
+    .mutation(({ ctx, input }) => {
       if (!ctx.session?.user?.id) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "Could not get user ID",
         });
       } else {
-        const workout = await prisma.workout.create({
+        return ctx.prisma.workout.create({
           data: {
             ...input,
             creatorId: ctx.session.user.id,
           },
           select: WorkoutSelect,
         });
-        return workout;
       }
-    },
-  })
-  .mutation("edit", {
-    input: CreateWorkoutInputSchema.extend({
-      id: z.number(),
     }),
-
-    async resolve({ input }) {
+  edit: protectedProcedure
+    .input(
+      CreateWorkoutInputSchema.extend({
+        id: z.number(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
       const { id } = input;
-      const workout = await prisma.workout.update({
+      const workout = ctx.prisma.workout.update({
         where: { id },
         data: input,
         select: WorkoutSelect,
       });
       return workout;
-    },
-  })
-  .mutation("delete", {
-    input: z.object({
-      id: z.number(),
     }),
-    async resolve({ input }) {
+  delete: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
       const { id } = input;
-      await prisma.workout.delete({ where: { id } });
+      ctx.prisma.workout.delete({ where: { id } });
       return {
         id,
       };
-    },
-  });
+    }),
+});
+
+export type WorkoutRouterType = typeof workoutRouter;

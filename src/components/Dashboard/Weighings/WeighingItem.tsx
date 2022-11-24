@@ -4,10 +4,11 @@ import { MdMonitorWeight } from "react-icons/md";
 import { useWeighingService } from "../../../services/useWeighingService";
 import { Rings } from "react-loading-icons";
 import DashboardItem from "../DashboardItem";
-import { InferQueryOutput } from "../../../types/trpc";
+import { inferRouterOutputs } from "@trpc/server";
+import { WeighingRouterType } from "../../../server/trpc/router/weighing-router";
 
 type WeighingItemProps = {
-  weighings: InferQueryOutput<"weighing.getWeightings">;
+  weighings: inferRouterOutputs<WeighingRouterType>["getWeighings"];
 };
 
 export default function WeighingItem({ weighings }: WeighingItemProps) {

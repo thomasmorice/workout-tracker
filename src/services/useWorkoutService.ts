@@ -24,27 +24,27 @@ export const useWorkoutService = () => {
   const utils = trpc.useContext();
   const { data: sessionData } = useSession();
 
-  const createWorkout = trpc.useMutation("workout.add", {
+  const createWorkout = trpc.workout.add.useMutation({
     async onSuccess() {
-      await utils.invalidateQueries(["workout.get-infinite-workouts"]);
+      await utils.workout.getInfiniteWorkout.invalidate();
     },
     onError(e: unknown) {
       throw e as TRPCError;
     },
   });
 
-  const editWorkout = trpc.useMutation("workout.edit", {
+  const editWorkout = trpc.workout.edit.useMutation({
     async onSuccess() {
-      await utils.invalidateQueries(["workout.get-infinite-workouts"]);
+      await utils.workout.getInfiniteWorkout.invalidate();
     },
     onError(e: unknown) {
       throw e as TRPCError;
     },
   });
 
-  const deleteWorkout = trpc.useMutation("workout.delete", {
+  const deleteWorkout = trpc.workout.delete.useMutation({
     async onSuccess() {
-      await utils.invalidateQueries(["workout.get-infinite-workouts"]);
+      await utils.workout.getInfiniteWorkout.invalidate();
     },
     onError(e: unknown) {
       throw e as TRPCError;
@@ -70,21 +70,18 @@ export const useWorkoutService = () => {
         // showLatest = true
       }
     }
-    return trpc.useInfiniteQuery(
-      [
-        "workout.get-infinite-workouts",
-        {
-          workoutTypes,
-          withResults,
-          classifiedOnly: showClassifiedWorkoutOnly,
-          searchTerm: filteredSearchTerm,
-          limit: limit || 12,
-          onlyFetchMine,
-          ids,
-          orderResults,
-          orderByMostlyDone,
-        },
-      ],
+    return trpc.workout.getInfiniteWorkout.useInfiniteQuery(
+      {
+        workoutTypes,
+        withResults,
+        classifiedOnly: showClassifiedWorkoutOnly,
+        searchTerm: filteredSearchTerm,
+        limit: limit || 12,
+        onlyFetchMine,
+        ids,
+        orderResults,
+        orderByMostlyDone,
+      },
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
         enabled: enabled && sessionData?.user !== undefined,
@@ -94,13 +91,11 @@ export const useWorkoutService = () => {
 
   const getWorkoutById = (id: unknown) => {
     const workoutId = parseInt(id as string);
-    return trpc.useQuery(
-      [
-        "workout.get-workout-by-id",
-        {
-          id: workoutId,
-        },
-      ],
+    return trpc.workout.getWorkoutById.useQuery(
+      {
+        id: workoutId,
+      },
+
       {
         enabled: !!id && sessionData?.user !== undefined,
         refetchOnWindowFocus: false,
