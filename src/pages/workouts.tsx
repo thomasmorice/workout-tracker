@@ -87,14 +87,14 @@ const Workouts: NextPage = () => {
               </div>
             </div>
 
-            <h2 className="group mt-12 flex cursor-pointer items-center gap-3 text-2xl font-bold text-accent-content">
+            <h2 className="group mt-12 flex cursor-pointer items-center gap-3 text-2xl font-bold">
               {`Latest ${classifiedOnly ? "classified" : ""} workouts`}
             </h2>
 
             <button
               type="button"
               onClick={() => showWorkoutForm("create")}
-              className="btn btn-primary mt-6 mb-2"
+              className="btn-primary btn mt-6 mb-2"
             >
               Create a new workout
             </button>

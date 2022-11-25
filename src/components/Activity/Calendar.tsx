@@ -50,7 +50,7 @@ const Calendar = ({
             onClick={() => {
               set_currentMonth(subMonths(currentMonth, 1));
             }}
-            className="btn-outline btn btn-sm btn-circle"
+            className="btn-outline btn-sm btn-circle btn"
           >
             <AiOutlineLeft className="" />
           </div>
@@ -59,7 +59,7 @@ const Calendar = ({
             onClick={() => {
               set_currentMonth(addMonths(currentMonth, 1));
             }}
-            className="btn-outline btn btn-sm btn-circle"
+            className="btn-outline btn-sm btn-circle btn"
           >
             <AiOutlineRight className="navIcon" />
           </div>
@@ -109,7 +109,7 @@ const Calendar = ({
           }
         >
           <div
-            className={`flex h-9 w-9 items-center justify-center rounded-full  text-base-content hover:bg-primary-content  dark:text-accent-content hover:dark:text-primary ${
+            className={`flex h-9 w-9 items-center justify-center rounded-full hover:bg-primary-content  hover:dark:text-primary ${
               isSameDay(currentDate, new Date())
                 ? "bg-primary"
                 : selectedDate &&

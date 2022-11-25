@@ -1,7 +1,7 @@
 import create from "zustand";
 import { persist } from "zustand/middleware";
 
-type Theme = "light" | "dark";
+type Theme = "night" | "dark";
 
 interface ThemeState {
   toggleTheme: () => void;
@@ -11,11 +11,11 @@ interface ThemeState {
 const useThemeStore = create<ThemeState>()(
   persist(
     (set, get) => ({
-      theme: "dark",
+      theme: "night",
       toggleTheme() {
         const { theme } = get();
         set({
-          theme: theme === "light" ? "dark" : "light",
+          theme: theme === "night" ? "dark" : "night",
         });
       },
     }),

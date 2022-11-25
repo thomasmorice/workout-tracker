@@ -62,7 +62,7 @@ export default function WorkoutSessionResultItem({
       <div className="relative flex flex-col gap-7">
         {/* Workout */}
         <div className="card relative  z-20 bg-base-200 transition-all duration-300">
-          <div className="card-body p-4">
+          <div className="card-body p-5">
             <div
               className={`absolute top-3 right-3 hidden  cursor-grab items-center gap-2 p-2 md:flex`}
             >
@@ -76,14 +76,6 @@ export default function WorkoutSessionResultItem({
               >
                 <MdDragIndicator className="h-7 w-7" />
               </div>
-
-              <button
-                onClick={onRemoveWorkoutResult}
-                type="button"
-                className="btn btn-error btn-xs btn-circle"
-              >
-                <MdDelete size="18px" />
-              </button>
             </div>
 
             {/* Move position on phone */}
@@ -93,17 +85,17 @@ export default function WorkoutSessionResultItem({
                   disabled={!onMoveResultDown}
                   onClick={onMoveResultDown}
                   type="button"
-                  className="btn btn-sm"
+                  className="btn-outline btn btn-xs"
                 >
-                  <MdOutlineArrowDropDown size="24px" />
+                  <MdOutlineArrowDropDown size="20px" />
                 </button>
                 <button
                   disabled={!onMoveResultUp}
                   onClick={onMoveResultUp}
                   type="button"
-                  className="btn btn-sm"
+                  className="btn-outline btn btn-xs "
                 >
-                  <MdOutlineArrowDropUp size="24px" />
+                  <MdOutlineArrowDropUp size="20px" />
                 </button>
               </div>
             </div>
@@ -128,38 +120,39 @@ export default function WorkoutSessionResultItem({
                 </div>
               </div>
 
-              <div
-                className={`whitespace-pre-wrap text-xs font-light opacity-80`}
-              >
+              <div className={`whitespace-pre-wrap text-[0.75rem] opacity-80 `}>
                 {result.workout.description}
               </div>
             </div>
-            <div className="card-actions items-center justify-end">
-              <button
-                onClick={onRemoveWorkoutResult}
-                type="button"
-                className="btn btn-error btn-sm items-center gap-2"
-              >
-                <MdDelete size="20px" /> Delete
-              </button>
+            <div className="card-actions items-center justify-end pt-4">
+              <div className="btn-group">
+                {!hasResults && (
+                  <button
+                    type="button"
+                    onClick={onOpenWorkoutResultDetail}
+                    className="btn-outline btn btn-sm z-20 gap-x-2 text-xs"
+                  >
+                    <MdEdit size={17} /> {`Enter the result`}
+                  </button>
+                )}
+                <button
+                  onClick={onRemoveWorkoutResult}
+                  type="button"
+                  className="btn-outline btn btn-error btn-sm items-center gap-2"
+                >
+                  <MdDelete size="20px" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
         <div className="absolute top-0 left-1/2 bottom-0 border-[1px] border-dashed border-base-content"></div>
-        {hasResults ? (
+        {hasResults && (
           <WorkoutResultCard
             onEdit={onOpenWorkoutResultDetail}
             result={result}
           />
-        ) : (
-          <button
-            type="button"
-            onClick={onOpenWorkoutResultDetail}
-            className="btn btn-primary z-20 gap-x-2 text-xs"
-          >
-            <MdEdit size={17} /> {`Enter the result`}
-          </button>
         )}
       </div>
     </Reorder.Item>

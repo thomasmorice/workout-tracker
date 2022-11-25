@@ -25,8 +25,9 @@ module.exports = {
   ],
   daisyui: {
     themes: [
-      "light",
+      "night",
       "dark",
+      "dracula",
       // {
       //   dark: {
       //     primary: "#BBAB8D",
