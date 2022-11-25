@@ -79,7 +79,7 @@ const Calendar = ({
       );
     }
     return (
-      <div className="text-2xs grid grid-cols-7 text-center font-light opacity-80">
+      <div className="grid grid-cols-7 text-center text-xs font-light opacity-80">
         {weekDays}
       </div>
     );

@@ -61,7 +61,7 @@ export default function PersonalRecordItem({
         graphNumbers={resultsByDate().map((wr) => wr.weight ?? 0)}
       >
         <>
-          <div className="text-2xs -mt-0.5 text-base-content">
+          <div className="-mt-0.5 text-xs text-base-content">
             latest - {resultsByDate()[resultsByDate().length - 1]?.weight}KG
           </div>
           <div className="relative z-10 flex items-center gap-2">

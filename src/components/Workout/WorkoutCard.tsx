@@ -80,7 +80,7 @@ export default function WorkoutCard({
                 {workout.description}
               </div>
               <div className="divider opacity-50">
-                <div className="text-2xs flex flex-col items-center">
+                <div className="flex flex-col items-center text-xs">
                   {isCondensedCardExpanded ? (
                     <>
                       Collaps <MdOutlineExpandLess />
@@ -189,7 +189,7 @@ export default function WorkoutCard({
             </div>
 
             {/* Description */}
-            <div className="description mt-2 whitespace-pre-wrap break-words text-[0.75rem] leading-relaxed opacity-70">
+            <div className="description mt-2 whitespace-pre-wrap break-words text-[0.7rem] leading-relaxed opacity-70">
               {workout.description}
             </div>
 

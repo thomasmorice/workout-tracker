@@ -16,13 +16,13 @@ export default function MobileBottomNavbar({ items }: NavigationItemsProps) {
   return (
     <div
       // style={{ boxShadow: "0px -1px 5px 0px rgba(0,0,0,0.3)" }}
-      className="fixed inset-x-0 bottom-0 z-40 flex h-16 w-full items-center border-t border-t-white border-opacity-10 bg-base-100"
+      className="fixed inset-x-0 bottom-0 z-40 flex h-16 w-full items-center border-t border-t-white border-opacity-10 bg-base-100 text-xs"
     >
       <>
         {items.map((item) => {
           return (
             <Link
-              className={`text-2xs flex h-full w-1/4 flex-col items-center justify-center gap-0.5 
+              className={`flex h-full w-1/4 flex-col items-center justify-center gap-0.5 text-xs 
             ${isLinkActive(item.href) ? "bg-base-200 text-primary-content" : ""}
           `}
               key={item.href}
@@ -34,7 +34,7 @@ export default function MobileBottomNavbar({ items }: NavigationItemsProps) {
           );
         })}
         <Link
-          className={`text-2xs flex h-full w-1/4 flex-col items-center justify-center gap-0.5
+          className={`flex h-full w-1/4 flex-col items-center justify-center gap-0.5 text-xs
                     
                     ${
                       isLinkActive("/activities")
