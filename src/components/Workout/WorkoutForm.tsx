@@ -134,7 +134,7 @@ export default function WorkoutForm() {
                 <label className="label">
                   <span className="label-text">
                     Name{""}
-                    <span className="text-2xs ml-2 opacity-60">optional</span>
+                    <span className="ml-2 text-xs opacity-60">optional</span>
                   </span>
                 </label>
                 <input
@@ -164,7 +164,7 @@ export default function WorkoutForm() {
                   <label className="label">
                     <span className="label-text">
                       Difficulty
-                      <span className="text-2xs ml-2 opacity-60">optional</span>
+                      <span className="ml-2 text-xs opacity-60">optional</span>
                     </span>
                   </label>
                   <select
@@ -186,7 +186,7 @@ export default function WorkoutForm() {
                   <label className="label">
                     <span className="label-text">
                       Type of element
-                      <span className="text-2xs ml-2 opacity-60">optional</span>
+                      <span className="ml-2 text-xs opacity-60">optional</span>
                     </span>
                   </label>
                   <select
@@ -208,7 +208,7 @@ export default function WorkoutForm() {
                 <label className="label">
                   <span className="label-text">
                     Type of workout
-                    <span className="text-2xs ml-2 opacity-60">optional</span>
+                    <span className="ml-2 text-xs opacity-60">optional</span>
                   </span>
                 </label>
                 <select
@@ -232,7 +232,7 @@ export default function WorkoutForm() {
                 <label className="label">
                   <span className="label-text">
                     Total time
-                    <span className="text-2xs ml-2 opacity-60">optional</span>
+                    <span className="ml-2 text-xs opacity-60">optional</span>
                   </span>
                 </label>
                 <div className="flex flex-wrap items-center gap-2">

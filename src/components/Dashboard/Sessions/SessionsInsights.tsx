@@ -109,7 +109,7 @@ export default function SessionInsights() {
                 ).map((sessionPerWeek: any) => sessionPerWeek[1].length)}
                 title="Avg weekly session"
               >
-                <div className="text-2xs">{`Based on data < 1 year`}</div>
+                <div className="text-xs">{`Based on data < 1 year`}</div>
                 <div className="relative z-10 flex items-center gap-2">
                   <div className="text-2xl font-bold text-accent-content">
                     {weeklySessionsInsights?.averageSessionsThisYear.toFixed(2)}

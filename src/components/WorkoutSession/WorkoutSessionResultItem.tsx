@@ -129,7 +129,7 @@ export default function WorkoutSessionResultItem({
               </div>
 
               <div
-                className={`text-2xs whitespace-pre-wrap font-light opacity-50`}
+                className={`whitespace-pre-wrap text-xs font-light opacity-80`}
               >
                 {result.workout.description}
               </div>

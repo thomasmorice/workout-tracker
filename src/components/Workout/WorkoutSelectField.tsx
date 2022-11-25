@@ -100,7 +100,7 @@ export default function WorkoutSelectField({
       {searchTerm === "" && showWorkoutSearchResult && (
         <ul
           tabIndex={0}
-          className="text-2xs dropdown-content menu w-full rounded-lg bg-base-300 p-1 shadow"
+          className="dropdown-content menu w-full rounded-lg bg-base-300 p-1 text-xs shadow"
         >
           <li
             onMouseDown={() => {
