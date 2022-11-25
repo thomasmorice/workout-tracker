@@ -67,12 +67,12 @@ const Home: NextPage = () => {
         </>
       ) : (
         <>
-          <Header h1={"Dashboard"} />
-          <div className="flex flex-col  items-center gap-5 rounded-3xl bg-base-200 py-14 px-3 sm:flex-row sm:items-center sm:px-8">
+          <Header h1={`Your dashboard`} />
+          <div className="flex flex-col  items-center gap-5 rounded-3xl bg-base-200 py-8 px-3 sm:flex-row sm:items-center sm:px-8">
             <div className="flex flex-col gap-2">
-              <h3 className="text-center text-xl font-semibold text-base-content sm:text-left sm:text-3xl">
+              {/* <h3 className="text-center text-xl font-semibold text-base-content sm:text-left sm:text-3xl">
                 Hello {sessionData.user?.name}
-              </h3>
+              </h3> */}
               <div className="dimmed flex  gap-1 font-light">
                 <AiFillBell className="hidden sm:block" size="20" />
                 <p className="flex-1 text-center sm:text-left">

@@ -63,7 +63,7 @@ export default function WorkoutCard({
                 {format(workout.createdAt, "MM/dd/yyyy")}
               </span>
             </div>
-            <div className={`badge badge-primary text-xs font-medium `}>
+            <div className={`badge-primary badge text-xs font-medium `}>
               {enumToString(workout.elementType)}
             </div>
             <div className="divider my-0.5 opacity-50"></div>
@@ -80,10 +80,10 @@ export default function WorkoutCard({
                 {workout.description}
               </div>
               <div className="divider opacity-50">
-                <div className="flex flex-col items-center text-xs">
+                <div className="flex cursor-pointer flex-col items-center text-xs">
                   {isCondensedCardExpanded ? (
                     <>
-                      Collaps <MdOutlineExpandLess />
+                      COLLAPSE <MdOutlineExpandLess />
                     </>
                   ) : (
                     <>
@@ -135,7 +135,7 @@ export default function WorkoutCard({
             <div className="badges flex flex-wrap gap-2 pt-4 uppercase">
               {workout.difficulty && (
                 <div
-                  className={`badge badge-outline text-xs font-medium text-${workout.difficulty.toLowerCase()}-600
+                  className={`badge-outline badge text-xs font-medium text-${workout.difficulty.toLowerCase()}-600
           ${
             workout.difficulty === "BLACK"
               ? "border-white bg-black text-white"
@@ -146,13 +146,13 @@ export default function WorkoutCard({
                 </div>
               )}
 
-              <div className={`badge badge-primary text-xs font-medium `}>
+              <div className={`badge-primary badge text-xs font-medium `}>
                 {enumToString(workout.elementType)}
               </div>
 
               {workout.isDoableAtHome && (
                 <div
-                  className={`badge badge-secondary badge-outline text-xs font-medium`}
+                  className={`badge-secondary badge-outline badge text-xs font-medium`}
                 >
                   Doable at home
                 </div>

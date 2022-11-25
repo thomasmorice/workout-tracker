@@ -23,7 +23,11 @@ export default function MobileBottomNavbar({ items }: NavigationItemsProps) {
           return (
             <Link
               className={`flex h-full w-1/4 flex-col items-center justify-center gap-0.5 text-xs 
-            ${isLinkActive(item.href) ? "bg-base-200 text-primary-content" : ""}
+            ${
+              isLinkActive(item.href)
+                ? "bg-primary text-primary-content"
+                : "text-neutral-content "
+            }
           `}
               key={item.href}
               href={item.href}
@@ -38,8 +42,8 @@ export default function MobileBottomNavbar({ items }: NavigationItemsProps) {
                     
                     ${
                       isLinkActive("/activities")
-                        ? "bg-base-200 text-primary-content"
-                        : ""
+                        ? "bg-primary text-primary-content"
+                        : "text-neutral-content"
                     }
                   `}
           href={"/activities"}

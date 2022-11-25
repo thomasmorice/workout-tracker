@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import MoodSelector from "../MoodSelector/MoodSelector";
 import { WorkoutResultInputsWithWorkout } from "../../types/app";
 import Portal from "../Portal/Portal";
+import WorkoutCard from "../Workout/WorkoutCard";
 
 export interface WorkoutResultFormProps {
   workoutResult: WorkoutResultInputsWithWorkout;
@@ -49,26 +50,38 @@ export default function WorkoutResultForm({
     <Portal>
       <Modal modalChildrenOrder={1} onClose={onClose}>
         <>
-          <h3 className="mb-4 text-xl font-bold capitalize">{`Workout result ${
-            workoutResult.workout.name || `#${workoutResult.workout.id}`
-          }`}</h3>
+          <h3 className="mb-4 text-xl font-bold capitalize">Add the result</h3>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
+            <div className="form-control w-full">
+              <div className="card max-h-20 overflow-y-scroll whitespace-pre-wrap border-white border-opacity-10 p-2 text-[0.7rem] opacity-80">
+                {workoutResult.workout.description}
+              </div>
+            </div>
+
             <div className="form-control w-full">
               <label className="label">
                 <span className="label-text">Overall feeling</span>
               </label>
 
               <div className="flex items-center">
-                <MoodSelector
-                  onSelect={(mood) =>
-                    set_editedWorkoutResult({
-                      ...editedWorkoutResult,
-                      rating: mood,
-                    })
-                  }
-                  selectedMood={editedWorkoutResult.rating ?? undefined}
-                />
+                <div className="rating gap-3">
+                  {[...Array(5)].map((x, index) => (
+                    <input
+                      onClick={() =>
+                        set_editedWorkoutResult({
+                          ...editedWorkoutResult,
+                          rating: index + 1,
+                        })
+                      }
+                      checked={index + 1 === editedWorkoutResult.rating}
+                      type="radio"
+                      name="rating"
+                      className="mask mask-heart bg-accent"
+                      key={index}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -85,7 +98,7 @@ export default function WorkoutResultForm({
                     description: e.target.value,
                   })
                 }
-                className="textarea placeholder:opacity-50"
+                className="textarea leading-normal placeholder:opacity-50"
                 rows={4}
                 maxRows={12}
                 placeholder="Great workout with a lot of..."

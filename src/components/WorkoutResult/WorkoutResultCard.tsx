@@ -33,7 +33,7 @@ export default function WorkoutResultCard({
   };
   return (
     <div className="card relative bg-base-200 transition-all duration-300">
-      <div className="card-body">
+      <div className="card-body  p-5">
         <div className="flex flex-col gap-4">
           {eventDate && (
             <div className="text-sm text-accent-content">
@@ -41,9 +41,9 @@ export default function WorkoutResultCard({
             </div>
           )}
           <div className="flex items-center gap-3">
-            {result.isRx && <div className="badge  badge-success">RX</div>}
+            {result.isRx && <div className="badge-success  badge">RX</div>}
             {result.rating && (
-              <div className="badge badge-success">
+              <div className="badge-success badge">
                 <MoodIcon
                   props={{
                     size: "18px",
@@ -57,7 +57,7 @@ export default function WorkoutResultCard({
             {result.description}
           </div>
           {resultHasBenchmarkeableWorkout(result) && (
-            <div className="badge badge-primary">
+            <div className="badge-primary badge">
               {result.time && format(result.time * 1000, "mm:ss' minutes'")}
               {result.totalReps && `${result.totalReps} reps`}
               {result.weight && `${result.weight}KG`}
@@ -65,7 +65,7 @@ export default function WorkoutResultCard({
           )}
         </div>
         {onEdit && (
-          <div className="card-actions justify-end pt-5">
+          <div className="card-actions justify-end pt-3">
             <button
               type="button"
               onClick={onEdit}

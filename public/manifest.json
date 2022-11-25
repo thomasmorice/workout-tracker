@@ -3,7 +3,7 @@
   "background_color": "#ee3e54",
   "display": "standalone",
   "scope": "/",
-  "start_url": "/?v=1",
+  "start_url": "/?version=0.1",
   "name": "WOD Tracker",
   "short_name": "WOD Tracker",
   "description": "Workout tracker build especially for Crossfit type of workouts. Plan your session, follow your progress and reach your goals",

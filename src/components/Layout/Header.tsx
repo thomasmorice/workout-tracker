@@ -19,14 +19,22 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
     <>
       <div className=" mb-4 h-20 md:hidden">
         <div className="fixed inset-x-0 z-50 flex w-full items-center justify-between bg-base-100 py-0 px-4 pr-2 shadow-lg">
-          <h1 className="h1 mobile flex items-center gap-2">
-            {onGoBack && (
-              <div onClick={onGoBack} className="text-lg">
-                <MdOutlineKeyboardBackspace className="h-8 w-8" />{" "}
-              </div>
-            )}
-            {typeof h1 === "object" ? h1.mobile : h1}{" "}
-          </h1>
+          {onGoBack ? (
+            <div
+              onClick={onGoBack}
+              className="flex cursor-pointer items-center gap-3 text-lg"
+            >
+              <MdOutlineKeyboardBackspace className="h-8 w-8" />{" "}
+              <h1 className="h1 mobile flex items-center gap-2">
+                {typeof h1 === "object" ? h1.mobile : h1}{" "}
+              </h1>
+            </div>
+          ) : (
+            <h1 className="h1 mobile flex items-center gap-3">
+              {typeof h1 === "object" ? h1.mobile : h1}
+            </h1>
+          )}
+
           {status === "loading" ? (
             <>
               <div className="flex items-center gap-x-2">
