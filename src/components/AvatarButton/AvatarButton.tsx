@@ -22,7 +22,7 @@ export default function AvatarButton({}: AvatarButtonProps) {
               tabIndex={0}
               className="btn btn-ghost btn-lg px-2 normal-case"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5">
                 <Image
                   width={42}
                   height={42}
@@ -32,9 +32,6 @@ export default function AvatarButton({}: AvatarButtonProps) {
                   alt=""
                 />
                 <div className="flex items-center gap-1">
-                  {/* <h4 className="max-w-[130px] truncate font-medium text-accent-content">
-                    {sessionData.user?.name}
-                  </h4> */}
                   <MdArrowDropDown size={22} />
                 </div>
               </div>

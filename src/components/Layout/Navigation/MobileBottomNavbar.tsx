@@ -16,7 +16,7 @@ export default function MobileBottomNavbar({ items }: NavigationItemsProps) {
   return (
     <div
       // style={{ boxShadow: "0px -1px 5px 0px rgba(0,0,0,0.3)" }}
-      className="fixed inset-x-0 bottom-0 z-40 flex h-16 w-full items-center border-t border-t-white border-opacity-10 bg-base-100 text-xs"
+      className="fixed inset-x-0 bottom-0 z-40 flex h-14 w-full items-center border-t border-t-white border-opacity-10 bg-base-100 text-xs"
     >
       <>
         {items.map((item) => {

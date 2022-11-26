@@ -15,7 +15,7 @@ export default function DashboardItemList({
 }: DashboardItemListProps) {
   return (
     <>
-      <h2 className="h2 mt-10 mb-2">{title}</h2>
+      <h2 className="h2 mt-4">{title}</h2>
       {isLoading ? (
         <div className="flex items-center gap-3">
           <Rings /> {loadingMessage || "Fetching data"}

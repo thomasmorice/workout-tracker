@@ -23,9 +23,11 @@ export default function WeighingForm({
   const { getWeighingById, createOrEditWeighing } = useWeighingService();
   const { eventBeingEdited, eventDate } = useEventStore();
 
-  const { data: existingWeighing, isLoading } = getWeighingById(
-    eventBeingEdited || -1
-  );
+  const {
+    data: existingWeighing,
+    isLoading,
+    isFetching,
+  } = getWeighingById(eventBeingEdited || -1);
 
   const handleCreateOrEdit: SubmitHandler<
     z.infer<typeof CreateWeighingInputSchema>
@@ -72,7 +74,7 @@ export default function WeighingForm({
     reset(defaultValues);
   }, [defaultValues, reset]);
 
-  if (isLoading) {
+  if (isLoading && isFetching) {
     return <Rings className="h-14 w-14" />;
   }
 
