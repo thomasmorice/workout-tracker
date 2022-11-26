@@ -6,7 +6,6 @@ import {
   useFieldArray,
 } from "react-hook-form";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import WorkoutSelectField from "../Workout/WorkoutSelectField";
 import { useWorkoutSessionService } from "../../services/useWorkoutSessionService";
 import { useToastStore } from "../../store/ToastStore";
@@ -22,10 +21,7 @@ import {
 import { isBefore } from "date-fns";
 import Portal from "../Portal/Portal";
 import { useEventStore } from "../../store/EventStore";
-import {
-  sessionHasResultsFilled,
-  workoutResultIsFilled,
-} from "../../utils/utils";
+import { workoutResultIsFilled } from "../../utils/utils";
 import { inferRouterInputs } from "@trpc/server";
 import { WorkoutSessionRouterType } from "../../server/trpc/router/workout-session-router";
 
@@ -170,7 +166,8 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
                 <DatePicker
                   className="input w-full bg-base-200"
                   onFocus={(e) => (e.target.readOnly = true)}
-                  showTimeInput
+                  // showTimeInput
+                  showTimeSelect
                   placeholderText="Select date"
                   onChange={(date: Date) => field.onChange(date)}
                   selected={field.value}
