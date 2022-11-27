@@ -3,7 +3,6 @@ import { useEventStore } from "../../../store/EventStore";
 import Modal from "../../Layout/Navigation/Modal/Modal";
 import WeighingForm from "../../Weighing/WeighingForm";
 import WorkoutSessionForm from "../../WorkoutSession/WorkoutSessionForm";
-import DashboardAddItem from "../DashboardAddItem";
 import DashboardItemList from "../DashboardItemList";
 
 export default function QuickActions() {
@@ -37,17 +36,23 @@ export default function QuickActions() {
         title="Quick actions"
       >
         <>
-          <DashboardAddItem
-            title="Add a session"
+          <button
             onClick={() => {
               closeForm(); // This will close the workout session form in case it has been opened in the "activities" section
               set_showAddSessionModal(true);
             }}
-          />
-          <DashboardAddItem
-            title="Add a weighing"
-            onClick={() => set_showAddWeightModal(true)}
-          />
+            className={` btn flex items-center gap-1 text-xs`}
+          >
+            Add a session
+          </button>
+          <button
+            onClick={() => {
+              set_showAddWeightModal(true);
+            }}
+            className={` btn flex items-center gap-1 text-xs`}
+          >
+            Add a weighing
+          </button>
         </>
       </DashboardItemList>
     </>

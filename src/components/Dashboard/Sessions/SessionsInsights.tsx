@@ -70,16 +70,16 @@ export default function SessionInsights() {
         <>
           {sessionsForInsights && sessionsForInsights.length > 0 && (
             <>
-              <DashboardItem title="Sessions insights">
+              <DashboardItem title="Session insights">
                 <div className="">
-                  <div className="relative z-10 flex items-center gap-2">
-                    <div className="text-2xl font-bold text-accent-content">
+                  <div className="relative z-10 flex items-center gap-2 text-sm">
+                    <div className="text-xl font-bold text-accent-content">
                       {sessionsForInsights.length}
                     </div>
                     total sessions
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="text-2xl font-bold text-accent-content">
+                  <div className="flex items-center gap-2 text-sm">
+                    <div className="text-xl font-bold text-accent-content">
                       {sessionsThisMonth}
                     </div>
                     done this month

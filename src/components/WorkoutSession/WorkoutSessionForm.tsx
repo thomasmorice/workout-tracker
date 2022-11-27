@@ -37,8 +37,9 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
 
   const { eventBeingEdited, eventDate, addOrEditEvent } = useEventStore();
 
-  const { data: existingWorkoutSession, refetch: refetchWorkoutSession } =
-    getWorkoutSessionById(eventBeingEdited || -1);
+  const { data: existingWorkoutSession } = getWorkoutSessionById(
+    eventBeingEdited || -1
+  );
 
   const [defaultValues, set_defaultValues] = useState({});
 
@@ -46,7 +47,7 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
     set_defaultValues({
       id: existingWorkoutSession?.id ?? undefined,
       date: existingWorkoutSession?.event.eventDate ?? eventDate ?? new Date(),
-      workoutResults: existingWorkoutSession?.workoutResults ?? undefined,
+      workoutResults: existingWorkoutSession?.workoutResults ?? [],
       eventId: existingWorkoutSession?.eventId ?? undefined,
     });
   }, [existingWorkoutSession, eventDate]);
