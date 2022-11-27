@@ -46,7 +46,7 @@ export default function Modal({
         ></div>
         <div
           ref={withCloseButton ? null : ref}
-          className={`modal-box relative z-50 max-h-[85%] w-full sm:max-h-[calc(100vh_-_5rem)] sm:w-[580px] sm:max-w-5xl 
+          className={`modal-box relative z-50 max-h-[85%] min-h-[50%] w-full  sm:max-h-[calc(100vh_-_5rem)] sm:w-[580px] sm:max-w-5xl md:min-h-fit 
           `}
         >
           {withCloseButton && (
