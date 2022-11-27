@@ -68,7 +68,7 @@ export default function WorkoutResultForm({
                 <div className="rating gap-3">
                   {[...Array(5)].map((x, index) => (
                     <input
-                      onClick={() =>
+                      onChange={() =>
                         set_editedWorkoutResult({
                           ...editedWorkoutResult,
                           rating: index + 1,

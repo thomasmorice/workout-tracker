@@ -110,7 +110,7 @@ export default function DashboardItem({
     >
       {title && (
         <div
-          className={`text-lg  ${
+          className={`md:text-lg  ${
             !theme || theme === "base"
               ? "text-base-content"
               : "text-secondary-content"

@@ -43,6 +43,7 @@ export const useWorkoutSessionService = () => {
       },
       {
         enabled: sessionData?.user !== undefined && id !== -1,
+        refetchOnWindowFocus: false,
       }
     );
   };
