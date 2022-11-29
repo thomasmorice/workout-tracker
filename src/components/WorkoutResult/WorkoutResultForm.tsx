@@ -77,7 +77,9 @@ export default function WorkoutResultForm({
                       checked={index + 1 === editedWorkoutResult.rating}
                       type="radio"
                       name="rating"
-                      className="mask mask-heart bg-accent"
+                      className={`mask mask-heart bg-base-content ${
+                        editedWorkoutResult.rating ? "" : "bg-opacity-10"
+                      } `}
                       key={index}
                     />
                   ))}

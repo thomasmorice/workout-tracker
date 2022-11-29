@@ -46,7 +46,7 @@ export default function WorkoutCard({
       {condensed ? (
         <div className="card-body p-5 pb-0">
           <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between gap-2 leading-none transition-colors hover:text-primary-content">
+            <div className="flex items-center justify-between gap-2 leading-none transition-colors">
               {workout.name ? workout.name : `#${workout.id}`}
               <button
                 className="btn btn-primary btn-sm btn-circle"
@@ -59,11 +59,11 @@ export default function WorkoutCard({
 
             <div className={`text-xs`}>
               Created{" "}
-              <span className="text-accent-content">
+              <span className="">
                 {format(workout.createdAt, "MM/dd/yyyy")}
               </span>
             </div>
-            <div className={`badge-primary badge text-xs font-medium `}>
+            <div className={`badge badge-primary text-xs font-medium `}>
               {enumToString(workout.elementType)}
             </div>
             <div className="divider my-0.5 opacity-50"></div>
@@ -135,7 +135,7 @@ export default function WorkoutCard({
             <div className="badges flex flex-wrap gap-2 pt-4 uppercase">
               {workout.difficulty && (
                 <div
-                  className={`badge-outline badge text-xs font-medium text-${workout.difficulty.toLowerCase()}-600
+                  className={`badge badge-outline text-xs font-medium text-${workout.difficulty.toLowerCase()}-600
           ${
             workout.difficulty === "BLACK"
               ? "border-white bg-black text-white"
@@ -146,13 +146,13 @@ export default function WorkoutCard({
                 </div>
               )}
 
-              <div className={`badge-primary badge text-xs font-medium `}>
+              <div className={`badge badge-primary text-xs font-medium `}>
                 {enumToString(workout.elementType)}
               </div>
 
               {workout.isDoableAtHome && (
                 <div
-                  className={`badge-secondary badge-outline badge text-xs font-medium`}
+                  className={`badge badge-secondary badge-outline text-xs font-medium`}
                 >
                   Doable at home
                 </div>
@@ -164,7 +164,7 @@ export default function WorkoutCard({
             {/* Title */}
             <div className="card-title text-xl md:text-2xl">
               <Link href={`/workout/${workout.id}`}>
-                <div className="flex items-center gap-2 transition-colors hover:text-primary-content">
+                <div className="link flex items-center gap-2 transition-colors">
                   {workout.name ? workout.name : `#${workout.id}`}
                   <MdOpenInNew size={17} />
                 </div>

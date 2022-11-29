@@ -21,9 +21,11 @@ export default function DashboardItemList({
           <Rings /> {loadingMessage || "Fetching data"}
         </div>
       ) : (
-        <div className="flex w-full gap-4 overflow-auto py-3 sm:gap-8 sm:py-5 md:flex-wrap">
+        // <div className="-mr-6 pl-6">
+        <div className="relative  left-1/2 right-1/2 -ml-[calc(50vw_-_20px)] -mr-[50vw] flex w-[calc(100vw_-_20px)] gap-4 overflow-auto pt-3 pb-5 pr-4 sm:gap-8 sm:py-5 md:inset-0  md:m-0 md:w-full md:flex-wrap">
           {children}
         </div>
+        // </div>
       )}
     </>
   );

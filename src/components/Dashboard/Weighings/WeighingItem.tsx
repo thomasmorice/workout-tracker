@@ -41,7 +41,7 @@ export default function WeighingItem({ weighings }: WeighingItemProps) {
         title="Latest weightings"
       >
         <div className="relative z-10 flex items-center gap-2">
-          <div className="text-2xl font-bold text-accent-content">
+          <div className="text-2xl font-bold">
             {getLatestWeight && `${getLatestWeight.weight}Kg`}
           </div>
         </div>
