@@ -18,7 +18,7 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
   return (
     <>
       <div className=" mb-4 h-20 md:hidden">
-        <div className="fixed inset-x-0 z-50 flex w-full items-center justify-between bg-base-100 py-0 px-4 pr-2 shadow-lg">
+        <div className="fixed inset-x-0 z-50 flex w-full items-center justify-between border-b border-white border-opacity-5 bg-base-100 py-0 px-4 pr-2 shadow-lg">
           {onGoBack ? (
             <div
               onClick={onGoBack}

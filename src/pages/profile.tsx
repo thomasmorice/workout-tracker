@@ -36,18 +36,14 @@ const Profile: NextPage = () => {
           <label className="label" htmlFor="">
             Name
           </label>
-          <p className="font-bold text-accent-content">
-            {sessionData?.user?.name}
-          </p>
+          <p className="font-bold">{sessionData?.user?.name}</p>
         </div>
 
         <div className="inline-flex  items-center gap-3 rounded-lg bg-base-200 p-2 px-6">
           <label className="label" htmlFor="">
             Email
           </label>
-          <p className="font-bold text-accent-content">
-            {sessionData?.user?.email}
-          </p>
+          <p className="font-bold">{sessionData?.user?.email}</p>
         </div>
       </div>
     </>

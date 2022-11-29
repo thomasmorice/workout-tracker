@@ -6,6 +6,10 @@ import DashboardItem from "../DashboardItem";
 import DashboardItemList from "../DashboardItemList";
 import { useWorkoutService } from "../../../services/useWorkoutService";
 import { MdFavorite } from "react-icons/md";
+import {
+  IoCheckmarkDoneCircleSharp,
+  IoHeartCircleSharp,
+} from "react-icons/io5";
 import Link from "next/link";
 
 export default function SessionInsights() {
@@ -70,23 +74,58 @@ export default function SessionInsights() {
         <>
           {sessionsForInsights && sessionsForInsights.length > 0 && (
             <>
-              <DashboardItem title="Session insights">
+              <div className="stat rounded-xl bg-base-200">
+                <div className="stat-figure text-secondary">
+                  <IoCheckmarkDoneCircleSharp size={32} />
+                </div>
+                <div className="stat-title">Total sessions </div>
+                <div className="stat-value text-secondary">
+                  {sessionsForInsights.length}
+                </div>
+                <div className="stat-desc">
+                  <span className="text-sm font-bold text-secondary">
+                    {sessionsThisMonth}
+                  </span>{" "}
+                  done this month
+                </div>
+              </div>
+
+              {/* <DashboardItem title="Session insights">
                 <div className="">
                   <div className="relative z-10 flex items-center gap-2 text-sm">
-                    <div className="text-xl font-bold text-accent-content">
+                    <div className="text-xl font-bold ">
                       {sessionsForInsights.length}
                     </div>
                     total sessions
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <div className="text-xl font-bold text-accent-content">
-                      {sessionsThisMonth}
-                    </div>
+                    <div className="text-xl font-bold">{sessionsThisMonth}</div>
                     done this month
                   </div>
                 </div>
-              </DashboardItem>
-              <DashboardItem title="Favorite workouts">
+              </DashboardItem> */}
+              <div className="stat rounded-xl bg-base-200">
+                <div className="stat-figure text-secondary">
+                  <IoHeartCircleSharp size={32} />
+                </div>
+                <div className="stat-title">Favorite workouts </div>
+                <div className="stat-value text-secondary"></div>
+                <div className="stat-desc flex flex-col gap-0.5 opacity-100">
+                  {mostlyDoneWorkouts?.pages[0]?.workouts.map((workout) => (
+                    <Link
+                      key={workout.id}
+                      href={`/workout/${workout.id}`}
+                      className="link-hover link flex gap-1.5"
+                    >
+                      <span className="text-secondary">
+                        {workout?.name || `#${workout.id}`}
+                      </span>
+                      {` (${workout?.workoutResults.length} times)`}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              {/* <DashboardItem title="Favorite workouts">
                 <div className="relative z-10 mt-3 flex flex-col gap-0.5 text-sm">
                   {mostlyDoneWorkouts?.pages[0]?.workouts.map((workout) => (
                     <Link
@@ -95,14 +134,14 @@ export default function SessionInsights() {
                       className="flex items-center gap-2"
                     >
                       <>
-                        <MdFavorite className="text-primary-content" />
+                        <MdFavorite className="" />
                         {workout?.name || `#${workout.id}`}
                         {` (${workout?.workoutResults.length} times)`}
                       </>
                     </Link>
                   ))}
                 </div>
-              </DashboardItem>
+              </DashboardItem> */}
               <DashboardItem
                 graphNumbers={Object.entries(
                   weeklySessionsInsights?.sessionsPerWeek
@@ -111,7 +150,7 @@ export default function SessionInsights() {
               >
                 <div className="text-xs">{`Based on data < 1 year`}</div>
                 <div className="relative z-10 flex items-center gap-2">
-                  <div className="text-2xl font-bold text-accent-content">
+                  <div className="text-2xl font-bold">
                     {weeklySessionsInsights?.averageSessionsThisYear.toFixed(2)}
                   </div>
                 </div>

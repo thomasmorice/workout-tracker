@@ -104,7 +104,7 @@ export default function DashboardItem({
 
   return (
     <div
-      className={`relative flex min-h-[112px] min-w-[256px] flex-col justify-between overflow-hidden rounded-xl p-5 shadow-sm ${
+      className={`shadow- relative flex min-h-[112px] min-w-[256px] flex-col justify-between overflow-hidden rounded-xl p-5 ${
         !theme || theme === "base" ? `bg-base-200` : "bg-secondary"
       }`}
     >
@@ -121,9 +121,9 @@ export default function DashboardItem({
       )}
       {children}
       {graphData && (
-        <div className="h-12">
+        <div className="h-6">
           <div className="absolute inset-x-0 bottom-0 z-0  ">
-            <Line height={80} data={graphData} options={chartOptions} />
+            <Line height={48} data={graphData} options={chartOptions} />
           </div>
         </div>
       )}

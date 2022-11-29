@@ -36,7 +36,7 @@ export default function WorkoutResultCard({
       <div className="card-body  p-5">
         <div className="flex flex-col gap-4">
           {eventDate && (
-            <div className="text-sm text-accent-content">
+            <div className="text-sm">
               {`Event date:  ${format(eventDate, "do MMMM yyyy")}`}
             </div>
           )}
@@ -69,7 +69,7 @@ export default function WorkoutResultCard({
             <button
               type="button"
               onClick={onEdit}
-              className="btn-outline btn btn-sm z-20 gap-x-2 text-xs"
+              className="btn-outline btn-sm btn z-20 gap-x-2 text-xs"
             >
               <MdEdit size={17} /> {`Edit result`}
             </button>

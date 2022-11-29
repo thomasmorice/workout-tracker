@@ -50,17 +50,12 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
           }`}
           ></div>
           <div className="flex flex-col gap-2 transition-transform group-hover:translate-x-1">
-            <time className="-mt-0.5 flex items-center gap-2 text-sm text-accent-content">
+            <time className="-mt-0.5 flex items-center gap-2 text-sm ">
               {format(
                 zonedTimeToUtc(event.eventDate, "Europe/Stockholm"),
                 "LLLL do, u 'at' p"
               )}
             </time>
-            {/* <h3 className="-mt-1.5 flex items-center gap-2 font-semibold text-accent-content">
-              {event.workoutSession
-                ? getSessionTitle(event.workoutSession)
-                : "Weighing"}
-            </h3> */}
             <div className=" flex flex-col gap-2 text-xs font-light ">
               <div className="flex items-center gap-1.5">
                 {/* <MdOutlineCalendarToday className="opacity-50" size={16} /> */}
