@@ -110,19 +110,25 @@ export default function SessionInsights() {
                 </div>
                 <div className="stat-title">Favorite workouts </div>
                 <div className="stat-value text-secondary"></div>
-                <div className="stat-desc flex flex-col gap-0.5 opacity-100">
-                  {mostlyDoneWorkouts?.pages[0]?.workouts.map((workout) => (
-                    <Link
-                      key={workout.id}
-                      href={`/workout/${workout.id}`}
-                      className="link-hover link flex gap-1.5"
-                    >
-                      <span className="text-secondary">
-                        {workout?.name || `#${workout.id}`}
-                      </span>
-                      {` (${workout?.workoutResults.length} times)`}
-                    </Link>
-                  ))}
+                <div className="stat-desc flex flex-col gap-1 opacity-100">
+                  {mostlyDoneWorkouts?.pages[0]?.workouts.map(
+                    (workout, index) => (
+                      <Link
+                        key={workout.id}
+                        href={`/workout/${workout.id}`}
+                        className={`link-hover link flex gap-1.5 ${
+                          index === 0 ? "text-[0.85rem]" : ""
+                        }`}
+                      >
+                        <span className="text-secondary">
+                          {workout?.name || `#${workout.id}`}
+                        </span>
+                        <span className="opacity-60">
+                          {` (${workout?.workoutResults.length} times)`}
+                        </span>
+                      </Link>
+                    )
+                  )}
                 </div>
               </div>
               {/* <DashboardItem title="Favorite workouts">
