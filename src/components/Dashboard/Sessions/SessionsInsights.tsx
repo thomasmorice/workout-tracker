@@ -74,7 +74,7 @@ export default function SessionInsights() {
         <>
           {sessionsForInsights && sessionsForInsights.length > 0 && (
             <>
-              <div className="stat rounded-xl bg-base-200">
+              <div className="stat max-w-[280px] rounded-xl bg-base-200">
                 <div className="stat-figure text-secondary">
                   <IoCheckmarkDoneCircleSharp size={32} />
                 </div>
@@ -104,7 +104,7 @@ export default function SessionInsights() {
                   </div>
                 </div>
               </DashboardItem> */}
-              <div className="stat rounded-xl bg-base-200">
+              <div className="stat max-w-[280px] rounded-xl bg-base-200">
                 <div className="stat-figure text-secondary">
                   <IoHeartCircleSharp size={32} />
                 </div>

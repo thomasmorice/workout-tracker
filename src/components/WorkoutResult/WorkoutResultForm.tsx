@@ -155,7 +155,7 @@ export default function WorkoutResultForm({
                   <label className="input-group">
                     <input
                       id="input-time"
-                      className="input max-w-[60px] flex-1 placeholder:opacity-50"
+                      className="input max-w-[80px] flex-1 placeholder:opacity-50"
                       placeholder="12"
                       type={"number"}
                       value={resultTotalTimeMn}
@@ -165,7 +165,7 @@ export default function WorkoutResultForm({
 
                     <input
                       id="input-time"
-                      className="input ml-2 max-w-[60px] flex-1 placeholder:opacity-50"
+                      className="input ml-2 max-w-[80px] flex-1 placeholder:opacity-50"
                       placeholder="45"
                       type={"number"}
                       value={resultTotalTimeSec}
