@@ -11,7 +11,7 @@ export default function ToastMessage() {
   };
   return (
     <div
-      className={`fixed right-1 bottom-1 flex max-w-fit flex-col gap-1 py-0 md:bottom-5 md:right-5 ${
+      className={`fixed right-2 bottom-3 flex max-w-fit flex-col gap-1 py-0 md:bottom-5 md:right-5 ${
         messages.length > 0 ? "z-[9999]" : "-z-50"
       }`}
     >
