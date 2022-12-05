@@ -13,10 +13,8 @@
     @apply text-lg font-semibold md:text-xl;
   }
 
-  .input,
-  .textarea,
-  .select {
-    @apply bg-base-200;
+  .h3 {
+    @apply text-lg font-semibold;
   }
 
   .sidebar-shadow {
@@ -24,11 +22,17 @@
   }
 
   .card {
-    @apply bg-base-200;
-    /* background-color: rgba(255, 255, 255, 0.01); */
+    /* @apply bg-base-200;
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.08),
       0px 8px 15px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transition: box-shadow 0.25s; */
 
-    transition: box-shadow 0.25s;
+    @apply rounded-3xl;
+    background: #2a303c;
+    box-shadow: 5px 5px 14px #20242d, -5px -5px 14px #353c4b;
+  }
+
+  .sidebar-shadow {
+    @apply border-base-content border-opacity-[0.08]  shadow-lg shadow-neutral;
   }
 }

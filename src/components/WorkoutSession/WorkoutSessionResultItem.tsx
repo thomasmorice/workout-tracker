@@ -61,7 +61,7 @@ export default function WorkoutSessionResultItem({
     >
       <div className="relative flex flex-col gap-7">
         {/* Workout */}
-        <div className="card relative  z-20 bg-base-200 transition-all duration-300">
+        <div className="card z-20">
           <div className="card-body p-5">
             <div
               className={`absolute top-3 right-3 hidden  cursor-grab items-center gap-2 p-2 md:flex`}
@@ -102,15 +102,17 @@ export default function WorkoutSessionResultItem({
 
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-1 ">
-                <a
-                  className="flex max-w-[calc(100%_-_5rem)] gap-2 font-bold hover:underline"
-                  target="blank"
-                  href={`/workout/${result.workoutId}`}
-                >
-                  {result.workout.name && result.workout.name !== ""
-                    ? result.workout.name
-                    : `#${result.workout.id}`}
-                </a>
+                <h2 className="h2">
+                  <a
+                    className="flex max-w-[calc(100%_-_5rem)] gap-2 font-bold hover:underline"
+                    target="blank"
+                    href={`/workout/${result.workoutId}`}
+                  >
+                    {result.workout.name && result.workout.name !== ""
+                      ? result.workout.name
+                      : `#${result.workout.id}`}
+                  </a>
+                </h2>
                 <div className="flex items-center gap-x-0.5 text-sm opacity-80">
                   {result.workout.totalTime && (
                     <>
@@ -145,15 +147,21 @@ export default function WorkoutSessionResultItem({
               </div>
             </div>
           </div>
+          {hasResults && (
+            <WorkoutResultCard
+              onEdit={onOpenWorkoutResultDetail}
+              result={result}
+            />
+          )}
         </div>
 
-        <div className="absolute top-0 left-1/2 bottom-0 border-[1px] border-dashed border-base-content"></div>
+        {/* <div className="absolute top-0 left-1/2 bottom-0 border-[1px] border-dashed border-base-content"></div>
         {hasResults && (
           <WorkoutResultCard
             onEdit={onOpenWorkoutResultDetail}
             result={result}
           />
-        )}
+        )} */}
       </div>
     </Reorder.Item>
   );

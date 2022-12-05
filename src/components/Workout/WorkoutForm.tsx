@@ -138,7 +138,7 @@ export default function WorkoutForm() {
                   </span>
                 </label>
                 <input
-                  className="input placeholder:opacity-50"
+                  className="input-bordered input placeholder:opacity-50"
                   placeholder="Grace..."
                   defaultValue=""
                   {...register("name")}
@@ -152,7 +152,7 @@ export default function WorkoutForm() {
 
                 <TextareaAutosize
                   {...register("description")}
-                  className="textarea placeholder:opacity-50"
+                  className="input-bordered textarea placeholder:opacity-50"
                   rows={4}
                   maxRows={12}
                   placeholder="5 rounds of..."
@@ -171,7 +171,7 @@ export default function WorkoutForm() {
                     {...register("difficulty", {
                       setValueAs: (value) => (value === "" ? null : value),
                     })}
-                    className="select"
+                    className="select-bordered select"
                   >
                     <option value={""}>Select a difficulty</option>
                     {Object.keys(Difficulty).map((difficulty) => (
@@ -193,7 +193,7 @@ export default function WorkoutForm() {
                     {...register("elementType", {
                       setValueAs: (value) => (value === "" ? null : value),
                     })}
-                    className="select"
+                    className="select-bordered select"
                   >
                     {Object.keys(ElementType).map((element) => (
                       <option key={element} value={element}>
@@ -215,7 +215,7 @@ export default function WorkoutForm() {
                   {...register("workoutType", {
                     setValueAs: (value) => (value === "" ? null : value),
                   })}
-                  className="select"
+                  className="select-bordered select"
                 >
                   <option disabled value="">
                     Select a workout type
@@ -237,7 +237,7 @@ export default function WorkoutForm() {
                 </label>
                 <div className="flex flex-wrap items-center gap-2">
                   <input
-                    className="input max-w-[110px] flex-1 placeholder:opacity-50"
+                    className="input-bordered input max-w-[110px] flex-1 placeholder:opacity-50"
                     placeholder="12"
                     type={"number"}
                     defaultValue=""

@@ -57,12 +57,19 @@ export default function SessionInsights() {
     }
   }, [sessionsForInsights]);
 
-  // console.log(
-  //   "graph content",
-  //   Object.entries(weeklySessionsInsights?.sessionsPerWeek).map(
-  //     (sessionPerWeek: any) => sessionPerWeek[1]
-  //   )
-  // );
+  const displayWorkoutAndCounter = (
+    id: number,
+    count: number,
+    name: string | null
+  ) => (
+    <Link
+      href={`/workout/${id}`}
+      className={`link-hover link flex items-center gap-1.5`}
+    >
+      <span className="text-secondary">{name || `#${id}`}</span>
+      <span className="text-xs text-base-content opacity-60">{`x${count}`}</span>
+    </Link>
+  );
 
   return (
     <>
@@ -90,64 +97,36 @@ export default function SessionInsights() {
                 </div>
               </div>
 
-              {/* <DashboardItem title="Session insights">
-                <div className="">
-                  <div className="relative z-10 flex items-center gap-2 text-sm">
-                    <div className="text-xl font-bold ">
-                      {sessionsForInsights.length}
-                    </div>
-                    total sessions
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="text-xl font-bold">{sessionsThisMonth}</div>
-                    done this month
-                  </div>
-                </div>
-              </DashboardItem> */}
               <div className="stat max-w-[280px] rounded-xl bg-base-200">
                 <div className="stat-figure text-secondary">
                   <IoHeartCircleSharp size={32} />
                 </div>
                 <div className="stat-title">Favorite workouts </div>
-                <div className="stat-value text-secondary"></div>
-                <div className="stat-desc flex flex-col gap-1 opacity-100">
+                <div className="stat-value text-[1.35rem]">
+                  {mostlyDoneWorkouts?.pages[0]?.workouts[0] &&
+                    displayWorkoutAndCounter(
+                      mostlyDoneWorkouts?.pages[0]?.workouts[0].id,
+                      mostlyDoneWorkouts?.pages[0]?.workouts[0].workoutResults
+                        .length,
+                      mostlyDoneWorkouts?.pages[0]?.workouts[0].name
+                    )}
+                </div>
+                <div className="stat-desc flex flex-col gap-0.5 opacity-100">
                   {mostlyDoneWorkouts?.pages[0]?.workouts.map(
-                    (workout, index) => (
-                      <Link
-                        key={workout.id}
-                        href={`/workout/${workout.id}`}
-                        className={`link-hover link flex gap-1.5 ${
-                          index === 0 ? "text-[0.85rem]" : ""
-                        }`}
-                      >
-                        <span className="text-secondary">
-                          {workout?.name || `#${workout.id}`}
-                        </span>
-                        <span className="opacity-60">
-                          {` (${workout?.workoutResults.length} times)`}
-                        </span>
-                      </Link>
-                    )
+                    (workout, index) =>
+                      index > 0 && (
+                        <div key={workout.id}>
+                          {displayWorkoutAndCounter(
+                            workout.id,
+                            workout?.workoutResults.length,
+                            workout.name
+                          )}
+                        </div>
+                      )
                   )}
                 </div>
               </div>
-              {/* <DashboardItem title="Favorite workouts">
-                <div className="relative z-10 mt-3 flex flex-col gap-0.5 text-sm">
-                  {mostlyDoneWorkouts?.pages[0]?.workouts.map((workout) => (
-                    <Link
-                      key={workout.id}
-                      href={`/workout/${workout.id}`}
-                      className="flex items-center gap-2"
-                    >
-                      <>
-                        <MdFavorite className="" />
-                        {workout?.name || `#${workout.id}`}
-                        {` (${workout?.workoutResults.length} times)`}
-                      </>
-                    </Link>
-                  ))}
-                </div>
-              </DashboardItem> */}
+
               <DashboardItem
                 graphNumbers={Object.entries(
                   weeklySessionsInsights?.sessionsPerWeek
