@@ -67,8 +67,8 @@ const Workouts: NextPage = () => {
                 </label>
               </div>
 
-              <div className="input relative flex w-full items-center justify-between bg-base-200">
-                <label className="z-10" htmlFor="searchWorkoutInput">
+              <div className="relative mt-4 flex w-full items-center justify-between">
+                <label className="z-10 ml-3" htmlFor="searchWorkoutInput">
                   <MdSearch size={22} />
                 </label>
                 <input
@@ -77,7 +77,7 @@ const Workouts: NextPage = () => {
                   placeholder="Search…"
                   value={searchTerm}
                   onChange={(e) => set_searchTerm(e.target.value)}
-                  className="input absolute left-0 w-full bg-base-200 px-12"
+                  className="input-bordered input absolute left-0 w-full px-12"
                 />
 
                 {/* <div className="z-10">
@@ -87,14 +87,14 @@ const Workouts: NextPage = () => {
               </div>
             </div>
 
-            <h2 className="group mt-12 flex cursor-pointer items-center gap-3 text-2xl font-bold">
+            <h2 className="h2 group mt-12 flex cursor-pointer items-center gap-3">
               {`Latest ${classifiedOnly ? "classified" : ""} workouts`}
             </h2>
 
             <button
               type="button"
               onClick={() => showWorkoutForm("create")}
-              className="btn-primary btn mt-6 mb-2"
+              className="btn btn-primary mt-4 mb-2"
             >
               Create a new workout
             </button>
@@ -102,16 +102,15 @@ const Workouts: NextPage = () => {
             <Masonry
               breakpointCols={{
                 default: 2,
-                1226: 2,
-                720: 1,
+                1226: 1,
               }}
-              className="-ml-8 flex w-auto pt-6 "
-              columnClassName="pl-8 bg-clip-padding "
+              className="-ml-16 flex w-auto pt-10"
+              columnClassName="pl-16 bg-clip-padding "
             >
               {data?.pages
                 ? data.pages.map((page) =>
                     page.workouts.map((workout) => (
-                      <div key={workout.id} className="mb-8">
+                      <div key={workout.id} className="mb-16">
                         <WorkoutCard
                           onEdit={() => showWorkoutForm("edit", workout)}
                           onDuplicate={() =>

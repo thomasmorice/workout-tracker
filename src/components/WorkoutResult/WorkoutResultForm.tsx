@@ -54,7 +54,14 @@ export default function WorkoutResultForm({
 
           <div className="flex flex-col gap-2">
             <div className="form-control w-full">
-              <div className="card max-h-20 overflow-y-scroll whitespace-pre-wrap border-white border-opacity-10 p-2 text-[0.7rem] opacity-80">
+              <div
+                style={{
+                  background: "#2a303c",
+                  boxShadow:
+                    "inset 2px 2px 0px #242933, inset -2px -2px 0px #303745",
+                }}
+                className="max-h-20 overflow-y-scroll whitespace-pre-wrap rounded-xl border-b border-white border-opacity-20 p-2 text-[0.7rem] opacity-80"
+              >
                 {workoutResult.workout.description}
               </div>
             </div>
@@ -100,7 +107,7 @@ export default function WorkoutResultForm({
                     description: e.target.value,
                   })
                 }
-                className="textarea leading-normal placeholder:opacity-50"
+                className="textarea-bordered textarea leading-normal placeholder:opacity-50"
                 rows={4}
                 maxRows={12}
                 placeholder="Great workout with a lot of..."

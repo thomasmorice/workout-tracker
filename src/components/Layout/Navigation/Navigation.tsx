@@ -6,6 +6,7 @@ import {
   MdOutlineDashboard,
   MdOutlineAccountCircle,
 } from "react-icons/md";
+import { HiOutlineClipboardList } from "react-icons/hi";
 import MobileBottomNavbar from "./MobileBottomNavbar";
 import DesktopSidebar from "./DesktopSidebar";
 
@@ -25,7 +26,7 @@ export default function Navigation() {
       href: "/",
     },
     {
-      icon: MdPadding,
+      icon: HiOutlineClipboardList,
       label: "Workouts",
       href: "/workouts",
     },

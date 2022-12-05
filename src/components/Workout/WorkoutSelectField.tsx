@@ -4,6 +4,7 @@ import { useDebounce } from "usehooks-ts";
 import { useWorkoutService } from "../../services/useWorkoutService";
 import WorkoutCard from "./WorkoutCard";
 import { MdClose } from "react-icons/md";
+
 import { useToastStore } from "../../store/ToastStore";
 import { inferRouterOutputs } from "@trpc/server";
 import { WorkoutRouterType } from "../../server/trpc/router/workout-router";
@@ -53,33 +54,42 @@ export default function WorkoutSelectField({
           onClick={() => {
             set_searchTerm("");
           }}
-          className="btn btn-error btn-sm btn-circle"
+          className="btn btn-sm btn-circle"
         >
-          <MdClose size={19} />
+          <MdClose size={14} />
         </button>
       </div>
       {(fetchedWorkouts?.pages[0]?.workouts.length ?? 0) > 0 &&
         searchTerm.length !== 0 && (
-          <div className="absolute top-14 z-30 max-h-[380px] w-full overflow-auto rounded-xl bg-base-200 px-4 pt-2">
-            {fetchedWorkouts?.pages.map((workoutPage, pageIndex) => (
-              <div className="flex flex-col" key={pageIndex}>
-                {workoutPage.workouts.map((workout) => (
-                  <WorkoutCard
-                    key={workout.id}
-                    onSelect={() => {
-                      addMessage({
-                        message: "Workout added",
-                        type: "info",
-                        closeAfter: 1000,
-                      });
-                      handleAddWorkout(workout);
-                    }}
-                    condensed
-                    workout={workout}
-                  />
-                ))}
-              </div>
-            ))}
+          <div
+            style={{
+              background: "#2a303c",
+              boxShadow:
+                "inset 5px 5px 8px #20242d, inset -5px -5px 8px #353c4b",
+            }}
+            className="absolute top-16 z-30 -ml-2 flex max-h-[380px] w-[calc(100%_+_1rem)] flex-col gap-4 overflow-auto rounded-2xl border border-white border-opacity-5"
+          >
+            <div className="py-6 px-4">
+              {fetchedWorkouts?.pages.map((workoutPage, pageIndex) => (
+                <div className="flex flex-col gap-10" key={pageIndex}>
+                  {workoutPage.workouts.map((workout) => (
+                    <WorkoutCard
+                      key={workout.id}
+                      onSelect={() => {
+                        addMessage({
+                          message: "Workout added",
+                          type: "info",
+                          closeAfter: 1000,
+                        });
+                        handleAddWorkout(workout);
+                      }}
+                      condensed
+                      workout={workout}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         )}
     </div>
@@ -88,7 +98,7 @@ export default function WorkoutSelectField({
   return (
     <div className="relative flex w-full flex-col gap-2">
       <input
-        className="input w-full bg-base-200 pr-8"
+        className="input-bordered input w-full pr-8"
         onFocus={() => set_showWorkoutSearchResult(true)}
         onBlur={() => set_showWorkoutSearchResult(false)}
         ref={searchInput}
@@ -100,7 +110,7 @@ export default function WorkoutSelectField({
       {searchTerm === "" && showWorkoutSearchResult && (
         <ul
           tabIndex={0}
-          className="dropdown-content menu w-full rounded-lg bg-base-300 p-1 text-xs shadow"
+          className="dropdown-content menu w-full rounded-lg bg-base-300 text-xs shadow"
         >
           <li
             onMouseDown={() => {

@@ -165,7 +165,7 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
               name="date"
               render={({ field }) => (
                 <DatePicker
-                  className="input w-full bg-base-200"
+                  className="input-bordered input w-full"
                   onFocus={(e) => (e.target.readOnly = true)}
                   showTimeInput
                   // showTimeSelect
@@ -199,11 +199,11 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
           {workoutResults.length > 0 && (
             <div className="form-control relative mt-2 w-full flex-1">
               <label className="label">
-                <span className="label-text">
+                <h2 className="h2 mt-3">
                   Session workouts {`(${workoutResults.length})`}
-                </span>
+                </h2>
               </label>
-              <div className="flex flex-col gap-8 text-sm">
+              <div className="mt-2 flex flex-col gap-8 text-sm">
                 <Reorder.Group
                   values={workoutResults}
                   onReorder={(values) => replaceWorkoutResults(values)}
@@ -234,7 +234,7 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
         {isDirty && (
           <div className="flex flex-col gap-2 text-sm">
             <button
-              className={`btn mt-2 ${isSubmitting ? "loading" : ""}`}
+              className={`btn mt-3 ${isSubmitting ? "loading" : ""}`}
               type="button"
               onClick={async () => {
                 await handleSubmit(handleCreateOrEdit)();

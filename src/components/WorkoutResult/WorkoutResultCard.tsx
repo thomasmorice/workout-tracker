@@ -32,8 +32,15 @@ export default function WorkoutResultCard({
     return <>{Icon && <Icon {...props} />}</>;
   };
   return (
-    <div className="card relative bg-base-200 transition-all duration-300">
-      <div className="card-body  p-5">
+    <div
+      style={{
+        background: "linear-gradient(145deg, #2d3340, #262b36)",
+        boxShadow: "5px 5px 4px #20242d, -5px -5px 4px #353c4b",
+      }}
+      className="relative rounded-2xl border-t border-white border-opacity-20"
+    >
+      <div className="card-body p-5">
+        <h3 className="h3">Result</h3>
         <div className="flex flex-col gap-4">
           {eventDate && (
             <div className="text-sm">
@@ -41,9 +48,9 @@ export default function WorkoutResultCard({
             </div>
           )}
           <div className="flex items-center gap-3">
-            {result.isRx && <div className="badge-success  badge">RX</div>}
+            {result.isRx && <div className="badge  badge-success">RX</div>}
             {result.rating && (
-              <div className="badge-success badge">
+              <div className="badge badge-success">
                 <MoodIcon
                   props={{
                     size: "18px",
@@ -57,7 +64,7 @@ export default function WorkoutResultCard({
             {result.description}
           </div>
           {resultHasBenchmarkeableWorkout(result) && (
-            <div className="badge-primary badge">
+            <div className="badge badge-primary">
               {result.time && format(result.time * 1000, "mm:ss' minutes'")}
               {result.totalReps && `${result.totalReps} reps`}
               {result.weight && `${result.weight}KG`}
@@ -69,7 +76,7 @@ export default function WorkoutResultCard({
             <button
               type="button"
               onClick={onEdit}
-              className="btn-outline btn-sm btn z-20 gap-x-2 text-xs"
+              className="btn-outline btn btn-sm z-20 gap-x-2 text-xs"
             >
               <MdEdit size={17} /> {`Edit result`}
             </button>
