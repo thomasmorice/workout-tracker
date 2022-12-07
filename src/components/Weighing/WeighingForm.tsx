@@ -113,7 +113,7 @@ export default function WeighingForm({
             <input
               id="input-rep-max"
               step={0.1}
-              className="input max-w-[110px] flex-1 placeholder:opacity-50"
+              className="input-bordered input max-w-[110px] flex-1 placeholder:opacity-50"
               {...register("weight", {
                 setValueAs: (v) => {
                   return v === null || v === ""

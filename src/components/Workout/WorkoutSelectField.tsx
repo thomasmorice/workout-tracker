@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { Rings } from "react-loading-icons";
 import { useDebounce } from "usehooks-ts";
 import { useWorkoutService } from "../../services/useWorkoutService";
@@ -40,10 +40,15 @@ export default function WorkoutSelectField({
     searchTerm: searchTermDebounced,
     enabled: searchTermDebounced.length > 2,
     showClassifiedWorkoutOnly: true,
-    ids: {
-      notIn: selectedIds,
-    },
   });
+
+  const filteredWorkouts = useMemo(() => {
+    if (fetchedWorkouts) {
+      return fetchedWorkouts.pages[0]?.workouts.filter(
+        (workout) => !selectedIds?.includes(workout.id)
+      );
+    }
+  }, [fetchedWorkouts, selectedIds]);
 
   // Workout Search Results
   const workoutSearchResult = (
@@ -59,39 +64,37 @@ export default function WorkoutSelectField({
           <MdClose size={14} />
         </button>
       </div>
-      {(fetchedWorkouts?.pages[0]?.workouts.length ?? 0) > 0 &&
-        searchTerm.length !== 0 && (
-          <div
-            style={{
-              background: "#2a303c",
-              boxShadow:
-                "inset 5px 5px 8px #20242d, inset -5px -5px 8px #353c4b",
-            }}
-            className="absolute top-16 z-30 -ml-2 flex max-h-[380px] w-[calc(100%_+_1rem)] flex-col gap-4 overflow-auto rounded-2xl border border-white border-opacity-5"
-          >
-            <div className="py-6 px-4">
-              {fetchedWorkouts?.pages.map((workoutPage, pageIndex) => (
-                <div className="flex flex-col gap-10" key={pageIndex}>
-                  {workoutPage.workouts.map((workout) => (
-                    <WorkoutCard
-                      key={workout.id}
-                      onSelect={() => {
-                        addMessage({
-                          message: "Workout added",
-                          type: "info",
-                          closeAfter: 1000,
-                        });
-                        handleAddWorkout(workout);
-                      }}
-                      condensed
-                      workout={workout}
-                    />
-                  ))}
-                </div>
+      {(filteredWorkouts?.length ?? 0) > 0 && searchTerm.length !== 0 && (
+        <div
+          style={{
+            background: "#2a303c",
+            boxShadow: "inset 5px 5px 8px #20242d, inset -5px -5px 8px #353c4b",
+          }}
+          className="absolute top-16 z-30 -ml-2 flex max-h-[380px] w-[calc(100%_+_1rem)] flex-col gap-4 overflow-auto rounded-2xl border border-white border-opacity-5"
+        >
+          <div className="py-6 px-4">
+            {/* {fetchedWorkouts?.pages.map((workoutPage, pageIndex) => ( */}
+            <div className="flex flex-col gap-10">
+              {filteredWorkouts?.map((workout) => (
+                <WorkoutCard
+                  key={workout.id}
+                  onSelect={() => {
+                    addMessage({
+                      message: "Workout added",
+                      type: "info",
+                      closeAfter: 1000,
+                    });
+                    handleAddWorkout(workout);
+                  }}
+                  condensed
+                  workout={workout}
+                />
               ))}
             </div>
+            {/* ))} */}
           </div>
-        )}
+        </div>
+      )}
     </div>
   );
 

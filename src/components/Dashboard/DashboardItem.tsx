@@ -8,8 +8,10 @@ import {
   Tooltip,
   Legend,
   ChartData,
+  Filler,
+  ScriptableContext,
 } from "chart.js";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Line } from "react-chartjs-2";
 
 ChartJS.register(
@@ -19,7 +21,8 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 );
 
 type DashboardItemProps = {
@@ -36,7 +39,7 @@ export default function DashboardItem({
   theme,
 }: DashboardItemProps) {
   const [graphData, set_graphData] = useState<ChartData<"line", number[]>>();
-  const [chartOptions, set_chartOptions] = useState({});
+  const [chartColor, set_chartColor] = useState<string>();
 
   useEffect(() => {
     if (graphNumbers) {
@@ -44,63 +47,18 @@ export default function DashboardItem({
         labels: graphNumbers.map((_, index) => index),
         datasets: [
           {
-            fill: "origin",
-            backgroundColor: `hsl(${getComputedStyle(
-              document.documentElement
-            ).getPropertyValue("--s")}`,
-            borderColor: `hsl(${getComputedStyle(
-              document.documentElement
-            ).getPropertyValue("--s")}`,
-            tension: 0.3,
-            borderWidth: 2,
             data: graphNumbers,
           },
         ],
       });
-
-      set_chartOptions({
-        responsive: true,
-        plugins: {
-          legend: {
-            display: false,
-          },
-        },
-        tooltips: {
-          // enabled: false,
-        },
-        elements: {
-          point: {
-            radius: 0,
-          },
-        },
-        scales: {
-          x: {
-            grid: {
-              display: false,
-            },
-            display: false,
-            ticks: {
-              display: false,
-            },
-          },
-          y: {
-            grid: {
-              display: false,
-            },
-            display: false,
-            title: {
-              display: false,
-            },
-            ticks: {
-              display: false,
-            },
-            suggestedMin: Math.min(...graphNumbers),
-            suggestedMax: Math.max(...graphNumbers),
-          },
-        },
-      });
     }
   }, [graphNumbers]);
+
+  useEffect(() => {
+    set_chartColor(
+      getComputedStyle(document.documentElement).getPropertyValue("--s")
+    );
+  }, []);
 
   return (
     <div
@@ -121,9 +79,63 @@ export default function DashboardItem({
       )}
       {children}
       {graphData && (
-        <div className="h-6">
+        <div className="h-8">
           <div className="absolute inset-x-0 bottom-0 z-0  ">
-            <Line height={48} data={graphData} options={chartOptions} />
+            <Line
+              redraw={true}
+              height={60}
+              data={graphData}
+              options={{
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                },
+                elements: {
+                  point: {
+                    radius: 0,
+                  },
+                  line: {
+                    borderColor: `hsla(${chartColor} / 80%`,
+                    borderWidth: 1,
+                    tension: 0.3,
+                    backgroundColor: ({ chart: { ctx } }) => {
+                      const bg = ctx.createLinearGradient(0, 0, 0, 50);
+                      bg.addColorStop(0, `hsla(${chartColor} / 70%`);
+                      bg.addColorStop(0.95, `hsla(${chartColor} / 0%`);
+                      return bg;
+                    },
+                    fill: true,
+                  },
+                },
+
+                scales: {
+                  x: {
+                    grid: {
+                      display: false,
+                    },
+                    display: false,
+                    ticks: {
+                      display: false,
+                    },
+                  },
+                  y: {
+                    grid: {
+                      display: false,
+                    },
+                    display: false,
+                    title: {
+                      display: false,
+                    },
+                    ticks: {
+                      display: false,
+                    },
+                    // suggestedMin: Math.min(...graphNumbers),
+                    // suggestedMax: Math.max(...graphNumbers),
+                  },
+                },
+              }}
+            />
           </div>
         </div>
       )}
