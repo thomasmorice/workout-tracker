@@ -8,6 +8,7 @@ import { MdClose } from "react-icons/md";
 import { useToastStore } from "../../store/ToastStore";
 import { inferRouterOutputs } from "@trpc/server";
 import { WorkoutRouterType } from "../../server/trpc/router/workout-router";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface WorkoutSelectProps {
   handleAddWorkout: (
@@ -75,21 +76,33 @@ export default function WorkoutSelectField({
           <div className="py-6 px-4">
             {/* {fetchedWorkouts?.pages.map((workoutPage, pageIndex) => ( */}
             <div className="flex flex-col gap-10">
-              {filteredWorkouts?.map((workout) => (
-                <WorkoutCard
-                  key={workout.id}
-                  onSelect={() => {
-                    addMessage({
-                      message: "Workout added",
-                      type: "info",
-                      closeAfter: 1000,
-                    });
-                    handleAddWorkout(workout);
-                  }}
-                  condensed
-                  workout={workout}
-                />
-              ))}
+              <AnimatePresence>
+                {filteredWorkouts?.map((workout) => (
+                  <motion.div
+                    key={workout.id}
+                    exit={{
+                      opacity: 0,
+                      height: 0,
+                    }}
+                    transition={{
+                      duration: 0.3,
+                    }}
+                  >
+                    <WorkoutCard
+                      onSelect={() => {
+                        addMessage({
+                          message: "Workout added",
+                          type: "info",
+                          closeAfter: 1000,
+                        });
+                        handleAddWorkout(workout);
+                      }}
+                      condensed
+                      workout={workout}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
             {/* ))} */}
           </div>
