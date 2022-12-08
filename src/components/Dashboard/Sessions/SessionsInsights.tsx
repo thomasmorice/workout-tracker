@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
 import { format, isSameMonth, differenceInYears } from "date-fns";
 import { useWorkoutSessionService } from "../../../services/useWorkoutSessionService";
-
-import DashboardItem from "../DashboardItem";
 import DashboardItemList from "../DashboardItemList";
 import { useWorkoutService } from "../../../services/useWorkoutService";
 import { MdFavorite } from "react-icons/md";
@@ -11,6 +9,7 @@ import {
   IoHeartCircleSharp,
 } from "react-icons/io5";
 import Link from "next/link";
+import DashboardItemGraph from "../DashboardItemGraph";
 
 export default function SessionInsights() {
   const { getInfiniteWorkouts } = useWorkoutService();
@@ -33,26 +32,32 @@ export default function SessionInsights() {
     }, 0);
   }, [sessionsForInsights]);
 
-  const weeklySessionsInsights = useMemo(() => {
-    // Data valid should be less than 1 year old
+  const monthlySessionsInsights = useMemo(() => {
     let totalSessionsThisYear = 0;
     if (sessionsForInsights) {
-      let sessionsPerWeek = sessionsForInsights?.reduce((acc: any, session) => {
-        if (differenceInYears(new Date(), session.event.eventDate) === 0) {
-          totalSessionsThisYear++;
-          const yearWeek = `${format(session.event.eventDate, "y'-'II")}`;
-          if (!acc[yearWeek]) {
-            acc[yearWeek] = [];
+      let sessionsPerMonth = sessionsForInsights?.reduce(
+        (acc: any, session) => {
+          // Data valid should be less than 1 year old and not the current month
+          if (
+            differenceInYears(new Date(), session.event.eventDate) === 0 &&
+            !isSameMonth(new Date(), session.event.eventDate)
+          ) {
+            totalSessionsThisYear++;
+            const yearMonth = `${format(session.event.eventDate, "y'-'MM")}`;
+            if (!acc[yearMonth]) {
+              acc[yearMonth] = [];
+            }
+            acc[yearMonth].push(session.event.eventDate);
           }
-          acc[yearWeek].push(session.event.eventDate);
-        }
-        return acc;
-      }, [] as {});
+          return acc;
+        },
+        [] as {}
+      );
       return {
         totalSessionsThisYear: totalSessionsThisYear,
-        averageSessionsThisYear:
-          totalSessionsThisYear / Object.entries(sessionsPerWeek).length,
-        sessionsPerWeek: sessionsPerWeek,
+        averageMonthlySessionsThisYear:
+          totalSessionsThisYear / Object.entries(sessionsPerMonth).length,
+        sessionsPerMonth: sessionsPerMonth,
       };
     }
   }, [sessionsForInsights]);
@@ -97,6 +102,25 @@ export default function SessionInsights() {
                 </div>
               </div>
 
+              <div className="stat relative max-w-[280px] rounded-xl bg-base-200">
+                <div className="stat-figure text-secondary">
+                  <IoCheckmarkDoneCircleSharp size={32} />
+                </div>
+                <div className="stat-title">Avg monthly session</div>
+                <div className="stat-value text-secondary">
+                  {monthlySessionsInsights?.averageMonthlySessionsThisYear.toFixed(
+                    1
+                  )}
+                </div>
+                <div className="stat-desc">
+                  <DashboardItemGraph
+                    graphNumbers={Object.entries(
+                      monthlySessionsInsights?.sessionsPerMonth
+                    ).map((sessionPerMonth: any) => sessionPerMonth[1].length)}
+                  />
+                </div>
+              </div>
+
               <div className="stat max-w-[280px] rounded-xl bg-base-200">
                 <div className="stat-figure text-secondary">
                   <IoHeartCircleSharp size={32} />
@@ -126,27 +150,6 @@ export default function SessionInsights() {
                   )}
                 </div>
               </div>
-
-              <DashboardItem
-                graphNumbers={Object.entries(
-                  weeklySessionsInsights?.sessionsPerWeek
-                ).map((sessionPerWeek: any) => sessionPerWeek[1].length)}
-                title="Avg weekly session"
-              >
-                <div className="text-xs">{`Based on data < 1 year`}</div>
-                <div className="relative z-10 flex items-center gap-2">
-                  <div className="text-2xl font-bold">
-                    {weeklySessionsInsights?.averageSessionsThisYear.toFixed(2)}
-                  </div>
-                </div>
-              </DashboardItem>
-              {/* <DashboardItem title="Sessions this month">
-                <div className="relative z-10 flex items-center gap-2">
-                  <div className="text-2xl font-bold text-accent-content">
-                    {sessionsThisMonth}
-                  </div>
-                </div>
-              </DashboardItem> */}
             </>
           )}
         </>
