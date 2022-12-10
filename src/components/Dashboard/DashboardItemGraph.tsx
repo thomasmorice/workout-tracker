@@ -59,11 +59,11 @@ export default function DashboardItemGraph({
   }
 
   return (
-    <div className="h-10">
+    <div className="h-12">
       <div className="absolute inset-x-0 bottom-0 z-0  ">
         <Line
           redraw={true}
-          height={50}
+          height={70}
           data={graphData}
           options={{
             plugins: {
@@ -80,7 +80,7 @@ export default function DashboardItemGraph({
                 borderWidth: 1,
                 tension: 0.3,
                 backgroundColor: ({ chart: { ctx } }) => {
-                  const bg = ctx.createLinearGradient(0, 0, 0, 46);
+                  const bg = ctx.createLinearGradient(0, 0, 0, 50);
                   bg.addColorStop(0, `hsla(${chartColor} / 70%`);
                   bg.addColorStop(0.95, `hsla(${chartColor} / 0%`);
                   return bg;

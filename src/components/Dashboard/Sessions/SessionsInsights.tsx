@@ -3,13 +3,14 @@ import { format, isSameMonth, differenceInYears } from "date-fns";
 import { useWorkoutSessionService } from "../../../services/useWorkoutSessionService";
 import DashboardItemList from "../DashboardItemList";
 import { useWorkoutService } from "../../../services/useWorkoutService";
-import { MdFavorite } from "react-icons/md";
+import { MdDone, MdFavorite } from "react-icons/md";
 import {
   IoCheckmarkDoneCircleSharp,
   IoHeartCircleSharp,
 } from "react-icons/io5";
 import Link from "next/link";
 import DashboardItemGraph from "../DashboardItemGraph";
+import DashboardItem from "../DashboardItem";
 
 export default function SessionInsights() {
   const { getInfiniteWorkouts } = useWorkoutService();
@@ -62,20 +63,6 @@ export default function SessionInsights() {
     }
   }, [sessionsForInsights]);
 
-  const displayWorkoutAndCounter = (
-    id: number,
-    count: number,
-    name: string | null
-  ) => (
-    <Link
-      href={`/workout/${id}`}
-      className={`link-hover link flex items-center gap-1.5`}
-    >
-      <span className="text-secondary">{name || `#${id}`}</span>
-      <span className="text-xs text-base-content opacity-60">{`x${count}`}</span>
-    </Link>
-  );
-
   return (
     <>
       <DashboardItemList
@@ -86,70 +73,56 @@ export default function SessionInsights() {
         <>
           {sessionsForInsights && sessionsForInsights.length > 0 && (
             <>
-              <div className="stat max-w-[280px] rounded-xl bg-base-200">
-                <div className="stat-figure text-secondary">
-                  <IoCheckmarkDoneCircleSharp size={32} />
-                </div>
-                <div className="stat-title">Total sessions </div>
-                <div className="stat-value text-secondary">
-                  {sessionsForInsights.length}
-                </div>
-                <div className="stat-desc">
+              <DashboardItem
+                title={"Total sessions"}
+                illustration={<IoCheckmarkDoneCircleSharp size={32} />}
+                value={sessionsForInsights.length}
+              >
+                <div className="stat-desc flex items-center gap-1">
                   <span className="text-sm font-bold text-secondary">
                     {sessionsThisMonth}
-                  </span>{" "}
+                  </span>
                   done this month
                 </div>
-              </div>
+              </DashboardItem>
 
-              <div className="stat relative max-w-[280px] rounded-xl bg-base-200">
-                <div className="stat-figure text-secondary">
-                  <IoCheckmarkDoneCircleSharp size={32} />
-                </div>
-                <div className="stat-title">Avg monthly session</div>
-                <div className="stat-value text-secondary">
-                  {monthlySessionsInsights?.averageMonthlySessionsThisYear.toFixed(
+              <DashboardItem
+                title={"Avg monthly session"}
+                illustration={<IoCheckmarkDoneCircleSharp size={32} />}
+                value={
+                  monthlySessionsInsights?.averageMonthlySessionsThisYear.toFixed(
                     1
-                  )}
-                </div>
-                <div className="stat-desc">
-                  <DashboardItemGraph
-                    graphNumbers={Object.entries(
-                      monthlySessionsInsights?.sessionsPerMonth
-                    ).map((sessionPerMonth: any) => sessionPerMonth[1].length)}
-                  />
-                </div>
-              </div>
+                  ) || ""
+                }
+              >
+                <DashboardItemGraph
+                  graphNumbers={Object.entries(
+                    monthlySessionsInsights?.sessionsPerMonth
+                  ).map((sessionPerMonth: any) => sessionPerMonth[1].length)}
+                />
+              </DashboardItem>
 
-              <div className="stat max-w-[280px] rounded-xl bg-base-200">
-                <div className="stat-figure text-secondary">
-                  <IoHeartCircleSharp size={32} />
-                </div>
-                <div className="stat-title">Favorite workouts </div>
-                <div className="stat-value text-[1.35rem]">
-                  {mostlyDoneWorkouts?.pages[0]?.workouts[0] &&
-                    displayWorkoutAndCounter(
-                      mostlyDoneWorkouts?.pages[0]?.workouts[0].id,
-                      mostlyDoneWorkouts?.pages[0]?.workouts[0].workoutResults
-                        .length,
-                      mostlyDoneWorkouts?.pages[0]?.workouts[0].name
-                    )}
-                </div>
-                <div className="stat-desc flex flex-col gap-0.5 opacity-100">
-                  {mostlyDoneWorkouts?.pages[0]?.workouts.map(
-                    (workout, index) =>
-                      index > 0 && (
-                        <div key={workout.id}>
-                          {displayWorkoutAndCounter(
-                            workout.id,
-                            workout?.workoutResults.length,
-                            workout.name
-                          )}
+              <DashboardItem
+                title={"Favorite workouts"}
+                illustration={<MdFavorite size={32} />}
+              >
+                <>
+                  {mostlyDoneWorkouts?.pages[0]?.workouts.map((workout) => (
+                    <div key={workout.id}>
+                      <Link
+                        href={`/workout/${workout.id}`}
+                        className={`link-hover link flex items-center gap-1`}
+                      >
+                        {workout.name || `#${workout.id}`}
+                        <div className="flex items-center gap-0.5 text-secondary">
+                          <MdDone size="16" />
+                          {workout.workoutResults.length}
                         </div>
-                      )
-                  )}
-                </div>
-              </div>
+                      </Link>
+                    </div>
+                  ))}
+                </>
+              </DashboardItem>
             </>
           )}
         </>

@@ -1,144 +1,22 @@
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  ChartData,
-  Filler,
-  ScriptableContext,
-} from "chart.js";
-import { useEffect, useRef, useState } from "react";
-import { Line } from "react-chartjs-2";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-);
-
 type DashboardItemProps = {
-  title?: string;
-  children: React.ReactNode;
-  graphNumbers?: number[];
-  theme?: "base" | "colored";
+  title: string;
+  illustration: React.ReactElement;
+  value?: string | number;
+  children: React.ReactElement;
 };
 
 export default function DashboardItem({
   title,
+  illustration,
+  value = "",
   children,
-  graphNumbers,
-  theme,
 }: DashboardItemProps) {
-  const [graphData, set_graphData] = useState<ChartData<"line", number[]>>();
-  const [chartColor, set_chartColor] = useState<string>();
-
-  useEffect(() => {
-    if (graphNumbers) {
-      set_graphData({
-        labels: graphNumbers.map((_, index) => index),
-        datasets: [
-          {
-            data: graphNumbers,
-          },
-        ],
-      });
-    }
-  }, [graphNumbers]);
-
-  useEffect(() => {
-    set_chartColor(
-      getComputedStyle(document.documentElement).getPropertyValue("--s")
-    );
-  }, []);
-
   return (
-    <div
-      className={`shadow- relative flex min-h-[112px] min-w-[256px] flex-col justify-between overflow-hidden rounded-xl p-5 ${
-        !theme || theme === "base" ? `bg-base-200` : "bg-secondary"
-      }`}
-    >
-      {title && (
-        <div
-          className={`md:text-lg  ${
-            !theme || theme === "base"
-              ? "text-base-content"
-              : "text-secondary-content"
-          } `}
-        >
-          {title}
-        </div>
-      )}
-      {children}
-      {graphData && (
-        <div className="h-8">
-          <div className="absolute inset-x-0 bottom-0 z-0  ">
-            <Line
-              redraw={true}
-              height={60}
-              data={graphData}
-              options={{
-                plugins: {
-                  legend: {
-                    display: false,
-                  },
-                },
-                elements: {
-                  point: {
-                    radius: 0,
-                  },
-                  line: {
-                    borderColor: `hsla(${chartColor} / 80%`,
-                    borderWidth: 1,
-                    tension: 0.3,
-                    backgroundColor: ({ chart: { ctx } }) => {
-                      const bg = ctx.createLinearGradient(0, 0, 0, 50);
-                      bg.addColorStop(0, `hsla(${chartColor} / 70%`);
-                      bg.addColorStop(0.95, `hsla(${chartColor} / 0%`);
-                      return bg;
-                    },
-                    fill: true,
-                  },
-                },
-
-                scales: {
-                  x: {
-                    grid: {
-                      display: false,
-                    },
-                    display: false,
-                    ticks: {
-                      display: false,
-                    },
-                  },
-                  y: {
-                    grid: {
-                      display: false,
-                    },
-                    display: false,
-                    title: {
-                      display: false,
-                    },
-                    ticks: {
-                      display: false,
-                    },
-                    // suggestedMin: Math.min(...graphNumbers),
-                    // suggestedMax: Math.max(...graphNumbers),
-                  },
-                },
-              }}
-            />
-          </div>
-        </div>
-      )}
+    <div className="stat relative max-w-[280px] rounded-xl bg-base-200">
+      <div className="stat-figure text-secondary">{illustration}</div>
+      <div className="stat-title">{title}</div>
+      <div className="stat-value text-secondary">{value}</div>
+      <div className="stat-desc">{children}</div>
     </div>
   );
 }
