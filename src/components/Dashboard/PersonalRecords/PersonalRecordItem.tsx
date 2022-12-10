@@ -1,36 +1,37 @@
 import {
   MdArrowDropDown,
   MdArrowDropUp,
+  MdDone,
   MdRemove,
   MdStarRate,
 } from "react-icons/md";
 import { useEffect, useMemo, useCallback } from "react";
-import { format } from "date-fns";
 
-import DashboardItem from "../DashboardItem";
 import { inferRouterOutputs } from "@trpc/server";
 import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
+import DashboardItemGraph from "../DashboardItemGraph";
+import Link from "next/link";
 
 type PersonalRecordWorkoutType = {
-  personalRecordWorkout: inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
+  workout: inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
 };
 
 export default function PersonalRecordItem({
-  personalRecordWorkout,
+  workout,
 }: PersonalRecordWorkoutType) {
   const resultsByDate = useCallback(() => {
-    return personalRecordWorkout.workoutResults.sort(
+    return workout.workoutResults.sort(
       (a, b) =>
         a.workoutSession.event.eventDate.getTime() -
         b.workoutSession.event.eventDate.getTime()
     );
-  }, [personalRecordWorkout]);
+  }, [workout]);
 
   const resultsByPerformance = useCallback(() => {
-    return personalRecordWorkout.workoutResults.sort(
+    return workout.workoutResults.sort(
       (a, b) => (b.weight || 0) - (a.weight || 0)
     );
-  }, [personalRecordWorkout]);
+  }, [workout]);
 
   const getPercentageOfImprovement = useMemo(() => {
     const bestPerformance = resultsByPerformance()[0];
@@ -50,63 +51,65 @@ export default function PersonalRecordItem({
     }
   }, [resultsByDate, resultsByPerformance]);
 
-  if (personalRecordWorkout.workoutResults.length === 0) {
+  if (workout.workoutResults.length === 0) {
     return null;
   }
 
   return (
     <>
-      <DashboardItem
-        title={personalRecordWorkout.name ?? ""}
-        graphNumbers={resultsByDate().map((wr) => wr.weight ?? 0)}
+      <Link
+        href={`/workout/${workout.id}`}
+        className={`flex cursor-pointer items-center  gap-1`}
       >
-        <>
-          <div className="-mt-0.5 text-xs text-base-content">
-            latest - {resultsByDate()[resultsByDate().length - 1]?.weight}KG
-          </div>
-          <div className="relative z-10 flex items-center gap-2">
-            <div className="text-2xl font-bold">
-              {resultsByPerformance()[0]?.weight}KG
-            </div>
-
-            <span
-              className={`mx-2 flex items-center rounded-full px-2 py-0.5 text-sm text-success-content 
-          ${
-            getPercentageOfImprovement
-              ? getPercentageOfImprovement.isIncreasing
-                ? "bg-success"
-                : "bg-error"
-              : "bg-base-content"
-          }`}
+        <div className="stat relative max-w-[280px] rounded-xl bg-base-200 transition-transform hover:scale-[1.03] hover:shadow-inner ">
+          <div className="stat-figure text-secondary">
+            <div
+              className={`badge ml-4
+  ${
+    getPercentageOfImprovement?.isIncreasing ? "badge-success" : "badge-error"
+  }`}
             >
               {!getPercentageOfImprovement ? (
                 <MdRemove size={18} />
-              ) : getPercentageOfImprovement.isLastPR ? (
+              ) : getPercentageOfImprovement?.isLastPR ? (
                 <>
                   <MdStarRate />
-                  <span>PR</span>
+                  PR
                 </>
               ) : (
                 <>
-                  {getPercentageOfImprovement.isIncreasing && (
+                  {getPercentageOfImprovement?.isIncreasing ? (
                     <>
                       <MdArrowDropUp size={20} />
                       <span>{getPercentageOfImprovement?.result || "0%"}</span>
                     </>
-                  )}
-
-                  {!getPercentageOfImprovement.isIncreasing && (
-                    <>
-                      <MdArrowDropDown size={20} />
-                      <span>{getPercentageOfImprovement?.result || "0%"}</span>
-                    </>
+                  ) : (
+                    <div className="flex items-center">
+                      <MdArrowDropDown size={16} />
+                      {getPercentageOfImprovement?.result || "0%"}
+                    </div>
                   )}
                 </>
               )}
-            </span>
+            </div>
           </div>
-        </>
-      </DashboardItem>
+          <div className="stat-title flex items-center gap-2">
+            {workout.name ?? workout.id}
+            <div className="badge flex items-center gap-0.5">
+              <MdDone size="16" />
+              {workout.workoutResults.length}
+            </div>
+          </div>
+          <div className="stat-value text-secondary">
+            {resultsByPerformance()[0]?.weight}KG
+          </div>
+          <div className="stat-desc">
+            <DashboardItemGraph
+              graphNumbers={resultsByDate()?.map((wr) => wr.weight ?? 0)}
+            />
+          </div>
+        </div>
+      </Link>
     </>
   );
 }

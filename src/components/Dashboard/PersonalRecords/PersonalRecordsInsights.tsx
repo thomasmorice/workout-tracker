@@ -1,8 +1,13 @@
 import { useWorkoutService } from "../../../services/useWorkoutService";
-import PersonalRecordItem from "./PersonalRecordItem";
 import DashboardItemList from "../DashboardItemList";
+import { inferRouterOutputs } from "@trpc/server";
+import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
+import PersonalRecordItem from "./PersonalRecordItem";
 
-export default function PersonalRecordsInsights({}) {
+type PersonalRecordWorkoutType =
+  inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
+
+export default function PersonalRecordsInsights() {
   const { getInfiniteWorkouts } = useWorkoutService();
 
   const { data: personalRecordWorkouts, isLoading } = getInfiniteWorkouts({
@@ -24,28 +29,28 @@ export default function PersonalRecordsInsights({}) {
     withResults: true,
   });
 
+  if (
+    !personalRecordWorkouts ||
+    !personalRecordWorkouts?.pages[0]?.workouts?.length
+  ) {
+    return null;
+  }
+
   return (
     <>
-      {personalRecordWorkouts &&
-      personalRecordWorkouts?.pages[0]?.workouts?.length ? (
-        <DashboardItemList
-          isLoading={isLoading}
-          loadingMessage="fetching personal records"
-          title="Latest personal records"
-        >
-          <>
-            {personalRecordWorkouts &&
-              personalRecordWorkouts.pages[0]?.workouts.map((workout) => (
-                <PersonalRecordItem
-                  key={workout.id}
-                  personalRecordWorkout={workout}
-                />
-              ))}
-          </>
-        </DashboardItemList>
-      ) : (
-        <> </>
-      )}
+      <DashboardItemList
+        isLoading={isLoading}
+        loadingMessage="fetching personal records"
+        title="Latest personal records"
+      >
+        <>
+          {personalRecordWorkouts.pages[0]?.workouts.map((workout) => (
+            <div key={workout.id}>
+              <PersonalRecordItem workout={workout} />
+            </div>
+          ))}
+        </>
+      </DashboardItemList>
     </>
   );
 }
