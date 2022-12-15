@@ -101,7 +101,8 @@ const Workouts: NextPage = () => {
 
             <Masonry
               breakpointCols={{
-                default: 2,
+                default: 3,
+                1500: 2,
                 1226: 1,
               }}
               className="-ml-16 flex w-auto pt-10"

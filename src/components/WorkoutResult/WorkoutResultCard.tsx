@@ -1,6 +1,6 @@
 import { inferRouterOutputs } from "@trpc/server";
 import { format } from "date-fns";
-import { MdEdit } from "react-icons/md";
+import { MdEdit, MdOutlineCalendarToday } from "react-icons/md";
 import { WorkoutRouterType } from "../../server/trpc/router/workout-router";
 import { WorkoutResultInputsWithWorkout } from "../../types/app";
 import { resultHasBenchmarkeableWorkout } from "../../utils/utils";
@@ -32,21 +32,17 @@ export default function WorkoutResultCard({
     return <>{Icon && <Icon {...props} />}</>;
   };
   return (
-    <div
-      style={{
-        background: "linear-gradient(145deg, #2d3340, #262b36)",
-        boxShadow: "5px 5px 4px #20242d, -5px -5px 4px #353c4b",
-      }}
-      className="relative rounded-2xl border-t border-white border-opacity-20"
-    >
-      <div className="card-body p-5">
-        <h3 className="h3">Result</h3>
-        <div className="flex flex-col gap-4">
+    <div className="card relative z-0 pt-10">
+      <div className=" card-body rounded-xl p-5">
+        <h3 className="h3">
           {eventDate && (
-            <div className="text-sm">
-              {`Event date:  ${format(eventDate, "do MMMM yyyy")}`}
+            <div className="mb-3 flex items-center gap-2">
+              <MdOutlineCalendarToday />
+              {`${format(eventDate, "do MMMM yyyy")}`}
             </div>
           )}
+        </h3>
+        <div className="flex flex-col gap-4">
           <div className="flex items-center gap-3">
             {result.isRx && <div className="badge  badge-success">RX</div>}
             {result.rating && (

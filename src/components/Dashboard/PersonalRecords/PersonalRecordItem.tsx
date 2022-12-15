@@ -5,7 +5,7 @@ import {
   MdRemove,
   MdStarRate,
 } from "react-icons/md";
-import { useEffect, useMemo, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 
 import { inferRouterOutputs } from "@trpc/server";
 import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
@@ -65,9 +65,11 @@ export default function PersonalRecordItem({
           <div className="stat-figure text-secondary">
             <div
               className={`badge ml-4
-  ${
-    getPercentageOfImprovement?.isIncreasing ? "badge-success" : "badge-error"
-  }`}
+              ${
+                getPercentageOfImprovement?.isIncreasing
+                  ? "badge-success"
+                  : "badge-error"
+              }`}
             >
               {!getPercentageOfImprovement ? (
                 <MdRemove size={18} />
@@ -84,7 +86,7 @@ export default function PersonalRecordItem({
                       <span>{getPercentageOfImprovement?.result || "0%"}</span>
                     </>
                   ) : (
-                    <div className="flex items-center">
+                    <div className="flex min-w-[52px] items-center">
                       <MdArrowDropDown size={16} />
                       {getPercentageOfImprovement?.result || "0%"}
                     </div>
