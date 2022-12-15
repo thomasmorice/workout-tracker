@@ -57,12 +57,15 @@ export default function WorkoutSessionResultItem({
       }}
       onPointerDown={() => set_isDragging(true)}
       onPointerUp={() => set_isDragging(false)}
-      className="mb-12"
+      className="group mb-12"
     >
-      <div className="relative flex flex-col gap-7">
+      <div
+        className={`workout-card ${result.workout.difficulty?.toLowerCase()}`}
+      >
         {/* Workout */}
+        <div className={`glowing-bg`}></div>
         <div className="card z-20">
-          <div className="card-body p-5">
+          <div className="condensed card-body  p-5">
             <div
               className={`absolute top-3 right-3 hidden  cursor-grab items-center gap-2 p-2 md:flex`}
             >
@@ -147,21 +150,15 @@ export default function WorkoutSessionResultItem({
               </div>
             </div>
           </div>
-          {hasResults && (
-            <WorkoutResultCard
-              onEdit={onOpenWorkoutResultDetail}
-              result={result}
-            />
-          )}
         </div>
-
-        {/* <div className="absolute top-0 left-1/2 bottom-0 border-[1px] border-dashed border-base-content"></div>
+      </div>
+      <div className="mx-2 -mt-8 transition-all group-hover:-mt-1">
         {hasResults && (
           <WorkoutResultCard
             onEdit={onOpenWorkoutResultDetail}
             result={result}
           />
-        )} */}
+        )}
       </div>
     </Reorder.Item>
   );

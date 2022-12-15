@@ -1,7 +1,6 @@
 import { WorkoutType } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
 import { trpc } from "../utils/trpc";
 
 interface InfiniteWorkoutsProps {
@@ -89,11 +88,11 @@ export const useWorkoutService = () => {
     );
   };
 
-  const getWorkoutById = (id: unknown) => {
-    const workoutId = parseInt(id as string);
+  const getWorkoutById = (id: number) => {
+    console.log("fetching");
     return trpc.workout.getWorkoutById.useQuery(
       {
-        id: workoutId,
+        id: id,
       },
 
       {

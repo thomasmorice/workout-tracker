@@ -42,197 +42,200 @@ export default function WorkoutCard({
     useState(false);
 
   return (
-    <div className="group card">
-      {condensed ? (
-        <div className="card-body p-5 pb-0">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between gap-2 leading-none transition-colors">
-              {workout.name ? workout.name : `#${workout.id}`}
-              <button
-                className="btn btn-primary btn-sm"
-                type="button"
-                onClick={onSelect && onSelect}
-              >
-                Add
-              </button>
-            </div>
+    <div className={`workout-card group ${workout.difficulty?.toLowerCase()}`}>
+      <div className={`glowing-bg`}></div>
+      <div className={`card`}>
+        {condensed ? (
+          <div className="card-body p-5 pb-0">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between gap-2 leading-none transition-colors">
+                {workout.name ? workout.name : `#${workout.id}`}
+                <button
+                  className="btn btn-primary btn-sm"
+                  type="button"
+                  onClick={onSelect && onSelect}
+                >
+                  Add
+                </button>
+              </div>
 
-            <div className={`text-xs`}>
-              Created{" "}
-              <span className="">
-                {format(workout.createdAt, "MM/dd/yyyy")}
-              </span>
-            </div>
-            <div className={`badge badge-primary text-xs font-medium `}>
-              {enumToString(workout.elementType)}
-            </div>
-            <div className="divider my-0.5 opacity-50"></div>
-            <div
-              onClick={() =>
-                set_isCondensedCardExpanded(!isCondensedCardExpanded)
-              }
-            >
-              <div
-                className={`description  overflow-hidden  whitespace-pre-wrap break-words text-[0.7rem] transition-all ${
-                  isCondensedCardExpanded ? "max-h-[500px]" : "max-h-[64px]"
-                }`}
-              >
-                {workout.description}
-              </div>
-              <div className="divider opacity-50">
-                <div className="flex cursor-pointer flex-col items-center text-xs">
-                  {isCondensedCardExpanded ? (
-                    <>
-                      COLLAPSE <MdOutlineExpandLess />
-                    </>
-                  ) : (
-                    <>
-                      EXPAND <MdOutlineExpandMore />
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="card-body">
-          <div className="flex items-center justify-between">
-            {/* Author */}
-            <div className="flex items-center gap-3">
-              <div className="mask mask-circle relative h-10 w-10 ">
-                <Image
-                  layout="fill"
-                  referrerPolicy="no-referrer"
-                  src={workout.creator.image ?? "https://i.pravatar.cc/300"}
-                  alt="Workout creator"
-                />
-              </div>
-              <div className="flex flex-col">
-                <div className="text-lg leading-tight">
-                  {workout?.creator.name}
-                </div>
-                <div className={`text-xs font-light opacity-50`}>
-                  Created on the{" "}
-                  {/* {formatDistance(new Date(), new Date(workout.createdAt))} ago */}
+              <div className={`text-xs`}>
+                Created{" "}
+                <span className="">
                   {format(workout.createdAt, "MM/dd/yyyy")}
+                </span>
+              </div>
+              <div className={`badge badge-primary text-xs font-medium `}>
+                {enumToString(workout.elementType)}
+              </div>
+              <div className="divider my-0.5 opacity-50"></div>
+              <div
+                onClick={() =>
+                  set_isCondensedCardExpanded(!isCondensedCardExpanded)
+                }
+              >
+                <div
+                  className={`description  overflow-hidden  whitespace-pre-wrap break-words text-[0.7rem] transition-all ${
+                    isCondensedCardExpanded ? "max-h-[500px]" : "max-h-[64px]"
+                  }`}
+                >
+                  {workout.description}
+                </div>
+                <div className="divider opacity-50">
+                  <div className="flex cursor-pointer flex-col items-center text-xs">
+                    {isCondensedCardExpanded ? (
+                      <>
+                        COLLAPSE <MdOutlineExpandLess />
+                      </>
+                    ) : (
+                      <>
+                        EXPAND <MdOutlineExpandMore />
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-
-            {workout._count.workoutResults > 0 && (
-              <div className="flex opacity-70">
-                <MdDone className="" size={21} />
-                <sup className="text-[0.65rem]">
-                  {workout._count.workoutResults}
-                </sup>
-              </div>
-            )}
           </div>
+        ) : (
+          <div className="card-body">
+            <div className="flex items-center justify-between">
+              {/* Author */}
+              <div className="flex items-center gap-3">
+                <div className="mask mask-circle relative h-10 w-10 ">
+                  <Image
+                    fill
+                    referrerPolicy="no-referrer"
+                    src={workout.creator.image ?? "https://i.pravatar.cc/300"}
+                    alt="Workout creator"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <div className="text-lg leading-tight">
+                    {workout?.creator.name}
+                  </div>
+                  <div className={`text-xs font-light opacity-50`}>
+                    Created on the{" "}
+                    {/* {formatDistance(new Date(), new Date(workout.createdAt))} ago */}
+                    {format(workout.createdAt, "MM/dd/yyyy")}
+                  </div>
+                </div>
+              </div>
 
-          {/* Badges */}
-          <div className="badges flex flex-wrap gap-2 pt-4 uppercase">
-            {workout.difficulty && (
-              <div
-                className={`badge badge-outline text-xs font-medium text-${workout.difficulty.toLowerCase()}-600
+              {workout._count.workoutResults > 0 && (
+                <div className="flex opacity-70">
+                  <MdDone className="" size={21} />
+                  <sup className="text-[0.65rem]">
+                    {workout._count.workoutResults}
+                  </sup>
+                </div>
+              )}
+            </div>
+
+            {/* Badges */}
+            <div className="badges flex flex-wrap gap-2 pt-4 uppercase">
+              {workout.difficulty && (
+                <div
+                  className={`badge badge-outline text-xs font-medium text-${workout.difficulty.toLowerCase()}-600
           ${
             workout.difficulty === "BLACK"
               ? "border-white bg-black text-white"
               : ""
           }`}
-              >
-                {workout.difficulty}
-              </div>
-            )}
+                >
+                  {workout.difficulty}
+                </div>
+              )}
 
-            <div className={`badge badge-primary text-xs font-medium `}>
-              {enumToString(workout.elementType)}
+              <div className={`badge badge-primary text-xs font-medium `}>
+                {enumToString(workout.elementType)}
+              </div>
+
+              {workout.isDoableAtHome && (
+                <div
+                  className={`badge badge-secondary badge-outline text-xs font-medium`}
+                >
+                  Doable at home
+                </div>
+              )}
             </div>
 
-            {workout.isDoableAtHome && (
-              <div
-                className={`badge badge-secondary badge-outline text-xs font-medium`}
-              >
-                Doable at home
-              </div>
-            )}
-          </div>
+            <div className="divider my-2 opacity-50"></div>
 
-          <div className="divider my-2 opacity-50"></div>
-
-          {/* Title */}
-          <div className="card-title text-xl">
-            <Link href={`/workout/${workout.id}`}>
-              <div className="link-hover link flex items-center gap-2 transition-colors">
-                {workout.name ? workout.name : `#${workout.id}`}
-                <MdOpenInNew size={17} />
-              </div>
-            </Link>
-          </div>
-
-          {/* Timecap and workout type */}
-          <div className="flex items-center gap-1">
-            {workout.totalTime && (
-              <>
-                <MdTimer /> {workout.totalTime}mn
-                {workout.workoutType && (
-                  <>
-                    {" — "}
-                    <span className="capitalize">
-                      {enumToString(workout.workoutType.toLowerCase())}
-                    </span>
-                  </>
-                )}
-              </>
-            )}
-          </div>
-
-          {/* Description */}
-          <div className="description mt-2 whitespace-pre-wrap break-words text-[0.7rem] leading-relaxed opacity-70">
-            {workout.description}
-          </div>
-
-          {onEdit &&
-            onDuplicate &&
-            onDelete &&
-            (workout.creator.id === sessionData?.user?.id ||
-              workout.elementType === "UNCLASSIFIED") && (
-              <>
-                <div className="divider opacity-50"></div>
-
-                {/* Card footer */}
-
-                <div className="card-actions justify-end ">
-                  <div className="btn-group ">
-                    <button
-                      type="button"
-                      onClick={onEdit}
-                      className="btn-outline btn btn-sm gap-x-2 text-xs"
-                    >
-                      <MdEdit size={17} /> Edit
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={onDuplicate}
-                      className="btn-outline btn btn-sm gap-x-2 text-xs"
-                    >
-                      <MdCopyAll size={17} /> Duplicate
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={onDelete}
-                      className="btn-outline btn btn-error btn-sm text-xs"
-                    >
-                      <MdDelete size={17} />
-                    </button>
-                  </div>
+            {/* Title */}
+            <div className="card-title text-xl">
+              <Link href={`/workout/${workout.id}`}>
+                <div className="link-hover link flex items-center gap-2 transition-colors">
+                  {workout.name ? workout.name : `#${workout.id}`}
+                  <MdOpenInNew size={17} />
                 </div>
-              </>
-            )}
-        </div>
-      )}
+              </Link>
+            </div>
+
+            {/* Timecap and workout type */}
+            <div className="flex items-center gap-1">
+              {workout.totalTime && (
+                <>
+                  <MdTimer /> {workout.totalTime}mn
+                  {workout.workoutType && (
+                    <>
+                      {" — "}
+                      <span className="capitalize">
+                        {enumToString(workout.workoutType.toLowerCase())}
+                      </span>
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* Description */}
+            <div className="description mt-2 whitespace-pre-wrap break-words text-[0.7rem] leading-relaxed opacity-70">
+              {workout.description}
+            </div>
+
+            {onEdit &&
+              onDuplicate &&
+              onDelete &&
+              (workout.creator.id === sessionData?.user?.id ||
+                workout.elementType === "UNCLASSIFIED") && (
+                <>
+                  <div className="divider opacity-50"></div>
+
+                  {/* Card footer */}
+
+                  <div className="card-actions justify-end ">
+                    <div className="btn-group ">
+                      <button
+                        type="button"
+                        onClick={onEdit}
+                        className="btn-outline btn btn-sm gap-x-2 text-xs"
+                      >
+                        <MdEdit size={17} /> Edit
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={onDuplicate}
+                        className="btn-outline btn btn-sm gap-x-2 text-xs"
+                      >
+                        <MdCopyAll size={17} /> Duplicate
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={onDelete}
+                        className="btn-outline btn btn-error btn-sm text-xs"
+                      >
+                        <MdDelete size={17} />
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -54,8 +54,27 @@ export const workoutRouter = router({
       const { id } = input;
       return ctx.prisma.workout.findFirstOrThrow({
         select: {
-          ...SelectWorkout,
+          ...WorkoutExtras,
+          ...WorkoutSelect,
+          workoutResults: {
+            select: {
+              ...WorkoutResultsSelect,
+              workoutSession: {
+                select: {
+                  event: true,
+                },
+              },
+            },
+            orderBy: {
+              workoutSession: {
+                event: {
+                  eventDate: "desc",
+                },
+              },
+            },
+          },
         },
+
         where: {
           AND: {
             id: id,

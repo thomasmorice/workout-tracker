@@ -21,16 +21,78 @@
     box-shadow: rgba(0, 0, 0, 0.22) 0px 4px 22px;
   }
 
-  .card {
-    /* @apply bg-base-200;
-    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.08),
-      0px 8px 15px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.1);
-    transition: box-shadow 0.25s; */
-
-    @apply rounded-3xl;
-    background: #2a303c;
-    box-shadow: 5px 5px 10px #111318, -5px -5px 10px #434d60;
+  .workout-card {
+    @apply relative;
   }
+
+  .glowing-bg {
+    @apply absolute -inset-0.5 animate-tilt rounded-xl  bg-gradient-to-r opacity-40 blur transition duration-1000 group-hover:opacity-80 group-hover:duration-200;
+    @apply from-slate-700 via-slate-600 to-slate-800;
+  }
+
+  .card {
+    @apply rounded-xl border border-base-content border-opacity-20;
+  }
+
+  .workout-card.green .glowing-bg {
+    @apply from-green-600 via-green-500 to-green-800;
+  }
+
+  .workout-card.green .card {
+    @apply border-green-700 border-opacity-20;
+  }
+
+  .workout-card.yellow .glowing-bg {
+    @apply from-yellow-600 via-yellow-500 to-yellow-800;
+  }
+
+  .workout-card.yellow .card {
+    @apply border-yellow-700 border-opacity-20;
+  }
+
+  .workout-card.red .glowing-bg {
+    @apply from-red-600 via-red-500 to-red-800;
+  }
+
+  .workout-card.red .card {
+    @apply border-red-700 border-opacity-20;
+  }
+
+  .workout-card.black .glowing-bg {
+    @apply from-slate-400 via-slate-700 to-black;
+  }
+
+  .workout-card.black .card {
+    @apply border-black border-opacity-80;
+  }
+
+  /* .card.green {
+    @apply from-green-400 via-green-600 to-green-700;
+  }
+
+  .card.yellow {
+    @apply from-yellow-400 via-yellow-600 to-yellow-700;
+  }
+
+  .card.red {
+    @apply from-red-400 via-red-600 to-red-700;
+  }
+
+  .card.black {
+    @apply from-slate-400 via-slate-600 to-slate-700;
+  } */
+
+  /* .card.result {
+    @apply from-green-700 to-green-900;
+  } */
+
+  .card-body {
+    @apply rounded-xl bg-white dark:bg-base-100;
+  }
+
+  /* .card-body.condensed {
+    @apply dark:bg-base-100;
+  }  */
 
   .sidebar-shadow {
     @apply border-base-content border-opacity-[0.08]  shadow-lg shadow-neutral;
