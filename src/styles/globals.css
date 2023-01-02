@@ -17,16 +17,12 @@
     @apply text-lg font-semibold;
   }
 
-  .sidebar-shadow {
-    box-shadow: rgba(0, 0, 0, 0.22) 0px 4px 22px;
-  }
-
   .workout-card {
     @apply relative;
   }
 
   .glowing-bg {
-    @apply absolute -inset-0.5 animate-tilt rounded-xl  bg-gradient-to-r opacity-40 blur transition duration-1000 group-hover:opacity-80 group-hover:duration-200;
+    @apply absolute -inset-[1px] animate-tilt rounded-xl  bg-gradient-to-r opacity-30 blur transition duration-1000 group-hover:opacity-60 group-hover:duration-200;
     @apply from-slate-700 via-slate-600 to-slate-800;
   }
 
@@ -59,42 +55,22 @@
   }
 
   .workout-card.black .glowing-bg {
-    @apply from-slate-400 via-slate-700 to-black;
+    @apply from-slate-300 via-slate-600 to-slate-400;
   }
 
   .workout-card.black .card {
     @apply border-black border-opacity-80;
   }
 
-  /* .card.green {
-    @apply from-green-400 via-green-600 to-green-700;
-  }
-
-  .card.yellow {
-    @apply from-yellow-400 via-yellow-600 to-yellow-700;
-  }
-
-  .card.red {
-    @apply from-red-400 via-red-600 to-red-700;
-  }
-
-  .card.black {
-    @apply from-slate-400 via-slate-600 to-slate-700;
-  } */
-
-  /* .card.result {
-    @apply from-green-700 to-green-900;
-  } */
-
   .card-body {
     @apply rounded-xl bg-white dark:bg-base-100;
   }
 
-  /* .card-body.condensed {
-    @apply dark:bg-base-100;
-  }  */
-
   .sidebar-shadow {
     @apply border-base-content border-opacity-[0.08]  shadow-lg shadow-neutral;
+  }
+
+  .badge {
+    @apply rounded-lg text-xs;
   }
 }
