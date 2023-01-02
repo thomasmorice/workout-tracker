@@ -68,7 +68,7 @@ export default function Layout({ children }: LayoutProps) {
               <button
                 type="button"
                 onClick={() => signIn()}
-                className="btn btn-primary flex gap-x-2"
+                className="btn-primary btn flex gap-x-2"
               >
                 <MdLogin size="22px" />
                 Login
