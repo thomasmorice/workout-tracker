@@ -17,17 +17,13 @@
     @apply text-lg font-semibold;
   }
 
-  .workout-card {
-    @apply relative;
+  .workout-card .card {
+    @apply rounded-xl border border-base-content border-opacity-20;
   }
 
   .glowing-bg {
     @apply absolute -inset-[1px] animate-tilt rounded-xl  bg-gradient-to-r opacity-30 blur transition duration-1000 group-hover:opacity-60 group-hover:duration-200;
     @apply from-slate-700 via-slate-600 to-slate-800;
-  }
-
-  .card {
-    @apply rounded-xl border border-base-content border-opacity-20;
   }
 
   .workout-card.green .glowing-bg {
@@ -59,7 +55,7 @@
   }
 
   .workout-card.black .card {
-    @apply border-black border-opacity-80;
+    @apply border-black border-opacity-40;
   }
 
   .card-body {
