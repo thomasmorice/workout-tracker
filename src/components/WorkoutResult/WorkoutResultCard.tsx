@@ -32,7 +32,7 @@ export default function WorkoutResultCard({
     return <>{Icon && <Icon {...props} />}</>;
   };
   return (
-    <div className="card relative z-0 pt-10">
+    <div className="card relative -z-10 pt-10">
       <div className=" card-body rounded-xl p-5">
         <h3 className="h3">
           {eventDate && (
@@ -72,7 +72,7 @@ export default function WorkoutResultCard({
             <button
               type="button"
               onClick={onEdit}
-              className="btn-outline btn btn-sm z-20 gap-x-2 text-xs"
+              className="btn-outline btn-sm btn z-20 gap-x-2 text-xs"
             >
               <MdEdit size={17} /> {`Edit result`}
             </button>

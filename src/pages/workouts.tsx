@@ -4,7 +4,7 @@ import Head from "next/head";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Masonry from "react-masonry-css";
 import { useIntersectionObserver, useDebounce } from "usehooks-ts";
-import WorkoutCard from "../components/Workout/WorkoutCard";
+import WorkoutCard from "../components/Workout/WorkoutCard/WorkoutCard";
 import WorkoutCardSkeleton from "../components/Workout/WorkoutCardSkeleton";
 import { useWorkoutService } from "../services/useWorkoutService";
 import { useWorkoutStore } from "../store/WorkoutStore";
@@ -94,7 +94,7 @@ const Workouts: NextPage = () => {
             <button
               type="button"
               onClick={() => showWorkoutForm("create")}
-              className="btn btn-primary mt-4 mb-2"
+              className="btn-primary btn mt-4 mb-2"
             >
               Create a new workout
             </button>
@@ -111,7 +111,7 @@ const Workouts: NextPage = () => {
               {data?.pages
                 ? data.pages.map((page) =>
                     page.workouts.map((workout) => (
-                      <div key={workout.id} className="mb-16">
+                      <div key={workout.id} className="mb-12">
                         <WorkoutCard
                           onEdit={() => showWorkoutForm("edit", workout)}
                           onDuplicate={() =>

@@ -2,7 +2,7 @@ import { useState, useRef, useMemo } from "react";
 import { Rings } from "react-loading-icons";
 import { useDebounce } from "usehooks-ts";
 import { useWorkoutService } from "../../services/useWorkoutService";
-import WorkoutCard from "./WorkoutCard";
+import WorkoutCard from "./WorkoutCard/WorkoutCard";
 import { MdClose } from "react-icons/md";
 
 import { useToastStore } from "../../store/ToastStore";
@@ -60,18 +60,20 @@ export default function WorkoutSelectField({
           onClick={() => {
             set_searchTerm("");
           }}
-          className="btn btn-sm btn-circle"
+          className="btn-sm btn-circle btn"
         >
           <MdClose size={14} />
         </button>
       </div>
       {(filteredWorkouts?.length ?? 0) > 0 && searchTerm.length !== 0 && (
         <div
-          style={{
-            background: "#2a303c",
-            boxShadow: "inset 5px 5px 8px #20242d, inset -5px -5px 8px #353c4b",
-          }}
-          className="absolute top-16 z-30 -ml-2 flex max-h-[380px] w-[calc(100%_+_1rem)] flex-col gap-4 overflow-auto rounded-2xl border border-white border-opacity-5"
+          style={
+            {
+              // background: "#2a303c",
+              // boxShadow: "inset 5px 5px 8px #20242d, inset -5px -5px 8px #353c4b",
+            }
+          }
+          className="absolute top-16 z-30 -ml-2 flex max-h-[380px] w-[calc(100%_+_1rem)] flex-col gap-4 overflow-auto rounded-2xl border border-white border-opacity-5 bg-base-200"
         >
           <div className="py-6 px-4">
             {/* {fetchedWorkouts?.pages.map((workoutPage, pageIndex) => ( */}
@@ -97,7 +99,7 @@ export default function WorkoutSelectField({
                         });
                         handleAddWorkout(workout);
                       }}
-                      condensed
+                      mode="selecteable"
                       workout={workout}
                     />
                   </motion.div>

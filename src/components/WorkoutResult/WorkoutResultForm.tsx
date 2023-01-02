@@ -1,10 +1,8 @@
 import Modal from "../Layout/Navigation/Modal/Modal";
 import TextareaAutosize from "react-textarea-autosize";
 import { useEffect, useState } from "react";
-import MoodSelector from "../MoodSelector/MoodSelector";
 import { WorkoutResultInputsWithWorkout } from "../../types/app";
 import Portal from "../Portal/Portal";
-import WorkoutCard from "../Workout/WorkoutCard";
 
 export interface WorkoutResultFormProps {
   workoutResult: WorkoutResultInputsWithWorkout;

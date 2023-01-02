@@ -31,15 +31,26 @@ module.exports = {
     "alert-success",
     "alert-error",
     "alert-info",
-    "border-green-600",
-    "text-green-600",
+    "text-green-300",
+    "text-red-300",
+    "text-yellow-300",
+
     "bg-green-500",
-    "bg-yellow-500",
     "bg-red-500",
-    "border-yellow-600",
-    "text-yellow-600",
-    "border-red-600",
-    "text-red-600",
+    "bg-yellow-500",
+
+    "bg-green-700",
+    "bg-red-700",
+    "bg-yellow-700",
+
+    "bg-green-900",
+    "bg-red-900",
+    "bg-yellow-900",
+    "bg-gray-900",
+
+    "border-yellow-700",
+    "border-red-700",
+    "border-green-700",
     "bg-gray-400",
   ],
   daisyui: {
