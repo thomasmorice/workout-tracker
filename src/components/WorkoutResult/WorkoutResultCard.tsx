@@ -32,8 +32,8 @@ export default function WorkoutResultCard({
     return <>{Icon && <Icon {...props} />}</>;
   };
   return (
-    <div className="card relative -z-10 pt-10">
-      <div className=" card-body rounded-xl p-5">
+    <div className="card relative -z-10 rounded-xl border border-base-content pt-8">
+      <div className=" card-body  p-5">
         <h3 className="h3">
           {eventDate && (
             <div className="mb-3 flex items-center gap-2">
@@ -44,9 +44,9 @@ export default function WorkoutResultCard({
         </h3>
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-3">
-            {result.isRx && <div className="badge  badge-success">RX</div>}
+            {result.isRx && <div className="badge-success  badge">RX</div>}
             {result.rating && (
-              <div className="badge badge-success">
+              <div className="badge-success badge">
                 <MoodIcon
                   props={{
                     size: "18px",
@@ -60,7 +60,7 @@ export default function WorkoutResultCard({
             {result.description}
           </div>
           {resultHasBenchmarkeableWorkout(result) && (
-            <div className="badge badge-primary">
+            <div className="badge-primary badge">
               {result.time && format(result.time * 1000, "mm:ss' minutes'")}
               {result.totalReps && `${result.totalReps} reps`}
               {result.weight && `${result.weight}KG`}
@@ -72,7 +72,7 @@ export default function WorkoutResultCard({
             <button
               type="button"
               onClick={onEdit}
-              className="btn-outline btn-sm btn z-20 gap-x-2 text-xs"
+              className="btn-outline btn btn-sm z-20 gap-x-2 text-xs"
             >
               <MdEdit size={17} /> {`Edit result`}
             </button>
