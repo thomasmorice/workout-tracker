@@ -103,187 +103,185 @@ export default function WorkoutForm() {
 
   return (
     <>
-      {state === "delete" ? (
-        <ConfirmModal
-          onClose={closeWorkoutForm}
-          title="Delete workout"
-          onConfirm={async () =>
-            existingWorkout && (await handleDelete(existingWorkout))
-          }
-        >
-          <p>Are you sure you wanna delete the workout </p>
-        </ConfirmModal>
-      ) : (
-        // Full Modal Form
-        <Modal isOpen={!!state} onClose={closeWorkoutForm}>
-          <>
-            <h3 className="text-xl font-bold capitalize">{state} a workout</h3>
+      <ConfirmModal
+        isOpen={state === "delete"}
+        onClose={closeWorkoutForm}
+        title="Delete workout"
+        onConfirm={async () =>
+          existingWorkout && (await handleDelete(existingWorkout))
+        }
+      >
+        <p>Are you sure you wanna delete the workout </p>
+      </ConfirmModal>
 
-            <form
-              className="mt-5 flex flex-col gap-2"
-              onSubmit={async (e) => {
-                try {
-                  await handleSubmit(handleSave)(e);
-                  closeWorkoutForm();
-                } catch (e) {
-                  console.error(e);
-                }
-              }}
-            >
-              <div className="form-control w-full">
-                <label className="label">
-                  <span className="label-text">
-                    Name{""}
-                    <span className="ml-2 text-xs opacity-60">optional</span>
-                  </span>
-                </label>
-                <input
-                  className="input bg-base-200 placeholder:opacity-50"
-                  placeholder="Grace..."
-                  defaultValue=""
-                  {...register("name")}
-                />
-              </div>
+      <Modal isOpen={!!state && state !== "delete"} onClose={closeWorkoutForm}>
+        <>
+          <h3 className="text-xl font-bold capitalize">{state} a workout</h3>
 
-              <div className="form-control w-full">
-                <label className="label">
-                  <span className="label-text">Description</span>
-                </label>
+          <form
+            className="mt-5 flex flex-col gap-2"
+            onSubmit={async (e) => {
+              try {
+                await handleSubmit(handleSave)(e);
+                closeWorkoutForm();
+              } catch (e) {
+                console.error(e);
+              }
+            }}
+          >
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">
+                  Name{""}
+                  <span className="ml-2 text-xs opacity-60">optional</span>
+                </span>
+              </label>
+              <input
+                className="input bg-base-200 placeholder:opacity-50"
+                placeholder="Grace..."
+                defaultValue=""
+                {...register("name")}
+              />
+            </div>
 
-                <TextareaAutosize
-                  {...register("description")}
-                  className="textarea bg-base-200 placeholder:opacity-50"
-                  rows={4}
-                  maxRows={12}
-                  placeholder="5 rounds of..."
-                />
-              </div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Description</span>
+              </label>
 
-              <div className="flex w-full flex-wrap gap-4">
-                <div className="form-control relative flex-1">
-                  <label className="label">
-                    <span className="label-text">
-                      Difficulty
-                      <span className="ml-2 text-xs opacity-60">optional</span>
-                    </span>
-                  </label>
-                  <select
-                    {...register("difficulty", {
-                      setValueAs: (value) => (value === "" ? null : value),
-                    })}
-                    className="select bg-base-200"
-                  >
-                    <option value={""}>Select a difficulty</option>
-                    {Object.keys(Difficulty).map((difficulty) => (
-                      <option key={difficulty} value={difficulty}>
-                        {enumToString(difficulty).toLowerCase()}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              <TextareaAutosize
+                {...register("description")}
+                className="textarea bg-base-200 placeholder:opacity-50"
+                rows={4}
+                maxRows={12}
+                placeholder="5 rounds of..."
+              />
+            </div>
 
-                <div className="form-control relative flex-1">
-                  <label className="label">
-                    <span className="label-text">
-                      Type of element
-                      <span className="ml-2 text-xs opacity-60">optional</span>
-                    </span>
-                  </label>
-                  <select
-                    {...register("elementType", {
-                      setValueAs: (value) => (value === "" ? null : value),
-                    })}
-                    className="select bg-base-200"
-                  >
-                    {Object.keys(ElementType).map((element) => (
-                      <option key={element} value={element}>
-                        {enumToString(element).toLowerCase()}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
+            <div className="flex w-full flex-wrap gap-4">
               <div className="form-control relative flex-1">
                 <label className="label">
                   <span className="label-text">
-                    Type of workout
+                    Difficulty
                     <span className="ml-2 text-xs opacity-60">optional</span>
                   </span>
                 </label>
                 <select
-                  {...register("workoutType", {
+                  {...register("difficulty", {
                     setValueAs: (value) => (value === "" ? null : value),
                   })}
                   className="select bg-base-200"
                 >
-                  <option disabled value="">
-                    Select a workout type
-                  </option>
-                  {Object.keys(WorkoutType).map((type) => (
-                    <option key={type} value={type}>
-                      {enumToString(type).toLowerCase()}
+                  <option value={""}>Select a difficulty</option>
+                  {Object.keys(Difficulty).map((difficulty) => (
+                    <option key={difficulty} value={difficulty}>
+                      {enumToString(difficulty).toLowerCase()}
                     </option>
                   ))}
                 </select>
               </div>
 
-              <div className="form-control relative w-full">
+              <div className="form-control relative flex-1">
                 <label className="label">
                   <span className="label-text">
-                    Total time
+                    Type of element
                     <span className="ml-2 text-xs opacity-60">optional</span>
                   </span>
                 </label>
-                <div className="flex flex-wrap items-center gap-2">
+                <select
+                  {...register("elementType", {
+                    setValueAs: (value) => (value === "" ? null : value),
+                  })}
+                  className="select bg-base-200"
+                >
+                  {Object.keys(ElementType).map((element) => (
+                    <option key={element} value={element}>
+                      {enumToString(element).toLowerCase()}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="form-control relative flex-1">
+              <label className="label">
+                <span className="label-text">
+                  Type of workout
+                  <span className="ml-2 text-xs opacity-60">optional</span>
+                </span>
+              </label>
+              <select
+                {...register("workoutType", {
+                  setValueAs: (value) => (value === "" ? null : value),
+                })}
+                className="select bg-base-200"
+              >
+                <option disabled value="">
+                  Select a workout type
+                </option>
+                {Object.keys(WorkoutType).map((type) => (
+                  <option key={type} value={type}>
+                    {enumToString(type).toLowerCase()}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-control relative w-full">
+              <label className="label">
+                <span className="label-text">
+                  Total time
+                  <span className="ml-2 text-xs opacity-60">optional</span>
+                </span>
+              </label>
+              <div className="flex flex-wrap items-center gap-2">
+                <input
+                  className="input max-w-[110px] flex-1 bg-base-200 placeholder:opacity-50"
+                  placeholder="12"
+                  type={"number"}
+                  defaultValue=""
+                  step="0.5"
+                  {...register("totalTime", {
+                    setValueAs: (v) => {
+                      return v === null || v === ""
+                        ? null
+                        : parseFloat(v as string);
+                    },
+                  })}
+                />
+                <span className="mr-3"> mn</span>
+
+                <label className="label cursor-pointer">
                   <input
-                    className="input max-w-[110px] flex-1 bg-base-200 placeholder:opacity-50"
-                    placeholder="12"
-                    type={"number"}
-                    defaultValue=""
-                    step="0.5"
-                    {...register("totalTime", {
-                      setValueAs: (v) => {
-                        return v === null || v === ""
-                          ? null
-                          : parseFloat(v as string);
-                      },
-                    })}
+                    type="checkbox"
+                    {...register("isDoableAtHome")}
+                    className="checkbox bg-base-100"
                   />
-                  <span className="mr-3"> mn</span>
-
-                  <label className="label cursor-pointer">
-                    <input
-                      type="checkbox"
-                      {...register("isDoableAtHome")}
-                      className="checkbox bg-base-100"
-                    />
-                    <span className="label-text ml-2">Do-able at home </span>
-                  </label>
-                </div>
+                  <span className="label-text ml-2">Do-able at home </span>
+                </label>
               </div>
+            </div>
 
-              <div className="mt-3 flex flex-wrap justify-end gap-4">
-                <button
-                  type={"button"}
-                  className="btn"
-                  onClick={closeWorkoutForm}
-                >
-                  Cancel
-                </button>
-                <button
-                  className={`btn-primary btn capitalize ${
-                    isSubmitting ? "loading" : ""
-                  }`}
-                  type="submit"
-                >
-                  {`${state} workout`}
-                </button>
-              </div>
-            </form>
-          </>
-        </Modal>
-      )}
+            <div className="mt-3 flex flex-wrap justify-end gap-4">
+              <button
+                type={"button"}
+                className="btn"
+                onClick={closeWorkoutForm}
+              >
+                Cancel
+              </button>
+              <button
+                className={`btn-primary btn capitalize ${
+                  isSubmitting ? "loading" : ""
+                }`}
+                type="submit"
+              >
+                {`${state} workout`}
+              </button>
+            </div>
+          </form>
+        </>
+      </Modal>
     </>
   );
 }
