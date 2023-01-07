@@ -35,16 +35,17 @@ export default function Layout({ children }: LayoutProps) {
       <div>
         <ToastMessage />
         <Navigation />
-        <FloatingActionButton />
+
         {status === "authenticated" && (
-          <div className="hidden md:block">
-            <RightSidebar />
-          </div>
+          <>
+            <div className="hidden md:block">
+              <RightSidebar />
+            </div>
+            <WorkoutForm />
+            <FloatingActionButton />
+          </>
         )}
-        {/* <Modal isOpen={!!workoutFormState} onClose={closeWorkoutForm}>
-          <WorkoutForm />
-        </Modal> */}
-        <WorkoutForm />
+        {/* <WorkoutForm /> */}
         <div id="portal" />
 
         <main
