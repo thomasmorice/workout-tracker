@@ -4,6 +4,7 @@ import Modal from "./Modal";
 interface ConfirmModalProps {
   title: string;
   children: React.ReactElement;
+  isOpen: boolean;
   onConfirm: () => void;
   onClose: () => void;
 }
@@ -11,17 +12,18 @@ interface ConfirmModalProps {
 export default function ConfirmModal({
   title,
   children,
+  isOpen,
   onConfirm,
   onClose,
 }: ConfirmModalProps) {
   return (
     <Portal>
-      <Modal onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose}>
         <>
-          <h3 className="text-xl font-bold capitalize mb-2">{title}</h3>
+          <h3 className="mb-2 text-xl font-bold capitalize">{title}</h3>
           {children}
           <div className="modal-action">
-            <label onClick={onConfirm} className="btn btn-error">
+            <label onClick={onConfirm} className="btn-error btn">
               Confirm
             </label>
             <label onClick={onClose} className="btn">
