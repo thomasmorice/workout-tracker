@@ -37,6 +37,7 @@ model Workout {
     creatorId      String
     updatedAt      DateTime        @updatedAt
     workoutResults WorkoutResult[]
+    isGlobal       Boolean         @default(false)
 }
 
 model WorkoutSession {

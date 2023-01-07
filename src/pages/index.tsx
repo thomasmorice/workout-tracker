@@ -6,10 +6,8 @@ import { useWorkoutSessionService } from "../services/useWorkoutSessionService";
 import { formatISO } from "date-fns";
 import PersonalRecordsInsights from "../components/Dashboard/PersonalRecords/PersonalRecordsInsights";
 import WeighingsInsights from "../components/Dashboard/Weighings/WeighingsInsights";
-import { useEffect } from "react";
 import SessionInsights from "../components/Dashboard/Sessions/SessionsInsights";
 import Header from "../components/Layout/Header";
-import QuickActions from "../components/Dashboard/QuickActions/QuickActions";
 import Lottie from "lottie-react";
 import bicepsCurlAnimation from "../assets/lottie-biceps-curl-animation.json";
 
@@ -67,8 +65,7 @@ const Home: NextPage = () => {
         </>
       ) : (
         <>
-          <Header h1={`Your dashboard`} />
-          <QuickActions />
+          <Header h1={`Dashboard`} />
           <SessionInsights />
           <PersonalRecordsInsights />
           <WeighingsInsights />

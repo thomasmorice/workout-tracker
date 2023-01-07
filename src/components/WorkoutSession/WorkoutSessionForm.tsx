@@ -152,7 +152,7 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
   return (
     <>
       <form
-        className="flex flex-col pb-10 pt-2 md:pt-5"
+        className="flex flex-col pt-2 md:pt-5"
         onSubmit={handleSubmit(handleCreateOrEdit)}
       >
         <div className="flex flex-col gap-1">
@@ -165,7 +165,7 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
               name="date"
               render={({ field }) => (
                 <DatePicker
-                  className="input-bordered input w-full"
+                  className="input w-full bg-base-200"
                   onFocus={(e) => (e.target.readOnly = true)}
                   showTimeInput
                   // showTimeSelect

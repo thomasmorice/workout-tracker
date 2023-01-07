@@ -46,7 +46,7 @@ export default function WorkoutResultForm({
 
   return (
     <Portal>
-      <Modal modalChildrenOrder={1} onClose={onClose}>
+      <Modal isOpen={true} modalChildrenOrder={1} onClose={onClose}>
         <>
           <h3 className="mb-4 text-xl font-bold capitalize">Add the result</h3>
 
@@ -160,7 +160,7 @@ export default function WorkoutResultForm({
                   <label className="input-group">
                     <input
                       id="input-time"
-                      className="input-bordered input max-w-[80px] flex-1 placeholder:opacity-50"
+                      className="input max-w-[80px] flex-1 bg-base-200 placeholder:opacity-50"
                       placeholder="12"
                       type={"number"}
                       value={resultTotalTimeMn}
@@ -170,7 +170,7 @@ export default function WorkoutResultForm({
 
                     <input
                       id="input-time"
-                      className="input-bordered input ml-2 max-w-[80px] flex-1 placeholder:opacity-50"
+                      className="input ml-2 max-w-[80px] flex-1 bg-base-200 placeholder:opacity-50"
                       placeholder="45"
                       type={"number"}
                       value={resultTotalTimeSec}
@@ -191,7 +191,7 @@ export default function WorkoutResultForm({
                   <label className="input-group">
                     <input
                       id="input-repetitions"
-                      className="input-bordered input max-w-[110px] flex-1 placeholder:opacity-50"
+                      className="input max-w-[110px] flex-1 bg-base-200 placeholder:opacity-50"
                       placeholder="50"
                       type={"number"}
                       value={editedWorkoutResult.totalReps ?? ""}
@@ -220,7 +220,7 @@ export default function WorkoutResultForm({
                 <label className="input-group">
                   <input
                     id="input-rep-max"
-                    className="input-bordered input max-w-[110px] flex-1 placeholder:opacity-50"
+                    className="input max-w-[110px] flex-1 bg-base-200 placeholder:opacity-50"
                     onChange={(e) =>
                       set_editedWorkoutResult({
                         ...editedWorkoutResult,

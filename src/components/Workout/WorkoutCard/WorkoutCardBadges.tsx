@@ -64,7 +64,7 @@ export default function WorkoutCardBadges({ workout }: WorkoutCardProps) {
       )}
 
       {workout.isDoableAtHome && (
-        <div className={`badge badge-secondary badge-outline`}>
+        <div className={`badge-primary badge-outline badge`}>
           Doable at home
         </div>
       )}

@@ -45,30 +45,26 @@ const Workouts: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header h1={"Workout list"} />
+      <div className="flex items-center justify-between">
+        <Header h1={"Workout list"} />
+        <button
+          type="button"
+          onClick={() => showWorkoutForm("create")}
+          className="btn-primary btn-sm btn hidden md:block"
+        >
+          + Create a new workout
+        </button>
+      </div>
 
       {sessionData && (
         <>
           <div className="">
             <div className="flex flex-wrap items-center gap-2 md:pt-6">
-              <div className="form-control items-start ">
-                <label className="label cursor-pointer gap-2">
-                  <span className="label-text">
-                    {classifiedOnly
-                      ? "Only classified workouts"
-                      : "All workouts"}
-                  </span>
-                  <input
-                    type="checkbox"
-                    onChange={(e) => set_classifiedOnly(e.target.checked)}
-                    className="toggle"
-                    checked={classifiedOnly}
-                  />
-                </label>
-              </div>
-
-              <div className="relative mt-4 flex w-full items-center justify-between">
-                <label className="z-10 ml-3" htmlFor="searchWorkoutInput">
+              <div className="relative flex w-full items-center justify-between">
+                <label
+                  className="absolute z-10 ml-3"
+                  htmlFor="searchWorkoutInput"
+                >
                   <MdSearch size={22} />
                 </label>
                 <input
@@ -77,27 +73,20 @@ const Workouts: NextPage = () => {
                   placeholder="Search…"
                   value={searchTerm}
                   onChange={(e) => set_searchTerm(e.target.value)}
-                  className="input-bordered input absolute left-0 w-full px-12"
+                  className="input left-0 w-full  rounded-full bg-base-200 px-12"
                 />
-
-                {/* <div className="z-10">
-                  <kbd className="kbd bg-base-100">⌘</kbd>
-                  <kbd className="kbd bg-base-100">K</kbd>
-                </div> */}
               </div>
             </div>
 
-            <h2 className="h2 group mt-12 flex cursor-pointer items-center gap-3">
-              {`Latest ${classifiedOnly ? "classified" : ""} workouts`}
-            </h2>
+            <div className="mt-6">
+              <button className="badge badge-primary badge-lg font-medium">
+                All workouts
+              </button>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => showWorkoutForm("create")}
-              className="btn-primary btn mt-4 mb-2"
-            >
-              Create a new workout
-            </button>
+            {/* <h2 className="h2 group mt-12 flex cursor-pointer items-center gap-3">
+              {`Latest ${classifiedOnly ? "classified" : ""} workouts`}
+            </h2> */}
 
             <Masonry
               breakpointCols={{
@@ -105,7 +94,7 @@ const Workouts: NextPage = () => {
                 1500: 2,
                 1226: 1,
               }}
-              className="-ml-16 flex w-auto pt-10"
+              className="-ml-16 mt-6 flex w-auto"
               columnClassName="pl-16 bg-clip-padding "
             >
               {data?.pages

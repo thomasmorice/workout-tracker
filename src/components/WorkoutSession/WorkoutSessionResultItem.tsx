@@ -91,7 +91,7 @@ export default function WorkoutSessionResultItem({
       />
 
       {hasResults && (
-        <div className="mx-2 -mt-8 transition-all group-hover:-mt-1">
+        <div className="mx-2 -mt-8 rounded-b-xl border border-base-content border-opacity-10 bg-base-200 pt-8 transition-all group-hover:-mt-1">
           <WorkoutResultCard
             onEdit={onOpenWorkoutResultDetail}
             result={result}

@@ -115,7 +115,7 @@ export default function WorkoutForm() {
         </ConfirmModal>
       ) : (
         // Full Modal Form
-        <Modal onClose={closeWorkoutForm}>
+        <Modal isOpen={!!state} onClose={closeWorkoutForm}>
           <>
             <h3 className="text-xl font-bold capitalize">{state} a workout</h3>
 
@@ -138,7 +138,7 @@ export default function WorkoutForm() {
                   </span>
                 </label>
                 <input
-                  className="input-bordered input placeholder:opacity-50"
+                  className="input bg-base-200 placeholder:opacity-50"
                   placeholder="Grace..."
                   defaultValue=""
                   {...register("name")}
@@ -152,7 +152,7 @@ export default function WorkoutForm() {
 
                 <TextareaAutosize
                   {...register("description")}
-                  className="input-bordered textarea placeholder:opacity-50"
+                  className="textarea bg-base-200 placeholder:opacity-50"
                   rows={4}
                   maxRows={12}
                   placeholder="5 rounds of..."
@@ -171,7 +171,7 @@ export default function WorkoutForm() {
                     {...register("difficulty", {
                       setValueAs: (value) => (value === "" ? null : value),
                     })}
-                    className="select-bordered select"
+                    className="select bg-base-200"
                   >
                     <option value={""}>Select a difficulty</option>
                     {Object.keys(Difficulty).map((difficulty) => (
@@ -193,7 +193,7 @@ export default function WorkoutForm() {
                     {...register("elementType", {
                       setValueAs: (value) => (value === "" ? null : value),
                     })}
-                    className="select-bordered select"
+                    className="select bg-base-200"
                   >
                     {Object.keys(ElementType).map((element) => (
                       <option key={element} value={element}>
@@ -215,7 +215,7 @@ export default function WorkoutForm() {
                   {...register("workoutType", {
                     setValueAs: (value) => (value === "" ? null : value),
                   })}
-                  className="select-bordered select"
+                  className="select bg-base-200"
                 >
                   <option disabled value="">
                     Select a workout type
@@ -237,7 +237,7 @@ export default function WorkoutForm() {
                 </label>
                 <div className="flex flex-wrap items-center gap-2">
                   <input
-                    className="input-bordered input max-w-[110px] flex-1 placeholder:opacity-50"
+                    className="input max-w-[110px] flex-1 bg-base-200 placeholder:opacity-50"
                     placeholder="12"
                     type={"number"}
                     defaultValue=""
@@ -264,11 +264,17 @@ export default function WorkoutForm() {
               </div>
 
               <div className="mt-3 flex flex-wrap justify-end gap-4">
-                <button className="btn" onClick={closeWorkoutForm}>
+                <button
+                  type={"button"}
+                  className="btn"
+                  onClick={closeWorkoutForm}
+                >
                   Cancel
                 </button>
                 <button
-                  className={`btn btn-primary ${isSubmitting ? "loading" : ""}`}
+                  className={`btn-primary btn capitalize ${
+                    isSubmitting ? "loading" : ""
+                  }`}
                   type="submit"
                 >
                   {`${state} workout`}

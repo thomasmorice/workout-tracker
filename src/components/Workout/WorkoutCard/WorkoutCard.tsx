@@ -55,7 +55,7 @@ export default function WorkoutCard({
     <div
       className={`workout-card group relative ${workout.difficulty?.toLowerCase()}`}
     >
-      <div className={`glowing-bg -z-10`}></div>
+      {/* <div className={`glowing-bg -z-10`}></div> */}
 
       <div className="card bg-base-100 p-6 ">
         {/* Title and actions */}
@@ -78,12 +78,15 @@ export default function WorkoutCard({
           {/* Card actions */}
           {mode === "card" && (
             <div className="dropdown-end dropdown">
-              <label tabIndex={0} className="btn btn-square btn-sm">
+              <label
+                tabIndex={0}
+                className="btn btn-square btn-sm border-none bg-base-200"
+              >
                 <HiDotsHorizontal />
               </label>
               <ul
                 tabIndex={0}
-                className="dropdown-content menu rounded-box w-52 bg-base-100 p-1 shadow"
+                className="dropdown-content menu rounded-box w-52 bg-base-200 p-1 shadow-lg"
               >
                 <li>
                   <a onClick={onEdit}>

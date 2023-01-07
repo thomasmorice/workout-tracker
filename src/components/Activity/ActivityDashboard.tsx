@@ -64,7 +64,7 @@ export default function ActivityDashboard() {
         <div className="flex items-center gap-3">
           <h2 className="h2">Activity</h2>
           <div className="dropdown ">
-            <label tabIndex={0} className="btn-outline btn btn-sm btn-circle">
+            <label tabIndex={0} className="btn-outline btn-sm btn-circle btn">
               <MdAdd size={22} />
             </label>
             <ul

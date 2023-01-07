@@ -7,8 +7,8 @@ import { useRouter } from "next/router";
 import { MdLogin } from "react-icons/md";
 import { useEffect, useState } from "react";
 import RightSidebar from "../RightSidebar/RightSidebar";
-import { useSidebarStore } from "../../store/SidebarStore";
 import Head from "next/head";
+import FloatingActionButton from "../FloatingActionButton/FloatingActionButton";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -18,8 +18,6 @@ export default function Layout({ children }: LayoutProps) {
   const { status } = useSession();
   const { state: workoutFormState } = useWorkoutStore();
   const [currentPath, set_currentPath] = useState<String[]>();
-
-  const { isSidebarExpanded } = useSidebarStore();
 
   useEffect(() => {
     const asPathWithoutQuery = router.pathname.split("?")[0];
@@ -37,17 +35,20 @@ export default function Layout({ children }: LayoutProps) {
       <div>
         <ToastMessage />
         <Navigation />
+        <FloatingActionButton />
         {status === "authenticated" && (
           <div className="hidden md:block">
             <RightSidebar />
           </div>
         )}
-        {workoutFormState && <WorkoutForm />}
+        {/* <Modal isOpen={!!workoutFormState} onClose={closeWorkoutForm}>
+          <WorkoutForm />
+        </Modal> */}
+        <WorkoutForm />
         <div id="portal" />
 
         <main
-          className={`px-4 pb-24 sm:px-8 md:pb-0 
-          ${isSidebarExpanded ? "md:ml-64" : "md:ml-16 xl:ml-24"}
+          className={`px-4 pb-24 sm:px-8 md:ml-16 md:pb-0 xl:ml-24
           ${status === "authenticated" ? "md:mr-80 xl:mr-[340px]" : ""}
         `}
         >

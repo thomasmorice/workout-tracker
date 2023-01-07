@@ -78,10 +78,10 @@ export default function SessionInsights() {
                 illustration={<IoCheckmarkDoneCircleSharp size={32} />}
                 value={sessionsForInsights.length}
               >
-                <div className="stat-desc flex items-center gap-1">
-                  <span className="text-sm font-bold text-secondary">
+                <div className="stat-desc flex items-center gap-2">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-content">
                     {sessionsThisMonth}
-                  </span>
+                  </div>
                   done this month
                 </div>
               </DashboardItem>
@@ -114,7 +114,7 @@ export default function SessionInsights() {
                         className={`link-hover link flex items-center gap-1`}
                       >
                         {workout.name || `#${workout.id}`}
-                        <div className="flex items-center gap-0.5 text-secondary">
+                        <div className="flex items-center gap-0.5">
                           <MdDone size="16" />
                           {workout.workoutResults.length}
                         </div>
