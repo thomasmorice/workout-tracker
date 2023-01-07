@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { IoScale } from "react-icons/io5";
+import { MdMonitorWeight } from "react-icons/md";
 import { useWeighingService } from "../../../services/useWeighingService";
 import DashboardItem from "../DashboardItem";
 import DashboardItemGraph from "../DashboardItemGraph";
@@ -42,7 +42,7 @@ export default function WeighingInsights() {
           {latestWeighings && latestWeighings.length > 0 && (
             <DashboardItem
               title="Weighings"
-              illustration={<IoScale size={26} />}
+              illustration={<MdMonitorWeight size={32} />}
               value={getLatestWeight ? `${getLatestWeight.weight}Kg` : ""}
             >
               <DashboardItemGraph

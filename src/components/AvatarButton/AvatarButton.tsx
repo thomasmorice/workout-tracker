@@ -18,14 +18,11 @@ export default function AvatarButton({}: AvatarButtonProps) {
       ) : (
         <div className={`dropdown max-md:dropdown-end`}>
           {sessionData ? (
-            <label
-              tabIndex={0}
-              className="btn btn-ghost btn-lg px-2 normal-case"
-            >
-              <div className="flex items-center gap-1.5">
+            <label tabIndex={0} className="btn btn-ghost px-1">
+              <div className="flex items-center gap-1">
                 <Image
-                  width={42}
-                  height={42}
+                  width={36}
+                  height={36}
                   className="rounded-full"
                   referrerPolicy="no-referrer"
                   src={sessionData.user?.image ?? "https://i.pravatar.cc/300"}

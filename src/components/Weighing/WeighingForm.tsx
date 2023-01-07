@@ -80,7 +80,7 @@ export default function WeighingForm({
 
   return (
     <form
-      className="mt-5 flex flex-col pb-10"
+      className="mt-5 flex flex-col"
       onSubmit={handleSubmit(handleCreateOrEdit)}
     >
       <div className="flex flex-col gap-3">
@@ -93,7 +93,7 @@ export default function WeighingForm({
             name="date"
             render={({ field }) => (
               <DatePicker
-                className="input w-full"
+                className="input w-full bg-base-200"
                 // disabled={!editMode}
                 showTimeInput
                 placeholderText="Select date"
@@ -113,7 +113,7 @@ export default function WeighingForm({
             <input
               id="input-rep-max"
               step={0.1}
-              className="input-bordered input max-w-[110px] flex-1 placeholder:opacity-50"
+              className="input max-w-[110px] flex-1 bg-base-200 placeholder:opacity-50"
               {...register("weight", {
                 setValueAs: (v) => {
                   return v === null || v === ""

@@ -116,7 +116,7 @@ export default function WorkoutSelectField({
   return (
     <div className="relative flex w-full flex-col gap-2">
       <input
-        className="input-bordered input w-full pr-8"
+        className="input w-full bg-base-200 pr-8"
         onFocus={() => set_showWorkoutSearchResult(true)}
         onBlur={() => set_showWorkoutSearchResult(false)}
         ref={searchInput}

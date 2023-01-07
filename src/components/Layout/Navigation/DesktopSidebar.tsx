@@ -1,18 +1,15 @@
+import { motion } from "framer-motion";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRef } from "react";
-import { MdLogin, MdOutlineMenuOpen, MdOutlineMenu } from "react-icons/md";
-import { Rings } from "react-loading-icons";
 import Logo from "../Logo";
 import { NavigationItemsProps } from "./Navigation";
-import { useSidebarStore } from "../../../store/SidebarStore";
 
 export default function DesktopSidebar({ items }: NavigationItemsProps) {
   const ref = useRef(null);
   const { data: sessionData, status } = useSession();
   const router = useRouter();
-  const { isSidebarExpanded, setIsSidebarExpanded } = useSidebarStore();
 
   const classnames = {
     menuListItem:
@@ -23,17 +20,13 @@ export default function DesktopSidebar({ items }: NavigationItemsProps) {
     <>
       <aside
         ref={ref}
-        className={`sidebar-shadow fixed z-50  h-full border-r pt-6  ${
-          isSidebarExpanded ? "px-6" : "px-2"
-        } `}
+        className={`sidebar-shadow fixed z-50  h-full border-r pt-6  ${"px-2"} `}
       >
-        <div className={`${isSidebarExpanded ? "pt-5" : ""}`}>
+        <div>
           <Logo />
         </div>
 
-        <div
-          className={`divider opacity-60 ${isSidebarExpanded ? "py-8" : ""}`}
-        ></div>
+        <div className={`divider opacity-60`}></div>
 
         <ul className="flex w-full flex-col gap-5 text-sm">
           {/* User */}
@@ -53,36 +46,16 @@ export default function DesktopSidebar({ items }: NavigationItemsProps) {
                 }`}
                     >
                       <div
-                        className={`flex w-full items-center  gap-3 ${
-                          isSidebarExpanded ? "" : "justify-center"
-                        }`}
+                        className={`flex w-full items-center  justify-center gap-3`}
                       >
                         <>
                           <item.icon size="18px" />
-                          {isSidebarExpanded && item.label}
                         </>
                       </div>
                     </li>
                   </Link>
                 );
               })}
-
-              <li
-                onClick={() => setIsSidebarExpanded(!isSidebarExpanded)}
-                className={classnames.menuListItem}
-              >
-                <a className="flex w-full items-center gap-3">
-                  <>
-                    {isSidebarExpanded ? (
-                      <>
-                        <MdOutlineMenuOpen size="18px" /> Close
-                      </>
-                    ) : (
-                      <MdOutlineMenu size="18px" />
-                    )}
-                  </>
-                </a>
-              </li>
             </>
           )}
         </ul>

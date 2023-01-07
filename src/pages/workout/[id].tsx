@@ -31,13 +31,17 @@ const Workout: NextPage = () => {
             </div>
             <div className="mt-10">
               <h2 className="h2 mt-5 mb-8">Workout results</h2>
-              <div className="flex flex-col gap-8">
+              <div className="flex flex-col gap-4">
                 {workout.workoutResults.map((result) => (
-                  <WorkoutResultCard
-                    eventDate={result.workoutSession.event.eventDate}
+                  <div
                     key={result.id}
-                    result={result}
-                  />
+                    className="rounded-xl border border-base-content border-opacity-10 bg-base-200"
+                  >
+                    <WorkoutResultCard
+                      eventDate={result.workoutSession.event.eventDate}
+                      result={result}
+                    />
+                  </div>
                 ))}
               </div>
             </div>

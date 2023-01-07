@@ -13,10 +13,10 @@ export default function DashboardItem({
 }: DashboardItemProps) {
   return (
     <div className="stat relative max-w-[280px] rounded-xl bg-base-200">
-      <div className="stat-figure text-secondary">{illustration}</div>
+      <div className="stat-figure">{illustration}</div>
       <div className="stat-title">{title}</div>
-      <div className="stat-value text-secondary">{value}</div>
-      <div className="stat-desc">{children}</div>
+      <div className="stat-value">{value}</div>
+      <div className="stat-desc opacity-100">{children}</div>
     </div>
   );
 }

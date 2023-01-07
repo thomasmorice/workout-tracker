@@ -9,6 +9,7 @@ import {
 import { HiOutlineClipboardList } from "react-icons/hi";
 import MobileBottomNavbar from "./MobileBottomNavbar";
 import DesktopSidebar from "./DesktopSidebar";
+import { AnimatePresence, motion } from "framer-motion";
 
 export interface NavigationItemsProps {
   items: {
@@ -45,13 +46,17 @@ export default function Navigation() {
   return (
     <>
       {/* Desktop Nav */}
-      <div className="hidden md:block">
-        <DesktopSidebar items={NavigationItems} />
-      </div>
-      {/* Mobile Nav */}
-      <div className="block md:hidden">
-        <MobileBottomNavbar items={NavigationItems} />
-      </div>
+      <AnimatePresence>
+        <>
+          <div className="hidden md:block">
+            <DesktopSidebar items={NavigationItems} />
+          </div>
+          {/* Mobile Nav */}
+          <div className="block md:hidden">
+            <MobileBottomNavbar items={NavigationItems} />
+          </div>
+        </>
+      </AnimatePresence>
     </>
   );
 }

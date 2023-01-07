@@ -50,7 +50,7 @@ export default function DashboardItemGraph({
 
   useEffect(() => {
     set_chartColor(
-      getComputedStyle(document.documentElement).getPropertyValue("--s")
+      getComputedStyle(document.documentElement).getPropertyValue("--p")
     );
   }, []);
 
@@ -80,8 +80,8 @@ export default function DashboardItemGraph({
                 borderWidth: 1,
                 tension: 0.3,
                 backgroundColor: ({ chart: { ctx } }) => {
-                  const bg = ctx.createLinearGradient(0, 0, 0, 50);
-                  bg.addColorStop(0, `hsla(${chartColor} / 70%`);
+                  const bg = ctx.createLinearGradient(0, 0, 0, 60);
+                  bg.addColorStop(0, `hsla(${chartColor} / 60%`);
                   bg.addColorStop(0.95, `hsla(${chartColor} / 0%`);
                   return bg;
                 },

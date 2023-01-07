@@ -43,14 +43,15 @@ module.exports = {
     "bg-red-700",
     "bg-yellow-700",
 
+    "border-yellow-700",
+    "border-red-700",
+    "border-green-700",
+    "bg-gray-400",
+
     "bg-green-900",
     "bg-red-900",
     "bg-yellow-900",
     "bg-gray-900",
-
-    "border-yellow-700",
-    "border-red-700",
-    "border-green-700",
     "bg-gray-400",
   ],
   daisyui: {
@@ -58,19 +59,13 @@ module.exports = {
       "night",
       "dark",
       "dracula",
-      // {
-      //   dark: {
-      //     primary: "#BBAB8D",
-      //     secondary: "#577371",
-      //     accent: "#749E1F",
-      //     neutral: "#16102D",
-      //     "base-100": "#221D37",
-      //     info: "#4EB6CA",
-      //     success: "#66E5AA",
-      //     warning: "#C19915",
-      //     error: "#F75636",
-      //   },
-      // },
+      {
+        dark: {
+          ...require("daisyui/src/colors/themes")["[data-theme=dark]"],
+          "base-content": "#D1D6E0",
+          primary: "#2D68FF",
+        },
+      },
     ],
   },
   plugins: [require("daisyui")],
