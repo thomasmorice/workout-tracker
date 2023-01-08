@@ -77,10 +77,10 @@ export default function WorkoutCard({
 
           {/* Card actions */}
           {mode === "card" && (
-            <div className="dropdown-end dropdown">
+            <div className="dropdown dropdown-end">
               <label
                 tabIndex={0}
-                className="btn btn-square btn-sm border-none bg-base-200"
+                className="btn-sm btn-square btn border-none bg-base-200"
               >
                 <HiDotsHorizontal />
               </label>
@@ -110,7 +110,7 @@ export default function WorkoutCard({
           )}
 
           {mode === "selecteable" && (
-            <button type="button" onClick={onSelect} className="btn btn-sm">
+            <button type="button" onClick={onSelect} className="btn-sm btn">
               <IoAddCircle size={19} />
             </button>
           )}
@@ -194,7 +194,7 @@ export default function WorkoutCard({
               <div className="flex items-center gap-2">
                 {workout.creator && (
                   <div
-                    className="tooltip tooltip-right z-40"
+                    className="tooltip tooltip-right z-30"
                     data-tip={`Created by ${workout.creator.name}`}
                   >
                     <div className="mask mask-circle relative h-7 w-7 ">
