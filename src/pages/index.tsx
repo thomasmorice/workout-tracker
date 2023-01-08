@@ -9,7 +9,7 @@ import WeighingsInsights from "../components/Dashboard/Weighings/WeighingsInsigh
 import SessionInsights from "../components/Dashboard/Sessions/SessionsInsights";
 import Header from "../components/Layout/Header";
 import Lottie from "lottie-react";
-import bicepsCurlAnimation from "../assets/lottie-biceps-curl-animation.json";
+import lottieAnimation from "../assets/lottie-stretch-animation.json";
 
 const Home: NextPage = () => {
   const { data: sessionData, status } = useSession();
@@ -48,13 +48,13 @@ const Home: NextPage = () => {
       {!sessionData ? (
         <>
           <Header h1={"Workout tracker"} />
-          {status === "loading" ? (
-            <>
-              <Lottie animationData={bicepsCurlAnimation} loop={true} />
-              <p className="text-center">
-                Do some biceps curl while your information are being loaded :)
+          {status === "unauthenticated" ? (
+            <div className="mx-8 flex flex-col items-center justify-center pt-8">
+              <Lottie animationData={lottieAnimation} loop={true} />
+              <p className="text-center font-light">
+                Do some stretching while your information are being loaded
               </p>
-            </>
+            </div>
           ) : (
             <p className="py-6">
               Welcome to your favorite workout tracking app. Please login first

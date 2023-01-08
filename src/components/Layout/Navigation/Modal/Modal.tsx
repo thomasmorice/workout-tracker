@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useOnClickOutside, useLockedBody } from "usehooks-ts";
 import { Dialog } from "@headlessui/react";
 import Drawer from "react-drag-drawer";
@@ -17,15 +17,23 @@ export default function Modal({
   modalChildrenOrder,
   children,
 }: ModalProps) {
-  // const [isMounted, set_isMounted] = useState(false);
-
   const ref = useRef(null);
-
   useLockedBody(isOpen);
 
-  // useEffect(() => set_isMounted(true), []);
-
   useOnClickOutside(ref, onClose);
+
+  const onGoBack = useCallback(() => {
+    onClose();
+    history.forward();
+  }, [onClose]);
+
+  useEffect(() => {
+    if (isOpen) {
+      window.addEventListener("popstate", onGoBack);
+    } else {
+      window.removeEventListener("popstate", onGoBack);
+    }
+  }, [isOpen, onGoBack]);
 
   return (
     <Drawer
@@ -33,39 +41,11 @@ export default function Modal({
       containerElementClass={"modal-container"}
       modalElementClass={"inner-modal"}
       onRequestClose={onClose}
-      // className={`modal modal-bottom duration-[0] sm:modal-middle ${
-      //   isMounted ? "modal-open" : ""
-      // }
-      //     ${
-      //       !modalChildrenOrder
-      //         ? "z-50"
-      //         : modalChildrenOrder === 1
-      //         ? "z-[60]"
-      //         : "z-[70]"
-      //     }
-      //     `}
     >
-      {/* <div
-        id="modal-bg"
-        className={`fixed top-0 bottom-0 left-0 z-50 h-full w-full bg-black bg-opacity-20 backdrop-blur-[3px] `}
-      ></div> */}
-      {/* <div
-        ref={withCloseButton ? null : ref}
-        className={`
-          `}
-      >
-        {withCloseButton && (
-          <label
-            onClick={onClose}
-            className="btn-sm btn-circle btn absolute right-2 top-2"
-          >
-            ✕
-          </label>
-        )} */}
-      {/* <div className={"h-full "}> */}
+      <div className="flex w-full items-center justify-center">
+        <div className="mb-4 -mt-2 h-0.5 w-28 rounded-sm bg-base-content"></div>
+      </div>
       {children}
-      {/* </div> */}
-      {/* </div> */}
     </Drawer>
   );
 }

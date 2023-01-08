@@ -33,7 +33,7 @@
   }
 
   .inner-modal {
-    @apply absolute bottom-0 top-[10%] h-[110%] w-full rounded-t-2xl bg-base-100 p-6 md:h-fit md:min-h-fit md:max-w-xl md:rounded-2xl;
+    @apply absolute bottom-0 top-[10%] h-fit min-h-[90%] w-full rounded-t-2xl bg-base-100 p-6 md:h-fit md:min-h-fit md:max-w-xl md:rounded-2xl;
     will-change: transform;
     transform: translate3d(0, 0, 0);
   }
