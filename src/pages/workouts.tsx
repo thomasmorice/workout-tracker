@@ -4,7 +4,7 @@ import Head from "next/head";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Masonry from "react-masonry-css";
 import { useIntersectionObserver, useDebounce } from "usehooks-ts";
-import WorkoutCard from "../components/Workout/WorkoutCard/WorkoutCard";
+import WorkoutCard from "../components/Workout/WorkoutCard2/WorkoutCard";
 import WorkoutCardSkeleton from "../components/Workout/WorkoutCardSkeleton";
 import { useWorkoutService } from "../services/useWorkoutService";
 import { useWorkoutStore } from "../store/WorkoutStore";
@@ -79,7 +79,7 @@ const Workouts: NextPage = () => {
             </div>
 
             <div className="mt-6">
-              <button className="badge badge-primary badge-lg font-medium">
+              <button className="badge-primary badge badge-lg font-medium">
                 All workouts
               </button>
             </div>
