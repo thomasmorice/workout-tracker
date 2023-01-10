@@ -4,8 +4,8 @@
   "display": "standalone",
   "scope": "/",
   "start_url": "/?version=0.1",
-  "name": "Box Track",
-  "short_name": "Box Track",
+  "name": "Box Track (dev)",
+  "short_name": "Box Track (dev)",
   "description": "Workout tracker build especially for Crossfit type of workouts. Plan your session, follow your progress and reach your goals",
   "icons": [
     {

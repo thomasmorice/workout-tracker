@@ -47,7 +47,7 @@ const Home: NextPage = () => {
 
       {!sessionData ? (
         <>
-          <Header h1={"Workout tracker"} />
+          <Header h1={"Box Track"} />
           {status === "unauthenticated" ? (
             <div className="mx-8 flex flex-col items-center justify-center pt-8">
               <Lottie animationData={lottieAnimation} loop={true} />

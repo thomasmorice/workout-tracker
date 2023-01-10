@@ -14,7 +14,12 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap"
           rel="stylesheet"
         />
-        <link rel="manifest" href="/manifest.json" />
+        <link
+          rel="manifest"
+          href={`/manifest${
+            process.env.GIT_BRANCH !== "main" && "-staging"
+          }.json`}
+        />
         <link
           rel="apple-touch-icon"
           sizes="180x180"
