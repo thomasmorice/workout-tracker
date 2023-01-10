@@ -20,6 +20,8 @@ import { TbLink } from "react-icons/tb";
 import useCollapse from "react-collapsed";
 import { IoAddCircle, IoTimerOutline } from "react-icons/io5";
 import { enumToString } from "../../../utils/formatting";
+import Dropdown from "../../Dropdown/Dropdown";
+import { useMemo } from "react";
 
 interface WorkoutCardProps {
   workout:
@@ -48,6 +50,54 @@ export default function WorkoutCard({
 }: WorkoutCardProps) {
   const { data: sessionData } = useSession();
 
+  const workoutActions = useMemo(() => {
+    const actions = [];
+    if (onMoveResultUp) {
+      actions.push({
+        label: "Move result up",
+        onClick: onMoveResultUp,
+      });
+    }
+    if (onMoveResultDown) {
+      actions.push({
+        label: "Move result down",
+        onClick: onMoveResultDown,
+      });
+    }
+    if (onSelect) {
+      actions.push({
+        label: "Select workout",
+        onClick: onSelect,
+      });
+    }
+    if (onDuplicate) {
+      actions.push({
+        label: "Duplicate",
+        onClick: onDuplicate,
+      });
+    }
+    if (onEdit) {
+      actions.push({
+        label: "Edit",
+        onClick: onEdit,
+      });
+    }
+    if (onDelete) {
+      actions.push({
+        label: "Delete",
+        onClick: onDelete,
+      });
+    }
+    return actions;
+  }, [
+    onMoveResultUp,
+    onMoveResultDown,
+    onSelect,
+    onDuplicate,
+    onEdit,
+    onDelete,
+  ]);
+
   return (
     <div
       style={{
@@ -65,7 +115,7 @@ export default function WorkoutCard({
         </div>
         <div className="flex items-center gap-2">
           <div
-            className="tooltip tooltip-right z-40"
+            className="tooltip tooltip-right z-20"
             data-tip={`Created by ${workout.creator.name}`}
           >
             <div className="mask mask-circle relative h-8 w-8 ">
@@ -88,9 +138,11 @@ export default function WorkoutCard({
           </div>
         </div>
 
-        <button className="btn-outline btn-square btn-sm btn border-base-content border-opacity-25 text-base-content text-opacity-60 hover:border-opacity-50 hover:bg-base-300 hover:text-base-content hover:text-opacity-80 ">
-          <HiOutlineEllipsisHorizontal size={17} />
-        </button>
+        <Dropdown buttons={workoutActions} containerClass="dropdown-left">
+          <div className="btn-outline btn-sm btn-square btn border-base-content border-opacity-25 text-base-content text-opacity-60 hover:border-opacity-50 hover:bg-base-300 hover:text-base-content hover:text-opacity-80 ">
+            <HiOutlineEllipsisHorizontal size={17} />
+          </div>
+        </Dropdown>
       </div>
 
       {/* Badges */}

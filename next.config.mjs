@@ -1,4 +1,5 @@
 import withPWA from "next-pwa";
+import currentGitBranchName from "current-git-branch";
 
 const importWithPWA = withPWA({
   dest: "public",
@@ -19,6 +20,9 @@ const config = importWithPWA({
   },
   images: {
     domains: ["lh3.googleusercontent.com"],
+  },
+  env: {
+    GIT_BRANCH: currentGitBranchName(),
   },
 });
 export default config;
