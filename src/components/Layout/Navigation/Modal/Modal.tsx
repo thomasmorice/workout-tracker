@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useOnClickOutside, useLockedBody } from "usehooks-ts";
-import { Dialog } from "@headlessui/react";
 import Drawer from "react-drag-drawer";
+import { MdClose } from "react-icons/md";
 interface ModalProps {
   onClose: () => void;
   isOpen: boolean;
@@ -38,13 +38,22 @@ export default function Modal({
   return (
     <Drawer
       open={isOpen}
+      allowClose={!withCloseButton}
       containerElementClass={"modal-container"}
       modalElementClass={"inner-modal"}
       onRequestClose={onClose}
     >
-      <div className="flex w-full items-center justify-center">
-        <div className="mb-4 -mt-2 h-0.5 w-28 rounded-sm bg-base-content"></div>
-      </div>
+      {!withCloseButton ? (
+        <div className="flex w-full items-center justify-center">
+          <div className="mb-4 -mt-2 h-0.5 w-28 rounded-sm bg-base-content"></div>
+        </div>
+      ) : (
+        <div className="flex w-full items-center justify-end">
+          <div onClick={onClose} className="btn-circle btn">
+            <MdClose size={16} />{" "}
+          </div>
+        </div>
+      )}
       {children}
     </Drawer>
   );

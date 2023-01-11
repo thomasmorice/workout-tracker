@@ -17,9 +17,8 @@ export default function Dropdown({
   buttons,
 }: DropdownProps) {
   return (
-    <Menu as="div" className={`dropdown menu z-40 ${containerClass} `}>
+    <Menu as="div" className={`dropdown z-40 ${containerClass} `}>
       <Menu.Button>{children}</Menu.Button>
-
       <Transition
         as={Fragment}
         enter="transition ease-out duration-100"
@@ -37,14 +36,14 @@ export default function Dropdown({
             {buttons.map((button) => (
               <Menu.Item as={"li"} key={button.label}>
                 {({ active }) => (
-                  <button
+                  <a
                     onClick={button.onClick}
                     className={`${
                       active ? "bg-primary" : ""
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm text-base-content`}
+                    } group flex w-full items-center rounded-md text-sm text-base-content`}
                   >
                     {button.label}
-                  </button>
+                  </a>
                 )}
               </Menu.Item>
             ))}
