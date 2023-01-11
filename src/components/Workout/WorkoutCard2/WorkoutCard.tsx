@@ -1,32 +1,23 @@
 import { format } from "date-fns";
 import Image from "next/image";
-import {
-  MdDone,
-  MdDelete,
-  MdCopyAll,
-  MdEdit,
-  MdOutlineExpandMore,
-  MdOutlineExpandLess,
-  MdOutlineArrowDropDown,
-  MdOutlineArrowDropUp,
-} from "react-icons/md";
+import { MdDone, MdOutlineTimelapse } from "react-icons/md";
+
+import { WiMoonNew } from "react-icons/wi";
 import { HiOutlineEllipsisHorizontal } from "react-icons/hi2";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
 import { inferRouterOutputs } from "@trpc/server";
-import { HiDotsHorizontal } from "react-icons/hi";
-import { TbLink } from "react-icons/tb";
-import useCollapse from "react-collapsed";
-import { IoAddCircle, IoTimerOutline } from "react-icons/io5";
 import { enumToString } from "../../../utils/formatting";
 import Dropdown from "../../Dropdown/Dropdown";
 import { useMemo } from "react";
+import { useFloatingActionButtonStore } from "../../../store/FloatingActionButtonStore";
 
 interface WorkoutCardProps {
   workout:
     | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
     | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
+  isSelected?: boolean;
+  hasSelection?: boolean;
   onDuplicate?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -49,6 +40,7 @@ export default function WorkoutCard({
   footer,
 }: WorkoutCardProps) {
   const { data: sessionData } = useSession();
+  const { isSelected, hasSelection } = useFloatingActionButtonStore();
 
   const workoutActions = useMemo(() => {
     const actions = [];
@@ -101,9 +93,17 @@ export default function WorkoutCard({
   return (
     <div
       style={{
-        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.2)",
+        boxShadow: isSelected(workout)
+          ? "0px 0px 11px 8px rgba(0, 0, 0, 0.2)"
+          : "0px 4px 4px rgba(0, 0, 0, 0.2)",
       }}
-      className={`relative flex flex-col rounded-xl border border-base-content border-opacity-[0.15] bg-base-100 px-4 pt-5 pb-3 pr-8`}
+      className={`
+        ${
+          isSelected(workout)
+            ? "border-opacity-[0.25]"
+            : "border-opacity-[0.15]"
+        }
+        relative flex flex-col rounded-xl border border-base-content bg-base-100  px-4 pt-5 pb-3 pr-8 transition-all`}
     >
       {/* Header */}
       <div className="flex w-full justify-between">
@@ -128,7 +128,7 @@ export default function WorkoutCard({
             </div>
           </div>
 
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-[3px]">
             <div className="text-sm font-semibold leading-none tracking-tight">
               {workout.creator.name}
             </div>
@@ -138,11 +138,32 @@ export default function WorkoutCard({
           </div>
         </div>
 
-        <Dropdown buttons={workoutActions} containerClass="dropdown-left">
-          <div className="btn-outline btn-sm btn-square btn border-base-content border-opacity-25 text-base-content text-opacity-60 hover:border-opacity-50 hover:bg-base-300 hover:text-base-content hover:text-opacity-80 ">
-            <HiOutlineEllipsisHorizontal size={17} />
+        {isSelected(workout) || hasSelection() ? (
+          <div
+            onClick={onSelect}
+            className={`
+              btn-outline btn-sm btn-square btn border-base-content  text-base-content  hover:border-opacity-100 hover:bg-base-300 hover:text-base-content hover:text-opacity-80
+              ${
+                hasSelection() &&
+                "border-opacity-40 text-opacity-40 hover:border-opacity-40 hover:text-opacity-40"
+              }
+              ${
+                isSelected(workout) &&
+                "border-opacity-90 text-opacity-90 hover:border-opacity-90 hover:text-opacity-90"
+              }
+            `}
+          >
+            <MdDone size={17} />
           </div>
-        </Dropdown>
+        ) : (
+          <Dropdown buttons={workoutActions} containerClass="dropdown-left">
+            <div
+              className={`btn-outline btn-sm btn-square btn border-base-content text-base-content opacity-50  hover:bg-base-300 hover:text-base-content hover:text-opacity-80`}
+            >
+              <HiOutlineEllipsisHorizontal size={17} />
+            </div>
+          </Dropdown>
+        )}
       </div>
 
       {/* Badges */}
@@ -176,9 +197,36 @@ export default function WorkoutCard({
 
       <div className="mt-2 whitespace-pre-wrap font-script">
         {workout.name && <div className="text-xl">{workout.name}</div>}
-        <div className="mt-1 text-sm leading-[1.45rem] text-base-content text-opacity-75">
+        <div
+          className={`
+          mt-1 text-sm leading-[1.55rem] text-base-content transition-all
+          ${isSelected(workout) ? "text-opacity-90" : "text-opacity-70"}
+        `}
+        >
           {workout.description}
         </div>
+      </div>
+
+      {/* Footer */}
+
+      <div className="mt-3 flex items-center gap-1">
+        {workout.totalTime && (
+          <div className="badge items-center gap-0.5">
+            <MdOutlineTimelapse size={15} />
+            {workout.totalTime}mn
+          </div>
+        )}
+        {workout._count.workoutResults > 0 ? (
+          <div className="badge flex gap-1">
+            <MdDone className="" size={15} />
+            {workout._count.workoutResults} result
+          </div>
+        ) : (
+          <div className="badge flex gap-1">
+            <WiMoonNew className="" size={15} />
+            no result
+          </div>
+        )}
       </div>
     </div>
   );

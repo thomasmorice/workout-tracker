@@ -10,6 +10,7 @@ import { useWorkoutService } from "../services/useWorkoutService";
 import { useWorkoutStore } from "../store/WorkoutStore";
 import { MdSearch } from "react-icons/md";
 import Header from "../components/Layout/Header";
+import { useFloatingActionButtonStore } from "../store/FloatingActionButtonStore";
 
 const Workouts: NextPage = () => {
   const { data: sessionData } = useSession();
@@ -17,6 +18,7 @@ const Workouts: NextPage = () => {
   const entry = useIntersectionObserver(ref, {});
 
   const { showWorkoutForm } = useWorkoutStore();
+  const { toggleSelectWorkout } = useFloatingActionButtonStore();
   const { getInfiniteWorkouts } = useWorkoutService();
 
   const [classifiedOnly, set_classifiedOnly] = useState(true);
@@ -78,9 +80,23 @@ const Workouts: NextPage = () => {
               </div>
             </div>
 
-            <div className="mt-6">
-              <button className="badge-primary badge badge-lg font-medium">
+            <div className="mt-6 flex items-center gap-3">
+              <button
+                onClick={() => set_classifiedOnly(false)}
+                className={`badge badge-lg font-medium ${
+                  !classifiedOnly ? "badge-primary" : ""
+                }`}
+              >
                 All workouts
+              </button>
+
+              <button
+                onClick={() => set_classifiedOnly(true)}
+                className={`badge badge-lg font-medium ${
+                  classifiedOnly ? "badge-primary" : ""
+                }`}
+              >
+                Classified workouts
               </button>
             </div>
 
@@ -106,6 +122,7 @@ const Workouts: NextPage = () => {
                           onDuplicate={() =>
                             showWorkoutForm("duplicate", workout)
                           }
+                          onSelect={() => toggleSelectWorkout(workout)}
                           onDelete={() => showWorkoutForm("delete", workout)}
                           workout={workout}
                         />
