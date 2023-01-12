@@ -11,6 +11,7 @@ import { enumToString } from "../../../utils/formatting";
 import Dropdown from "../../Dropdown/Dropdown";
 import { useMemo } from "react";
 import { useFloatingActionButtonStore } from "../../../store/FloatingActionButtonStore";
+import { useLongPress } from "use-long-press";
 
 interface WorkoutCardProps {
   workout:
@@ -41,6 +42,10 @@ export default function WorkoutCard({
 }: WorkoutCardProps) {
   const { data: sessionData } = useSession();
   const { isSelected, hasSelection } = useFloatingActionButtonStore();
+
+  const onLongPress = useLongPress(() => {
+    onSelect && onSelect();
+  });
 
   const workoutActions = useMemo(() => {
     const actions = [];
@@ -106,7 +111,7 @@ export default function WorkoutCard({
         relative flex flex-col rounded-xl border border-base-content bg-base-100  px-4 pt-5 pb-3 pr-8 transition-all`}
     >
       {/* Header */}
-      <div className="flex w-full justify-between">
+      <div className="flex w-full justify-between" {...onLongPress()}>
         <div
           style={{ writingMode: "vertical-rl" }}
           className="absolute right-0 top-0 flex h-full w-6 rotate-180 items-center justify-center rounded-l-xl bg-base-200 text-[0.85rem] font-bold leading-[10px] tracking-[0.2rem] text-base-content text-opacity-30"
