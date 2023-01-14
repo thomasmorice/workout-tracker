@@ -9,10 +9,11 @@ import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
 import { inferRouterOutputs } from "@trpc/server";
 import { enumToString } from "../../../utils/formatting";
 import Dropdown from "../../Dropdown/Dropdown";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useFloatingActionButtonStore } from "../../../store/FloatingActionButtonStore";
 import { useLongPress } from "use-long-press";
 import { motion } from "framer-motion";
+import { GiButtonFinger } from "react-icons/gi";
 
 interface WorkoutCardProps {
   workout:
@@ -43,6 +44,7 @@ export default function WorkoutCard({
 }: WorkoutCardProps) {
   const { data: sessionData } = useSession();
   const { isSelected, hasSelection } = useFloatingActionButtonStore();
+  const [showFullDescription, set_showFullDescription] = useState(false);
 
   const onLongPress = useLongPress(() => {
     onSelect && onSelect();
@@ -100,14 +102,14 @@ export default function WorkoutCard({
     <div
       style={{
         boxShadow: isSelected(workout)
-          ? "0px 0px 11px 8px rgba(0, 0, 0, 0.2)"
-          : "0px 4px 4px rgba(0, 0, 0, 0.2)",
+          ? "0px 0px 11px 8px rgba(0, 0, 0, 0.1)"
+          : "0px 4px 4px rgba(0, 0, 0, 0.1)",
       }}
       className={`
         ${
           isSelected(workout)
             ? "scale-[0.97] border-primary border-opacity-70"
-            : "border-base-content border-opacity-[0.05]"
+            : "border-base-content border-opacity-[0.1]"
         }
         relative flex flex-col rounded-xl border-4  bg-base-200 bg-opacity-50  px-6 pt-8 pb-5 pr-10 transition-all`}
     >
@@ -148,14 +150,14 @@ export default function WorkoutCard({
           <div
             onClick={onSelect}
             className={`
-              btn-outline btn-square btn-sm btn border-base-content  text-base-content  hover:border-opacity-100 hover:bg-base-300 hover:text-base-content hover:text-opacity-80
+              btn-outline btn-sm btn-circle btn border-base-content  text-base-content  hover:border-opacity-100 hover:bg-base-300 hover:text-base-content hover:text-opacity-80
               ${
                 hasSelection() &&
                 "border-opacity-40 text-opacity-40 hover:border-opacity-40 hover:text-opacity-40"
               }
               ${
                 isSelected(workout) &&
-                "border-opacity-90 text-opacity-90 hover:border-opacity-90 hover:text-opacity-90"
+                "border-opacity-90 bg-primary text-opacity-90 hover:border-opacity-90 hover:text-opacity-100"
               }
             `}
           >
@@ -167,7 +169,7 @@ export default function WorkoutCard({
             containerClass="dropdown-left bg-base-100"
           >
             <div
-              className={`btn-outline btn-square btn-sm btn border-base-content text-base-content opacity-50  hover:bg-base-300 hover:text-base-content hover:text-opacity-80`}
+              className={`btn-outline btn-sm btn-circle btn border-base-content text-base-content opacity-50  hover:bg-base-300 hover:text-base-content hover:text-opacity-80`}
             >
               <HiOutlineEllipsisHorizontal size={17} />
             </div>
@@ -176,7 +178,7 @@ export default function WorkoutCard({
       </div>
 
       {/* Badges */}
-      <div className="mt-4 flex flex-wrap gap-1.5">
+      <div className="mt-4 flex flex-wrap gap-1">
         <div className="badge">{enumToString(workout.elementType)}</div>
         {workout.difficulty && (
           <div
@@ -194,7 +196,7 @@ export default function WorkoutCard({
             "border-red-300  bg-red-700  text-red-300 "
           }
           ${workout.difficulty === "BLACK" && ""}
-        badge border-opacity-70 bg-opacity-[0.35] `}
+        badge `}
           >
             {workout.difficulty}
           </div>
@@ -207,12 +209,12 @@ export default function WorkoutCard({
           </div>
         )}
         {workout._count.workoutResults > 0 ? (
-          <div className="badge flex gap-1">
+          <div className="badge flex gap-0.5">
             <MdDone className="" size={15} />
             {workout._count.workoutResults} result
           </div>
         ) : (
-          <div className="badge flex gap-1">
+          <div className="badge flex gap-0.5">
             <WiMoonNew className="" size={15} />
             no result
           </div>
@@ -232,7 +234,20 @@ export default function WorkoutCard({
           ${isSelected(workout) ? "text-opacity-100" : "text-opacity-80"}
         `}
         >
-          {workout.description}
+          {showFullDescription
+            ? workout.description
+            : workout.description.substring(0, 120)}
+
+          <>
+            <div>
+              <button
+                onClick={() => set_showFullDescription(!showFullDescription)}
+                className="underline"
+              >
+                show {`${showFullDescription ? "less" : "more"}`}
+              </button>
+            </div>
+          </>
         </div>
       </div>
 
