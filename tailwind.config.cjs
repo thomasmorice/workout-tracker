@@ -5,7 +5,7 @@ module.exports = {
   theme: {
     fontFamily: {
       sans: ["Work Sans", "ui-sans-serif", "system-ui"],
-      script: ["Patrick Hand"],
+      script: ["Kalam"],
     },
 
     extend: {

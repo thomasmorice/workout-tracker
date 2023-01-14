@@ -1,6 +1,6 @@
 import { AiOutlinePlus } from "react-icons/ai";
 import { Menu, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Modal from "../Layout/Navigation/Modal/Modal";
 import { useEventStore } from "../../store/EventStore";
 import WeighingForm from "../Weighing/WeighingForm";
@@ -9,7 +9,7 @@ import { useWorkoutStore } from "../../store/WorkoutStore";
 import Dropdown from "../Dropdown/Dropdown";
 import { MdClose } from "react-icons/md";
 import { useFloatingActionButtonStore } from "../../store/FloatingActionButtonStore";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 
 export default function FloatingActionButton() {
   const { closeForm } = useEventStore();
@@ -18,10 +18,19 @@ export default function FloatingActionButton() {
   const { showWorkoutForm } = useWorkoutStore();
   const { selectedWorkouts, hasSelection, cleanSelectedWorkouts } =
     useFloatingActionButtonStore();
+  const closeButtonAnimationControls = useAnimationControls();
+
+  useEffect(() => {
+    if (selectedWorkouts.length > 0) {
+      closeButtonAnimationControls.start({ scale: [1, 1.1, 0.9, 1] });
+    }
+  }, [selectedWorkouts, closeButtonAnimationControls]);
 
   const mainButtons = [
     {
-      label: "Add a session",
+      label: `Add a session ${
+        selectedWorkouts.length > 0 ? "with selected workouts" : ""
+      }`,
       onClick: () => set_showAddSessionModal(true),
     },
     {
@@ -37,6 +46,10 @@ export default function FloatingActionButton() {
   const multipleSelectionButtons = [
     {
       label: "Unselect all",
+      onClick: () => console.log("hello"),
+    },
+    {
+      label: "",
       onClick: () => console.log("hello"),
     },
   ];
@@ -79,11 +92,11 @@ export default function FloatingActionButton() {
             )}
           </div>
         </Dropdown>
-        <AnimatePresence exitBeforeEnter>
+        <AnimatePresence>
           {hasSelection() && (
             <motion.button
               initial={{ scale: 0.2 }}
-              animate={{ scale: 1 }}
+              animate={closeButtonAnimationControls}
               exit={{ scale: 0 }}
               onClick={cleanSelectedWorkouts}
               type="button"
@@ -95,29 +108,11 @@ export default function FloatingActionButton() {
                 }}
                 className="btn-error rotate-[265deg] p-2"
               >
-                <MdClose className="-rotate-[265deg]" size={12} />
+                <MdClose className="-rotate-[265deg]" size={14} />
               </div>
             </motion.button>
           )}
         </AnimatePresence>
-
-        {/* <Dropdown
-          buttons={multipleSelectionButtons}
-          containerClass="dropdown-top dropdown-left divide-y shadow-lg absolute -top-6 left-14"
-        >
-          <div
-            style={{
-              borderRadius: "0 50% 50% 50%",
-              // border: "3px solid black",
-            }}
-            className="btn-primary rotate-[265deg] p-2"
-          >
-            <MdClose className="-rotate-[260deg]" size={12} />
-          </div>
-          {/* <div className="btn-rounded btn-primary min-h-6 btn-circle btn flex h-7 w-7 items-center justify-center p-0 text-xs font-medium shadow-xl">
-            1
-          </div> */}
-        {/* </Dropdown> */}
       </div>
     </>
   );

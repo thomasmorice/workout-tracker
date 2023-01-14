@@ -24,6 +24,7 @@ import { useEventStore } from "../../store/EventStore";
 import { workoutResultIsFilled } from "../../utils/utils";
 import { inferRouterInputs } from "@trpc/server";
 import { WorkoutSessionRouterType } from "../../server/trpc/router/workout-session-router";
+import { useFloatingActionButtonStore } from "../../store/FloatingActionButtonStore";
 
 interface WorkoutSessionFormProps {
   onSuccess?: () => void;
@@ -42,12 +43,19 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
   );
 
   const [defaultValues, set_defaultValues] = useState({});
+  const { selectedWorkouts: preselectedWorkouts, cleanSelectedWorkouts } =
+    useFloatingActionButtonStore();
 
   useEffect(() => {
     set_defaultValues({
       id: existingWorkoutSession?.id ?? undefined,
       date: existingWorkoutSession?.event.eventDate ?? eventDate ?? new Date(),
-      workoutResults: existingWorkoutSession?.workoutResults ?? [],
+      workoutResults:
+        existingWorkoutSession?.workoutResults ??
+        preselectedWorkouts.map((workout) => ({
+          workout,
+          workoutId: workout.id,
+        })),
       eventId: existingWorkoutSession?.eventId ?? undefined,
     });
   }, [existingWorkoutSession, eventDate]);
@@ -59,6 +67,7 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
     handleSubmit,
     reset,
     getValues,
+    watch,
     control,
     formState: { isSubmitting, isDirty },
   } = useForm<
@@ -72,6 +81,8 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
   useEffect(() => {
     reset(defaultValues);
   }, [defaultValues, reset]);
+
+  watch("date");
 
   const handleCreateOrEdit: SubmitHandler<
     z.infer<typeof CreateWorkoutSessionInputSchema>
@@ -95,6 +106,7 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
         workoutResults: workoutSession.workoutResults,
         workoutSessionId: savedWorkoutSession.id,
       });
+      cleanSelectedWorkouts();
       closeMessage(message);
     }
 
@@ -231,21 +243,20 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
             </div>
           )}
         </div>
-        {isDirty && (
-          <div className="flex flex-col gap-2 text-sm">
-            <button
-              className={`btn mt-3 ${isSubmitting ? "loading" : ""}`}
-              type="button"
-              onClick={async () => {
-                await handleSubmit(handleCreateOrEdit)();
-                onSuccess && onSuccess();
-              }}
-            >
-              {isBefore(getValues("date"), new Date()) ? "Save" : "Plan"}
-              {` this session`}
-            </button>
-          </div>
-        )}
+
+        <div className="flex flex-col gap-2 text-sm">
+          <button
+            className={`btn mt-3 ${isSubmitting ? "loading" : ""}`}
+            type="button"
+            onClick={async () => {
+              await handleSubmit(handleCreateOrEdit)();
+              onSuccess && onSuccess();
+            }}
+          >
+            {isBefore(getValues("date"), new Date()) ? "Save" : "Plan"}
+            {` this session`}
+          </button>
+        </div>
 
         {editWorkoutResultIndex !== -1 && (
           <Portal>

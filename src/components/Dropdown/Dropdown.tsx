@@ -31,7 +31,7 @@ export default function Dropdown({
         <div className="border-none">
           <Menu.Items
             as={"ul"}
-            className="dropdown-content menu rounded-box w-52 gap-1 bg-base-200 p-2 text-sm shadow-lg"
+            className="dropdown-content menu rounded-box w-52 gap-1 bg-base-300 p-2 text-sm shadow-lg"
           >
             {buttons.map((button) => (
               <Menu.Item as={"li"} key={button.label}>

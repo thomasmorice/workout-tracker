@@ -12,6 +12,7 @@ import Dropdown from "../../Dropdown/Dropdown";
 import { useMemo } from "react";
 import { useFloatingActionButtonStore } from "../../../store/FloatingActionButtonStore";
 import { useLongPress } from "use-long-press";
+import { motion } from "framer-motion";
 
 interface WorkoutCardProps {
   workout:
@@ -105,19 +106,19 @@ export default function WorkoutCard({
       className={`
         ${
           isSelected(workout)
-            ? "border-opacity-[0.25]"
-            : "border-opacity-[0.15]"
+            ? "scale-[0.97] border-primary border-opacity-70"
+            : "border-base-content border-opacity-[0.05]"
         }
-        relative flex flex-col rounded-xl border border-base-content bg-base-100  px-4 pt-5 pb-3 pr-8 transition-all`}
+        relative flex flex-col rounded-xl border-4  bg-base-200 bg-opacity-50  px-6 pt-8 pb-5 pr-10 transition-all`}
     >
+      <div
+        style={{ writingMode: "vertical-rl" }}
+        className="absolute right-0 top-0 flex h-full w-6 rotate-180 items-center justify-center rounded-l-xl bg-base-300 text-[0.85rem] font-bold leading-[10px] tracking-[0.2rem] text-base-content text-opacity-50"
+      >
+        {enumToString(workout.workoutType ?? "")}
+      </div>
       {/* Header */}
       <div className="flex w-full justify-between" {...onLongPress()}>
-        <div
-          style={{ writingMode: "vertical-rl" }}
-          className="absolute right-0 top-0 flex h-full w-6 rotate-180 items-center justify-center rounded-l-xl bg-base-200 text-[0.85rem] font-bold leading-[10px] tracking-[0.2rem] text-base-content text-opacity-30"
-        >
-          {enumToString(workout.workoutType ?? "")}
-        </div>
         <div className="flex items-center gap-2">
           <div
             className="tooltip tooltip-right z-20"
@@ -147,7 +148,7 @@ export default function WorkoutCard({
           <div
             onClick={onSelect}
             className={`
-              btn-outline btn-sm btn-square btn border-base-content  text-base-content  hover:border-opacity-100 hover:bg-base-300 hover:text-base-content hover:text-opacity-80
+              btn-outline btn-square btn-sm btn border-base-content  text-base-content  hover:border-opacity-100 hover:bg-base-300 hover:text-base-content hover:text-opacity-80
               ${
                 hasSelection() &&
                 "border-opacity-40 text-opacity-40 hover:border-opacity-40 hover:text-opacity-40"
@@ -161,9 +162,12 @@ export default function WorkoutCard({
             <MdDone size={17} />
           </div>
         ) : (
-          <Dropdown buttons={workoutActions} containerClass="dropdown-left">
+          <Dropdown
+            buttons={workoutActions}
+            containerClass="dropdown-left bg-base-100"
+          >
             <div
-              className={`btn-outline btn-sm btn-square btn border-base-content text-base-content opacity-50  hover:bg-base-300 hover:text-base-content hover:text-opacity-80`}
+              className={`btn-outline btn-square btn-sm btn border-base-content text-base-content opacity-50  hover:bg-base-300 hover:text-base-content hover:text-opacity-80`}
             >
               <HiOutlineEllipsisHorizontal size={17} />
             </div>
@@ -172,7 +176,7 @@ export default function WorkoutCard({
       </div>
 
       {/* Badges */}
-      <div className="mt-4 flex gap-1.5">
+      <div className="mt-4 flex flex-wrap gap-1.5">
         <div className="badge">{enumToString(workout.elementType)}</div>
         {workout.difficulty && (
           <div
@@ -189,32 +193,13 @@ export default function WorkoutCard({
             workout.difficulty === "RED" &&
             "border-red-300  bg-red-700  text-red-300 "
           }
-          ${
-            workout.difficulty === "BLACK" &&
-            "border-base-content  bg-black  text-base-content"
-          }
+          ${workout.difficulty === "BLACK" && ""}
         badge border-opacity-70 bg-opacity-[0.35] `}
           >
             {workout.difficulty}
           </div>
         )}
-      </div>
 
-      <div className="mt-2 whitespace-pre-wrap font-script">
-        {workout.name && <div className="text-xl">{workout.name}</div>}
-        <div
-          className={`
-          mt-1 text-sm leading-[1.55rem] text-base-content transition-all
-          ${isSelected(workout) ? "text-opacity-90" : "text-opacity-70"}
-        `}
-        >
-          {workout.description}
-        </div>
-      </div>
-
-      {/* Footer */}
-
-      <div className="mt-3 flex items-center gap-1">
         {workout.totalTime && (
           <div className="badge items-center gap-0.5">
             <MdOutlineTimelapse size={15} />
@@ -233,6 +218,27 @@ export default function WorkoutCard({
           </div>
         )}
       </div>
+
+      <div className="mt-4 whitespace-pre-wrap font-script">
+        {workout.name && <div className="text-xl">{workout.name}</div>}
+        <div
+          style={
+            {
+              // textShadow: `0 0 1px #FFffff`,
+            }
+          }
+          className={`
+          mt-1 text-sm leading-6  tracking-wider text-base-content transition-all 
+          ${isSelected(workout) ? "text-opacity-100" : "text-opacity-80"}
+        `}
+        >
+          {workout.description}
+        </div>
+      </div>
+
+      {/* Footer */}
+
+      <div className="mt-3 flex items-center gap-1"></div>
     </div>
   );
 }
