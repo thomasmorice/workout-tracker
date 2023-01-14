@@ -17,7 +17,7 @@ export default function Dropdown({
   buttons,
 }: DropdownProps) {
   return (
-    <Menu as="div" className={`dropdown z-40 ${containerClass} `}>
+    <Menu as="div" className={`dropdown dropdown-open z-40 ${containerClass} `}>
       <Menu.Button>{children}</Menu.Button>
       <Transition
         as={Fragment}
@@ -31,7 +31,7 @@ export default function Dropdown({
         <div className="border-none">
           <Menu.Items
             as={"ul"}
-            className="dropdown-content menu rounded-box w-52 gap-1 bg-base-300 p-2 text-sm shadow-lg"
+            className="dropdown-content menu rounded-box visible absolute w-52 transform-none gap-1 bg-base-300 p-2 text-sm shadow-lg"
           >
             {buttons.map((button) => (
               <Menu.Item as={"li"} key={button.label}>
