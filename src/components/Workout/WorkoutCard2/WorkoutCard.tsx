@@ -9,11 +9,9 @@ import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
 import { inferRouterOutputs } from "@trpc/server";
 import { enumToString } from "../../../utils/formatting";
 import Dropdown from "../../Dropdown/Dropdown";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useFloatingActionButtonStore } from "../../../store/FloatingActionButtonStore";
 import { useLongPress } from "use-long-press";
-import { motion } from "framer-motion";
-import { GiButtonFinger } from "react-icons/gi";
 
 interface WorkoutCardProps {
   workout:
@@ -44,11 +42,28 @@ export default function WorkoutCard({
 }: WorkoutCardProps) {
   const { data: sessionData } = useSession();
   const { isSelected, hasSelection } = useFloatingActionButtonStore();
+
   const [showFullDescription, set_showFullDescription] = useState(false);
 
   const onLongPress = useLongPress(() => {
     onSelect && onSelect();
   });
+
+  const workoutDescriptionRef = useRef<HTMLParagraphElement>(null);
+
+  const isWorkoutDescriptionTruncated = useMemo(() => {
+    if (workoutDescriptionRef && workoutDescriptionRef.current) {
+      if (
+        workoutDescriptionRef.current.offsetHeight <
+          workoutDescriptionRef.current.scrollHeight ||
+        workoutDescriptionRef.current.offsetWidth <
+          workoutDescriptionRef.current.scrollWidth
+      ) {
+        return true;
+      }
+      return false;
+    }
+  }, [workoutDescriptionRef]);
 
   const workoutActions = useMemo(() => {
     const actions = [];
@@ -223,31 +238,25 @@ export default function WorkoutCard({
 
       <div className="mt-4 whitespace-pre-wrap font-script">
         {workout.name && <div className="text-xl">{workout.name}</div>}
-        <div
-          style={
-            {
-              // textShadow: `0 0 1px #FFffff`,
-            }
-          }
-          className={`
-          mt-1 text-sm leading-6  tracking-wider text-base-content transition-all 
-          ${isSelected(workout) ? "text-opacity-100" : "text-opacity-80"}
-        `}
-        >
-          {showFullDescription
-            ? workout.description
-            : workout.description.substring(0, 120)}
-
-          <>
-            <div>
+        <div className={`mt-1`}>
+          <p
+            className={`text-sm  leading-6 tracking-wider text-base-content transition-all
+            ${isSelected(workout) ? "text-opacity-100" : "text-opacity-80"}
+            ${showFullDescription ? "line-clamp-none" : "line-clamp-6"}
+          `}
+            ref={workoutDescriptionRef}
+          >
+            {workout.description}
+          </p>
+          {isWorkoutDescriptionTruncated && (
+            <div className="pt-1">
               <button
                 onClick={() => set_showFullDescription(!showFullDescription)}
-                className="underline"
               >
-                show {`${showFullDescription ? "less" : "more"}`}
+                read {`${showFullDescription ? "less" : "more"}`}
               </button>
             </div>
-          </>
+          )}
         </div>
       </div>
 
