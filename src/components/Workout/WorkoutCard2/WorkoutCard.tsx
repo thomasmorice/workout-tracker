@@ -44,6 +44,7 @@ export default function WorkoutCard({
   const { isSelected, hasSelection } = useFloatingActionButtonStore();
 
   const [showFullDescription, set_showFullDescription] = useState(false);
+  const [isTruncated, set_isTruncated] = useState(false);
 
   const onLongPress = useLongPress(() => {
     onSelect && onSelect();
@@ -51,7 +52,7 @@ export default function WorkoutCard({
 
   const workoutDescriptionRef = useRef<HTMLParagraphElement>(null);
 
-  const isWorkoutDescriptionTruncated = useMemo(() => {
+  useEffect(() => {
     if (workoutDescriptionRef && workoutDescriptionRef.current) {
       if (
         workoutDescriptionRef.current.offsetHeight <
@@ -59,11 +60,24 @@ export default function WorkoutCard({
         workoutDescriptionRef.current.offsetWidth <
           workoutDescriptionRef.current.scrollWidth
       ) {
-        return true;
+        set_isTruncated(true);
       }
-      return false;
     }
-  }, [workoutDescriptionRef]);
+  }, []);
+
+  // const isWorkoutDescriptionTruncated = () => {
+  //   if (workoutDescriptionRef && workoutDescriptionRef.current) {
+  //     if (
+  //       workoutDescriptionRef.current.offsetHeight <
+  //         workoutDescriptionRef.current.scrollHeight ||
+  //       workoutDescriptionRef.current.offsetWidth <
+  //         workoutDescriptionRef.current.scrollWidth
+  //     ) {
+  //       return true;
+  //     }
+  //     return false;
+  //   }
+  // };
 
   const workoutActions = useMemo(() => {
     const actions = [];
@@ -248,7 +262,7 @@ export default function WorkoutCard({
           >
             {workout.description}
           </p>
-          {isWorkoutDescriptionTruncated && (
+          {isTruncated && (
             <div className="pt-1">
               <button
                 onClick={() => set_showFullDescription(!showFullDescription)}
