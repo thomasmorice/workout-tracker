@@ -22,7 +22,10 @@ export default function FloatingActionButton() {
 
   useEffect(() => {
     if (selectedWorkouts.length > 0) {
-      closeButtonAnimationControls.start({ scale: [1, 1.1, 0.9, 1] });
+      closeButtonAnimationControls.start({
+        scale: [1, 1.15, 0.9, 1.15, 1],
+        transition: { duration: 0.6 },
+      });
     }
   }, [selectedWorkouts, closeButtonAnimationControls]);
 
@@ -100,15 +103,17 @@ export default function FloatingActionButton() {
               exit={{ scale: 0 }}
               onClick={cleanSelectedWorkouts}
               type="button"
-              className="absolute -top-5"
+              className="absolute -top-5 -right-4"
             >
               <div
-                style={{
-                  borderRadius: "0 50% 50% 50%",
-                }}
-                className="btn-error rotate-[265deg] p-2"
+                style={
+                  {
+                    // borderRadius: "0 50% 50% 50%",
+                  }
+                }
+                className="btn-error btn-circle flex h-7 w-7 items-center justify-center"
               >
-                <MdClose className="-rotate-[265deg]" size={14} />
+                <MdClose className="" size={13} />
               </div>
             </motion.button>
           )}

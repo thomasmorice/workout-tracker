@@ -31,7 +31,6 @@ const useFloatingActionButtonStore = create<FloatingActionButtonState>()(
           selectedWorkouts: selectedWorkouts.filter((w) => w.id !== workout.id),
         });
       } else {
-        navigator.vibrate(250);
         set({
           selectedWorkouts: [...selectedWorkouts, workout],
         });
