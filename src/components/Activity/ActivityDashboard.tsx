@@ -111,7 +111,7 @@ export default function ActivityDashboard() {
           <AnimatePresence>
             {!isLoading && getFilteredEvents && (
               <motion.ol
-                className="relative border-l border-accent-content border-opacity-20"
+                // className="relative border-l border-accent-content border-opacity-20"
                 variants={timelineContainerVariant}
                 initial="hidden"
                 animate="show"

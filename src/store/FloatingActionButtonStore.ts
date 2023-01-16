@@ -26,6 +26,7 @@ const useFloatingActionButtonStore = create<FloatingActionButtonState>()(
     selectedWorkouts: [],
     toggleSelectWorkout: (workout) => {
       const { selectedWorkouts } = get();
+
       if (selectedWorkouts.find((w) => w.id === workout.id)) {
         set({
           selectedWorkouts: selectedWorkouts.filter((w) => w.id !== workout.id),

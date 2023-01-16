@@ -1,5 +1,5 @@
 import { MdLogin, MdOutlineArrowBackIosNew } from "react-icons/md";
-import { Rings } from "react-loading-icons";
+import { TailSpin } from "react-loading-icons";
 import AvatarButton from "../AvatarButton/AvatarButton";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Logo from "./Logo";
@@ -41,7 +41,7 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
           {status === "loading" ? (
             <>
               <div className="flex items-center gap-x-2">
-                <Rings className="text-xl" />
+                <TailSpin className="h-8" stroke="#2D68FF" speed={1.2} />{" "}
               </div>
             </>
           ) : (
@@ -50,7 +50,7 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
                 <button
                   type="button"
                   onClick={() => signIn()}
-                  className="btn btn-primary my-2 flex gap-x-2"
+                  className="btn-primary btn my-2 flex gap-x-2"
                 >
                   <MdLogin size="22px" />
                   Login

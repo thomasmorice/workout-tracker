@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { MdArrowDropDown } from "react-icons/md";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { Rings } from "react-loading-icons";
+import { TailSpin } from "react-loading-icons";
 
 type AvatarButtonProps = {};
 
@@ -11,14 +11,11 @@ export default function AvatarButton({}: AvatarButtonProps) {
   return (
     <>
       {status === "loading" ? (
-        <div className="flex items-center gap-2">
-          <Rings className="h-10 w-10" />
-          Fetching data
-        </div>
+        <div className="flex items-center gap-2">TailSpin Fetching data</div>
       ) : (
         <div className={`dropdown max-md:dropdown-end`}>
           {sessionData ? (
-            <label tabIndex={0} className="btn btn-ghost px-1">
+            <label tabIndex={0} className="btn-ghost btn px-1">
               <div className="flex items-center gap-1">
                 <Image
                   width={36}
@@ -34,7 +31,7 @@ export default function AvatarButton({}: AvatarButtonProps) {
               </div>
             </label>
           ) : (
-            <button onClick={() => signIn()} className="btn btn-primary">
+            <button onClick={() => signIn()} className="btn-primary btn">
               Login
             </button>
           )}

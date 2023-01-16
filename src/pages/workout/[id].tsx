@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useWorkoutService } from "../../services/useWorkoutService";
 import WorkoutCard from "../../components/Workout/WorkoutCard/WorkoutCard";
 import Header from "../../components/Layout/Header";
-import { Rings } from "react-loading-icons";
+import { TailSpin } from "react-loading-icons";
 import WorkoutResultCard from "../../components/WorkoutResult/WorkoutResultCard";
 
 const Workout: NextPage = () => {
@@ -48,7 +48,8 @@ const Workout: NextPage = () => {
           </>
         ) : (
           <div className="flex items-center gap-2">
-            Loading workout <Rings />
+            Loading workout{" "}
+            <TailSpin className="h-8" stroke="#2D68FF" speed={1.2} />
           </div>
         )}
       </>

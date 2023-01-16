@@ -166,7 +166,7 @@ export default function WorkoutCard({
           </div>
 
           <div className="flex flex-col gap-[3px]">
-            <div className="text-sm font-semibold leading-none tracking-tight">
+            <div className="text-base font-medium leading-none tracking-tight">
               {workout.creator.name}
             </div>
             <div className="text-[0.83rem] font-light leading-none opacity-60">
@@ -207,7 +207,7 @@ export default function WorkoutCard({
       </div>
 
       {/* Badges */}
-      <div className="mt-4 flex flex-wrap gap-1">
+      <div className="mt-4 flex flex-wrap gap-x-1 gap-y-2">
         <div className="badge">{enumToString(workout.elementType)}</div>
         {workout.difficulty && (
           <div
@@ -254,9 +254,13 @@ export default function WorkoutCard({
         {workout.name && <div className="text-xl">{workout.name}</div>}
         <div className={`mt-1`}>
           <p
-            className={`text-sm  leading-6 tracking-wider text-base-content transition-all
+            className={`  text-sm leading-5 tracking-wider text-base-content transition-all
             ${isSelected(workout) ? "text-opacity-100" : "text-opacity-80"}
-            ${showFullDescription ? "line-clamp-none" : "line-clamp-6"}
+            ${
+              showFullDescription
+                ? "max-h-[500px] line-clamp-none"
+                : "max-h-40 line-clamp-6"
+            }
           `}
             ref={workoutDescriptionRef}
           >

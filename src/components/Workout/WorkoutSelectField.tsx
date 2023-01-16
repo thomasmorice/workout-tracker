@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo } from "react";
-import { Rings } from "react-loading-icons";
+import { TailSpin } from "react-loading-icons";
 import { useDebounce } from "usehooks-ts";
 import { useWorkoutService } from "../../services/useWorkoutService";
 import WorkoutCard from "./WorkoutCard/WorkoutCard";
@@ -143,7 +143,7 @@ export default function WorkoutSelectField({
 
       {isFetching && (
         <div className="absolute top-0 right-1">
-          <Rings className="w-12" />
+          <TailSpin className="h-8" stroke="#2D68FF" speed={1.2} />{" "}
         </div>
       )}
       {searchTerm !== "" && workoutSearchResult}
