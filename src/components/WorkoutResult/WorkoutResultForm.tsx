@@ -1,4 +1,4 @@
-import Modal from "../Layout/Navigation/Modal/Modal";
+import Modal from "../Layout/Modal/Modal";
 import TextareaAutosize from "react-textarea-autosize";
 import { useEffect, useState } from "react";
 import { WorkoutResultInputsWithWorkout } from "../../types/app";

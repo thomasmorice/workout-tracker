@@ -17,7 +17,7 @@ import {
   workoutResultIsFilled,
 } from "../../utils/utils";
 import WorkoutResultCard from "../WorkoutResult/WorkoutResultCard";
-import WorkoutCard from "../Workout/WorkoutCard/WorkoutCard";
+import WorkoutCard from "../Workout/WorkoutCard2/WorkoutCard";
 
 interface WorkoutSessionResultItemProps {
   result: WorkoutResultInputsWithWorkout;
@@ -81,7 +81,7 @@ export default function WorkoutSessionResultItem({
               <button
                 onClick={onRemoveWorkoutResult}
                 type="button"
-                className="btn-outline btn btn-error btn-sm items-center gap-2"
+                className="btn-outline btn-error btn btn-sm items-center gap-2"
               >
                 <MdDelete size="20px" />
               </button>

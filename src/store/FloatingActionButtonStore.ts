@@ -10,7 +10,7 @@ interface FloatingActionButtonState {
   isSelected: (workout: workoutType) => boolean;
   selectedWorkouts: workoutType[];
   toggleSelectWorkout: (workout: workoutType) => void;
-  cleanSelectedWorkouts: () => void;
+  clearSelectedWorkouts: () => void;
 }
 
 const useFloatingActionButtonStore = create<FloatingActionButtonState>()(
@@ -37,7 +37,7 @@ const useFloatingActionButtonStore = create<FloatingActionButtonState>()(
         });
       }
     },
-    cleanSelectedWorkouts: () => {
+    clearSelectedWorkouts: () => {
       set({
         selectedWorkouts: [],
       });

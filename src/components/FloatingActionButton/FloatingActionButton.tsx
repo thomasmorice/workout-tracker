@@ -1,7 +1,7 @@
 import { AiOutlinePlus } from "react-icons/ai";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
-import Modal from "../Layout/Navigation/Modal/Modal";
+import Modal from "../Layout/Modal/Modal";
 import { useEventStore } from "../../store/EventStore";
 import WeighingForm from "../Weighing/WeighingForm";
 import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm";
@@ -16,7 +16,7 @@ export default function FloatingActionButton() {
   const [showAddSessionModal, set_showAddSessionModal] = useState(false);
   const [showAddWeightModal, set_showAddWeightModal] = useState(false);
   const { showWorkoutForm } = useWorkoutStore();
-  const { selectedWorkouts, hasSelection, cleanSelectedWorkouts } =
+  const { selectedWorkouts, hasSelection, clearSelectedWorkouts } =
     useFloatingActionButtonStore();
   const closeButtonAnimationControls = useAnimationControls();
 
@@ -76,7 +76,12 @@ export default function FloatingActionButton() {
       >
         <>
           <h3 className="text-lg font-bold">Add a session</h3>
-          <WorkoutSessionForm onSuccess={() => console.log("success")} />
+          <WorkoutSessionForm
+            onSuccess={() => {
+              clearSelectedWorkouts();
+              set_showAddSessionModal(false);
+            }}
+          />
         </>
       </Modal>
       {/* )} */}
@@ -101,7 +106,7 @@ export default function FloatingActionButton() {
               initial={{ scale: 0.2 }}
               animate={closeButtonAnimationControls}
               exit={{ scale: 0 }}
-              onClick={cleanSelectedWorkouts}
+              onClick={clearSelectedWorkouts}
               type="button"
               className="absolute -top-5 -right-4"
             >

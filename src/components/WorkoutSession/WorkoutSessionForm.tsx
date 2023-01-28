@@ -43,7 +43,7 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
   );
 
   const [defaultValues, set_defaultValues] = useState({});
-  const { selectedWorkouts: preselectedWorkouts, cleanSelectedWorkouts } =
+  const { selectedWorkouts: preselectedWorkouts, clearSelectedWorkouts } =
     useFloatingActionButtonStore();
 
   useEffect(() => {
@@ -106,7 +106,7 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
         workoutResults: workoutSession.workoutResults,
         workoutSessionId: savedWorkoutSession.id,
       });
-      cleanSelectedWorkouts();
+      clearSelectedWorkouts();
       closeMessage(message);
     }
 

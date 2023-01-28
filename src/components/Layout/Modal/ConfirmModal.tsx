@@ -1,4 +1,4 @@
-import Portal from "../../../Portal/Portal";
+import Portal from "../../Portal/Portal";
 import Modal from "./Modal";
 
 interface ConfirmModalProps {

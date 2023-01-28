@@ -1,5 +1,5 @@
 import { useToastStore } from "../../store/ToastStore";
-import ConfirmModal from "../Layout/Navigation/Modal/ConfirmModal";
+import ConfirmModal from "../Layout/Modal/ConfirmModal";
 import { useState } from "react";
 import {
   MdTimer,
@@ -9,7 +9,7 @@ import {
   MdOutlineEvent,
 } from "react-icons/md";
 import { getSessionTitle, getSessionTotalTime } from "../../utils/utils";
-import { format, isBefore } from "date-fns";
+import { format } from "date-fns";
 import { useEventService } from "../../services/useEventService";
 import { useEventStore } from "../../store/EventStore";
 import { zonedTimeToUtc } from "date-fns-tz";
@@ -30,15 +30,14 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
 
   return (
     <>
-      <div
+      {/* <div
         className={`absolute -left-1.5 h-3 w-3 rounded-full border border-opacity-10 transition-all
           ${
             isBefore(event.eventDate, Date.now())
               ? "border-accent-content bg-base-300 group-hover:bg-base-100"
               : "border-primary bg-primary"
           }`}
-      ></div>
-      {/* <div className="mb-12 ml-5 cursor-pointer rounded-md border border-base-content border-opacity-20 p-5  transition-transform hover:translate-x-1"> */}
+      ></div> */}
       <div className="relative mb-6 cursor-pointer rounded-md border border-base-content border-opacity-10 bg-base-200 bg-opacity-50 p-5  transition-transform hover:translate-x-1">
         <div
           onClick={() => {
