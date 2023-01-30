@@ -11,7 +11,10 @@ export default function AvatarButton({}: AvatarButtonProps) {
   return (
     <>
       {status === "loading" ? (
-        <div className="flex items-center gap-2">TailSpin Fetching data</div>
+        <div className="flex items-center gap-2">
+          <TailSpin className="h-8" stroke="#2D68FF" speed={1.2} /> Fetching
+          data
+        </div>
       ) : (
         <div className={`dropdown max-md:dropdown-end`}>
           {sessionData ? (

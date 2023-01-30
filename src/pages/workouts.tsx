@@ -4,7 +4,7 @@ import Head from "next/head";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Masonry from "react-masonry-css";
 import { useIntersectionObserver, useDebounce } from "usehooks-ts";
-import WorkoutCard from "../components/Workout/WorkoutCard2/WorkoutCard";
+import WorkoutCard from "../components/Workout/WorkoutCardSimple/WorkoutCard";
 import WorkoutCardSkeleton from "../components/Workout/WorkoutCardSkeleton";
 import { useWorkoutService } from "../services/useWorkoutService";
 import { useWorkoutStore } from "../store/WorkoutStore";
@@ -52,7 +52,7 @@ const Workouts: NextPage = () => {
         <button
           type="button"
           onClick={() => showWorkoutForm("create")}
-          className="btn-primary btn-sm btn hidden md:block"
+          className="btn-primary btn btn-sm hidden md:block"
         >
           + Create a new workout
         </button>
