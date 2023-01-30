@@ -12,6 +12,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { MdArrowBack } from "react-icons/md";
 // import WorkoutCardHeader from "./WorkoutCardHeader";
 import WorkoutCardHeader from "./WorkoutCardHeaderSimplified";
+import WorkoutCardTitle from "./WorkoutCardTitle";
 
 interface WorkoutCardProps {
   workout:
@@ -46,7 +47,7 @@ export default function WorkoutCard({
         layout
         transition={{
           ease: "backInOut",
-          duration: 0.8,
+          duration: 0.7,
           borderRadius: {
             duration: 0.5,
           },
@@ -74,7 +75,31 @@ export default function WorkoutCard({
               }
         }
       >
+        <AnimatePresence>
+          {isExpanded && (
+            <motion.div
+              transition={{
+                delay: isExpanded ? 0.2 : 1,
+              }}
+              initial={{
+                opacity: 0,
+                x: -20,
+              }}
+              animate={{
+                opacity: 1,
+                x: 0,
+              }}
+              exit={{
+                opacity: 0,
+                x: -20,
+              }}
+            >
+              <MdArrowBack className="absolute" size={22} />
+            </motion.div>
+          )}
+        </AnimatePresence>
         <WorkoutCardHeader workout={workout} isExpanded={isExpanded} />
+        <WorkoutCardTitle workout={workout} isExpanded={isExpanded} />
         <div className="relative z-30 mt-3.5 flex justify-center">
           <button
             onClick={() => set_isExpanded(!isExpanded)}

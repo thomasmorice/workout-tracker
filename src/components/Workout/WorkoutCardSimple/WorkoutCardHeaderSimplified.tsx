@@ -21,7 +21,13 @@ export default function WorkoutCardHeader({
   workout,
 }: WorkoutCardHeaderProps) {
   return (
-    <motion.div layout className="relative z-10 w-full">
+    <motion.div
+      transition={{
+        delay: 0.3,
+      }}
+      layout
+      className="relative z-10 w-full"
+    >
       <motion.div className="">
         <MdArrowBack className="absolute w-0" size={22} />
 
@@ -32,11 +38,7 @@ export default function WorkoutCardHeader({
           }}
           className={`flex flex-col text-center`}
         >
-          <motion.div
-            transition={{ delay: isExpanded ? 0 : 0.5 }}
-            layout
-            className={`avatar `}
-          >
+          <motion.div transition={{ delay: 0.25 }} layout className={`avatar `}>
             <motion.div className="relative w-8 rounded-full border-2 border-base-content border-opacity-50 bg-transparent">
               <Image
                 fill
