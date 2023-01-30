@@ -43,6 +43,22 @@ export default function WorkoutCard({
 
   return (
     <>
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            className="fixed top-0 left-0 z-50 h-full w-full bg-base-300 bg-opacity-60"
+          ></motion.div>
+        )}
+      </AnimatePresence>
       <motion.div
         layout
         transition={{
@@ -98,6 +114,9 @@ export default function WorkoutCard({
             </motion.div>
           )}
         </AnimatePresence>
+        <div className="btn-ghost btn btn-sm btn-circle absolute right-4 z-30">
+          <RxDotsVertical size={23} />
+        </div>
         <WorkoutCardHeader workout={workout} isExpanded={isExpanded} />
         <WorkoutCardTitle workout={workout} isExpanded={isExpanded} />
         <div className="relative z-30 mt-3.5 flex justify-center">

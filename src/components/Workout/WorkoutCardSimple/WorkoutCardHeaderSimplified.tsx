@@ -1,6 +1,5 @@
 import { inferRouterOutputs } from "@trpc/server";
 import { AnimatePresence, motion } from "framer-motion";
-import { MdArrowBack } from "react-icons/md";
 import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
 import { enumToString } from "../../../utils/formatting";
 import Image from "next/image";
@@ -29,8 +28,6 @@ export default function WorkoutCardHeader({
       className="relative z-10 w-full"
     >
       <motion.div className="">
-        <MdArrowBack className="absolute w-0" size={22} />
-
         {/* AUTHOR */}
         <motion.div
           style={{
@@ -39,7 +36,11 @@ export default function WorkoutCardHeader({
           className={`flex flex-col text-center`}
         >
           <motion.div transition={{ delay: 0.25 }} layout className={`avatar `}>
-            <motion.div className="relative w-8 rounded-full border-2 border-base-content border-opacity-50 bg-transparent">
+            <motion.div
+              className={`relative  rounded-full border-2 border-base-content border-opacity-50 bg-transparent transition ${
+                isExpanded ? "w-10" : "w-8"
+              }`}
+            >
               <Image
                 fill
                 className="rounded-full object-contain p-0.5 "
@@ -54,7 +55,7 @@ export default function WorkoutCardHeader({
           <AnimatePresence>
             {isExpanded && (
               <motion.div
-                className="mt-1 w-full text-center"
+                className="mt-1.5 w-full text-center"
                 transition={{
                   delay: 0.3,
                 }}

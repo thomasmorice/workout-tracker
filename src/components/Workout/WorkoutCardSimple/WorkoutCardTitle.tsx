@@ -2,6 +2,7 @@ import { inferRouterOutputs } from "@trpc/server";
 import { motion } from "framer-motion";
 import { BsLightningChargeFill } from "react-icons/bs";
 import { GiBiceps } from "react-icons/gi";
+import { FaRunning } from "react-icons/fa";
 import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
 import { enumToString } from "../../../utils/formatting";
 
@@ -21,6 +22,9 @@ export default function WorkoutCardTitle({
       transition={{
         duration: isExpanded ? 0.4 : 1,
       }}
+      initial={{
+        marginTop: -32,
+      }}
       animate={{
         marginTop: isExpanded ? 16 : -32,
       }}
@@ -31,6 +35,7 @@ export default function WorkoutCardTitle({
         {workout.elementType.includes("WOD") && (
           <BsLightningChargeFill size={14} />
         )}
+        {workout.elementType.includes("ENDURANCE") && <FaRunning size={14} />}
         {enumToString(workout.elementType)}
       </motion.div>
       <motion.div className="flex items-center text-base tracking-[0.15rem]">
