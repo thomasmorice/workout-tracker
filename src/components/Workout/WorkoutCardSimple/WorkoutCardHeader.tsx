@@ -1,92 +1,83 @@
 import { inferRouterOutputs } from "@trpc/server";
-import { motion } from "framer-motion";
-import { MdArrowBack } from "react-icons/md";
+import { AnimatePresence, motion } from "framer-motion";
 import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
-import { enumToString } from "../../../utils/formatting";
 import Image from "next/image";
 import { format } from "date-fns";
-import { RxDotsVertical } from "react-icons/rx";
-import { GiBiceps } from "react-icons/gi";
-import { BsLightningChargeFill } from "react-icons/bs";
 
 type WorkoutCardHeaderProps = {
-  isExpanded: boolean;
+  expanded: "minified" | "expanded" | "full-screen";
   workout:
     | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
     | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
 };
 
 export default function WorkoutCardHeader({
-  isExpanded,
+  expanded,
   workout,
 }: WorkoutCardHeaderProps) {
   return (
-    <motion.div layout className="relative z-10 w-full">
-      <motion.div className="">
-        <MdArrowBack className="absolute w-0" size={22} />
-
-        {/* AUTHOR */}
-        <motion.div
-          style={{
-            alignItems: isExpanded ? "center" : "start",
-          }}
-          className={`flex flex-col `}
-        >
-          <motion.div layout className={`avatar `}>
-            <motion.div className="relative w-8 rounded-full border-2 border-base-content border-opacity-50 bg-transparent">
-              <Image
-                fill
-                className="rounded-full object-contain p-0.5"
-                referrerPolicy="no-referrer"
-                src={workout.creator.image ?? "https://i.pravatar.cc/300"}
-                alt="Workout creator"
-              />
-            </motion.div>
-          </motion.div>
-
-          {/* Creator name and date */}
-          <motion.div
-            transition={{
-              delay: isExpanded ? 0.3 : 0,
-            }}
-            animate={{
-              opacity: isExpanded ? 1 : 0,
-              height: isExpanded ? "auto" : 0,
-              // visibility: isExpanded ? "visible" : "hidden",
-            }}
-          >
-            <motion.div className="text-xs font-bold uppercase leading-[14px] tracking-[0.05em]">
-              {workout.creator.name}
-            </motion.div>
-            <motion.div className="text-[11px] tracking-tight text-base-content text-opacity-50">
-              {format(workout.createdAt, "dd/MM/yyyy")}
-            </motion.div>
-          </motion.div>
-        </motion.div>
-
-        <div className="btn-ghost btn btn-sm btn-circle absolute right-0 top-0">
-          <RxDotsVertical size={23} />
-        </div>
-      </motion.div>
-      {/* Workout title */}
+    <motion.div
+      transition={{
+        delay: 0.3,
+      }}
+      layout
+      className="relative z-10 w-full"
+    >
+      {/* AUTHOR */}
       <motion.div
-        transition={{
-          duration: 0.7,
+        style={{
+          alignItems: expanded === "full-screen" ? "center" : "start",
         }}
-        animate={{
-          y: isExpanded ? 0 : -32,
-        }}
-        className={`flex flex-col items-center font-bold`}
+        className={`flex gap-3
+            ${expanded === "minified" ? "items-center " : ""}
+            ${expanded === "expanded" ? "" : ""}
+            ${expanded === "full-screen" ? "flex-col justify-center" : ""}
+          `}
       >
-        <motion.div className=" flex items-center gap-1.5 text-center text-xs font-semibold tracking-[0.03rem]">
-          {workout.elementType.includes("STRENGTH") && <GiBiceps size={14} />}
-          {workout.elementType.includes("WOD") && (
-            <BsLightningChargeFill size={14} />
-          )}
-          {enumToString(workout.elementType)}
+        <motion.div layout className={`avatar`}>
+          <motion.div
+            className={`relative  rounded-full border-2 border-base-content border-opacity-50 bg-transparent transition ${
+              expanded === "full-screen" ? "w-10" : "w-8"
+            }`}
+          >
+            <Image
+              fill
+              className="rounded-full object-contain p-0.5 "
+              referrerPolicy="no-referrer"
+              src={workout.creator.image ?? "https://i.pravatar.cc/300"}
+              alt="Workout creator"
+            />
+          </motion.div>
         </motion.div>
-        <motion.div className="flex items-center text-base tracking-[0.15rem]">
-          16MN AMRAP
+
+        {/* Creator name and date */}
+
+        {/* <AnimatePresence>
+              {isExpanded && ( */}
+        <motion.div
+          className={`w-full
+              ${expanded !== "full-screen" ? "text-left" : "text-center"}
+            }`}
+          transition={{
+            delay: 0.25,
+            duration: 0.25,
+          }}
+          initial={{
+            opacity: 0,
+          }}
+          animate={{
+            opacity: expanded === "minified" ? 0 : 1,
+          }}
+          exit={{
+            opacity: 0,
+          }}
+        >
+          <motion.div className="text-xs font-bold uppercase leading-[15px] tracking-[0.05em]">
+            {workout.creator.name}
+          </motion.div>
+          <motion.div className="text-[11px] tracking-tight text-base-content text-opacity-50">
+            {format(workout.createdAt, "dd/MM/yyyy")}
+          </motion.div>
         </motion.div>
       </motion.div>
     </motion.div>
