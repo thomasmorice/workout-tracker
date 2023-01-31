@@ -20,7 +20,7 @@ export default function WorkoutCardTitle({
   return (
     <motion.div
       transition={{
-        duration: isExpanded ? 0.4 : 1,
+        delay: isExpanded ? 0 : 0.3,
       }}
       initial={{
         marginTop: -32,

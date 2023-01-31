@@ -14,9 +14,9 @@ import { RxDotsVertical } from "react-icons/rx";
 import { BiExpandAlt } from "react-icons/bi";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { MdArrowBack } from "react-icons/md";
+import { MdArrowBack, MdOutlineArrowBackIos } from "react-icons/md";
 // import WorkoutCardHeader from "./WorkoutCardHeader";
-import WorkoutCardHeader from "./WorkoutCardHeader";
+import WorkoutCardUserAndActions from "./WorkoutCardUserAndActions";
 import WorkoutCardTitle from "./WorkoutCardTitle";
 
 interface WorkoutCardProps {
@@ -68,47 +68,20 @@ export default function WorkoutCard({
       </AnimatePresence>
       <motion.div
         layout
-        transition={{
-          ease: "backInOut",
-          duration: 0.7,
-          borderRadius: {
-            duration: 0.5,
-          },
-          zIndex: {
-            delay: expanded !== "minified" ? 0 : 0.4,
-          },
-        }}
         className={`bg-base-300 p-5 pb-4
           ${
             expanded === "full-screen"
-              ? "border-b border-b-base-content border-opacity-10"
-              : ""
+              ? "fixed top-0 left-0 z-50 w-full rounded-none border-b border-b-base-content border-opacity-10"
+              : "relative z-30 rounded-3xl"
           }
         `}
-        animate={{
-          borderRadius: expanded === "full-screen" ? "0px" : "25px",
-          zIndex: expanded === "full-screen" ? "50" : "10",
-        }}
-        style={
-          expanded === "full-screen"
-            ? {
-                top: 0,
-                left: 0,
-                width: "100%",
-                position: "fixed",
-              }
-            : {
-                position: "relative",
-                borderRadius: "24px",
-              }
-        }
       >
         <AnimatePresence>
           {expanded === "full-screen" && (
             <motion.div
-              transition={{
-                delay: 0.2,
-              }}
+              onClick={() => set_expanded("expanded")}
+              className="btn-ghost btn btn-circle absolute z-30"
+              transition={{}}
               initial={{
                 opacity: 0,
                 x: -20,
@@ -122,14 +95,14 @@ export default function WorkoutCard({
                 x: -20,
               }}
             >
-              <MdArrowBack className="absolute" size={22} />
+              <MdOutlineArrowBackIos className="" size={22} />
             </motion.div>
           )}
         </AnimatePresence>
         <div className="btn-ghost btn btn-sm btn-circle absolute right-4 z-30">
           <RxDotsVertical size={23} />
         </div>
-        <WorkoutCardHeader workout={workout} expanded={expanded} />
+        <WorkoutCardUserAndActions workout={workout} expanded={expanded} />
         <WorkoutCardTitle
           workout={workout}
           isExpanded={expanded !== "minified"}
@@ -163,20 +136,24 @@ export default function WorkoutCard({
               set_expanded(expanded === "minified" ? "expanded" : "full-screen")
             }
             type="button"
-            className="btn-ghost btn btn-sm btn-circle"
+            className="btn-ghost btn btn-circle"
           >
-            <BsChevronExpand size={18} />
+            <BsChevronExpand size={26} />
           </button>
 
-          <button
-            onClick={() =>
-              set_expanded(expanded === "full-screen" ? "expanded" : "minified")
-            }
-            type="button"
-            className="btn-ghost btn btn-sm btn-circle"
-          >
-            <BsChevronContract size={18} />
-          </button>
+          {expanded !== "minified" && (
+            <button
+              onClick={() =>
+                set_expanded(
+                  expanded === "full-screen" ? "expanded" : "minified"
+                )
+              }
+              type="button"
+              className="btn-ghost btn btn-sm btn-circle"
+            >
+              <BsChevronContract size={26} />
+            </button>
+          )}
         </div>
       </motion.div>
     </>

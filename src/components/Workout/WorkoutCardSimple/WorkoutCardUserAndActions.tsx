@@ -4,33 +4,22 @@ import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
 import Image from "next/image";
 import { format } from "date-fns";
 
-type WorkoutCardHeaderProps = {
+type WorkoutCardUserAndActionsProps = {
   expanded: "minified" | "expanded" | "full-screen";
   workout:
     | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
     | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
 };
 
-export default function WorkoutCardHeader({
+export default function WorkoutCardUserAndActions({
   expanded,
   workout,
-}: WorkoutCardHeaderProps) {
+}: WorkoutCardUserAndActionsProps) {
   return (
-    <motion.div
-      transition={{
-        delay: 0.3,
-      }}
-      layout
-      className="relative z-10 w-full"
-    >
+    <motion.div layout className="relative z-10 w-full">
       {/* AUTHOR */}
       <motion.div
-        style={{
-          alignItems: expanded === "full-screen" ? "center" : "start",
-        }}
-        className={`flex gap-3
-            ${expanded === "minified" ? "items-center " : ""}
-            ${expanded === "expanded" ? "" : ""}
+        className={`flex items-center gap-3
             ${expanded === "full-screen" ? "flex-col justify-center" : ""}
           `}
       >
@@ -51,17 +40,16 @@ export default function WorkoutCardHeader({
         </motion.div>
 
         {/* Creator name and date */}
-
-        {/* <AnimatePresence>
-              {isExpanded && ( */}
         <motion.div
           className={`w-full
               ${expanded !== "full-screen" ? "text-left" : "text-center"}
             }`}
-          transition={{
-            delay: 0.25,
-            duration: 0.25,
-          }}
+          transition={
+            {
+              // delay: 0.25,
+              // duration: 0.25,
+            }
+          }
           initial={{
             opacity: 0,
           }}
