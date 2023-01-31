@@ -14,7 +14,14 @@ import { RxDotsVertical } from "react-icons/rx";
 import { BiExpandAlt } from "react-icons/bi";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { MdArrowBack, MdOutlineArrowBackIos } from "react-icons/md";
+import {
+  MdArrowBack,
+  MdCloseFullscreen,
+  MdExpandLess,
+  MdExpandMore,
+  MdFullscreen,
+  MdOutlineArrowBackIos,
+} from "react-icons/md";
 // import WorkoutCardHeader from "./WorkoutCardHeader";
 import WorkoutCardUserAndActions from "./WorkoutCardUserAndActions";
 import WorkoutCardTitle from "./WorkoutCardTitle";
@@ -35,7 +42,6 @@ interface WorkoutCardProps {
 
 export default function WorkoutCard({
   workout,
-  mode = "card",
   onDuplicate,
   onEdit,
   onDelete,
@@ -44,14 +50,14 @@ export default function WorkoutCard({
   onMoveResultDown,
   footer,
 }: WorkoutCardProps) {
-  const [expanded, set_expanded] = useState<
-    "minified" | "expanded" | "full-screen"
-  >("minified");
+  const [mode, set_mode] = useState<"minified" | "expanded" | "full-screen">(
+    "minified"
+  );
 
   return (
     <>
       <AnimatePresence>
-        {expanded === "full-screen" && (
+        {mode === "full-screen" && (
           <motion.div
             initial={{
               opacity: 0,
@@ -68,92 +74,98 @@ export default function WorkoutCard({
       </AnimatePresence>
       <motion.div
         layout
-        className={`bg-base-300 p-5 pb-4
+        className={`overflow-hidden bg-base-300 p-5 pb-4
           ${
-            expanded === "full-screen"
+            mode === "full-screen"
               ? "fixed top-0 left-0 z-50 w-full rounded-none border-b border-b-base-content border-opacity-10"
               : "relative z-30 rounded-3xl"
           }
         `}
       >
-        <AnimatePresence>
-          {expanded === "full-screen" && (
-            <motion.div
-              onClick={() => set_expanded("expanded")}
-              className="btn-ghost btn btn-circle absolute z-30"
-              transition={{}}
-              initial={{
-                opacity: 0,
-                x: -20,
-              }}
-              animate={{
-                opacity: 1,
-                x: 0,
-              }}
-              exit={{
-                opacity: 0,
-                x: -20,
-              }}
-            >
-              <MdOutlineArrowBackIos className="" size={22} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <div className="btn-ghost btn btn-sm btn-circle absolute right-4 z-30">
-          <RxDotsVertical size={23} />
-        </div>
-        <WorkoutCardUserAndActions workout={workout} expanded={expanded} />
-        <WorkoutCardTitle
-          workout={workout}
-          isExpanded={expanded !== "minified"}
+        <motion.div
+          style={{
+            background:
+              "radial-gradient(126.53% 118.31% at 50.16% 0%, #000000 0%, rgba(22, 25, 31, 0.27) 0%, #20252E 100%)",
+          }}
+          layout
+          className="absolute top-0 left-0 z-10 h-full w-full"
+        ></motion.div>
+
+        <Image
+          fill
+          className="absolute top-0 z-0 h-full w-full object-cover opacity-50"
+          alt="Wallballs"
+          src="/workout-item/wallballs.png"
         />
 
-        <AnimatePresence>
-          {expanded !== "minified" && (
-            <motion.div
-              initial={{
-                opacity: 0,
-                height: 0,
-              }}
-              animate={{
-                opacity: 1,
-                height: "auto",
-              }}
-              exit={{
-                opacity: 0,
-                height: 0,
-              }}
-              className={`mt-5 whitespace-pre-wrap text-center text-[11px] leading-[15px] text-base-content text-opacity-70`}
-            >
-              {workout.description}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <motion.div
+          layout="position"
+          onClick={() => set_mode("expanded")}
+          className="btn-ghost btn btn-circle absolute z-30"
+          transition={{
+            duration: mode === "full-screen" ? 0.5 : 0.2,
+          }}
+          animate={{
+            opacity: mode === "full-screen" ? 1 : 0,
+            x: mode === "full-screen" ? 0 : -10,
+          }}
+        >
+          <MdOutlineArrowBackIos className="" size={22} />
+        </motion.div>
+        <motion.div
+          layout="position"
+          className="btn-ghost btn btn-sm btn-circle absolute right-4 z-30"
+        >
+          <RxDotsVertical size={23} />
+        </motion.div>
+        <WorkoutCardUserAndActions workout={workout} mode={mode} />
+        <WorkoutCardTitle workout={workout} isExpanded={mode !== "minified"} />
+
+        <motion.div
+          className={` relative z-30
+                mt-5 whitespace-pre-wrap text-center  text-base-content 
+                ${mode === "minified" ? "hidden" : "visible"}
+                ${
+                  mode === "full-screen"
+                    ? "text-[14px] leading-[24px] text-opacity-100"
+                    : "text-[11.5px] leading-[18px] text-opacity-70"
+                }
+              `}
+        >
+          {workout.description}
+        </motion.div>
 
         <div className="relative z-30 mt-3.5 flex items-center justify-center gap-3 ">
           <button
             onClick={() =>
-              set_expanded(expanded === "minified" ? "expanded" : "full-screen")
+              set_mode(mode === "full-screen" ? "expanded" : "minified")
             }
             type="button"
             className="btn-ghost btn btn-circle"
+            disabled={mode === "minified"}
           >
-            <BsChevronExpand size={26} />
+            <MdExpandLess size={22} />
           </button>
 
-          {expanded !== "minified" && (
-            <button
-              onClick={() =>
-                set_expanded(
-                  expanded === "full-screen" ? "expanded" : "minified"
-                )
-              }
-              type="button"
-              className="btn-ghost btn btn-sm btn-circle"
-            >
-              <BsChevronContract size={26} />
-            </button>
-          )}
+          <button
+            onClick={() => set_mode("full-screen")}
+            type="button"
+            className="btn-ghost btn btn-circle"
+            disabled={mode === "full-screen"}
+          >
+            <MdFullscreen size={26} />
+          </button>
+
+          <button
+            onClick={() =>
+              set_mode(mode === "minified" ? "expanded" : "full-screen")
+            }
+            type="button"
+            className="btn-ghost btn btn-circle"
+            disabled={mode === "full-screen"}
+          >
+            <MdExpandMore size={22} />
+          </button>
         </div>
       </motion.div>
     </>

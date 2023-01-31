@@ -5,28 +5,28 @@ import Image from "next/image";
 import { format } from "date-fns";
 
 type WorkoutCardUserAndActionsProps = {
-  expanded: "minified" | "expanded" | "full-screen";
+  mode: "minified" | "expanded" | "full-screen";
   workout:
     | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
     | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
 };
 
 export default function WorkoutCardUserAndActions({
-  expanded,
+  mode,
   workout,
 }: WorkoutCardUserAndActionsProps) {
   return (
-    <motion.div layout className="relative z-10 w-full">
+    <motion.div className="relative z-10 w-full">
       {/* AUTHOR */}
       <motion.div
         className={`flex items-center gap-3
-            ${expanded === "full-screen" ? "flex-col justify-center" : ""}
+            ${mode === "full-screen" ? "flex-col justify-center" : ""}
           `}
       >
         <motion.div layout className={`avatar`}>
           <motion.div
-            className={`relative  rounded-full border-2 border-base-content border-opacity-50 bg-transparent transition ${
-              expanded === "full-screen" ? "w-10" : "w-8"
+            className={`relative rounded-full border-2 border-base-content border-opacity-50 bg-transparent transition ${
+              mode === "full-screen" ? "w-10" : "w-8"
             }`}
           >
             <Image
@@ -41,23 +41,20 @@ export default function WorkoutCardUserAndActions({
 
         {/* Creator name and date */}
         <motion.div
-          className={`w-full
-              ${expanded !== "full-screen" ? "text-left" : "text-center"}
+          layout="position"
+          className={`flex w-full flex-col self-center
+              ${mode !== "full-screen" ? "text-left" : "text-center"}
             }`}
-          transition={
-            {
-              // delay: 0.25,
-              // duration: 0.25,
-            }
-          }
           initial={{
             opacity: 0,
           }}
           animate={{
-            opacity: expanded === "minified" ? 0 : 1,
+            opacity: mode === "minified" ? 0 : 1,
+            x: mode === "minified" ? -7 : 0,
+            lineHeight: mode === "minified" ? "6px" : "14px",
           }}
-          exit={{
-            opacity: 0,
+          transition={{
+            delay: mode !== "expanded" ? 0.07 : 0.12,
           }}
         >
           <motion.div className="text-xs font-bold uppercase leading-[15px] tracking-[0.05em]">

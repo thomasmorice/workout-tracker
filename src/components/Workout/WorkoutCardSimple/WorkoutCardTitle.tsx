@@ -19,16 +19,11 @@ export default function WorkoutCardTitle({
 }: WorkoutCardTitleProps) {
   return (
     <motion.div
-      transition={{
-        delay: isExpanded ? 0 : 0.3,
-      }}
-      initial={{
-        marginTop: -32,
-      }}
-      animate={{
-        marginTop: isExpanded ? 16 : -32,
-      }}
-      className={`flex flex-col items-center font-bold`}
+      layout="position"
+      className={`
+        relative z-30 flex flex-col items-center font-bold
+        ${isExpanded ? "mt-3" : "-mt-8"}
+      `}
     >
       <motion.div className=" flex items-center gap-1.5 text-center text-xs font-semibold tracking-[0.03rem]">
         {workout.elementType.includes("STRENGTH") && <GiBiceps size={14} />}
