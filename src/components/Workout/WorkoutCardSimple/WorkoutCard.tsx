@@ -61,11 +61,11 @@ export default function WorkoutCard({
       </AnimatePresence>
       <motion.div
         layout
-        className={`overflow-hidden bg-base-300 p-5 pb-4
+        className={` bg-base-300 p-5 pb-4
           ${
             mode === "full-screen"
-              ? "fixed top-0 left-0 z-50 min-h-screen w-full  overflow-scroll rounded-none"
-              : "relative z-10 rounded-3xl"
+              ? "fixed top-0 bottom-0 left-0 z-50 w-full overflow-scroll rounded-none"
+              : "relative z-10 overflow-hidden rounded-3xl"
           }
         `}
       >
@@ -92,7 +92,7 @@ export default function WorkoutCard({
             onClick={() => mode === "minified" && set_mode("expanded")}
             className={`
             text-center text-xs font-light
-            ${mode !== "full-screen" ? " mt-2" : "mt-9 mb-6"}
+            ${mode !== "full-screen" ? " mt-2" : "mt-9 mb-14"}
           `}
           >
             FEAT. WALLBALLS - ROWING - BURPEES
@@ -100,31 +100,37 @@ export default function WorkoutCard({
 
           <motion.div
             onClick={() => mode === "expanded" && set_mode("minified")}
-            className={`
-                mt-5 whitespace-pre-wrap text-center  text-base-content 
+            className={`relative mt-5 whitespace-pre-wrap text-center  text-base-content 
                 ${mode === "minified" ? "hidden" : "visible"}
                 ${
                   mode === "full-screen"
-                    ? "mb-8 text-[14px] leading-[24px] text-opacity-100"
+                    ? "mb-16 text-base leading-[28px] text-opacity-100"
                     : "text-[11.5px] leading-[18px] text-opacity-70"
                 }
               `}
           >
+            <motion.div className="absolute left-4 -top-4 text-[76px] opacity-20">
+              “
+            </motion.div>
             {workout.description}
+            <motion.div className="absolute right-8 -bottom-12 text-[76px] opacity-20">
+              ”
+            </motion.div>
           </motion.div>
 
           <WorkoutCardBadges workout={workout} />
 
-          <div className="mt-3.5 flex items-center justify-center gap-3 ">
-            <button
-              onClick={() => set_mode("full-screen")}
-              type="button"
-              className="btn-ghost btn btn-circle"
-              disabled={mode === "full-screen"}
-            >
-              <BiExpand size={26} />
-            </button>
-          </div>
+          {mode !== "full-screen" && (
+            <div className="mt-3.5 flex items-center justify-center gap-3 ">
+              <button
+                onClick={() => set_mode("full-screen")}
+                type="button"
+                className="btn-ghost btn btn-circle"
+              >
+                <BiExpand size={26} />
+              </button>
+            </div>
+          )}
         </motion.div>
       </motion.div>
     </>
