@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
 import Image from "next/image";
 import { format } from "date-fns";
+import { RxDotsVertical } from "react-icons/rx";
 
 type WorkoutCardUserAndActionsProps = {
   mode: "minified" | "expanded" | "full-screen";
@@ -16,7 +17,7 @@ export default function WorkoutCardUserAndActions({
   workout,
 }: WorkoutCardUserAndActionsProps) {
   return (
-    <motion.div className="relative z-10 w-full">
+    <motion.div className="w-full">
       {/* AUTHOR */}
       <motion.div
         className={`flex items-center gap-3
@@ -26,7 +27,7 @@ export default function WorkoutCardUserAndActions({
         <motion.div layout className={`avatar`}>
           <motion.div
             className={`relative rounded-full border-2 border-base-content border-opacity-50 bg-transparent transition ${
-              mode === "full-screen" ? "w-10" : "w-8"
+              mode === "full-screen" ? "w-12" : "w-8"
             }`}
           >
             <Image
@@ -63,6 +64,16 @@ export default function WorkoutCardUserAndActions({
           <motion.div className="text-[11px] tracking-tight text-base-content text-opacity-50">
             {format(workout.createdAt, "dd/MM/yyyy")}
           </motion.div>
+        </motion.div>
+
+        <motion.div
+          layout="position"
+          className={`
+              btn-ghost btn btn-circle absolute -right-2 z-30 
+              ${mode === "full-screen" ? "top-0" : "-top-2"}
+            `}
+        >
+          <RxDotsVertical size={mode === "full-screen" ? 28 : 23} />
         </motion.div>
       </motion.div>
     </motion.div>

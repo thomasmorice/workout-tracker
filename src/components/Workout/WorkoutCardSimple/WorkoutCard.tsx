@@ -1,30 +1,15 @@
 import { inferRouterOutputs } from "@trpc/server";
 import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
-import Image from "next/image";
-import { enumToString } from "../../../utils/formatting";
-import { GiBiceps } from "react-icons/gi";
-import {
-  BsArrowsCollapse,
-  BsChevronContract,
-  BsChevronExpand,
-  BsLightningChargeFill,
-} from "react-icons/bs";
-import { format } from "date-fns";
 import { RxDotsVertical } from "react-icons/rx";
-import { BiExpandAlt } from "react-icons/bi";
+import { BiExpand } from "react-icons/bi";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  MdArrowBack,
-  MdCloseFullscreen,
-  MdExpandLess,
-  MdExpandMore,
-  MdFullscreen,
-  MdOutlineArrowBackIos,
-} from "react-icons/md";
-// import WorkoutCardHeader from "./WorkoutCardHeader";
+import { MdOutlineArrowBackIos } from "react-icons/md";
 import WorkoutCardUserAndActions from "./WorkoutCardUserAndActions";
 import WorkoutCardTitle from "./WorkoutCardTitle";
+import WorkoutCardIllustration from "./WorkoutCardIllustration";
+import WorkoutCardBadges from "./WorkoutCardBadges";
+import { useLockedBody } from "usehooks-ts";
 
 interface WorkoutCardProps {
   workout:
@@ -54,6 +39,8 @@ export default function WorkoutCard({
     "minified"
   );
 
+  useLockedBody(mode === "full-screen");
+
   return (
     <>
       <AnimatePresence>
@@ -68,7 +55,7 @@ export default function WorkoutCard({
             exit={{
               opacity: 0,
             }}
-            className="fixed top-0 left-0 z-50 h-full w-full bg-base-300 bg-opacity-60 backdrop-blur-sm"
+            className="fixed top-0 left-0 z-20 h-full w-full bg-base-300 bg-opacity-60 backdrop-blur-sm"
           ></motion.div>
         )}
       </AnimatePresence>
@@ -77,96 +64,68 @@ export default function WorkoutCard({
         className={`overflow-hidden bg-base-300 p-5 pb-4
           ${
             mode === "full-screen"
-              ? "fixed top-0 left-0 z-50 w-full rounded-none border-b border-b-base-content border-opacity-10"
-              : "relative z-30 rounded-3xl"
+              ? "fixed top-0 left-0 z-50 min-h-screen w-full  overflow-scroll rounded-none"
+              : "relative z-10 rounded-3xl"
           }
         `}
       >
-        <motion.div
-          style={{
-            background:
-              "radial-gradient(126.53% 118.31% at 50.16% 0%, #000000 0%, rgba(22, 25, 31, 0.27) 0%, #20252E 100%)",
-          }}
-          layout
-          className="absolute top-0 left-0 z-10 h-full w-full"
-        ></motion.div>
+        <WorkoutCardIllustration mode={mode} />
+        <motion.div className="relative z-20">
+          <motion.div
+            layout="position"
+            onClick={() => set_mode("minified")}
+            className="btn-ghost btn btn-circle absolute z-30"
+            transition={{
+              duration: mode === "full-screen" ? 0.5 : 0.2,
+            }}
+            animate={{
+              opacity: mode === "full-screen" ? 1 : 0,
+              x: mode === "full-screen" ? 0 : -10,
+            }}
+          >
+            <MdOutlineArrowBackIos className="" size={22} />
+          </motion.div>
 
-        <Image
-          fill
-          className="absolute top-0 z-0 h-full w-full object-cover opacity-50"
-          alt="Wallballs"
-          src="/workout-item/wallballs.png"
-        />
+          <WorkoutCardUserAndActions workout={workout} mode={mode} />
+          <WorkoutCardTitle workout={workout} mode={mode} />
+          <motion.div
+            onClick={() => mode === "minified" && set_mode("expanded")}
+            className={`
+            text-center text-xs font-light
+            ${mode !== "full-screen" ? " mt-2" : "mt-9 mb-6"}
+          `}
+          >
+            FEAT. WALLBALLS - ROWING - BURPEES
+          </motion.div>
 
-        <motion.div
-          layout="position"
-          onClick={() => set_mode("expanded")}
-          className="btn-ghost btn btn-circle absolute z-30"
-          transition={{
-            duration: mode === "full-screen" ? 0.5 : 0.2,
-          }}
-          animate={{
-            opacity: mode === "full-screen" ? 1 : 0,
-            x: mode === "full-screen" ? 0 : -10,
-          }}
-        >
-          <MdOutlineArrowBackIos className="" size={22} />
-        </motion.div>
-        <motion.div
-          layout="position"
-          className="btn-ghost btn btn-sm btn-circle absolute right-4 z-30"
-        >
-          <RxDotsVertical size={23} />
-        </motion.div>
-        <WorkoutCardUserAndActions workout={workout} mode={mode} />
-        <WorkoutCardTitle workout={workout} isExpanded={mode !== "minified"} />
-
-        <motion.div
-          className={` relative z-30
+          <motion.div
+            onClick={() => mode === "expanded" && set_mode("minified")}
+            className={`
                 mt-5 whitespace-pre-wrap text-center  text-base-content 
                 ${mode === "minified" ? "hidden" : "visible"}
                 ${
                   mode === "full-screen"
-                    ? "text-[14px] leading-[24px] text-opacity-100"
+                    ? "mb-8 text-[14px] leading-[24px] text-opacity-100"
                     : "text-[11.5px] leading-[18px] text-opacity-70"
                 }
               `}
-        >
-          {workout.description}
+          >
+            {workout.description}
+          </motion.div>
+
+          <WorkoutCardBadges workout={workout} />
+
+          <div className="mt-3.5 flex items-center justify-center gap-3 ">
+            <button
+              onClick={() => set_mode("full-screen")}
+              type="button"
+              className="btn-ghost btn btn-circle"
+              disabled={mode === "full-screen"}
+            >
+              <BiExpand size={26} />
+            </button>
+          </div>
         </motion.div>
-
-        <div className="relative z-30 mt-3.5 flex items-center justify-center gap-3 ">
-          <button
-            onClick={() =>
-              set_mode(mode === "full-screen" ? "expanded" : "minified")
-            }
-            type="button"
-            className="btn-ghost btn btn-circle"
-            disabled={mode === "minified"}
-          >
-            <MdExpandLess size={22} />
-          </button>
-
-          <button
-            onClick={() => set_mode("full-screen")}
-            type="button"
-            className="btn-ghost btn btn-circle"
-            disabled={mode === "full-screen"}
-          >
-            <MdFullscreen size={26} />
-          </button>
-
-          <button
-            onClick={() =>
-              set_mode(mode === "minified" ? "expanded" : "full-screen")
-            }
-            type="button"
-            className="btn-ghost btn btn-circle"
-            disabled={mode === "full-screen"}
-          >
-            <MdExpandMore size={22} />
-          </button>
-        </div>
       </motion.div>
     </>
   );
