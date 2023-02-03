@@ -140,11 +140,13 @@ export const getWorkoutItemsAndRandomIllustrationByDescription = (
   workoutItems.map((item) => {
     if (
       item.alternatives &&
-      new RegExp(item.alternatives.join("|")).test(description)
+      new RegExp(item.alternatives.join("|"), "i").test(description)
     ) {
       featuredItems.push(item);
     }
   });
+
+  console.log("workoutItems", featuredItems);
 
   const illustrationId = arrayShuffle(featuredItems).find(
     (item) => item.illustrationId
