@@ -23,6 +23,7 @@
     "@trpc/next": "^10.0.0",
     "@trpc/react-query": "^10.0.0",
     "@trpc/server": "^10.0.0",
+    "array-shuffle": "^3.0.0",
     "chart.js": "^3.9.1",
     "daisyui": "^2.41.0",
     "date-fns": "^2.29.3",

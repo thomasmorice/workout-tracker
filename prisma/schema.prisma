@@ -138,6 +138,10 @@ model Friends {
     @@unique([userId, friendUserId])
 }
 
+model WorkoutItem {
+    id String @id @default(cuid())
+}
+
 model VerificationToken {
     identifier String
     token      String   @unique

@@ -2,10 +2,12 @@ import { motion } from "framer-motion";
 
 type WorkoutCardIllustrationProps = {
   mode: "minified" | "expanded" | "full-screen";
+  illustration?: string;
 };
 
 export default function WorkoutCardIllustration({
   mode,
+  illustration,
 }: WorkoutCardIllustrationProps) {
   return (
     <motion.div
@@ -13,7 +15,7 @@ export default function WorkoutCardIllustration({
       className="absolute top-0 left-0 z-0 h-full max-h-80 w-full bg-cover bg-no-repeat opacity-50"
       transition={{
         backgroundSize: {
-          duration: 3,
+          duration: 6,
           ease: "easeInOut",
         },
       }}
@@ -22,11 +24,13 @@ export default function WorkoutCardIllustration({
       }}
       animate={{
         backgroundSize:
-          mode === "minified" ? "100%" : mode === "expanded" ? "110%" : "120%",
+          mode === "minified" ? "100%" : mode === "expanded" ? "110%" : "115%",
       }}
       style={{
-        backgroundImage: "url(/workout-item/wallballs.png)",
-        backgroundPosition: "50%",
+        backgroundImage: `url(/workout-item/${
+          illustration ?? "walking-into-the-gym"
+        }.png)`,
+        backgroundPosition: "50% 30%",
       }}
     >
       <motion.div

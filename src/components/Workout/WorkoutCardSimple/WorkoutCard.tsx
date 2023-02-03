@@ -2,7 +2,7 @@ import { inferRouterOutputs } from "@trpc/server";
 import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
 import { RxDotsVertical } from "react-icons/rx";
 import { BiExpand } from "react-icons/bi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { MdOutlineArrowBackIos } from "react-icons/md";
 import WorkoutCardUserAndActions from "./WorkoutCardUserAndActions";
@@ -10,6 +10,7 @@ import WorkoutCardTitle from "./WorkoutCardTitle";
 import WorkoutCardIllustration from "./WorkoutCardIllustration";
 import WorkoutCardBadges from "./WorkoutCardBadges";
 import { useLockedBody } from "usehooks-ts";
+import { getWorkoutItemsAndRandomIllustrationByDescription } from "../../../utils/workout";
 
 interface WorkoutCardProps {
   workout:
@@ -38,6 +39,15 @@ export default function WorkoutCard({
   const [mode, set_mode] = useState<"minified" | "expanded" | "full-screen">(
     "minified"
   );
+  const [workoutItems, set_workoutItems] = useState<string[]>();
+  const [illustration, set_illustration] = useState<string>();
+
+  useEffect(() => {
+    const itemsAndIllustration =
+      getWorkoutItemsAndRandomIllustrationByDescription(workout.description);
+    set_workoutItems(itemsAndIllustration.items);
+    set_illustration(itemsAndIllustration.illustration);
+  }, []);
 
   useLockedBody(mode === "full-screen");
 
@@ -69,7 +79,7 @@ export default function WorkoutCard({
           }
         `}
       >
-        <WorkoutCardIllustration mode={mode} />
+        <WorkoutCardIllustration illustration={illustration} mode={mode} />
         <motion.div className="relative z-20">
           <motion.div
             layout="position"
@@ -88,15 +98,18 @@ export default function WorkoutCard({
 
           <WorkoutCardUserAndActions workout={workout} mode={mode} />
           <WorkoutCardTitle workout={workout} mode={mode} />
-          <motion.div
-            onClick={() => mode === "minified" && set_mode("expanded")}
-            className={`
-            text-center text-xs font-light
-            ${mode !== "full-screen" ? " mt-2" : "mt-9 mb-14"}
+
+          {workoutItems && workoutItems.length > 0 && (
+            <motion.div
+              onClick={() => mode === "minified" && set_mode("expanded")}
+              className={`
+            text-center text-xs font-light uppercase
+            ${mode !== "full-screen" ? " mt-2" : "mt-9 mb-14 text-sm"}
           `}
-          >
-            FEAT. WALLBALLS - ROWING - BURPEES
-          </motion.div>
+            >
+              FEAT. {workoutItems?.join(" - ")}
+            </motion.div>
+          )}
 
           <motion.div
             onClick={() => mode === "expanded" && set_mode("minified")}
@@ -104,16 +117,24 @@ export default function WorkoutCard({
                 ${mode === "minified" ? "hidden" : "visible"}
                 ${
                   mode === "full-screen"
-                    ? "mb-16 text-base leading-[28px] text-opacity-100"
+                    ? "mb-24 text-sm font-light leading-[22px] tracking-tight text-opacity-80"
                     : "text-[11.5px] leading-[18px] text-opacity-70"
                 }
               `}
           >
-            <motion.div className="absolute left-4 -top-4 text-[76px] opacity-20">
+            <motion.div
+              className={`absolute -left-1 -top-6 text-[76px] opacity-20 ${
+                mode === "full-screen" ? "visible" : "hidden"
+              }`}
+            >
               “
             </motion.div>
             {workout.description}
-            <motion.div className="absolute right-8 -bottom-12 text-[76px] opacity-20">
+            <motion.div
+              className={`absolute -right-1 -bottom-12 text-[76px] opacity-20 ${
+                mode === "full-screen" ? "visible" : "hidden"
+              }`}
+            >
               ”
             </motion.div>
           </motion.div>
