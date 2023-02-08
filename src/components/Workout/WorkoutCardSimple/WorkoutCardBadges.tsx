@@ -8,8 +8,7 @@ import { enumToString } from "../../../utils/formatting";
 
 type WorkoutCardBadgesProps = {
   workout:
-    | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
-    | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
+    | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
 };
 
 export default function WorkoutCardBadges({ workout }: WorkoutCardBadgesProps) {
@@ -25,7 +24,7 @@ export default function WorkoutCardBadges({ workout }: WorkoutCardBadgesProps) {
       </div> */}
       {workout.difficulty && (
         <div
-          className={`badge items-center gap-1  border border-base-content border-opacity-70 lowercase`}
+          className={`badge items-center gap-1  border border-base-content border-opacity-40 lowercase`}
         >
           <div
             className={`h-2 w-2 rounded-full ${
@@ -39,18 +38,18 @@ export default function WorkoutCardBadges({ workout }: WorkoutCardBadgesProps) {
       )}
 
       {workout.totalTime && (
-        <div className="badge items-center gap-0.5 border border-base-content border-opacity-70">
+        <div className="badge items-center gap-0.5 border border-base-content border-opacity-40">
           <MdOutlineTimelapse size={13} />
           {workout.totalTime}mn
         </div>
       )}
       {workout._count.workoutResults > 0 ? (
-        <div className="badge flex gap-0.5 border border-base-content border-opacity-70">
+        <div className="badge flex gap-0.5 border border-base-content border-opacity-40">
           <MdDone className="" size={13} />
           {workout._count.workoutResults} result
         </div>
       ) : (
-        <div className="badge flex gap-0.5 border border-base-content border-opacity-70">
+        <div className="badge flex gap-0.5 border border-base-content border-opacity-40">
           <WiMoonNew className="" size={15} />
           no result
         </div>

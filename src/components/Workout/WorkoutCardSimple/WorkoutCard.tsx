@@ -1,21 +1,20 @@
 import { inferRouterOutputs } from "@trpc/server";
 import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
-import { RxDotsVertical } from "react-icons/rx";
 import { BiExpand } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { MdOutlineArrowBackIos } from "react-icons/md";
 import WorkoutCardUserAndActions from "./WorkoutCardUserAndActions";
 import WorkoutCardTitle from "./WorkoutCardTitle";
 import WorkoutCardIllustration from "./WorkoutCardIllustration";
 import WorkoutCardBadges from "./WorkoutCardBadges";
 import { useLockedBody } from "usehooks-ts";
 import { getWorkoutItemsAndRandomIllustrationByDescription } from "../../../utils/workout";
+import WorkoutResults from "../../WorkoutResult/WorkoutResults";
+import { useFloatingActionButtonStore } from "../../../store/FloatingActionButtonStore";
 
 interface WorkoutCardProps {
   workout:
-    | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
-    | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
+    | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
   onDuplicate?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -41,6 +40,7 @@ export default function WorkoutCard({
   );
   const [workoutItems, set_workoutItems] = useState<string[]>();
   const [illustration, set_illustration] = useState<string>();
+  const { isSelected, hasSelection } = useFloatingActionButtonStore();
 
   useEffect(() => {
     const itemsAndIllustration =
@@ -81,66 +81,60 @@ export default function WorkoutCard({
       >
         <WorkoutCardIllustration illustration={illustration} mode={mode} />
         <motion.div className="relative z-20">
-          <motion.div
-            layout="position"
-            onClick={() => set_mode("minified")}
-            className="btn-ghost btn btn-circle absolute z-30"
-            transition={{
-              duration: mode === "full-screen" ? 0.5 : 0.2,
-            }}
-            animate={{
-              opacity: mode === "full-screen" ? 1 : 0,
-              x: mode === "full-screen" ? 0 : -10,
-            }}
-          >
-            <MdOutlineArrowBackIos className="" size={22} />
-          </motion.div>
-
-          <WorkoutCardUserAndActions workout={workout} mode={mode} />
+          <WorkoutCardUserAndActions
+            onGoback={() => set_mode("minified")}
+            onToggleSelect={onSelect}
+            isSelected={isSelected(workout)}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onDuplicate={onDuplicate}
+            workout={workout}
+            mode={mode}
+          />
           <WorkoutCardTitle workout={workout} mode={mode} />
 
-          {workoutItems && workoutItems.length > 0 && (
-            <motion.div
-              onClick={() => mode === "minified" && set_mode("expanded")}
-              className={`
-            text-center text-xs font-light uppercase
-            ${mode !== "full-screen" ? " mt-2" : "mt-9 mb-14 text-sm"}
+          <div onClick={() => mode === "minified" && set_mode("expanded")}>
+            {mode === "minified" && workoutItems && workoutItems.length > 0 && (
+              <motion.div
+                className={`
+            mt-2 text-center text-xs font-light
+            uppercase
           `}
-            >
-              FEAT. {workoutItems?.join(" - ")}
-            </motion.div>
-          )}
+              >
+                FEAT. {workoutItems?.join(" - ")}
+              </motion.div>
+            )}
 
-          <motion.div
-            onClick={() => mode === "expanded" && set_mode("minified")}
-            className={`relative mt-5 whitespace-pre-wrap text-center  text-base-content 
+            <motion.div
+              onClick={() => mode === "expanded" && set_mode("minified")}
+              className={`relative mt-5 whitespace-pre-wrap text-center  text-base-content 
                 ${mode === "minified" ? "hidden" : "visible"}
                 ${
                   mode === "full-screen"
-                    ? "mb-24 text-sm font-light leading-[22px] tracking-tight text-opacity-80"
+                    ? "mb-12 text-sm font-light leading-[22px] tracking-tight text-opacity-80"
                     : "text-[11.5px] leading-[18px] text-opacity-70"
                 }
               `}
-          >
-            <motion.div
-              className={`absolute -left-1 -top-6 text-[76px] opacity-20 ${
-                mode === "full-screen" ? "visible" : "hidden"
-              }`}
             >
-              “
+              <motion.div
+                className={`absolute -left-1 -top-6 text-[76px] opacity-20 ${
+                  mode === "full-screen" ? "visible" : "hidden"
+                }`}
+              >
+                “
+              </motion.div>
+              {workout.description}
+              <motion.div
+                className={`absolute -right-1 -bottom-12 text-[76px] opacity-20 ${
+                  mode === "full-screen" ? "visible" : "hidden"
+                }`}
+              >
+                ”
+              </motion.div>
             </motion.div>
-            {workout.description}
-            <motion.div
-              className={`absolute -right-1 -bottom-12 text-[76px] opacity-20 ${
-                mode === "full-screen" ? "visible" : "hidden"
-              }`}
-            >
-              ”
-            </motion.div>
-          </motion.div>
 
-          <WorkoutCardBadges workout={workout} />
-
+            <WorkoutCardBadges workout={workout} />
+          </div>
           {mode !== "full-screen" && (
             <div className="mt-3.5 flex items-center justify-center gap-3 ">
               <button
@@ -150,6 +144,13 @@ export default function WorkoutCard({
               >
                 <BiExpand size={26} />
               </button>
+            </div>
+          )}
+
+          {mode === "full-screen" && (
+            <div>
+              <div className="divider mt-12 mb-8 opacity-70"></div>
+              {<WorkoutResults workoutId={workout.id} />}
             </div>
           )}
         </motion.div>

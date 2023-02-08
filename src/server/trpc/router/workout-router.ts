@@ -21,7 +21,7 @@ export const WorkoutSelect = {
   updatedAt: true,
 };
 
-export const WorkoutExtras = {
+export const WorkoutExtras: Prisma.WorkoutSelect = {
   creator: true,
   _count: {
     select: { workoutResults: true },
@@ -33,7 +33,7 @@ const SelectWorkout = {
   ...WorkoutSelect,
   workoutResults: {
     select: {
-      ...WorkoutResultsSelect,
+      // ...WorkoutResultsSelect,
       workoutSession: {
         select: {
           event: true,
@@ -56,6 +56,18 @@ export const workoutRouter = router({
         select: {
           ...WorkoutExtras,
           ...WorkoutSelect,
+          creator: true,
+          _count: {
+            select: {
+              workoutResults: {
+                where: {
+                  workoutSession: {
+                    athleteId: ctx.session.user.id,
+                  },
+                },
+              },
+            },
+          },
           workoutResults: {
             select: {
               ...WorkoutResultsSelect,
@@ -177,8 +189,22 @@ export const workoutRouter = router({
         take: limit + 1,
         select: {
           ...SelectWorkout,
+          creator: true,
+          _count: {
+            select: {
+              workoutResults: {
+                where: {
+                  workoutSession: {
+                    athleteId: ctx.session.user.id,
+                  },
+                },
+              },
+            },
+          },
         },
-        where: where,
+        where: {
+          ...where,
+        },
         cursor: cursor ? { id: cursor } : undefined,
         ...(orderByMostlyDone && {
           orderBy: {

@@ -5,12 +5,12 @@ import { GiBiceps } from "react-icons/gi";
 import { FaRunning } from "react-icons/fa";
 import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
 import { enumToString } from "../../../utils/formatting";
+import { AiFillTag } from "react-icons/ai";
 
 type WorkoutCardTitleProps = {
   mode: "minified" | "expanded" | "full-screen";
   workout:
-    | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
-    | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
+    | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
 };
 
 export default function WorkoutCardTitle({
@@ -37,12 +37,23 @@ export default function WorkoutCardTitle({
         ${mode === "full-screen" ? "text-sm" : "text-xs"}
         `}
       >
-        {workout.elementType.includes("STRENGTH") && <GiBiceps size={14} />}
-        {workout.elementType.includes("WOD") && (
-          <BsLightningChargeFill size={14} />
+        {workout.name ? (
+          <>
+            <AiFillTag size={14} />
+            <div className="text-base uppercase">{workout.name}</div>
+          </>
+        ) : (
+          <>
+            {workout.elementType.includes("STRENGTH") && <GiBiceps size={14} />}
+            {workout.elementType.includes("WOD") && (
+              <BsLightningChargeFill size={14} />
+            )}
+            {workout.elementType.includes("ENDURANCE") && (
+              <FaRunning size={14} />
+            )}
+            {enumToString(workout.elementType)}
+          </>
         )}
-        {workout.elementType.includes("ENDURANCE") && <FaRunning size={14} />}
-        {enumToString(workout.elementType)}
       </motion.div>
       <motion.div
         className={`
@@ -50,7 +61,8 @@ export default function WorkoutCardTitle({
         ${mode === "full-screen" ? "text-xl" : "text-base"}
       `}
       >
-        {workout.totalTime}MN {enumToString(workout.workoutType ?? "")}
+        {/* {workout.totalTime}MN  */}
+        {enumToString(workout.workoutType ?? "")}
       </motion.div>
     </motion.div>
   );

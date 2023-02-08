@@ -89,7 +89,6 @@ export const useWorkoutService = () => {
   };
 
   const getWorkoutById = (id: number) => {
-    console.log("fetching");
     return trpc.workout.getWorkoutById.useQuery(
       {
         id: id,

@@ -3,6 +3,7 @@ import arrayShuffle from "array-shuffle";
 export const workoutItems: {
   key: string;
   alternatives?: string[];
+  invalidates?: string[];
   illustrationId?: number;
 }[] = [
   {
@@ -41,6 +42,11 @@ export const workoutItems: {
     illustrationId: 3,
   },
   {
+    key: "thruster",
+    alternatives: ["thruster"],
+    illustrationId: 3,
+  },
+  {
     key: "muscle-ups",
     alternatives: ["muscle-up", "muscle up", "muscleup"],
     // illustrationId: 4,
@@ -73,6 +79,7 @@ export const workoutItems: {
   {
     key: "pushups",
     alternatives: ["pushup"],
+    invalidates: ["handstand pushup"],
     illustrationId: 5,
   },
   {
@@ -145,8 +152,6 @@ export const getWorkoutItemsAndRandomIllustrationByDescription = (
       featuredItems.push(item);
     }
   });
-
-  console.log("workoutItems", featuredItems);
 
   const illustrationId = arrayShuffle(featuredItems).find(
     (item) => item.illustrationId
