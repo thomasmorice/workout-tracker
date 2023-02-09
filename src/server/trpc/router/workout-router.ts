@@ -33,7 +33,8 @@ const SelectWorkout = {
   ...WorkoutSelect,
   workoutResults: {
     select: {
-      // ...WorkoutResultsSelect,
+      weight: true,
+
       workoutSession: {
         select: {
           event: true,
