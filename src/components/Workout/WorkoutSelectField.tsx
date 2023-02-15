@@ -60,7 +60,7 @@ export default function WorkoutSelectField({
           onClick={() => {
             set_searchTerm("");
           }}
-          className="btn-sm btn-circle btn"
+          className="btn btn-sm btn-circle"
         >
           <MdClose size={14} />
         </button>

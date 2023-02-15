@@ -7,7 +7,7 @@ import { useWorkoutService } from "../../services/useWorkoutService";
 import { useToastStore } from "../../store/ToastStore";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import { enumToString } from "../../utils/formatting";
-import Modal from "../Layout/Modal/Modal";
+import Modal from "../Layout/Modal/Modal2";
 import ConfirmModal from "../Layout/Modal/ConfirmModal";
 import { WorkoutRouterType } from "../../server/trpc/router/workout-router";
 
@@ -114,10 +114,12 @@ export default function WorkoutForm() {
         <p>Are you sure you wanna delete the workout </p>
       </ConfirmModal>
 
-      <Modal isOpen={!!state && state !== "delete"} onClose={closeWorkoutForm}>
+      <Modal
+        title={state && `${state} a workout`}
+        isOpen={!!state && state !== "delete"}
+        onClose={closeWorkoutForm}
+      >
         <>
-          <h3 className="text-xl font-bold capitalize">{state} a workout</h3>
-
           <form
             className="mt-5 flex flex-col gap-2"
             onSubmit={async (e) => {
@@ -271,9 +273,7 @@ export default function WorkoutForm() {
                 Cancel
               </button>
               <button
-                className={`btn-primary btn capitalize ${
-                  isSubmitting ? "loading" : ""
-                }`}
+                className={`btn-primary btn ${isSubmitting ? "loading" : ""}`}
                 type="submit"
               >
                 {`${state} workout`}

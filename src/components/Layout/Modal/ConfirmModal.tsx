@@ -3,7 +3,7 @@ import Modal from "./Modal";
 
 interface ConfirmModalProps {
   title: string;
-  children: React.ReactElement;
+  children: React.ReactNode;
   isOpen: boolean;
   onConfirm: () => void;
   onClose: () => void;

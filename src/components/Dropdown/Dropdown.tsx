@@ -4,7 +4,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 
 type DropdownProps = {
   containerClass?: string;
-  children: React.ReactElement;
+  children: React.ReactNode;
   buttons: {
     label: string;
     onClick: () => void;
@@ -17,7 +17,7 @@ export default function Dropdown({
   buttons,
 }: DropdownProps) {
   return (
-    <Menu as="div" className={`dropdown dropdown-open z-40 ${containerClass} `}>
+    <Menu as="div" className={`dropdown dropdown-open z-50 ${containerClass} `}>
       <Menu.Button>{children}</Menu.Button>
       <Transition
         as={Fragment}

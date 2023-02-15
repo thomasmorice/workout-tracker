@@ -4,7 +4,7 @@ interface DashboardItemListProps {
   title: string;
   isLoading?: boolean;
   loadingMessage?: string;
-  children: React.ReactElement;
+  children: React.ReactNode;
 }
 
 export default function DashboardItemList({

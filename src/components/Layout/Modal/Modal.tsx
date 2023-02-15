@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useOnClickOutside, useLockedBody } from "usehooks-ts";
 import Drawer from "react-drag-drawer";
 import { MdClose } from "react-icons/md";
@@ -7,7 +7,7 @@ interface ModalProps {
   isOpen: boolean;
   modalChildrenOrder?: number;
   withCloseButton?: boolean;
-  children: React.ReactElement;
+  children: React.ReactNode;
 }
 
 export default function Modal({
@@ -49,7 +49,7 @@ export default function Modal({
         </div>
       ) : (
         <div className="flex w-full items-center justify-end">
-          <div onClick={onClose} className="btn-circle btn">
+          <div onClick={onClose} className="btn btn-circle">
             <MdClose size={16} />{" "}
           </div>
         </div>

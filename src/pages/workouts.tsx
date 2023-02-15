@@ -4,13 +4,14 @@ import Head from "next/head";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Masonry from "react-masonry-css";
 import { useIntersectionObserver, useDebounce } from "usehooks-ts";
-import WorkoutCard from "../components/Workout/WorkoutCardSimple/WorkoutCard";
+import WorkoutCard from "../components/Workout/WorkoutCard/WorkoutCard";
 import WorkoutCardSkeleton from "../components/Workout/WorkoutCardSkeleton";
 import { useWorkoutService } from "../services/useWorkoutService";
 import { useWorkoutStore } from "../store/WorkoutStore";
 import { MdSearch } from "react-icons/md";
 import Header from "../components/Layout/Header";
 import { useFloatingActionButtonStore } from "../store/FloatingActionButtonStore";
+import { LayoutGroup, motion } from "framer-motion";
 
 const Workouts: NextPage = () => {
   const { data: sessionData } = useSession();
@@ -113,25 +114,27 @@ const Workouts: NextPage = () => {
               className="-ml-16 mt-6 flex w-auto"
               columnClassName="pl-16 bg-clip-padding "
             >
-              {data?.pages
-                ? data.pages.map((page) =>
-                    page.workouts.map((workout) => (
-                      <div key={workout.id} className="mb-12">
-                        <WorkoutCard
-                          onEdit={() => showWorkoutForm("edit", workout)}
-                          onDuplicate={() =>
-                            showWorkoutForm("duplicate", workout)
-                          }
-                          onSelect={() => toggleSelectWorkout(workout)}
-                          onDelete={() => showWorkoutForm("delete", workout)}
-                          workout={workout}
-                        />
-                      </div>
-                    ))
-                  )
-                : Array(9)
-                    .fill(0)
-                    .map((_, i) => <WorkoutCardSkeleton key={i} />)}
+              <LayoutGroup>
+                {data?.pages
+                  ? data.pages.map((page) =>
+                      page.workouts.map((workout) => (
+                        <div key={workout.id} className="mb-12">
+                          <WorkoutCard
+                            onEdit={() => showWorkoutForm("edit", workout)}
+                            onDuplicate={() =>
+                              showWorkoutForm("duplicate", workout)
+                            }
+                            onSelect={() => toggleSelectWorkout(workout)}
+                            onDelete={() => showWorkoutForm("delete", workout)}
+                            workout={workout}
+                          />
+                        </div>
+                      ))
+                    )
+                  : Array(9)
+                      .fill(0)
+                      .map((_, i) => <WorkoutCardSkeleton key={i} />)}
+              </LayoutGroup>
             </Masonry>
 
             {hasNoWorkouts && (

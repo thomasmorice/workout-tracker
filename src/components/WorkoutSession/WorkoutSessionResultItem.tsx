@@ -17,7 +17,7 @@ import {
   workoutResultIsFilled,
 } from "../../utils/utils";
 import WorkoutResultCard from "../WorkoutResult/WorkoutResultCard";
-import WorkoutCard from "../Workout/WorkoutCard2/WorkoutCard";
+import WorkoutCard from "../Workout/WorkoutCard/WorkoutCard";
 
 interface WorkoutSessionResultItemProps {
   result: WorkoutResultInputsWithWorkout;

@@ -13,7 +13,11 @@ export default function WorkoutCardIllustration({
     <motion.div
       layout
       className={`absolute top-0 left-0 z-0 h-full w-full bg-cover bg-no-repeat opacity-50
-        ${mode !== "full-screen" ? "max-h-80" : "max-h-96"}
+        ${
+          mode !== "full-screen"
+            ? "max-h-60 overflow-hidden rounded-3xl"
+            : "max-h-96"
+        }
       `}
       transition={{
         backgroundSize: {
@@ -25,8 +29,7 @@ export default function WorkoutCardIllustration({
         backgroundSize: "100%",
       }}
       animate={{
-        backgroundSize:
-          mode === "minified" ? "100%" : mode === "expanded" ? "110%" : "115%",
+        backgroundSize: mode !== "full-screen" ? "100%" : "115%",
       }}
       style={{
         backgroundImage: `url(/workout-item/${

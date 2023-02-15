@@ -1,8 +1,8 @@
 type DashboardItemProps = {
   title: string;
-  illustration: React.ReactElement;
+  illustration: React.ReactNode;
   value?: string | number;
-  children: React.ReactElement;
+  children: React.ReactNode;
 };
 
 export default function DashboardItem({

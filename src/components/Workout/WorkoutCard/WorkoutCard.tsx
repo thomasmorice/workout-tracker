@@ -1,42 +1,33 @@
-import { format } from "date-fns";
-import Image from "next/image";
-import {
-  MdDone,
-  MdDelete,
-  MdCopyAll,
-  MdEdit,
-  MdOutlineExpandMore,
-  MdOutlineExpandLess,
-  MdOutlineArrowDropDown,
-  MdOutlineArrowDropUp,
-} from "react-icons/md";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
 import { inferRouterOutputs } from "@trpc/server";
-import { HiDotsHorizontal } from "react-icons/hi";
-import { TbLink } from "react-icons/tb";
-import useCollapse from "react-collapsed";
-import { IoAddCircle, IoTimerOutline } from "react-icons/io5";
+import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
+import { BiExpand } from "react-icons/bi";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import WorkoutCardUserAndActions from "./WorkoutCardUserAndActions";
+import WorkoutCardTitle from "./WorkoutCardTitle";
+import WorkoutCardIllustration from "./WorkoutCardIllustration";
 import WorkoutCardBadges from "./WorkoutCardBadges";
+import { useLockedBody } from "usehooks-ts";
+import { getWorkoutItemsAndRandomIllustrationByDescription } from "../../../utils/workout";
+import WorkoutResults from "../../WorkoutResult/WorkoutResults";
+import { useFloatingActionButtonStore } from "../../../store/FloatingActionButtonStore";
+import WorkoutCardSkeleton from "../WorkoutCardSkeleton";
 
 interface WorkoutCardProps {
   workout:
-    | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
-    | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
+    | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
   onDuplicate?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
   onSelect?: () => void;
   onMoveResultUp?: () => void;
   onMoveResultDown?: () => void;
-  footer?: React.ReactElement;
+  footer?: React.ReactNode;
   mode?: "card" | "selecteable" | "for-result";
 }
 
 export default function WorkoutCard({
   workout,
-  mode = "card",
   onDuplicate,
   onEdit,
   onDelete,
@@ -45,190 +36,130 @@ export default function WorkoutCard({
   onMoveResultDown,
   footer,
 }: WorkoutCardProps) {
-  const { data: sessionData } = useSession();
+  const [mode, set_mode] = useState<"minified" | "expanded" | "full-screen">(
+    "minified"
+  );
+  const [workoutItems, set_workoutItems] = useState<string[]>();
+  const [illustration, set_illustration] = useState<string>();
+  const { isSelected, hasSelection } = useFloatingActionButtonStore();
 
-  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
-    collapsedHeight: mode === "selecteable" ? 48 : 128,
-  });
+  useEffect(() => {
+    const itemsAndIllustration =
+      getWorkoutItemsAndRandomIllustrationByDescription(workout.description);
+    set_workoutItems(itemsAndIllustration.items);
+    set_illustration(itemsAndIllustration.illustration);
+  }, []);
+
+  useLockedBody(mode === "full-screen");
+
+  if (!illustration && !workoutItems) {
+    return <WorkoutCardSkeleton />;
+  }
 
   return (
-    <div
-      className={`workout-card group relative ${workout.difficulty?.toLowerCase()}`}
-    >
-      {/* <div className={`glowing-bg -z-10`}></div> */}
+    <>
+      <AnimatePresence>
+        {mode === "full-screen" && (
+          <motion.div
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            className="fixed top-0 left-0 z-20 h-full w-full bg-base-300 bg-opacity-60 backdrop-blur-sm"
+          ></motion.div>
+        )}
+      </AnimatePresence>
+      <motion.div
+        layout
+        className={` bg-base-300 p-5 pb-4
+          ${
+            mode === "full-screen"
+              ? "fixed top-0 bottom-0 left-0 z-50 w-full overflow-scroll rounded-none"
+              : "relative rounded-3xl"
+          }
+        `}
+      >
+        <WorkoutCardIllustration illustration={illustration} mode={mode} />
+        <motion.div className="relative">
+          <WorkoutCardUserAndActions
+            onGoback={() => set_mode("minified")}
+            onOpenFullScreen={() => set_mode("full-screen")}
+            onToggleSelect={onSelect}
+            isSelected={isSelected(workout)}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onDuplicate={onDuplicate}
+            workout={workout}
+            mode={mode}
+          />
+          <WorkoutCardTitle workout={workout} mode={mode} />
 
-      <div className="card bg-base-100 p-6 ">
-        {/* Title and actions */}
-        <div className="flex items-center justify-between">
-          <Link
-            className="flex flex-wrap items-center gap-2 text-sm font-bold uppercase text-white opacity-75 transition-all hover:gap-4"
-            href={`/workout/${workout.id}`}
-          >
-            <TbLink size={16} />
-            {workout.name ? (
-              workout.name
+          <div onClick={() => mode === "minified" && set_mode("expanded")}>
+            {mode === "minified" && workoutItems && workoutItems.length > 0 ? (
+              <motion.div
+                className={`
+            mx-auto mt-2 max-w-[220px] text-center text-xs font-light
+            uppercase
+          `}
+              >
+                FEAT. {workoutItems?.join(" - ")}
+              </motion.div>
             ) : (
-              <div>
-                Workout N°
-                {workout.id}
-              </div>
-            )}
-          </Link>
-
-          {/* Card actions */}
-          {mode === "card" && (
-            <div className="dropdown dropdown-end">
-              <label
-                tabIndex={0}
-                className="btn-sm btn-square btn border-none bg-base-200"
+              <motion.div
+                onClick={() => mode === "expanded" && set_mode("minified")}
+                className={`relative mt-5 whitespace-pre-wrap text-center text-base-content 
+                ${
+                  mode === "full-screen"
+                    ? "mb-12 text-sm font-light leading-[22px] tracking-tight text-opacity-80"
+                    : "text-[11.5px] leading-[18px] text-opacity-70"
+                }
+              `}
               >
-                <HiDotsHorizontal />
-              </label>
-              <ul
-                tabIndex={0}
-                className="dropdown-content menu rounded-box w-52 bg-base-200 p-1 shadow-lg"
-              >
-                <li>
-                  <a onClick={onEdit}>
-                    <MdEdit size={17} /> Edit
-                  </a>
-                </li>
-                <li>
-                  <a onClick={onDuplicate}>
-                    <MdCopyAll size={17} />
-                    Duplicate
-                  </a>
-                </li>
-                <li>
-                  <a onClick={onDelete}>
-                    <MdDelete size={17} />
-                    Delete
-                  </a>
-                </li>
-              </ul>
-            </div>
-          )}
-
-          {mode === "selecteable" && (
-            <button type="button" onClick={onSelect} className="btn-sm btn">
-              <IoAddCircle size={19} />
-            </button>
-          )}
-
-          {mode === "for-result" && (
-            <>
-              {/* Move position on phone */}
-              <div className="absolute right-4 md:hidden">
-                <div className="btn-group">
-                  <button
-                    disabled={!onMoveResultDown}
-                    onClick={onMoveResultDown}
-                    type="button"
-                    className="btn-outline btn btn-xs"
-                  >
-                    <MdOutlineArrowDropDown size="20px" />
-                  </button>
-                  <button
-                    disabled={!onMoveResultUp}
-                    onClick={onMoveResultUp}
-                    type="button"
-                    className="btn-outline btn btn-xs "
-                  >
-                    <MdOutlineArrowDropUp size="20px" />
-                  </button>
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-
-        {/* Badges */}
-        <div className="mt-5 flex items-center justify-between">
-          <WorkoutCardBadges workout={workout} />
-        </div>
-
-        <div
-          className={`mt-3 whitespace-pre-wrap  text-[0.75rem] leading-5 text-base-content transition-opacity  ${
-            isExpanded || mode === "for-result"
-              ? "text-opacity-95"
-              : "text-opacity-70"
-          }`}
-          {...getToggleProps()}
-        >
-          <div
-            className="p-1"
-            {...(mode !== "for-result" && { ...getCollapseProps() })}
-          >
-            {workout.description}
-          </div>
-          <div className="divider w-full opacity-50">
-            <div className="flex cursor-pointer flex-col items-center text-xs">
-              {mode !== "for-result" &&
-                (isExpanded ? (
-                  <>
-                    COLLAPSE <MdOutlineExpandLess />
-                  </>
-                ) : (
-                  <>
-                    EXPAND <MdOutlineExpandMore />
-                  </>
-                ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Illustration */}
-        {/* <div className="relative my-5 h-44 w-full">
-        <Image
-          className="rounded-lg object-cover"
-          fill
-          src="/workout-illustration/deadlift.jpeg"
-          alt="Deadlift"
-        />
-      </div> */}
-
-        {/* Footer */}
-        <>
-          {mode === "card" && (
-            <div className="flex w-full items-center justify-between gap-3 text-xs">
-              <div className="flex items-center gap-2">
-                {workout.creator && (
-                  <div
-                    className="tooltip tooltip-right z-30"
-                    data-tip={`Created by ${workout.creator.name}`}
-                  >
-                    <div className="mask mask-circle relative h-7 w-7 ">
-                      <Image
-                        fill
-                        referrerPolicy="no-referrer"
-                        src={
-                          workout.creator.image ?? "https://i.pravatar.cc/300"
-                        }
-                        alt="Workout creator"
-                      />
-                    </div>
-                  </div>
-                )}
-                <div className="badge text-xs">
-                  {format(workout.createdAt, "dd/MM/yyyy")}
-                </div>
-              </div>
-              {workout._count && (
-                <div
-                  className="tooltip tooltip-left "
-                  data-tip={`Done ${workout._count.workoutResults} times`}
+                <motion.div
+                  className={`absolute -left-1 -top-6 text-[76px] opacity-20 ${
+                    mode === "full-screen" ? "visible" : "hidden"
+                  }`}
                 >
-                  <div className="badge flex gap-1">
-                    <MdDone className="" size={17} />
-                    {workout._count.workoutResults}
-                  </div>
-                </div>
-              )}
+                  “
+                </motion.div>
+                {workout.description}
+                <motion.div
+                  className={`absolute -right-1 -bottom-12 text-[76px] opacity-20 ${
+                    mode === "full-screen" ? "visible" : "hidden"
+                  }`}
+                >
+                  ”
+                </motion.div>
+              </motion.div>
+            )}
+
+            <WorkoutCardBadges workout={workout} />
+          </div>
+          {/* {mode !== "full-screen" && (
+            <div className="mt-3.5 flex items-center justify-center gap-3 ">
+              <button
+                onClick={() => set_mode("full-screen")}
+                type="button"
+                className="btn-ghost btn btn-circle"
+              >
+                <BiExpand size={26} />
+              </button>
+            </div>
+          )} */}
+
+          {mode === "full-screen" && (
+            <div>
+              <div className="divider mt-12 mb-8 opacity-70"></div>
+              {<WorkoutResults workoutId={workout.id} />}
             </div>
           )}
-          {footer && footer}
-        </>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </>
   );
 }

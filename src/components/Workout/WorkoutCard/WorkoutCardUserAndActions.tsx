@@ -11,6 +11,7 @@ import Dropdown from "../../Dropdown/Dropdown";
 type WorkoutCardUserAndActionsProps = {
   mode: "minified" | "expanded" | "full-screen";
   isSelected?: boolean;
+  onOpenFullScreen?: () => void;
   onDuplicate?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -21,6 +22,7 @@ type WorkoutCardUserAndActionsProps = {
 };
 
 export default function WorkoutCardUserAndActions({
+  onOpenFullScreen,
   onDuplicate,
   isSelected,
   onEdit,
@@ -44,39 +46,44 @@ export default function WorkoutCardUserAndActions({
     //     onClick: onMoveResultDown,
     //   });
     // }
-    if (onToggleSelect) {
+    onOpenFullScreen &&
+      actions.push({
+        label: "See details",
+        onClick: onOpenFullScreen,
+      });
+    onToggleSelect &&
       actions.push({
         label: "Select workout",
         onClick: onToggleSelect,
       });
-    }
-    if (onDuplicate) {
+
+    onDuplicate &&
       actions.push({
         label: "Duplicate",
         onClick: onDuplicate,
       });
-    }
-    if (onEdit) {
+
+    onEdit &&
       actions.push({
         label: "Edit",
         onClick: onEdit,
       });
-    }
-    if (onDelete) {
+
+    onDelete &&
       actions.push({
         label: "Delete",
         onClick: onDelete,
       });
-    }
+
     return actions;
-  }, [onToggleSelect, onDuplicate, onEdit, onDelete]);
+  }, [onToggleSelect, onDuplicate, onEdit, onDelete, onOpenFullScreen]);
 
   return (
     <motion.div className="w-full">
       <motion.div
         layout="position"
         onClick={onGoback}
-        className={`btn btn-circle 
+        className={`btn-ghost btn btn-circle
               ${mode === "full-screen" ? "fixed " : "hidden "}`}
         transition={{
           duration: mode === "full-screen" ? 0.5 : 0.2,
@@ -116,17 +123,6 @@ export default function WorkoutCardUserAndActions({
           className={`flex w-full flex-col self-center
               ${mode !== "full-screen" ? "text-left" : "text-center"}
             }`}
-          initial={{
-            opacity: 0,
-          }}
-          animate={{
-            opacity: mode === "minified" ? 0 : 1,
-            x: mode === "minified" ? -7 : 0,
-            lineHeight: mode === "minified" ? "6px" : "14px",
-          }}
-          transition={{
-            delay: mode !== "expanded" ? 0.07 : 0.12,
-          }}
         >
           <motion.div className="text-xs font-bold uppercase leading-[15px] tracking-[0.05em]">
             {workout.creator.name}
@@ -138,12 +134,11 @@ export default function WorkoutCardUserAndActions({
 
         <motion.div
           layout={"position"}
-          className={`btn  btn-circle z-30
-            ${isSelected ? "btn-primary" : ""}
+          className={`
             ${
               mode === "full-screen"
-                ? "fixed top-5 right-7"
-                : `btn-sm absolute right-0`
+                ? "fixed top-5 right-5"
+                : `btn-sm absolute -right-6 -top-2`
             }
             
           `}
@@ -151,9 +146,17 @@ export default function WorkoutCardUserAndActions({
           {isSelected ? (
             <MdDone onClick={onToggleSelect} size={17} />
           ) : (
-            <Dropdown buttons={workoutActions} containerClass="dropdown-left ">
-              <RxDotsVertical size={mode === "full-screen" ? 28 : 23} />
-            </Dropdown>
+            <div>
+              <Dropdown buttons={workoutActions} containerClass="dropdown-left">
+                <div
+                  className={`btn-ghost btn btn-circle
+                  ${isSelected ? "btn-primary" : ""}
+                `}
+                >
+                  <RxDotsVertical size={mode === "full-screen" ? 28 : 23} />
+                </div>
+              </Dropdown>
+            </div>
           )}
         </motion.div>
       </motion.div>

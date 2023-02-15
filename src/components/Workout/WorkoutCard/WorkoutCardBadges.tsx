@@ -1,71 +1,57 @@
 import { inferRouterOutputs } from "@trpc/server";
-import { AiFillThunderbolt } from "react-icons/ai";
-import { GiBiceps, GiWeightLiftingUp } from "react-icons/gi";
-import { HiQuestionMarkCircle } from "react-icons/hi";
-import { MdHourglassTop, MdPeople } from "react-icons/md";
+import { BsLightningChargeFill } from "react-icons/bs";
+import { GiBiceps } from "react-icons/gi";
+import { MdDone, MdOutlineTimelapse } from "react-icons/md";
+import { WiMoonNew } from "react-icons/wi";
 import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
 import { enumToString } from "../../../utils/formatting";
 
-interface WorkoutCardProps {
+type WorkoutCardBadgesProps = {
   workout:
-    | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
-    | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
-}
+    | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
+};
 
-export default function WorkoutCardBadges({ workout }: WorkoutCardProps) {
+export default function WorkoutCardBadges({ workout }: WorkoutCardBadgesProps) {
   return (
-    <div className="badges flex flex-wrap gap-1.5">
+    <div className="mt-4 flex flex-wrap justify-center gap-x-2 gap-y-2">
+      {/* <div className="badge gap-1 lowercase">
+        {workout.elementType.includes("WOD") && (
+          <BsLightningChargeFill size={13} />
+        )}
+
+        {workout.elementType.includes("STRENGTH") && <GiBiceps size={13} />}
+        {enumToString(workout.elementType)}
+      </div> */}
       {workout.difficulty && (
         <div
-          className={`badge border-${workout.difficulty.toLowerCase()}-700 bg-${workout.difficulty.toLowerCase()}-700 text-${workout.difficulty.toLowerCase()}-300
-    ${
-      workout.difficulty === "BLACK"
-        ? "border-base-content border-opacity-50 bg-black"
-        : "border-opacity-30 bg-opacity-20"
-    }`}
+          className={`badge items-center gap-1  border border-base-content border-opacity-40 lowercase`}
         >
+          <div
+            className={`h-2 w-2 rounded-full ${
+              workout.difficulty === "BLACK"
+                ? "border border-primary-content bg-black"
+                : `bg-${workout.difficulty.toLowerCase()}-500`
+            }`}
+          ></div>
           {workout.difficulty}
         </div>
       )}
 
-      {workout.elementType && (
-        <div className={`badge items-center gap-1.5`}>
-          {enumToString(workout.elementType).includes("STRENGTH") && (
-            <GiBiceps size={14} />
-          )}
-          {enumToString(workout.elementType).includes("UNCLASSIFIED") && (
-            <HiQuestionMarkCircle size={14} />
-          )}
-
-          {enumToString(workout.elementType).includes("WOD") && (
-            <AiFillThunderbolt size={14} />
-          )}
-
-          {enumToString(workout.elementType).includes("TEAMWOD") && (
-            <MdPeople size={14} />
-          )}
-
-          {enumToString(workout.elementType).includes("ENDURANCE") && (
-            <MdHourglassTop size={14} />
-          )}
-
-          {enumToString(workout.elementType).includes("WEIGHTLIFTING") && (
-            <GiWeightLiftingUp size={14} />
-          )}
-
-          {enumToString(workout.elementType)}
+      {workout.totalTime && (
+        <div className="badge items-center gap-0.5 border border-base-content border-opacity-40">
+          <MdOutlineTimelapse size={13} />
+          {workout.totalTime}mn
         </div>
       )}
-
-      {workout.workoutType && (
-        <div className={`badge items-center gap-1.5`}>
-          {enumToString(workout.workoutType)}
+      {workout._count.workoutResults > 0 ? (
+        <div className="badge flex gap-0.5 border border-base-content border-opacity-40">
+          <MdDone className="" size={13} />
+          {workout._count.workoutResults} result
         </div>
-      )}
-
-      {workout.isDoableAtHome && (
-        <div className={`badge-primary badge-outline badge`}>
-          Doable at home
+      ) : (
+        <div className="badge flex gap-0.5 border border-base-content border-opacity-40">
+          <WiMoonNew className="" size={15} />
+          no result
         </div>
       )}
     </div>

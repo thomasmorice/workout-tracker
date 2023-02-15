@@ -22,13 +22,7 @@ export default function WorkoutCardTitle({
       layout="position"
       className={`
         flex flex-col items-center font-bold
-        ${
-          mode === "full-screen"
-            ? "mt-6"
-            : mode === "expanded"
-            ? "mt-2"
-            : "-mt-8"
-        }
+        ${mode === "full-screen" ? "mt-6" : "mt-3"}
       `}
     >
       <motion.div
