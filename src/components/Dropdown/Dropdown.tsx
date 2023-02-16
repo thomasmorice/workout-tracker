@@ -17,10 +17,11 @@ export default function Dropdown({
   buttons,
 }: DropdownProps) {
   return (
-    <Menu as="div" className={`dropdown dropdown-open z-50 ${containerClass} `}>
+    <Menu as="div" className={`dropdown dropdown-open ${containerClass} `}>
       <Menu.Button>{children}</Menu.Button>
       <Transition
-        as={Fragment}
+        as={"div"}
+        className="relative z-30"
         enter="transition ease-out duration-100"
         enterFrom="transform opacity-0 scale-50"
         enterTo="transform opacity-100 scale-100"

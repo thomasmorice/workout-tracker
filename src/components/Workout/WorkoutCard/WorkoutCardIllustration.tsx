@@ -12,12 +12,8 @@ export default function WorkoutCardIllustration({
   return (
     <motion.div
       layout
-      className={`absolute top-0 left-0 z-0 h-full w-full bg-cover bg-no-repeat opacity-50
-        ${
-          mode !== "full-screen"
-            ? "max-h-60 overflow-hidden rounded-3xl"
-            : "max-h-96"
-        }
+      className={`absolute top-0 bottom-0 left-0 z-0 h-full max-h-60 w-full bg-cover bg-center bg-no-repeat opacity-50
+        ${mode !== "full-screen" ? "rounded-3xl" : ""}
       `}
       transition={{
         backgroundSize: {
@@ -35,7 +31,6 @@ export default function WorkoutCardIllustration({
         backgroundImage: `url(/workout-item/${
           illustration ?? "walking-into-the-gym"
         }.png)`,
-        backgroundPosition: "50% 30%",
       }}
     >
       <motion.div
