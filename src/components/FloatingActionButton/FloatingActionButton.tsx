@@ -74,7 +74,7 @@ export default function FloatingActionButton() {
       >
         <>
           <WorkoutSessionForm
-            onSuccess={() => {
+            onClose={() => {
               clearSelectedWorkouts();
               set_showAddSessionModal(false);
             }}

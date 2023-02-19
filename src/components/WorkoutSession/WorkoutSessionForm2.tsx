@@ -1,6 +1,6 @@
 import { format, parseISO } from "date-fns";
 import { ReactElement, useEffect, useRef, useState } from "react";
-import { MdEdit } from "react-icons/md";
+import { MdArrowBackIosNew, MdEdit } from "react-icons/md";
 import { getRandomPreparingSessionllustration } from "../../utils/workout";
 import { date } from "zod";
 import { Controller, useForm } from "react-hook-form";
@@ -9,17 +9,24 @@ import { WorkoutSessionRouterType } from "../../server/trpc/router/workout-sessi
 import { WorkoutResultInputsWithWorkout } from "../../types/app";
 
 interface WorkoutSessionFormProps {
-  onSuccess?: () => void;
+  onClose: () => void;
 }
 
 export default function WorkoutSessionForm({
-  onSuccess,
+  onClose,
 }: WorkoutSessionFormProps) {
   const [illustration] = useState(getRandomPreparingSessionllustration());
   const datetimePickerRef = useRef<HTMLInputElement>(null);
+  const [showDateTimePicker, set_showDateTimePicker] = useState(false);
   const [defaultValues, set_defaultValues] = useState({
     date: new Date(),
   });
+
+  useEffect(() => {
+    if (showDateTimePicker) {
+      datetimePickerRef.current?.focus();
+    }
+  }, [showDateTimePicker]);
 
   const {
     handleSubmit,
@@ -39,7 +46,7 @@ export default function WorkoutSessionForm({
   watch("date");
 
   return (
-    <div className="min-h-[520px]">
+    <div className="h-screen">
       <div
         style={{
           backgroundImage: `url(/workout-item/${illustration}.png)`,
@@ -47,12 +54,18 @@ export default function WorkoutSessionForm({
         className="absolute top-0 left-0 h-56 w-full bg-cover bg-center opacity-50"
       ></div>
 
-      <div className="relative">
+      <div
+        onClick={onClose}
+        className="btn-ghost btn btn-circle absolute top-4 left-2"
+      >
+        <MdArrowBackIosNew size={26} />
+      </div>
+      <div className="relative mt-8">
         <div className="flex items-center justify-center gap-1 font-semibold ">
           {format(getValues("date"), "EEEE, MMM dd, p")}
           <button
-            onClick={() => datetimePickerRef.current?.showPicker()}
-            className="btn-ghost btn btn-sm btn-circle"
+            onClick={() => set_showDateTimePicker(true)}
+            className="btn-ghost btn btn-sm btn-circle relative"
             type="button"
           >
             <MdEdit size={18} />
@@ -61,8 +74,7 @@ export default function WorkoutSessionForm({
               name="date"
               render={({ field }) => (
                 <input
-                  className="hidden"
-                  step={1800}
+                  className={`input-datetime absolute top-0 left-0 h-full w-full opacity-0`}
                   onChange={
                     (e) => field.onChange(parseISO(e.target.value))
                     // console.log("Date", parseISO(e.target.value))
