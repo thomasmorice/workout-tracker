@@ -57,7 +57,7 @@ export default function WorkoutCard({
     >
       <div className={`glowing-bg -z-10`}></div>
 
-      <div className="card bg-base-100 p-6 ">
+      <div className="card z-10 bg-base-100 p-6">
         {/* Title and actions */}
         <div className="flex items-center justify-between">
           <Link

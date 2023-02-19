@@ -32,8 +32,8 @@ export default function WorkoutResultCard({
     return <>{Icon && <Icon {...props} />}</>;
   };
   return (
-    <div className="card relative -z-10 rounded-xl border border-base-content pt-8">
-      <div className=" card-body  p-5">
+    <div className="card relative z-0 rounded-xl border border-base-content pt-8">
+      <div className=" card-body  p-5 ">
         <h3 className="h3">
           {eventDate && (
             <div className="mb-3 flex items-center gap-2">
