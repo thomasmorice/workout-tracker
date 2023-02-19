@@ -165,3 +165,10 @@ export const getWorkoutItemsAndRandomIllustrationByDescription = (
     illustration: arrayShuffle(filenames)[0],
   };
 };
+
+export const getRandomPreparingSessionllustration = () => {
+  return (
+    arrayShuffle(illustrations.find((i) => i.id === 8)?.filename || [])[0] ||
+    "preparing-workout"
+  );
+};

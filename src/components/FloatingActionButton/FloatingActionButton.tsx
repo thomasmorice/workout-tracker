@@ -1,10 +1,9 @@
 import { AiOutlinePlus } from "react-icons/ai";
-import { Menu, Transition } from "@headlessui/react";
-import { Fragment, useEffect, useState } from "react";
-import Modal from "../Layout/Modal/Modal";
+import { useEffect, useState } from "react";
+import Modal from "../Layout/Modal/Modal2";
 import { useEventStore } from "../../store/EventStore";
 import WeighingForm from "../Weighing/WeighingForm";
-import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm";
+import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm2";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import Dropdown from "../Dropdown/Dropdown";
 import { MdClose } from "react-icons/md";
@@ -71,11 +70,9 @@ export default function FloatingActionButton() {
       {/* {showAddSessionModal && ( */}
       <Modal
         isOpen={showAddSessionModal}
-        withCloseButton={true}
         onClose={() => set_showAddSessionModal(false)}
       >
         <>
-          <h3 className="text-lg font-bold">Add a session</h3>
           <WorkoutSessionForm
             onSuccess={() => {
               clearSelectedWorkouts();
@@ -91,7 +88,7 @@ export default function FloatingActionButton() {
           buttons={mainButtons}
           containerClass="dropdown-top dropdown-left divide-y shadow-lg "
         >
-          <div className="btn-rounded btn-primary btn-circle btn flex h-16 w-16 items-center justify-center shadow-xl">
+          <div className="btn-rounded btn-primary btn btn-circle flex h-16 w-16 items-center justify-center shadow-xl">
             <AiOutlinePlus size={17} />
             {hasSelection() && (
               <div className="absolute -mt-6 -mr-6 text-xs font-normal ">

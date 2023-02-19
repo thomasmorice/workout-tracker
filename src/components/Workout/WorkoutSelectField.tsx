@@ -2,7 +2,7 @@ import { useState, useRef, useMemo } from "react";
 import { TailSpin } from "react-loading-icons";
 import { useDebounce } from "usehooks-ts";
 import { useWorkoutService } from "../../services/useWorkoutService";
-import WorkoutCard from "./WorkoutCard/WorkoutCard";
+import WorkoutCard from "./WorkoutCardSimple/WorkoutCard";
 import { MdClose } from "react-icons/md";
 
 import { useToastStore } from "../../store/ToastStore";

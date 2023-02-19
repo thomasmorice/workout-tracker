@@ -48,7 +48,7 @@ export default function WorkoutCardUserAndActions({
     // }
     onOpenFullScreen &&
       actions.push({
-        label: "See details",
+        label: "Open card details",
         onClick: onOpenFullScreen,
       });
     onToggleSelect &&
@@ -144,7 +144,12 @@ export default function WorkoutCardUserAndActions({
           `}
         >
           {isSelected ? (
-            <MdDone onClick={onToggleSelect} size={17} />
+            <button
+              className="btn-primary btn btn-sm btn-circle mr-2 mt-2"
+              onClick={onToggleSelect}
+            >
+              <MdDone size={17} />
+            </button>
           ) : (
             <div>
               <Dropdown buttons={workoutActions} containerClass="dropdown-left">

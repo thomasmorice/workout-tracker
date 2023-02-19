@@ -11,8 +11,8 @@ export default function WorkoutCardIllustration({
 }: WorkoutCardIllustrationProps) {
   return (
     <motion.div
-      layout
-      className={`absolute top-0 bottom-0 left-0 z-0 h-full max-h-60 w-full bg-cover bg-center bg-no-repeat opacity-50
+      layout="position"
+      className={`absolute top-0 bottom-0 left-0 z-0 h-full max-h-56 w-full bg-cover bg-center bg-no-repeat opacity-50
         ${mode !== "full-screen" ? "rounded-3xl" : ""}
       `}
       transition={{

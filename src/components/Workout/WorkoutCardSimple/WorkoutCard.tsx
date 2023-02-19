@@ -1,6 +1,5 @@
 import { inferRouterOutputs } from "@trpc/server";
 import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
-import { BiExpand } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import WorkoutCardUserAndActions from "./WorkoutCardUserAndActions";
@@ -99,58 +98,49 @@ export default function WorkoutCard({
           />
           <WorkoutCardTitle workout={workout} mode={mode} />
 
-          <div onClick={() => mode === "minified" && set_mode("expanded")}>
+          <motion.div
+            onClick={() => mode === "minified" && set_mode("expanded")}
+          >
             {mode === "minified" && workoutItems && workoutItems.length > 0 ? (
-              <motion.div
+              <div
                 className={`
             mx-auto mt-2 max-w-[220px] text-center text-xs font-light
-            uppercase
+            uppercase 
           `}
               >
                 FEAT. {workoutItems?.join(" - ")}
-              </motion.div>
+              </div>
             ) : (
-              <motion.div
+              <div
                 onClick={() => mode === "expanded" && set_mode("minified")}
-                className={`relative mt-5 whitespace-pre-wrap text-center text-base-content 
+                className={`relative mt-5 whitespace-pre-wrap text-center text-[11.5px] leading-[18px] text-base-content text-opacity-70 
                 ${
                   mode === "full-screen"
-                    ? "mb-12 text-sm font-light leading-[22px] tracking-tight text-opacity-80"
-                    : "text-[11.5px] leading-[18px] text-opacity-70"
+                    ? "mb-12 text-sm font-light leading-[22px] tracking-tight text-opacity-100"
+                    : ""
                 }
               `}
               >
-                <motion.div
+                <div
                   className={`absolute -left-1 -top-6 text-[76px] opacity-20 ${
                     mode === "full-screen" ? "visible" : "hidden"
                   }`}
                 >
                   “
-                </motion.div>
+                </div>
                 {workout.description}
-                <motion.div
+                <div
                   className={`absolute -right-1 -bottom-12 text-[76px] opacity-20 ${
                     mode === "full-screen" ? "visible" : "hidden"
                   }`}
                 >
                   ”
-                </motion.div>
-              </motion.div>
+                </div>
+              </div>
             )}
 
             <WorkoutCardBadges workout={workout} />
-          </div>
-          {/* {mode !== "full-screen" && (
-            <div className="mt-3.5 flex items-center justify-center gap-3 ">
-              <button
-                onClick={() => set_mode("full-screen")}
-                type="button"
-                className="btn-ghost btn btn-circle"
-              >
-                <BiExpand size={26} />
-              </button>
-            </div>
-          )} */}
+          </motion.div>
 
           {mode === "full-screen" && (
             <div>

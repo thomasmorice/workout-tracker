@@ -28,7 +28,7 @@ export default function WorkoutCardTitle({
       <motion.div
         className={`
         flex items-center gap-1.5 text-center  font-semibold tracking-[0.03rem]
-        ${mode === "full-screen" ? "text-sm" : "text-xs"}
+        ${mode === "full-screen" ? "text-lg" : "text-base"}
         `}
       >
         {workout.name ? (
@@ -49,15 +49,16 @@ export default function WorkoutCardTitle({
           </>
         )}
       </motion.div>
-      <motion.div
-        className={`
+      {workout.workoutType && (
+        <motion.div
+          className={`
         flex items-center  font-bold tracking-[0.15rem]
-        ${mode === "full-screen" ? "text-xl" : "text-base"}
+        ${mode === "full-screen" ? "text-base" : "text-sm"}
       `}
-      >
-        {/* {workout.totalTime}MN  */}
-        {enumToString(workout.workoutType ?? "")}
-      </motion.div>
+        >
+          [{enumToString(workout.workoutType)}]
+        </motion.div>
+      )}
     </motion.div>
   );
 }
