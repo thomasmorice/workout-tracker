@@ -4,7 +4,7 @@ import Head from "next/head";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Masonry from "react-masonry-css";
 import { useIntersectionObserver, useDebounce } from "usehooks-ts";
-import WorkoutCard from "../components/Workout/WorkoutCardSimple/WorkoutCard";
+import WorkoutCard from "../components/Workout/WorkoutCard/WorkoutCard";
 import WorkoutCardSkeleton from "../components/Workout/WorkoutCardSkeleton";
 import { useWorkoutService } from "../services/useWorkoutService";
 import { useWorkoutStore } from "../store/WorkoutStore";

@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useWorkoutService } from "../../services/useWorkoutService";
-import WorkoutCard from "../../components/Workout/WorkoutCardSimple/WorkoutCard";
+import WorkoutCard from "../../components/Workout/WorkoutCard/WorkoutCard";
 import Header from "../../components/Layout/Header";
 import { TailSpin } from "react-loading-icons";
 import WorkoutResultCard from "../../components/WorkoutResult/WorkoutResultCard";
