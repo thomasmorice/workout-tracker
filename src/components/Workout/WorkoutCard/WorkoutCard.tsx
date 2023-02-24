@@ -11,6 +11,7 @@ import { getWorkoutItemsAndRandomIllustrationByDescription } from "../../../util
 import WorkoutResults from "../../WorkoutResult/WorkoutResults";
 import { useFloatingActionButtonStore } from "../../../store/FloatingActionButtonStore";
 import WorkoutCardSkeleton from "../WorkoutCardSkeleton";
+import { useWorkoutStore } from "../../../store/WorkoutStore";
 
 interface WorkoutCardProps {
   workout:
@@ -40,7 +41,7 @@ export default function WorkoutCard({
   );
   const [workoutItems, set_workoutItems] = useState<string[]>();
   const [illustration, set_illustration] = useState<string>();
-  const { isSelected, hasSelection } = useFloatingActionButtonStore();
+  const { selectedWorkouts } = useWorkoutStore();
 
   useEffect(() => {
     const itemsAndIllustration =
@@ -75,6 +76,7 @@ export default function WorkoutCard({
       </AnimatePresence>
       <motion.div
         layout
+        layoutId={workout.id.toString()}
         className={` bg-base-300 p-5 pb-4
           ${
             mode === "full-screen"
@@ -89,7 +91,7 @@ export default function WorkoutCard({
             onGoback={() => set_mode("minified")}
             onOpenFullScreen={() => set_mode("full-screen")}
             onToggleSelect={onSelect}
-            isSelected={isSelected(workout)}
+            isSelected={selectedWorkouts.some((w) => w.id === workout.id)}
             onEdit={onEdit}
             onDelete={onDelete}
             onDuplicate={onDuplicate}
@@ -116,7 +118,7 @@ export default function WorkoutCard({
                 className={`relative mt-5 whitespace-pre-wrap text-center text-[11.5px] leading-[18px] text-base-content text-opacity-70 
                 ${
                   mode === "full-screen"
-                    ? "mb-12 text-sm font-light leading-[22px] tracking-tight text-opacity-100"
+                    ? "-z-10 mb-12 text-sm font-light leading-[22px] tracking-tight text-opacity-100"
                     : ""
                 }
               `}

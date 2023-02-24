@@ -69,6 +69,7 @@ export const useWorkoutService = () => {
         // showLatest = true
       }
     }
+
     return trpc.workout.getInfiniteWorkout.useInfiniteQuery(
       {
         workoutTypes,

@@ -12,8 +12,8 @@ export default function WorkoutCardIllustration({
   return (
     <motion.div
       layout="position"
-      className={`absolute top-0 bottom-0 left-0 z-0 h-full max-h-56 w-full bg-cover bg-center bg-no-repeat opacity-50
-        ${mode !== "full-screen" ? "rounded-3xl" : ""}
+      className={`absolute inset-0  max-h-64 w-full bg-cover bg-center bg-no-repeat opacity-50
+        ${mode !== "full-screen" ? "rounded-3xl" : "-z-10 "}
       `}
       transition={{
         backgroundSize: {
@@ -36,9 +36,9 @@ export default function WorkoutCardIllustration({
       <motion.div
         style={{
           background:
-            "radial-gradient(100% 80% at 50% 0%, rgb(0, 0, 0) 0%, rgba(22, 25, 31, 0.27) 0%, rgb(32, 37, 45) 140%)",
+            "radial-gradient(100% 80% at 50% 0%, rgb(0, 0, 0) 0%, rgba(22, 25, 31, 0.27) 50%, rgb(32, 37, 45) 100%)",
         }}
-        className={`absolute top-0 left-0 z-10 h-full w-full`}
+        className={`absolute inset-0 z-10`}
       />
     </motion.div>
   );

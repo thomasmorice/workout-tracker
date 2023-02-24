@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import RightSidebar from "../RightSidebar/RightSidebar";
 import Head from "next/head";
 import FloatingActionButton from "../FloatingActionButton/FloatingActionButton";
-
+import WorkoutSelectionBanner from "./WorkoutSelectionBanner";
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -18,6 +18,7 @@ export default function Layout({ children }: LayoutProps) {
   const { status } = useSession();
   const { state: workoutFormState } = useWorkoutStore();
   const [currentPath, set_currentPath] = useState<String[]>();
+  const { isWorkoutSelectionModeActive } = useWorkoutStore();
 
   useEffect(() => {
     const asPathWithoutQuery = router.pathname.split("?")[0];
@@ -34,7 +35,14 @@ export default function Layout({ children }: LayoutProps) {
       </Head>
       <div>
         <ToastMessage />
-        <Navigation />
+
+        <div className="navigation-and-workout-selections relative z-50">
+          {isWorkoutSelectionModeActive ? (
+            <WorkoutSelectionBanner />
+          ) : (
+            <Navigation />
+          )}
+        </div>
 
         {status === "authenticated" && (
           <>
@@ -42,10 +50,9 @@ export default function Layout({ children }: LayoutProps) {
               <RightSidebar />
             </div>
             <WorkoutForm />
-            <FloatingActionButton />
+            {!isWorkoutSelectionModeActive && <FloatingActionButton />}
           </>
         )}
-        {/* <WorkoutForm /> */}
         <div id="portal" />
 
         <main

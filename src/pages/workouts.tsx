@@ -10,8 +10,7 @@ import { useWorkoutService } from "../services/useWorkoutService";
 import { useWorkoutStore } from "../store/WorkoutStore";
 import { MdSearch } from "react-icons/md";
 import Header from "../components/Layout/Header";
-import { useFloatingActionButtonStore } from "../store/FloatingActionButtonStore";
-import { LayoutGroup, motion } from "framer-motion";
+import { LayoutGroup } from "framer-motion";
 
 const Workouts: NextPage = () => {
   const { data: sessionData } = useSession();
@@ -19,7 +18,8 @@ const Workouts: NextPage = () => {
   const entry = useIntersectionObserver(ref, {});
 
   const { showWorkoutForm } = useWorkoutStore();
-  const { toggleSelectWorkout } = useFloatingActionButtonStore();
+  const { toggleSelectWorkout, isWorkoutSelectionModeActive } =
+    useWorkoutStore();
   const { getInfiniteWorkouts } = useWorkoutService();
 
   const [classifiedOnly, set_classifiedOnly] = useState(true);
@@ -53,7 +53,7 @@ const Workouts: NextPage = () => {
         <button
           type="button"
           onClick={() => showWorkoutForm("create")}
-          className="btn-primary btn btn-sm hidden md:block"
+          className="btn-primary btn-sm btn hidden md:block"
         >
           + Create a new workout
         </button>

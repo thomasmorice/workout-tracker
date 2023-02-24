@@ -1,5 +1,5 @@
 import { inferRouterOutputs } from "@trpc/server";
-import create from "zustand";
+import { create } from "zustand";
 import { EventRouterType } from "../server/trpc/router/event-router";
 
 type EventType = "weighting" | "workout-session";

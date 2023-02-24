@@ -2,12 +2,10 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import Modal from "../Layout/Modal/Modal2";
 import { useEventStore } from "../../store/EventStore";
-import WeighingForm from "../Weighing/WeighingForm";
+import WeighingForm from "../Weighing/WeighingForm2";
 import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm2";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import Dropdown from "../Dropdown/Dropdown";
-import { MdClose } from "react-icons/md";
-import { useFloatingActionButtonStore } from "../../store/FloatingActionButtonStore";
 import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 
 export default function FloatingActionButton() {
@@ -15,24 +13,22 @@ export default function FloatingActionButton() {
   const [showAddSessionModal, set_showAddSessionModal] = useState(false);
   const [showAddWeightModal, set_showAddWeightModal] = useState(false);
   const { showWorkoutForm } = useWorkoutStore();
-  const { selectedWorkouts, hasSelection, clearSelectedWorkouts } =
-    useFloatingActionButtonStore();
+  // const { selectedWorkouts, hasSelection, clearSelectedWorkouts } =
+  //   useFloatingActionButtonStore();
   const closeButtonAnimationControls = useAnimationControls();
 
-  useEffect(() => {
-    if (selectedWorkouts.length > 0) {
-      closeButtonAnimationControls.start({
-        scale: [1, 1.15, 0.9, 1.15, 1],
-        transition: { duration: 0.6 },
-      });
-    }
-  }, [selectedWorkouts, closeButtonAnimationControls]);
+  // useEffect(() => {
+  //   if (selectedWorkouts.length > 0) {
+  //     closeButtonAnimationControls.start({
+  //       scale: [1, 1.15, 0.9, 1.15, 1],
+  //       transition: { duration: 0.6 },
+  //     });
+  //   }
+  // }, [selectedWorkouts, closeButtonAnimationControls]);
 
   const mainButtons = [
     {
-      label: `Add a session ${
-        selectedWorkouts.length > 0 ? "with selected workouts" : ""
-      }`,
+      label: `Create a session`,
       onClick: () => set_showAddSessionModal(true),
     },
     {
@@ -63,11 +59,10 @@ export default function FloatingActionButton() {
         onClose={() => set_showAddWeightModal(false)}
       >
         <>
-          <h3 className="text-lg font-bold">Add a weighing</h3>
           <WeighingForm onSuccess={() => set_showAddWeightModal(false)} />
         </>
       </Modal>
-      {/* {showAddSessionModal && ( */}
+
       <Modal
         isOpen={showAddSessionModal}
         onClose={() => set_showAddSessionModal(false)}
@@ -75,29 +70,28 @@ export default function FloatingActionButton() {
         <>
           <WorkoutSessionForm
             onClose={() => {
-              clearSelectedWorkouts();
               set_showAddSessionModal(false);
             }}
           />
         </>
       </Modal>
-      {/* )} */}
 
       <div className="fixed bottom-20 right-8 z-50">
         <Dropdown
+          withBackdrop
           buttons={mainButtons}
           containerClass="dropdown-top dropdown-left divide-y shadow-lg "
         >
-          <div className="btn-rounded btn-primary btn btn-circle flex h-16 w-16 items-center justify-center shadow-xl">
+          <div className="btn-rounded btn-primary btn-circle btn flex h-16 w-16 items-center justify-center shadow-xl">
             <AiOutlinePlus size={17} />
-            {hasSelection() && (
+            {/* {hasSelection() && (
               <div className="absolute -mt-6 -mr-6 text-xs font-normal ">
                 {selectedWorkouts.length}
               </div>
-            )}
+            )} */}
           </div>
         </Dropdown>
-        <AnimatePresence>
+        {/* <AnimatePresence>
           {hasSelection() && (
             <motion.button
               initial={{ scale: 0.2 }}
@@ -119,7 +113,7 @@ export default function FloatingActionButton() {
               </div>
             </motion.button>
           )}
-        </AnimatePresence>
+        </AnimatePresence> */}
       </div>
     </>
   );

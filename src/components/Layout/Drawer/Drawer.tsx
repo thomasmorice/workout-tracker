@@ -6,7 +6,7 @@ export type DrawerProps = {
 
 export default function Drawer({ children, isOpen, onClose }: DrawerProps) {
   return (
-    <div className="drawer fixed z-[1000]">
+    <div className="drawer fixed">
       <input
         id="my-drawer"
         type="checkbox"

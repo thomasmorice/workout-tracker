@@ -83,7 +83,7 @@ export default function WorkoutCardUserAndActions({
       <motion.div
         layout="position"
         onClick={onGoback}
-        className={`btn-ghost btn btn-circle
+        className={`btn-ghost btn-circle btn z-10
               ${mode === "full-screen" ? "fixed " : "hidden "}`}
         transition={{
           duration: mode === "full-screen" ? 0.5 : 0.2,
@@ -104,12 +104,12 @@ export default function WorkoutCardUserAndActions({
         <motion.div layout className={`avatar`}>
           <motion.div
             className={`relative rounded-full border-2 border-base-content border-opacity-50 bg-transparent ${
-              mode === "full-screen" ? "w-12" : "w-8"
+              mode === "full-screen" ? "h-12 w-12" : "h-8 w-8"
             }`}
           >
             <Image
               fill
-              className="rounded-full object-contain p-0.5 "
+              className="rounded-full object-cover p-0.5"
               referrerPolicy="no-referrer"
               src={workout.creator.image ?? "https://i.pravatar.cc/300"}
               alt="Workout creator"
@@ -145,23 +145,25 @@ export default function WorkoutCardUserAndActions({
         >
           {isSelected ? (
             <button
-              className="btn-primary btn btn-sm btn-circle mr-2 mt-2"
+              className="btn-primary btn-sm btn-circle btn mr-3 mt-2"
               onClick={onToggleSelect}
             >
               <MdDone size={17} />
             </button>
           ) : (
-            <div>
-              <Dropdown buttons={workoutActions} containerClass="dropdown-left">
-                <div
-                  className={`btn-ghost btn btn-circle
+            <Dropdown
+              withBackdrop={mode === "full-screen"}
+              buttons={workoutActions}
+              containerClass="dropdown-left"
+            >
+              <div
+                className={`btn-ghost btn-circle btn
                   ${isSelected ? "btn-primary" : ""}
                 `}
-                >
-                  <RxDotsVertical size={mode === "full-screen" ? 28 : 23} />
-                </div>
-              </Dropdown>
-            </div>
+              >
+                <RxDotsVertical size={mode === "full-screen" ? 28 : 23} />
+              </div>
+            </Dropdown>
           )}
         </motion.div>
       </motion.div>

@@ -44,10 +44,10 @@
   .badge {
     @apply rounded-lg text-xs;
   }
+}
 
-  ::-webkit-calendar-picker-indicator {
-    width: 100%;
-    position: absolute;
-    left: 0;
-  }
+::-webkit-calendar-picker-indicator {
+  width: 100%;
+  position: absolute;
+  left: 0;
 }

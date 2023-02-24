@@ -1,5 +1,8 @@
-import { Dialog } from "@headlessui/react";
-import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useRef } from "react";
+import { useOnClickOutside } from "usehooks-ts";
+import { usePreventScroll } from "react-aria";
+import { MdArrowBackIosNew } from "react-icons/md";
 
 type ModalProps = {
   isOpen: boolean;
@@ -14,29 +17,39 @@ export default function Modal({
   children,
   onClose,
 }: ModalProps) {
-  const [showModal, set_showModal] = useState<boolean>(false);
-
-  useEffect(() => {
-    set_showModal(isOpen);
-  }, [isOpen]);
-
+  const innerModal = useRef(null);
+  useOnClickOutside(innerModal, onClose);
+  usePreventScroll({
+    isDisabled: !isOpen,
+  });
   return (
-    <Dialog
-      className={`modal modal-bottom sm:modal-middle ${
-        showModal ? "modal-open" : ""
-      }`}
-      open={isOpen}
-      onClose={onClose}
-    >
-      <Dialog.Panel className="modal-box">
-        {title && (
-          <Dialog.Title className="text-xl font-bold capitalize">
-            {title}
-          </Dialog.Title>
-        )}
-        {/* <Dialog.Description>Here yçou c</Dialog.Description> */}
-        {children}
-      </Dialog.Panel>
-    </Dialog>
+    <AnimatePresence>
+      {isOpen && (
+        <div className={`modal modal-open modal-bottom sm:modal-middle`}>
+          <motion.div
+            className="w-full"
+            transition={{
+              duration: 0.2,
+            }}
+            initial={{
+              y: "100%",
+            }}
+            animate={{
+              y: 0,
+            }}
+            exit={{
+              y: "100%",
+            }}
+          >
+            <div ref={innerModal} className="modal-box overflow-y-scroll">
+              {title && (
+                <div className="text-xl font-bold capitalize">{title}</div>
+              )}
+              {children}
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 }

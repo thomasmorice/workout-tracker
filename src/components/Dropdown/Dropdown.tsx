@@ -1,10 +1,11 @@
-import { Menu, Transition } from "@headlessui/react";
-import { Fragment } from "react";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AnimatePresence, motion } from "framer-motion";
+import { useRef, useState } from "react";
+import { useOnClickOutside } from "usehooks-ts";
 
 type DropdownProps = {
   containerClass?: string;
   children: React.ReactNode;
+  withBackdrop?: boolean;
   buttons: {
     label: string;
     onClick: () => void;
@@ -15,42 +16,53 @@ export default function Dropdown({
   containerClass,
   children,
   buttons,
+  withBackdrop = false,
 }: DropdownProps) {
+  const dropdownRef = useRef(null);
+  const [isOpen, set_isOpen] = useState(false);
+  useOnClickOutside(dropdownRef, () => set_isOpen(false));
+
   return (
-    <Menu as="div" className={`dropdown dropdown-open ${containerClass} `}>
-      <Menu.Button>{children}</Menu.Button>
-      <Transition
-        as={"div"}
-        className="relative z-30"
-        enter="transition ease-out duration-100"
-        enterFrom="transform opacity-0 scale-50"
-        enterTo="transform opacity-100 scale-100"
-        leave="transition ease-in duration-75"
-        leaveFrom="transform opacity-100 scale-100"
-        leaveTo="transform opacity-0 scale-50"
+    <>
+      <AnimatePresence>
+        {withBackdrop && isOpen && (
+          <motion.div
+            transition={{
+              duration: 0.2,
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[99] bg-base-100 bg-opacity-80"
+          ></motion.div>
+        )}
+      </AnimatePresence>
+
+      <div
+        ref={dropdownRef}
+        className={`dropdown ${containerClass} ${
+          isOpen ? "dropdown-open z-[100]" : ""
+        } `}
       >
-        <div className="border-none">
-          <Menu.Items
-            as={"ul"}
-            className="dropdown-content menu rounded-box visible absolute w-52 transform-none gap-1 bg-base-300 p-2 text-sm shadow-lg"
-          >
-            {buttons.map((button) => (
-              <Menu.Item as={"li"} key={button.label}>
-                {({ active }) => (
-                  <a
-                    onClick={button.onClick}
-                    className={`${
-                      active ? "bg-primary" : ""
-                    } group flex w-full items-center rounded-md text-sm text-base-content`}
-                  >
-                    {button.label}
-                  </a>
-                )}
-              </Menu.Item>
-            ))}
-          </Menu.Items>
-        </div>
-      </Transition>
-    </Menu>
+        <button onClick={() => set_isOpen(true)} type="button">
+          {children}
+        </button>
+        <ul className="dropdown-content menu rounded-box absolute w-52 gap-1 border-t-transparent bg-base-300 p-2 text-sm">
+          {buttons.map((button) => (
+            <li key={button.label}>
+              <a
+                onClick={() => {
+                  set_isOpen(false);
+                  button.onClick();
+                }}
+                className={`group flex w-full items-center rounded-md text-sm text-base-content`}
+              >
+                {button.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 }

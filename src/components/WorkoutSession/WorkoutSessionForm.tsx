@@ -25,6 +25,7 @@ import { workoutResultIsFilled } from "../../utils/utils";
 import { inferRouterInputs } from "@trpc/server";
 import { WorkoutSessionRouterType } from "../../server/trpc/router/workout-session-router";
 import { useFloatingActionButtonStore } from "../../store/FloatingActionButtonStore";
+import { useWorkoutStore } from "../../store/WorkoutStore";
 
 interface WorkoutSessionFormProps {
   onSuccess?: () => void;
@@ -44,7 +45,7 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
 
   const [defaultValues, set_defaultValues] = useState({});
   const { selectedWorkouts: preselectedWorkouts, clearSelectedWorkouts } =
-    useFloatingActionButtonStore();
+    useWorkoutStore();
 
   useEffect(() => {
     set_defaultValues({

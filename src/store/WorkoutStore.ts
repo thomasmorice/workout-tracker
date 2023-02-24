@@ -1,13 +1,20 @@
 import { inferRouterOutputs, TRPCError } from "@trpc/server";
-import create from "zustand";
+import { create } from "zustand";
 import { WorkoutRouterType } from "../server/trpc/router/workout-router";
 import { useToastStore } from "./ToastStore";
 
 type StateType = "create" | "duplicate" | "edit" | "delete";
+type workoutType =
+  inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
 
 interface WorkoutFormState {
   state?: StateType;
   workout?: inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
+  isWorkoutSelectionModeActive: boolean;
+  selectedWorkouts: workoutType[];
+  toggleSelectWorkout: (workout: workoutType) => void;
+  clearSelectedWorkouts: () => void;
+  setWorkoutSelectionMode: (isSelectionModActive: boolean) => void;
   showWorkoutForm: (
     state: StateType,
     existingWorkout?: inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
@@ -17,6 +24,34 @@ interface WorkoutFormState {
 }
 
 const useWorkoutStore = create<WorkoutFormState>()((set, get) => ({
+  isWorkoutSelectionModeActive: false,
+  setWorkoutSelectionMode: (isSelectionModActive) => {
+    set({
+      isWorkoutSelectionModeActive: isSelectionModActive,
+    });
+  },
+  selectedWorkouts: [],
+  toggleSelectWorkout: (workout) => {
+    const { selectedWorkouts } = get();
+
+    if (selectedWorkouts.find((w) => w.id === workout.id)) {
+      set({
+        selectedWorkouts: selectedWorkouts.filter((w) => w.id !== workout.id),
+      });
+    } else {
+      // selecting a workout
+      set({
+        selectedWorkouts: [...selectedWorkouts, workout],
+        isWorkoutSelectionModeActive: true,
+      });
+    }
+  },
+  clearSelectedWorkouts: () => {
+    set({
+      selectedWorkouts: [],
+      isWorkoutSelectionModeActive: false,
+    });
+  },
   showWorkoutForm: (state, workout) => {
     if (state !== "create" && !workout) {
       console.error(
