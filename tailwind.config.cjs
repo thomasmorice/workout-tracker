@@ -57,14 +57,12 @@ module.exports = {
   ],
   daisyui: {
     themes: [
-      "night",
-      "dark",
-      "dracula",
       {
         dark: {
           ...require("daisyui/src/colors/themes")["[data-theme=dark]"],
           "base-content": "#D1D6E0",
           primary: "#2D68FF",
+          "range-shdw": "black",
         },
       },
     ],

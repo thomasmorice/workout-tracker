@@ -10,15 +10,19 @@ import RightSidebar from "../RightSidebar/RightSidebar";
 import Head from "next/head";
 import FloatingActionButton from "../FloatingActionButton/FloatingActionButton";
 import WorkoutSelectionBanner from "./WorkoutSelectionBanner";
+import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm2";
+import { useEventStore } from "../../store/EventStore";
+import WeighingForm from "../Weighing/WeighingForm2";
+import Modal from "./Modal/Modal";
 interface LayoutProps {
   children: React.ReactNode;
 }
 export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
   const { status } = useSession();
-  const { state: workoutFormState } = useWorkoutStore();
   const [currentPath, set_currentPath] = useState<String[]>();
   const { isWorkoutSelectionModeActive } = useWorkoutStore();
+  const { showFormWithEventType, closeForm } = useEventStore();
 
   useEffect(() => {
     const asPathWithoutQuery = router.pathname.split("?")[0];
@@ -50,6 +54,14 @@ export default function Layout({ children }: LayoutProps) {
               <RightSidebar />
             </div>
             <WorkoutForm />
+            <Modal onClose={closeForm} isOpen={!!showFormWithEventType}>
+              {showFormWithEventType === "workout-session" ? (
+                <WorkoutSessionForm onSuccess={closeForm} />
+              ) : (
+                <WeighingForm onSuccess={closeForm} />
+              )}
+            </Modal>
+
             {!isWorkoutSelectionModeActive && <FloatingActionButton />}
           </>
         )}

@@ -77,10 +77,6 @@ export default function WeighingForm({
   });
 
   useEffect(() => {
-    console.log("date", getValues("date"));
-  }, [getValues("date")]);
-
-  useEffect(() => {
     reset(defaultValues);
   }, [defaultValues, reset]);
 
@@ -109,15 +105,26 @@ export default function WeighingForm({
       <div className="relative flex flex-col gap-3">
         <DatePicker name="date" control={control} />
 
-        <div className="form-control w-full">
+        <p className="pt-8 text-center text-sm font-light leading-loose">
+          Track your weight and access those data from your dashboard. <br />
+          <br />
+          Tracking your weight can be beneficial for motivation and identifying
+          patterns or trends in your weight loss journey. It is important to
+          weigh yourself at the same time of day and under the same conditions
+          each time, and to track your weight consistently according to your
+          goals and preferences. Weight is just one aspect of overall health,
+          and it is important to focus on other healthy habits as well.
+        </p>
+
+        <div className="form-control mt-6 w-full flex-row gap-4 self-center">
           <label className="label">
             <span className="label-text">Weight</span>
           </label>
-          <label className="input-group">
+          <label className="input-group w-fit">
             <input
               id="input-rep-max"
               step={0.1}
-              className="input max-w-[110px] flex-1 bg-base-200 placeholder:opacity-50"
+              className="input flex-1 bg-base-200 placeholder:opacity-50"
               {...register("weight", {
                 setValueAs: (v) => {
                   return v === null || v === ""
@@ -132,9 +139,11 @@ export default function WeighingForm({
           </label>
         </div>
 
-        <div className="mt-3 flex flex-wrap justify-end gap-4">
+        <div className="mt-3 flex flex-wrap justify-center gap-4">
           <button
-            className={`btn mt-2 ${isSubmitting ? "loading" : ""}`}
+            className={`btn-primary btn-sm btn mt-2 rounded-full ${
+              isSubmitting ? "loading" : ""
+            }`}
             type="submit"
           >
             {`${existingWeighing ? "Edit" : "Add"} weighing`}

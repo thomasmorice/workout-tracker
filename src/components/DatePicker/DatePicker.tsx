@@ -21,7 +21,7 @@ export default function DatePicker(
   }, [showDateTimePicker]);
 
   return (
-    <div className="flex items-center justify-center gap-1 font-semibold ">
+    <div className="flex w-fit items-center justify-center gap-1 self-center px-4 py-2 font-semibold">
       {field.value && (
         <>
           {format(field.value, "EEEE, MMM dd, p")}
@@ -32,7 +32,7 @@ export default function DatePicker(
           >
             <MdEdit size={18} />
             <input
-              className={`input-datetime absolute top-0 h-full w-10  opacity-0`}
+              className={`input-datetime absolute top-0 h-full w-5  opacity-0`}
               onChange={(e) => field.onChange(parseISO(e.target.value))}
               ref={datetimePickerRef}
               type="datetime-local"

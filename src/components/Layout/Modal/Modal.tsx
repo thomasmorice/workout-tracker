@@ -1,60 +1,58 @@
-import { useCallback, useEffect, useRef } from "react";
-import { useOnClickOutside, useLockedBody } from "usehooks-ts";
-import Drawer from "react-drag-drawer";
-import { MdClose } from "react-icons/md";
-interface ModalProps {
-  onClose: () => void;
+import { AnimatePresence, motion } from "framer-motion";
+import { useRef } from "react";
+import { useOnClickOutside } from "usehooks-ts";
+import { usePreventScroll } from "react-aria";
+import { MdArrowBackIosNew } from "react-icons/md";
+
+type ModalProps = {
   isOpen: boolean;
-  modalChildrenOrder?: number;
-  withCloseButton?: boolean;
+  title?: React.ReactNode;
   children: React.ReactNode;
-}
+  onClose: () => void;
+};
 
 export default function Modal({
-  onClose,
   isOpen,
-  withCloseButton = false,
-  modalChildrenOrder,
+  title,
   children,
+  onClose,
 }: ModalProps) {
-  const ref = useRef(null);
-  useLockedBody(isOpen);
-
-  useOnClickOutside(ref, onClose);
-
-  const onGoBack = useCallback(() => {
-    onClose();
-    history.forward();
-  }, [onClose]);
-
-  useEffect(() => {
-    if (isOpen) {
-      window.addEventListener("popstate", onGoBack);
-    } else {
-      window.removeEventListener("popstate", onGoBack);
-    }
-  }, [isOpen, onGoBack]);
-
+  const innerModal = useRef(null);
+  useOnClickOutside(innerModal, onClose);
+  usePreventScroll({
+    isDisabled: !isOpen,
+  });
   return (
-    <Drawer
-      open={isOpen}
-      allowClose={!withCloseButton}
-      containerElementClass={"modal-container"}
-      modalElementClass={"inner-modal"}
-      onRequestClose={onClose}
-    >
-      {!withCloseButton ? (
-        <div className="flex w-full items-center justify-center">
-          <div className="mb-4 -mt-2 h-0.5 w-28 rounded-sm bg-base-content"></div>
-        </div>
-      ) : (
-        <div className="flex w-full items-center justify-end">
-          <div onClick={onClose} className="btn btn-circle">
-            <MdClose size={16} />{" "}
-          </div>
+    <AnimatePresence>
+      {isOpen && (
+        <div className={`modal modal-open modal-bottom sm:modal-middle`}>
+          <motion.div
+            className="w-full"
+            transition={{
+              duration: 0.2,
+            }}
+            initial={{
+              y: "100%",
+            }}
+            animate={{
+              y: 0,
+            }}
+            exit={{
+              y: "100%",
+            }}
+          >
+            <div
+              ref={innerModal}
+              className="modal-box overflow-y-scroll rounded-t-3xl"
+            >
+              {title && (
+                <div className="text-xl font-bold capitalize">{title}</div>
+              )}
+              {children}
+            </div>
+          </motion.div>
         </div>
       )}
-      {children}
-    </Drawer>
+    </AnimatePresence>
   );
 }

@@ -7,7 +7,7 @@ import AvatarButton from "../AvatarButton/AvatarButton";
 import { MdNotifications } from "react-icons/md";
 
 export default function RightSidebar() {
-  const { eventTypeToEdit, closeForm } = useEventStore();
+  const { showFormWithEventType, closeForm } = useEventStore();
 
   return (
     <>
@@ -24,8 +24,8 @@ export default function RightSidebar() {
             </div>
           </div>
 
-          <div className="mt-6">
-            {!eventTypeToEdit ? (
+          {/* <div className="mt-6">
+            {!showFormWithEventType ? (
               <ActivityDashboard />
             ) : (
               <div>
@@ -37,7 +37,7 @@ export default function RightSidebar() {
                     className="transition-transform group-hover:-translate-x-1"
                     size={16}
                   />
-                  {eventTypeToEdit === "workout-session"
+                  {showFormWithEventType === "workout-session"
                     ? "Session"
                     : "Weighing"}{" "}
                   Form
@@ -49,7 +49,7 @@ export default function RightSidebar() {
                 )}
               </div>
             )}
-          </div>
+          </div> */}
         </div>
       </aside>
     </>

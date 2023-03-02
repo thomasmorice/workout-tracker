@@ -87,7 +87,7 @@ export default function ActivityDashboard() {
                 <a
                   onClick={() =>
                     addOrEditEvent({
-                      type: "weighting",
+                      type: "weighing",
                       date: showSpecificDay,
                     })
                   }

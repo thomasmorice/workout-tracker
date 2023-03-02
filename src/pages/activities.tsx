@@ -8,10 +8,11 @@ import WorkoutSessionForm from "../components/WorkoutSession/WorkoutSessionForm"
 import { useEventStore } from "../store/EventStore";
 
 const Activities: NextPage = () => {
-  const { eventTypeToEdit, closeForm } = useEventStore();
+  const { eventBeingEdited, showFormWithEventType, closeForm } =
+    useEventStore();
   return (
     <div className="">
-      {!eventTypeToEdit ? (
+      {!eventBeingEdited ? (
         <>
           <Header
             h1={{
@@ -23,7 +24,7 @@ const Activities: NextPage = () => {
         </>
       ) : (
         <>
-          {eventTypeToEdit === "workout-session" ? (
+          {/* {showFormWithEventType === "workout-session" ? (
             <>
               <Header onGoBack={closeForm} h1={"Session form"} />
               <WorkoutSessionForm onSuccess={closeForm} />
@@ -33,7 +34,7 @@ const Activities: NextPage = () => {
               <Header onGoBack={closeForm} h1={"Weighing form"} />
               <WeighingForm onSuccess={closeForm} />
             </>
-          )}
+          )} */}
         </>
       )}
     </div>

@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 
-interface WeightingProps {
+interface WeighingProps {
   dateFilter?: {
     lte: string;
     gte: string;
@@ -24,7 +24,7 @@ export const useWeighingService = () => {
     },
   });
 
-  const getWeighings = ({ dateFilter, take }: WeightingProps) => {
+  const getWeighings = ({ dateFilter, take }: WeighingProps) => {
     return trpc.weighing.getWeighings.useQuery(
       {
         dateFilter,

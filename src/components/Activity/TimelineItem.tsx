@@ -45,7 +45,7 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
               eventId: event.workoutSession
                 ? event.workoutSession.id
                 : event.weighing?.id,
-              type: event.workoutSession ? "workout-session" : "weighting",
+              type: event.workoutSession ? "workout-session" : "weighing",
             });
           }}
           className="group"

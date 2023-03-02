@@ -46,7 +46,7 @@ export default function WorkoutResultForm({
 
   return (
     <Portal>
-      <Modal isOpen={true} modalChildrenOrder={1} onClose={onClose}>
+      <Modal isOpen={true} onClose={onClose}>
         <>
           <h3 className="mb-4 text-xl font-bold capitalize">Add the result</h3>
 

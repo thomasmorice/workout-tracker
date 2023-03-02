@@ -1,39 +1,30 @@
 import { AiOutlinePlus } from "react-icons/ai";
-import { useEffect, useState } from "react";
-import Modal from "../Layout/Modal/Modal2";
+import { useState } from "react";
+import Modal from "../Layout/Modal/Modal";
 import { useEventStore } from "../../store/EventStore";
 import WeighingForm from "../Weighing/WeighingForm2";
-import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm2";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import Dropdown from "../Dropdown/Dropdown";
-import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
+import { useAnimationControls } from "framer-motion";
 
 export default function FloatingActionButton() {
-  const { closeForm } = useEventStore();
-  const [showAddSessionModal, set_showAddSessionModal] = useState(false);
-  const [showAddWeightModal, set_showAddWeightModal] = useState(false);
   const { showWorkoutForm } = useWorkoutStore();
-  // const { selectedWorkouts, hasSelection, clearSelectedWorkouts } =
-  //   useFloatingActionButtonStore();
-  const closeButtonAnimationControls = useAnimationControls();
-
-  // useEffect(() => {
-  //   if (selectedWorkouts.length > 0) {
-  //     closeButtonAnimationControls.start({
-  //       scale: [1, 1.15, 0.9, 1.15, 1],
-  //       transition: { duration: 0.6 },
-  //     });
-  //   }
-  // }, [selectedWorkouts, closeButtonAnimationControls]);
+  const { addOrEditEvent } = useEventStore();
 
   const mainButtons = [
     {
       label: `Create a session`,
-      onClick: () => set_showAddSessionModal(true),
+      onClick: () =>
+        addOrEditEvent({
+          type: "workout-session",
+        }),
     },
     {
       label: "Add a weighing",
-      onClick: () => set_showAddWeightModal(true),
+      onClick: () =>
+        addOrEditEvent({
+          type: "weighing",
+        }),
     },
     {
       label: "Create a workout",
@@ -54,28 +45,6 @@ export default function FloatingActionButton() {
 
   return (
     <>
-      <Modal
-        isOpen={showAddWeightModal}
-        onClose={() => set_showAddWeightModal(false)}
-      >
-        <>
-          <WeighingForm onSuccess={() => set_showAddWeightModal(false)} />
-        </>
-      </Modal>
-
-      <Modal
-        isOpen={showAddSessionModal}
-        onClose={() => set_showAddSessionModal(false)}
-      >
-        <>
-          <WorkoutSessionForm
-            onClose={() => {
-              set_showAddSessionModal(false);
-            }}
-          />
-        </>
-      </Modal>
-
       <div className="fixed bottom-20 right-8 z-50">
         <Dropdown
           withBackdrop

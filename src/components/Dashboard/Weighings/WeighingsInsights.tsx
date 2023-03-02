@@ -48,7 +48,7 @@ export default function WeighingInsights() {
               <DashboardItemGraph
                 graphNumbers={[...latestWeighings]
                   .reverse()
-                  .map((weighting) => weighting.weight)}
+                  .map((weighing) => weighing.weight)}
               />
             </DashboardItem>
           )}

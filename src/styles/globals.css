@@ -44,6 +44,28 @@
   .badge {
     @apply rounded-lg text-xs;
   }
+
+  .range-custom {
+    --range-shdw: transparent;
+    /* height: 0.3rem; */
+  }
+
+  .range-custom::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    width: 16px; /* Set a specific slider handle width */
+    height: 16px; /* Slider handle height */
+    cursor: pointer; /* Cursor on hover */
+  }
+
+  .range-custom::-moz-range-thumb {
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: #04aa6d; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+  }
 }
 
 ::-webkit-calendar-picker-indicator {

@@ -7,7 +7,7 @@ import { useWorkoutService } from "../../services/useWorkoutService";
 import { useToastStore } from "../../store/ToastStore";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import { enumToString } from "../../utils/formatting";
-import Modal from "../Layout/Modal/Modal2";
+import Modal from "../Layout/Modal/Modal";
 import ConfirmModal from "../Layout/Modal/ConfirmModal";
 import { WorkoutRouterType } from "../../server/trpc/router/workout-router";
 
