@@ -4,15 +4,15 @@ import { WorkoutRouterType } from "../server/trpc/router/workout-router";
 import { useToastStore } from "./ToastStore";
 
 type StateType = "create" | "duplicate" | "edit" | "delete";
-type workoutType =
+type WorkoutType =
   inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
 
 interface WorkoutFormState {
   state?: StateType;
   workout?: inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
   isWorkoutSelectionModeActive: boolean;
-  selectedWorkouts: workoutType[];
-  toggleSelectWorkout: (workout: workoutType) => void;
+  selectedWorkouts: WorkoutType[];
+  toggleSelectWorkout: (workout: WorkoutType) => void;
   clearSelectedWorkouts: () => void;
   setWorkoutSelectionMode: (isSelectionModActive: boolean) => void;
   showWorkoutForm: (

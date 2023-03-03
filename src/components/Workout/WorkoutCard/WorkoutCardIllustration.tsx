@@ -1,19 +1,19 @@
 import { motion } from "framer-motion";
 
 type WorkoutCardIllustrationProps = {
-  mode: "minified" | "expanded" | "full-screen";
+  isFullScreen: boolean;
   illustration?: string;
 };
 
 export default function WorkoutCardIllustration({
-  mode,
+  isFullScreen,
   illustration,
 }: WorkoutCardIllustrationProps) {
   return (
     <motion.div
       layout="position"
-      className={`absolute inset-0  max-h-64 w-full bg-cover bg-center bg-no-repeat opacity-50
-        ${mode !== "full-screen" ? "rounded-3xl" : "-z-10 "}
+      className={`absolute inset-0  max-h-52 w-full bg-cover bg-center bg-no-repeat opacity-50
+        ${!isFullScreen ? "rounded-3xl" : "-z-10 "}
       `}
       transition={{
         backgroundSize: {
@@ -25,7 +25,7 @@ export default function WorkoutCardIllustration({
         backgroundSize: "100%",
       }}
       animate={{
-        backgroundSize: mode !== "full-screen" ? "100%" : "115%",
+        backgroundSize: !isFullScreen ? "100%" : "115%",
       }}
       style={{
         backgroundImage: `url(/workout-item/${

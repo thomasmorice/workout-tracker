@@ -10,20 +10,22 @@ import { useWorkoutService } from "../services/useWorkoutService";
 import { useWorkoutStore } from "../store/WorkoutStore";
 import { MdSearch } from "react-icons/md";
 import Header from "../components/Layout/Header";
-import { LayoutGroup } from "framer-motion";
+import { LayoutGroup, motion } from "framer-motion";
+import { useRouter } from "next/router";
 
 const Workouts: NextPage = () => {
   const { data: sessionData } = useSession();
   const ref = useRef<HTMLDivElement | null>(null);
+
   const entry = useIntersectionObserver(ref, {});
+  const router = useRouter();
 
-  const { showWorkoutForm } = useWorkoutStore();
-  const { toggleSelectWorkout, isWorkoutSelectionModeActive } =
-    useWorkoutStore();
+  const { toggleSelectWorkout, showWorkoutForm } = useWorkoutStore();
   const { getInfiniteWorkouts } = useWorkoutService();
-
+  const [showWorkoutDetail, set_showWorkoutDetail] = useState<number>();
   const [classifiedOnly, set_classifiedOnly] = useState(true);
   const [searchTerm, set_searchTerm] = useState("");
+  const [scrollPosition, set_scrollPosition] = useState(0);
   const searchTermDebounced = useDebounce<string>(searchTerm, 500);
 
   const { data, fetchNextPage, hasNextPage, isFetching, isSuccess, ...rest } =
@@ -40,6 +42,16 @@ const Workouts: NextPage = () => {
     return data?.pages[0]?.workouts?.length === 0 && isSuccess;
   }, [data, isSuccess]);
 
+  useEffect(() => {
+    const id = parseInt(router.query.id as string, 10);
+    if (id) {
+      set_scrollPosition(window.scrollY);
+    } else {
+      window.scrollBy(0, scrollPosition);
+    }
+    id ? set_showWorkoutDetail(id) : set_showWorkoutDetail(undefined);
+  }, [router.query.id]);
+
   return (
     <>
       <Head>
@@ -53,7 +65,7 @@ const Workouts: NextPage = () => {
         <button
           type="button"
           onClick={() => showWorkoutForm("create")}
-          className="btn-primary btn-sm btn hidden md:block"
+          className="btn btn-primary btn-sm hidden md:block"
         >
           + Create a new workout
         </button>
@@ -118,8 +130,13 @@ const Workouts: NextPage = () => {
                 {data?.pages
                   ? data.pages.map((page) =>
                       page.workouts.map((workout) => (
-                        <div key={workout.id} className="mb-12">
+                        <div
+                          // ref={showWorkoutDetail ? openedWorkoutRef : null}
+                          key={workout.id}
+                          className="mb-12"
+                        >
                           <WorkoutCard
+                            isFullScreen={workout.id === showWorkoutDetail}
                             onEdit={() => showWorkoutForm("edit", workout)}
                             onDuplicate={() =>
                               showWorkoutForm("duplicate", workout)

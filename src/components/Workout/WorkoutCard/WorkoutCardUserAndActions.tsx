@@ -7,9 +7,10 @@ import { RxDotsVertical } from "react-icons/rx";
 import { MdDone, MdOutlineArrowBackIos } from "react-icons/md";
 import { useMemo } from "react";
 import Dropdown from "../../Dropdown/Dropdown";
+import { useRouter } from "next/router";
 
 type WorkoutCardUserAndActionsProps = {
-  mode: "minified" | "expanded" | "full-screen";
+  isFullScreen: boolean;
   isSelected?: boolean;
   onOpenFullScreen?: () => void;
   onDuplicate?: () => void;
@@ -29,9 +30,10 @@ export default function WorkoutCardUserAndActions({
   onDelete,
   onToggleSelect,
   onGoback,
-  mode,
+  isFullScreen,
   workout,
 }: WorkoutCardUserAndActionsProps) {
+  const router = useRouter();
   const workoutActions = useMemo(() => {
     const actions = [];
     // if (onMoveResultUp) {
@@ -83,14 +85,14 @@ export default function WorkoutCardUserAndActions({
       <motion.div
         layout="position"
         onClick={onGoback}
-        className={`btn-ghost btn-circle btn z-10
-              ${mode === "full-screen" ? "fixed " : "hidden "}`}
-        transition={{
-          duration: mode === "full-screen" ? 0.5 : 0.2,
-        }}
+        className={`btn btn-ghost btn-circle z-10
+              ${isFullScreen ? "fixed " : "hidden "}`}
+        // transition={{
+        //   duration: isFullScreen ? 0.5 : 0.2,
+        // }}
         animate={{
-          opacity: mode === "full-screen" ? 1 : 0,
-          x: mode === "full-screen" ? 0 : -10,
+          opacity: isFullScreen ? 1 : 0,
+          x: isFullScreen ? 0 : -10,
         }}
       >
         <MdOutlineArrowBackIos className="" size={22} />
@@ -98,13 +100,13 @@ export default function WorkoutCardUserAndActions({
       {/* AUTHOR */}
       <motion.div
         className={`flex items-center gap-3
-            ${mode === "full-screen" ? "flex-col justify-center" : ""}
+            ${isFullScreen ? "flex-col justify-center" : ""}
           `}
       >
         <motion.div layout className={`avatar`}>
           <motion.div
             className={`relative rounded-full border-2 border-base-content border-opacity-50 bg-transparent ${
-              mode === "full-screen" ? "h-12 w-12" : "h-8 w-8"
+              isFullScreen ? "h-12 w-12" : "h-8 w-8"
             }`}
           >
             <Image
@@ -119,9 +121,8 @@ export default function WorkoutCardUserAndActions({
 
         {/* Creator name and date */}
         <motion.div
-          layout="position"
           className={`flex w-full flex-col self-center
-              ${mode !== "full-screen" ? "text-left" : "text-center"}
+              ${isFullScreen ? "text-center" : "text-left"}
             }`}
         >
           <motion.div className="text-xs font-bold uppercase leading-[15px] tracking-[0.05em]">
@@ -136,7 +137,7 @@ export default function WorkoutCardUserAndActions({
           layout={"position"}
           className={`
             ${
-              mode === "full-screen"
+              isFullScreen
                 ? "fixed top-5 right-5"
                 : `btn-sm absolute -right-6 -top-2`
             }
@@ -145,23 +146,23 @@ export default function WorkoutCardUserAndActions({
         >
           {isSelected ? (
             <button
-              className="btn-primary btn-sm btn-circle btn mr-3 mt-2"
+              className="btn btn-primary btn-sm btn-circle mr-3 mt-2"
               onClick={onToggleSelect}
             >
               <MdDone size={17} />
             </button>
           ) : (
             <Dropdown
-              withBackdrop={mode === "full-screen"}
+              withBackdrop={isFullScreen}
               buttons={workoutActions}
               containerClass="dropdown-left"
             >
               <div
-                className={`btn-ghost btn-circle btn
+                className={`btn btn-ghost btn-circle
                   ${isSelected ? "btn-primary" : ""}
                 `}
               >
-                <RxDotsVertical size={mode === "full-screen" ? 28 : 23} />
+                <RxDotsVertical size={isFullScreen ? 28 : 23} />
               </div>
             </Dropdown>
           )}

@@ -91,7 +91,7 @@ export const workoutRouter = router({
         where: {
           AND: {
             id: id,
-            creatorId: ctx.session.user.id,
+            // creatorId: ctx.session.user.id,
           },
         },
       });

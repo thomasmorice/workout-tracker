@@ -9,9 +9,9 @@ import WorkoutCardBadges from "./WorkoutCardBadges";
 import { useLockedBody } from "usehooks-ts";
 import { getWorkoutItemsAndRandomIllustrationByDescription } from "../../../utils/workout";
 import WorkoutResults from "../../WorkoutResult/WorkoutResults";
-import { useFloatingActionButtonStore } from "../../../store/FloatingActionButtonStore";
 import WorkoutCardSkeleton from "../WorkoutCardSkeleton";
 import { useWorkoutStore } from "../../../store/WorkoutStore";
+import { useRouter } from "next/router";
 
 interface WorkoutCardProps {
   workout:
@@ -23,7 +23,7 @@ interface WorkoutCardProps {
   onMoveResultUp?: () => void;
   onMoveResultDown?: () => void;
   footer?: React.ReactNode;
-  mode?: "card" | "selecteable" | "for-result";
+  isFullScreen?: boolean;
 }
 
 export default function WorkoutCard({
@@ -32,16 +32,16 @@ export default function WorkoutCard({
   onEdit,
   onDelete,
   onSelect,
+  isFullScreen = false,
   onMoveResultUp,
   onMoveResultDown,
   footer,
 }: WorkoutCardProps) {
-  const [mode, set_mode] = useState<"minified" | "expanded" | "full-screen">(
-    "minified"
-  );
+  const [isExpanded, set_isExpanded] = useState(false);
   const [workoutItems, set_workoutItems] = useState<string[]>();
   const [illustration, set_illustration] = useState<string>();
   const { selectedWorkouts } = useWorkoutStore();
+  const router = useRouter();
 
   useEffect(() => {
     const itemsAndIllustration =
@@ -50,7 +50,7 @@ export default function WorkoutCard({
     set_illustration(itemsAndIllustration.illustration);
   }, []);
 
-  useLockedBody(mode === "full-screen");
+  useLockedBody(isFullScreen);
 
   if (!illustration && !workoutItems) {
     return <WorkoutCardSkeleton />;
@@ -59,7 +59,7 @@ export default function WorkoutCard({
   return (
     <>
       <AnimatePresence>
-        {mode === "full-screen" && (
+        {isFullScreen && (
           <motion.div
             initial={{
               opacity: 0,
@@ -76,34 +76,39 @@ export default function WorkoutCard({
       </AnimatePresence>
       <motion.div
         layout
-        layoutId={workout.id.toString()}
-        className={` bg-base-300 p-5 pb-4
+        layoutId={`workout-${workout.id}`}
+        className={`bg-base-300 p-5 pb-4
           ${
-            mode === "full-screen"
+            isFullScreen
               ? "fixed top-0 bottom-0 left-0 z-50 w-full overflow-scroll rounded-none"
               : "relative rounded-3xl"
           }
         `}
       >
-        <WorkoutCardIllustration illustration={illustration} mode={mode} />
+        <WorkoutCardIllustration
+          illustration={illustration}
+          isFullScreen={isFullScreen}
+        />
         <motion.div className="relative">
           <WorkoutCardUserAndActions
-            onGoback={() => set_mode("minified")}
-            onOpenFullScreen={() => set_mode("full-screen")}
+            onGoback={() => router.back()}
+            onOpenFullScreen={() => {
+              router.push(`/workouts/?id=${workout.id}`, undefined, {
+                shallow: true,
+              });
+            }}
             onToggleSelect={onSelect}
             isSelected={selectedWorkouts.some((w) => w.id === workout.id)}
             onEdit={onEdit}
             onDelete={onDelete}
             onDuplicate={onDuplicate}
             workout={workout}
-            mode={mode}
+            isFullScreen={isFullScreen}
           />
-          <WorkoutCardTitle workout={workout} mode={mode} />
+          <WorkoutCardTitle workout={workout} isFullScreen={isFullScreen} />
 
-          <motion.div
-            onClick={() => mode === "minified" && set_mode("expanded")}
-          >
-            {mode === "minified" && workoutItems && workoutItems.length > 0 ? (
+          <motion.div onClick={() => !isExpanded && set_isExpanded(true)}>
+            {!isExpanded && workoutItems && workoutItems.length > 0 ? (
               <div
                 className={`
             mx-auto mt-2 max-w-[220px] text-center text-xs font-light
@@ -114,10 +119,10 @@ export default function WorkoutCard({
               </div>
             ) : (
               <div
-                onClick={() => mode === "expanded" && set_mode("minified")}
+                onClick={() => isExpanded && set_isExpanded(false)}
                 className={`relative mt-5 whitespace-pre-wrap text-center text-[11.5px] leading-[18px] text-base-content text-opacity-70 
                 ${
-                  mode === "full-screen"
+                  isFullScreen
                     ? "-z-10 mb-12 text-sm font-light leading-[22px] tracking-tight text-opacity-100"
                     : ""
                 }
@@ -125,7 +130,7 @@ export default function WorkoutCard({
               >
                 <div
                   className={`absolute -left-1 -top-6 text-[76px] opacity-20 ${
-                    mode === "full-screen" ? "visible" : "hidden"
+                    isFullScreen ? "visible" : "hidden"
                   }`}
                 >
                   “
@@ -133,7 +138,7 @@ export default function WorkoutCard({
                 {workout.description}
                 <div
                   className={`absolute -right-1 -bottom-12 text-[76px] opacity-20 ${
-                    mode === "full-screen" ? "visible" : "hidden"
+                    isFullScreen ? "visible" : "hidden"
                   }`}
                 >
                   ”
@@ -144,7 +149,7 @@ export default function WorkoutCard({
             <WorkoutCardBadges workout={workout} />
           </motion.div>
 
-          {mode === "full-screen" && (
+          {isFullScreen && (
             <div>
               <div className="divider mt-12 mb-8 opacity-70"></div>
               {<WorkoutResults workoutId={workout.id} />}

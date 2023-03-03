@@ -65,7 +65,6 @@ export default function WorkoutSessionResultItem({
         onMoveResultUp={onMoveResultUp}
         onMoveResultDown={onMoveResultDown}
         workout={result.workout}
-        mode="for-result"
         footer={
           <div className="card-actions  items-center justify-end">
             <div className="btn-group">
@@ -81,7 +80,7 @@ export default function WorkoutSessionResultItem({
               <button
                 onClick={onRemoveWorkoutResult}
                 type="button"
-                className="btn-outline btn-error btn btn-sm items-center gap-2"
+                className="btn-outline btn btn-error btn-sm items-center gap-2"
               >
                 <MdDelete size="20px" />
               </button>

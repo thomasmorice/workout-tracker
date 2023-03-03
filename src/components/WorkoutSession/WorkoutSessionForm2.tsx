@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { MdArrowBackIosNew, MdEdit, MdModelTraining } from "react-icons/md";
 import { getRandomPreparingSessionllustration } from "../../utils/workout";
 import { useWorkoutSessionService } from "../../services/useWorkoutSessionService";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useFieldArray } from "react-hook-form";
 import { inferRouterInputs } from "@trpc/server";
 import { WorkoutSessionRouterType } from "../../server/trpc/router/workout-session-router";
 import { WorkoutResultInputsWithWorkout } from "../../types/app";
@@ -14,6 +14,7 @@ import { BsLightningChargeFill } from "react-icons/bs";
 import { GiBiceps } from "react-icons/gi";
 import { enumToString } from "../../utils/formatting";
 import { FaRunning } from "react-icons/fa";
+import DatePicker from "../DatePicker/DatePicker";
 
 type WorkoutSessionFormProps = {
   onSuccess?: () => void;
@@ -25,9 +26,7 @@ export default function WorkoutSessionForm({
   const [illustration] = useState(getRandomPreparingSessionllustration());
   const datetimePickerRef = useRef<HTMLInputElement>(null);
   const [showDateTimePicker, set_showDateTimePicker] = useState(false);
-  const [defaultValues, set_defaultValues] = useState<{}>({
-    date: new Date(),
-  });
+  const [defaultValues, set_defaultValues] = useState({});
   const { getWorkoutSessionById } = useWorkoutSessionService();
   const router = useRouter();
 
@@ -37,10 +36,6 @@ export default function WorkoutSessionForm({
 
   const { data: existingWorkoutSession } = getWorkoutSessionById(
     eventBeingEdited || -1
-  );
-
-  const [selectedWorkoutResult, set_selectedWorkoutResult] = useState(
-    existingWorkoutSession?.workoutResults[0]?.workout || preselectedWorkouts[0]
   );
 
   useEffect(() => {
@@ -65,6 +60,7 @@ export default function WorkoutSessionForm({
 
   const {
     handleSubmit,
+
     reset,
     getValues,
     watch,
@@ -78,11 +74,30 @@ export default function WorkoutSessionForm({
     defaultValues,
   });
 
+  const [selectedIndex, set_selectedIndex] = useState(0);
+  const {
+    fields: workoutResults,
+    replace: replaceWorkoutResults,
+    append: appendWorkoutResults,
+    update: updateWorkoutResults,
+    remove: removeWorkoutResults,
+    move: moveWorkoutResults,
+  } = useFieldArray({
+    keyName: "key",
+    control, // control props comes from useForm (optional: if you are using FormContext)
+    name: "workoutResults", // unique name for your Field Array
+  });
+
   useEffect(() => {
     reset(defaultValues);
   }, [defaultValues, reset]);
 
-  console.log("selected workout result", selectedWorkoutResult);
+  useEffect(() => {
+    console.log("workoutResults", workoutResults);
+  }, [workoutResults]);
+
+  const [selectedWorkoutResultIndex, set_selectedWorkoutResultIndex] =
+    useState(0);
 
   return (
     <div className="min-h-[16rem]">
@@ -108,30 +123,9 @@ export default function WorkoutSessionForm({
         <MdArrowBackIosNew size={26} />
       </div>
       <div className="relative mt-10 flex flex-col justify-center">
-        <div className="flex items-center justify-center gap-1 font-semibold ">
-          {format(getValues("date"), "EEEE, MMM dd, p")}
-          <button
-            onClick={() => set_showDateTimePicker(true)}
-            className="btn-ghost btn-sm btn-circle btn relative"
-            type="button"
-          >
-            <MdEdit size={18} />
-            <Controller
-              control={control}
-              name="date"
-              render={({ field }) => (
-                <input
-                  className={`input-datetime absolute top-0 h-full w-10  opacity-0`}
-                  onChange={(e) => field.onChange(parseISO(e.target.value))}
-                  ref={datetimePickerRef}
-                  type="datetime-local"
-                />
-              )}
-            />
-          </button>
-        </div>
+        <DatePicker name="date" control={control} />
 
-        {getValues("workoutResults")?.length > 0 ? (
+        {workoutResults ? (
           <button
             type="button"
             className="btn-primary btn-sm mt-7 self-center rounded-full text-xs font-semibold uppercase"
@@ -154,17 +148,15 @@ export default function WorkoutSessionForm({
         )}
 
         <div className="mt-6">
-          {getValues("workoutResults")?.length > 0 ? (
+          {workoutResults ? (
             <>
               <div className="flex gap-6">
-                {getValues("workoutResults").map((workoutResult, index) => {
+                {workoutResults.map((workoutResult, index) => {
                   return (
                     <div
                       key={workoutResult.id}
                       className={`${
-                        selectedWorkoutResult?.id === workoutResult.workoutId
-                          ? ""
-                          : "opacity-40"
+                        selectedIndex === index ? "" : "opacity-40"
                       }`}
                     >
                       <div className="flex flex-col">
@@ -180,34 +172,56 @@ export default function WorkoutSessionForm({
 
               <div className="flex flex-col">
                 <div className="flex items-center gap-2 text-base font-semibold">
-                  {selectedWorkoutResult?.elementType.includes("STRENGTH") && (
+                  {workoutResults[
+                    selectedWorkoutResultIndex
+                  ]?.workout.elementType.includes("STRENGTH") && (
                     <GiBiceps size={14} />
                   )}
-                  {selectedWorkoutResult?.elementType?.includes("WOD") && (
+                  {workoutResults[
+                    selectedWorkoutResultIndex
+                  ]?.workout.elementType?.includes("WOD") && (
                     <BsLightningChargeFill size={14} />
                   )}
-                  {selectedWorkoutResult?.elementType?.includes(
-                    "ENDURANCE"
-                  ) && <FaRunning size={14} />}
-                  {enumToString(selectedWorkoutResult?.elementType || "")}
+                  {workoutResults[
+                    selectedWorkoutResultIndex
+                  ]?.workout.elementType?.includes("ENDURANCE") && (
+                    <FaRunning size={14} />
+                  )}
+                  {enumToString(
+                    workoutResults[selectedWorkoutResultIndex]?.workout
+                      .elementType || ""
+                  )}
                 </div>
 
                 <div className="text-sm uppercase">
-                  {selectedWorkoutResult?.totalTime}MN{" "}
+                  {
+                    workoutResults[selectedWorkoutResultIndex]?.workout
+                      .totalTime
+                  }
+                  MN{" "}
                   {enumToString(
-                    selectedWorkoutResult?.workoutType || "workout"
+                    workoutResults[selectedWorkoutResultIndex]?.workout
+                      .workoutType || "workout"
                   )}
                 </div>
 
                 {/* Save workout result */}
+
                 <div className="-ml-6 mt-4 w-[calc(100%_+_3rem)] bg-base-300 py-4 text-center text-sm font-bold">
                   How was your workout?
                   <input
                     type="range"
                     min="1"
                     max="5"
-                    // value="25"
-                    onChange={(e) => console.log(e.target.value)}
+                    value={
+                      workoutResults[selectedWorkoutResultIndex]?.rating + ""
+                    }
+                    onChange={(e) =>
+                      updateWorkoutResults(selectedWorkoutResultIndex, {
+                        ...workoutResults[selectedWorkoutResultIndex],
+                        rating: parseInt(e.target.value),
+                      } as WorkoutResultInputsWithWorkout)
+                    }
                     className="range-custom range mt-2 px-3"
                     step="1"
                   />
@@ -221,7 +235,10 @@ export default function WorkoutSessionForm({
                 </div>
 
                 <div className="mt-6 whitespace-pre-wrap text-xs font-light">
-                  {selectedWorkoutResult?.description}
+                  {
+                    workoutResults[selectedWorkoutResultIndex]?.workout
+                      ?.description
+                  }
                 </div>
               </div>
             </>
