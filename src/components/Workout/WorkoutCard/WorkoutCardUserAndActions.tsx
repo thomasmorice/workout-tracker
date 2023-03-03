@@ -103,7 +103,7 @@ export default function WorkoutCardUserAndActions({
             ${isFullScreen ? "flex-col justify-center" : ""}
           `}
       >
-        <motion.div layout className={`avatar`}>
+        <motion.div layout="position" className={`avatar`}>
           <motion.div
             className={`relative rounded-full border-2 border-base-content border-opacity-50 bg-transparent ${
               isFullScreen ? "h-12 w-12" : "h-8 w-8"
@@ -121,6 +121,7 @@ export default function WorkoutCardUserAndActions({
 
         {/* Creator name and date */}
         <motion.div
+          layout="position"
           className={`flex w-full flex-col self-center
               ${isFullScreen ? "text-center" : "text-left"}
             }`}
