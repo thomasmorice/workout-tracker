@@ -99,7 +99,7 @@ export default function WorkoutSelectField({
                         });
                         handleAddWorkout(workout);
                       }}
-                      mode="selecteable"
+                      // mode="selecteable"
                       workout={workout}
                     />
                   </motion.div>
