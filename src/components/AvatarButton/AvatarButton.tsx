@@ -21,16 +21,16 @@ export default function AvatarButton({}: AvatarButtonProps) {
             <label tabIndex={0} className="btn-ghost btn px-1">
               <div className="flex items-center gap-1">
                 <Image
-                  width={36}
-                  height={36}
+                  width={28}
+                  height={28}
                   className="rounded-full"
                   referrerPolicy="no-referrer"
                   src={sessionData.user?.image ?? "https://i.pravatar.cc/300"}
                   alt=""
                 />
-                <div className="flex items-center gap-1">
+                {/* <div className="flex items-center gap-1">
                   <MdArrowDropDown size={22} />
-                </div>
+                </div> */}
               </div>
             </label>
           ) : (

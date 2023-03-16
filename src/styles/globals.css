@@ -4,7 +4,7 @@
 
 @layer components {
   .h1 {
-    @apply text-xl font-bold md:hidden;
+    @apply text-lg font-bold md:hidden;
   }
   .h1.desktop {
     @apply hidden text-4xl md:block;

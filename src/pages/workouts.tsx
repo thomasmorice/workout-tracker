@@ -126,32 +126,30 @@ const Workouts: NextPage = () => {
               className="-ml-16 mt-6 flex w-auto"
               columnClassName="pl-16 bg-clip-padding "
             >
-              <LayoutGroup>
-                {data?.pages
-                  ? data.pages.map((page) =>
-                      page.workouts.map((workout) => (
-                        <div
-                          // ref={showWorkoutDetail ? openedWorkoutRef : null}
-                          key={workout.id}
-                          className="mb-12"
-                        >
-                          <WorkoutCard
-                            isFullScreen={workout.id === showWorkoutDetail}
-                            onEdit={() => showWorkoutForm("edit", workout)}
-                            onDuplicate={() =>
-                              showWorkoutForm("duplicate", workout)
-                            }
-                            onSelect={() => toggleSelectWorkout(workout)}
-                            onDelete={() => showWorkoutForm("delete", workout)}
-                            workout={workout}
-                          />
-                        </div>
-                      ))
-                    )
-                  : Array(9)
-                      .fill(0)
-                      .map((_, i) => <WorkoutCardSkeleton key={i} />)}
-              </LayoutGroup>
+              {data?.pages
+                ? data.pages.map((page) =>
+                    page.workouts.map((workout) => (
+                      <div
+                        // ref={showWorkoutDetail ? openedWorkoutRef : null}
+                        key={workout.id}
+                        className="relative mb-12"
+                      >
+                        <WorkoutCard
+                          isFullScreen={workout.id === showWorkoutDetail}
+                          onEdit={() => showWorkoutForm("edit", workout)}
+                          onDuplicate={() =>
+                            showWorkoutForm("duplicate", workout)
+                          }
+                          onSelect={() => toggleSelectWorkout(workout)}
+                          onDelete={() => showWorkoutForm("delete", workout)}
+                          workout={workout}
+                        />
+                      </div>
+                    ))
+                  )
+                : Array(9)
+                    .fill(0)
+                    .map((_, i) => <WorkoutCardSkeleton key={i} />)}
             </Masonry>
 
             {hasNoWorkouts && (

@@ -10,6 +10,13 @@ import SessionInsights from "../components/Dashboard/Sessions/SessionsInsights";
 import Header from "../components/Layout/Header";
 import Lottie from "lottie-react";
 import lottieAnimation from "../assets/lottie-stretch-animation.json";
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
 
 const Home: NextPage = () => {
   const { data: sessionData, status } = useSession();
@@ -86,6 +93,7 @@ const Home: NextPage = () => {
       ) : (
         <>
           <Header h1={`Dashboard`} />
+
           <SessionInsights />
           <PersonalRecordsInsights />
           <WeighingsInsights />
