@@ -22,7 +22,7 @@ export default function DashboardItemList({
           {/* {loadingMessage || "Fetching data"} */}
         </div>
       ) : (
-        <div className="relative -ml-4 pl-4 w-[100vw] flex gap-4 overflow-auto pt-3 pb-5 pr-4 sm:gap-8 sm:py-5 md:inset-0  md:m-0 md:w-full md:flex-wrap">
+        <div className="snap-mandatory snap-x relative -ml-4 w-[100vw] flex overflow-auto pt-3 pb-5 pr-4  sm:py-5 md:inset-0  md:m-0 md:w-full md:flex-wrap">
           {children}
         </div>
       )}

@@ -68,7 +68,7 @@ export default function SessionInsights() {
       <DashboardItemList
         loadingMessage="fetching metrics"
         isLoading={isLoading || isLoadingMostlyDoneWorkout}
-        title="Workout/session metrics"
+        title="Sessions metrics"
       >
         <>
           {sessionsForInsights && sessionsForInsights.length > 0 && (

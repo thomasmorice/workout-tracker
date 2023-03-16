@@ -45,7 +45,7 @@ export default function PersonalRecordsInsights() {
       >
         <>
           {personalRecordWorkouts.pages[0]?.workouts.map((workout) => (
-            <div key={workout.id}>
+            <div className="px-4 snap-start" key={workout.id}>
               <PersonalRecordItem workout={workout} />
             </div>
           ))}
