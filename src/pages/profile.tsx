@@ -4,6 +4,7 @@ import Head from "next/head";
 import { useSession } from "next-auth/react";
 import AvatarButton from "../components/AvatarButton/AvatarButton";
 import Header from "../components/Layout/Header";
+import Portal from "../components/Portal/Portal";
 
 const Profile: NextPage = () => {
   const { data: sessionData } = useSession();
@@ -21,6 +22,7 @@ const Profile: NextPage = () => {
 
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <Header h1={"My profile"} />
 
       <div className="flex flex-wrap items-center gap-3">

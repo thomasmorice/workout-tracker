@@ -14,6 +14,7 @@ import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm2";
 import { useEventStore } from "../../store/EventStore";
 import WeighingForm from "../Weighing/WeighingForm2";
 import Modal from "./Modal/Modal";
+import { AnimatePresence, motion } from "framer-motion";
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -97,7 +98,18 @@ export default function Layout({ children }: LayoutProps) {
             )}
           </div>
 
-          {children}
+          <div id="header" />
+
+          <AnimatePresence mode="popLayout" initial={false}>
+            <motion.div
+              key={router.asPath}
+              initial={{ x: 300, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 300, opacity: 0 }}
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
         </main>
       </div>
     </>

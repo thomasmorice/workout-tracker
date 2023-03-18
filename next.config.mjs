@@ -19,10 +19,13 @@ const config = importWithPWA({
     defaultLocale: "en",
   },
   images: {
-    domains: ["lh3.googleusercontent.com"],
+    domains: ["lh3.googleusercontent.com", "i.pravatar.cc"],
   },
   env: {
     GIT_BRANCH: currentGitBranchName(),
+  },
+  experimental: {
+    scrollRestoration: true,
   },
 });
 export default config;

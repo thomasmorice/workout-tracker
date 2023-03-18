@@ -83,6 +83,7 @@ export const useWorkoutService = () => {
         orderByMostlyDone,
       },
       {
+        // staleTime: 100000,
         getNextPageParam: (lastPage) => lastPage.nextCursor,
         enabled: enabled && sessionData?.user !== undefined,
       }
@@ -98,6 +99,7 @@ export const useWorkoutService = () => {
       {
         enabled: !!id && sessionData?.user !== undefined,
         refetchOnWindowFocus: false,
+        refetchOnMount: false,
       }
     );
   };

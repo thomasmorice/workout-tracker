@@ -1,5 +1,4 @@
 import { inferRouterOutputs } from "@trpc/server";
-import { motion } from "framer-motion";
 import { BsLightningChargeFill } from "react-icons/bs";
 import { GiBiceps } from "react-icons/gi";
 import { FaRunning } from "react-icons/fa";
@@ -18,14 +17,13 @@ export default function WorkoutCardTitle({
   isFullScreen,
 }: WorkoutCardTitleProps) {
   return (
-    <motion.div
-      layout="position"
+    <div
       className={`
         flex flex-col items-center font-bold
-        ${isFullScreen ? "mt-6" : "mt-3"}
+        ${isFullScreen ? "mt-12" : "mt-3"}
       `}
     >
-      <motion.div
+      <div
         className={`
         flex items-center gap-1.5 text-center  font-semibold tracking-[0.03rem]
         ${isFullScreen ? "text-lg" : "text-base"}
@@ -48,17 +46,17 @@ export default function WorkoutCardTitle({
             {enumToString(workout.elementType)}
           </>
         )}
-      </motion.div>
+      </div>
       {workout.workoutType && (
-        <motion.div
+        <div
           className={`
         flex items-center  font-bold tracking-[0.15rem]
         ${isFullScreen ? "text-base" : "text-sm"}
       `}
         >
           [{enumToString(workout.workoutType)}]
-        </motion.div>
+        </div>
       )}
-    </motion.div>
+    </div>
   );
 }

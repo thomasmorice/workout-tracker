@@ -10,8 +10,9 @@ import { useWorkoutService } from "../services/useWorkoutService";
 import { useWorkoutStore } from "../store/WorkoutStore";
 import { MdSearch } from "react-icons/md";
 import Header from "../components/Layout/Header";
-import { LayoutGroup, motion } from "framer-motion";
 import { useRouter } from "next/router";
+import { inferRouterOutputs } from "@trpc/server";
+import { WorkoutRouterType } from "../server/trpc/router/workout-router";
 
 const Workouts: NextPage = () => {
   const { data: sessionData } = useSession();
@@ -22,7 +23,10 @@ const Workouts: NextPage = () => {
 
   const { toggleSelectWorkout, showWorkoutForm } = useWorkoutStore();
   const { getInfiniteWorkouts } = useWorkoutService();
-  const [showWorkoutDetail, set_showWorkoutDetail] = useState<number>();
+  const [showWorkoutDetail, set_showWorkoutDetail] =
+    useState<
+      inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]["id"]
+    >();
   const [classifiedOnly, set_classifiedOnly] = useState(true);
   const [searchTerm, set_searchTerm] = useState("");
   const [scrollPosition, set_scrollPosition] = useState(0);
@@ -44,13 +48,23 @@ const Workouts: NextPage = () => {
 
   useEffect(() => {
     const id = parseInt(router.query.id as string, 10);
-    if (id) {
-      set_scrollPosition(window.scrollY);
-    } else {
-      window.scrollBy(0, scrollPosition);
-    }
+
+    // if (id) {
+    //   set_scrollPosition(window.scrollY);
+    // } else {
+    //   window.scrollBy(0, scrollPosition);
+    // }
     id ? set_showWorkoutDetail(id) : set_showWorkoutDetail(undefined);
-  }, [router.query.id]);
+  }, [router.query.id, showWorkoutDetail]);
+
+  if (showWorkoutDetail) {
+    const selectedWorkout = data?.pages.forEach((page) =>
+      page.workouts.find((w) => w.id === showWorkoutDetail)
+    );
+    if (selectedWorkout) {
+      return <WorkoutCard workout={selectedWorkout} isFullScreen />;
+    }
+  }
 
   return (
     <>
@@ -60,12 +74,13 @@ const Workouts: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <Header h1={"Workout list"} />
+
       <div className="flex items-center justify-between">
-        <Header h1={"Workout list"} />
         <button
           type="button"
           onClick={() => showWorkoutForm("create")}
-          className="btn btn-primary btn-sm hidden md:block"
+          className="btn-primary btn-sm btn hidden md:block"
         >
           + Create a new workout
         </button>
@@ -112,10 +127,6 @@ const Workouts: NextPage = () => {
                 Classified workouts
               </button>
             </div>
-
-            {/* <h2 className="h2 group mt-12 flex cursor-pointer items-center gap-3">
-              {`Latest ${classifiedOnly ? "classified" : ""} workouts`}
-            </h2> */}
 
             <Masonry
               breakpointCols={{

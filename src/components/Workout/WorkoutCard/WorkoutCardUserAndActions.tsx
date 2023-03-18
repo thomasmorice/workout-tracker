@@ -1,5 +1,4 @@
 import { inferRouterOutputs } from "@trpc/server";
-import { motion } from "framer-motion";
 import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
 import Image from "next/image";
 import { format } from "date-fns";
@@ -36,18 +35,6 @@ export default function WorkoutCardUserAndActions({
   const router = useRouter();
   const workoutActions = useMemo(() => {
     const actions = [];
-    // if (onMoveResultUp) {
-    //   actions.push({
-    //     label: "Move result up",
-    //     onClick: onMoveResultUp,
-    //   });
-    // }
-    // if (onMoveResultDown) {
-    //   actions.push({
-    //     label: "Move result down",
-    //     onClick: onMoveResultDown,
-    //   });
-    // }
     onOpenFullScreen &&
       actions.push({
         label: "Open card details",
@@ -81,30 +68,22 @@ export default function WorkoutCardUserAndActions({
   }, [onToggleSelect, onDuplicate, onEdit, onDelete, onOpenFullScreen]);
 
   return (
-    <motion.div className="w-full">
-      <motion.div
-        layout="position"
+    <div className="w-full">
+      <div
         onClick={onGoback}
-        className={`btn btn-ghost btn-circle z-10
+        className={`btn-ghost btn-circle btn z-10
               ${isFullScreen ? "fixed " : "hidden "}`}
-        // transition={{
-        //   duration: isFullScreen ? 0.5 : 0.2,
-        // }}
-        animate={{
-          opacity: isFullScreen ? 1 : 0,
-          x: isFullScreen ? 0 : -10,
-        }}
       >
         <MdOutlineArrowBackIos className="" size={22} />
-      </motion.div>
+      </div>
       {/* AUTHOR */}
-      <motion.div
+      <div
         className={`flex items-center gap-3
             ${isFullScreen ? "flex-col justify-center" : ""}
           `}
       >
-        <motion.div layout="position" className={`avatar`}>
-          <motion.div
+        <div className={`avatar`}>
+          <div
             className={`relative rounded-full border-2 border-base-content border-opacity-50 bg-transparent ${
               isFullScreen ? "h-12 w-12" : "h-8 w-8"
             }`}
@@ -116,26 +95,24 @@ export default function WorkoutCardUserAndActions({
               src={workout.creator.image ?? "https://i.pravatar.cc/300"}
               alt="Workout creator"
             />
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* Creator name and date */}
-        <motion.div
-          layout="position"
+        <div
           className={`flex w-full flex-col self-center
               ${isFullScreen ? "text-center" : "text-left"}
             }`}
         >
-          <motion.div className="text-xs font-bold uppercase leading-[15px] tracking-[0.05em]">
+          <div className="text-xs font-bold uppercase leading-[15px] tracking-[0.05em]">
             {workout.creator.name}
-          </motion.div>
-          <motion.div className="text-[11px] tracking-tight text-base-content text-opacity-50">
+          </div>
+          <div className="text-[11px] tracking-tight text-base-content text-opacity-50">
             {format(workout.createdAt, "dd/MM/yyyy")}
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
-        <motion.div
-          layout={"position"}
+        <div
           className={`
             ${
               isFullScreen
@@ -147,7 +124,7 @@ export default function WorkoutCardUserAndActions({
         >
           {isSelected ? (
             <button
-              className="btn btn-primary btn-sm btn-circle mr-3 mt-2"
+              className="btn-primary btn-sm btn-circle btn mr-3 mt-2"
               onClick={onToggleSelect}
             >
               <MdDone size={17} />
@@ -159,7 +136,7 @@ export default function WorkoutCardUserAndActions({
               containerClass="dropdown-left"
             >
               <div
-                className={`btn btn-ghost btn-circle
+                className={`btn-ghost btn-circle btn
                   ${isSelected ? "btn-primary" : ""}
                 `}
               >
@@ -167,8 +144,8 @@ export default function WorkoutCardUserAndActions({
               </div>
             </Dropdown>
           )}
-        </motion.div>
-      </motion.div>
-    </motion.div>
+        </div>
+      </div>
+    </div>
   );
 }

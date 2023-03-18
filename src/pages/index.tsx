@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-import { AiFillBell } from "react-icons/ai";
 import { useWorkoutSessionService } from "../services/useWorkoutSessionService";
 import { formatISO } from "date-fns";
 import PersonalRecordsInsights from "../components/Dashboard/PersonalRecords/PersonalRecordsInsights";
@@ -10,6 +9,7 @@ import SessionInsights from "../components/Dashboard/Sessions/SessionsInsights";
 import Header from "../components/Layout/Header";
 import Lottie from "lottie-react";
 import lottieAnimation from "../assets/lottie-stretch-animation.json";
+import { motion } from "framer-motion";
 
 const Home: NextPage = () => {
   const { data: sessionData, status } = useSession();
@@ -86,7 +86,6 @@ const Home: NextPage = () => {
       ) : (
         <>
           <Header h1={`Dashboard`} />
-
           <SessionInsights />
           <PersonalRecordsInsights />
           <WeighingsInsights />

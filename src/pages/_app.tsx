@@ -6,26 +6,26 @@ import "../styles/globals.css";
 import "../styles/react-datepicker.css";
 import Layout from "../components/Layout/Layout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AnimatePresence, motion } from "framer-motion";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
-  // usePromptNewVersion();
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        networkMode: "always",
-      },
-    },
-  });
+  // const queryClient = new QueryClient({
+  //   defaultOptions: {
+  //     queries: {
+  //       networkMode: "always",
+  //     },
+  //   },
+  // });
   return (
     <SessionProvider session={session}>
-      <QueryClientProvider client={queryClient}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </QueryClientProvider>
+      {/* <QueryClientProvider client={queryClient}> */}
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+      {/* </QueryClientProvider> */}
     </SessionProvider>
   );
 };

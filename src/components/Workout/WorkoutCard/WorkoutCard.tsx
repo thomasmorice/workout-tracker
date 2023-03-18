@@ -1,7 +1,6 @@
 import { inferRouterOutputs } from "@trpc/server";
 import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import WorkoutCardUserAndActions from "./WorkoutCardUserAndActions";
 import WorkoutCardTitle from "./WorkoutCardTitle";
 import WorkoutCardIllustration from "./WorkoutCardIllustration";
@@ -12,6 +11,7 @@ import WorkoutResults from "../../WorkoutResult/WorkoutResults";
 import WorkoutCardSkeleton from "../WorkoutCardSkeleton";
 import { useWorkoutStore } from "../../../store/WorkoutStore";
 import { useRouter } from "next/router";
+import Header from "../../Layout/Header";
 
 interface WorkoutCardProps {
   workout:
@@ -20,6 +20,7 @@ interface WorkoutCardProps {
   onEdit?: () => void;
   onDelete?: () => void;
   onSelect?: () => void;
+  onOpen?: () => void;
   onMoveResultUp?: () => void;
   onMoveResultDown?: () => void;
   footer?: React.ReactNode;
@@ -33,6 +34,7 @@ export default function WorkoutCard({
   onDelete,
   onSelect,
   isFullScreen = false,
+  onOpen,
   onMoveResultUp,
   onMoveResultDown,
   footer,
@@ -58,29 +60,14 @@ export default function WorkoutCard({
 
   return (
     <>
-      <AnimatePresence>
-        {isFullScreen && (
-          <motion.div
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 1,
-            }}
-            exit={{
-              opacity: 0,
-            }}
-            className="fixed top-0 left-0 z-20 h-full w-full bg-base-300 bg-opacity-60 backdrop-blur-sm"
-          ></motion.div>
-        )}
-      </AnimatePresence>
-      <motion.div
-        layout
-        layoutId={`workout-${workout.id}`}
+      {isFullScreen && (
+        <Header onGoBack={() => router.back()} h1={"Workout details"} />
+      )}
+      <div
         className={`bg-base-300 p-5 pb-4
           ${
             isFullScreen
-              ? "fixed top-0 bottom-0 left-0 z-50 w-full overflow-scroll rounded-none"
+              ? "fixed top-0 bottom-0 left-0 z-50 w-full overflow-scroll"
               : "relative rounded-3xl"
           }
         `}
@@ -89,11 +76,11 @@ export default function WorkoutCard({
           illustration={illustration}
           isFullScreen={isFullScreen}
         />
-        <motion.div className="relative">
+        <div className="relative">
           <WorkoutCardUserAndActions
             onGoback={() => router.back()}
             onOpenFullScreen={() => {
-              router.push(`/workouts/?id=${workout.id}`, undefined, {
+              router.push(`/workout/${workout.id}`, undefined, {
                 shallow: true,
               });
             }}
@@ -107,8 +94,11 @@ export default function WorkoutCard({
           />
           <WorkoutCardTitle workout={workout} isFullScreen={isFullScreen} />
 
-          <motion.div onClick={() => !isExpanded && set_isExpanded(true)}>
-            {!isExpanded && workoutItems && workoutItems.length > 0 ? (
+          <div onClick={() => !isExpanded && set_isExpanded(true)}>
+            {!isExpanded &&
+            !isFullScreen &&
+            workoutItems &&
+            workoutItems.length > 0 ? (
               <div
                 className={`
             mx-auto mt-2 max-w-[220px] text-center text-xs font-light
@@ -120,7 +110,7 @@ export default function WorkoutCard({
             ) : (
               <div
                 onClick={() => isExpanded && set_isExpanded(false)}
-                className={`relative mt-5 whitespace-pre-wrap text-center text-[11.5px] leading-[18px] text-base-content text-opacity-70 
+                className={`relative mt-12 whitespace-pre-wrap text-center text-[11.5px] leading-[18px] text-base-content text-opacity-70 
                 ${
                   isFullScreen
                     ? "-z-10 mb-12 text-sm font-light leading-[22px] tracking-tight text-opacity-100"
@@ -129,7 +119,7 @@ export default function WorkoutCard({
               `}
               >
                 <div
-                  className={`absolute -left-1 -top-6 text-[76px] opacity-20 ${
+                  className={`absolute -left-1  text-[76px] opacity-20 ${
                     isFullScreen ? "visible" : "hidden"
                   }`}
                 >
@@ -147,7 +137,7 @@ export default function WorkoutCard({
             )}
 
             <WorkoutCardBadges workout={workout} />
-          </motion.div>
+          </div>
 
           {isFullScreen && (
             <div>
@@ -155,8 +145,8 @@ export default function WorkoutCard({
               {<WorkoutResults workoutId={workout.id} />}
             </div>
           )}
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </>
   );
 }
