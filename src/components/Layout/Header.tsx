@@ -5,6 +5,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Logo from "./Logo";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { motion } from "framer-motion";
 
 interface HeaderProps {
   h1:
@@ -31,10 +32,28 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
     return null;
   }
 
+  const fadeIn = {
+    initial: {
+      y: -40,
+      opacity: 0,
+    },
+    animate: {
+      y: 0,
+      opacity: 1,
+    },
+    exit: {
+      y: -40,
+      opacity: 0,
+    },
+  };
+
   return createPortal(
     <>
       <div className="mb-16 md:hidden">
-        <div className="fixed inset-x-0 top-0 z-50 flex h-10 w-full items-center justify-between border-b border-white border-opacity-5 bg-base-100 py-0 px-4 pr-2">
+        <motion.div
+          className="fixed inset-x-0 top-0 z-50 flex h-10 w-full items-center justify-between border-b border-white border-opacity-5 bg-base-100 py-0 px-4 pr-2"
+          {...fadeIn}
+        >
           <div className="flex items-center gap-3.5">
             {onGoBack ? (
               <div
@@ -77,7 +96,7 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
               )}
             </>
           )}
-        </div>
+        </motion.div>
       </div>
       <h1 className="h1 desktop">
         {typeof h1 === "object" ? h1.desktop : h1}{" "}

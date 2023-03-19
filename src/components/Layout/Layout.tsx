@@ -15,6 +15,7 @@ import { useEventStore } from "../../store/EventStore";
 import WeighingForm from "../Weighing/WeighingForm2";
 import Modal from "./Modal/Modal";
 import { AnimatePresence, motion } from "framer-motion";
+import { Rings } from "react-loading-icons";
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -24,11 +25,37 @@ export default function Layout({ children }: LayoutProps) {
   const [currentPath, set_currentPath] = useState<String[]>();
   const { isWorkoutSelectionModeActive } = useWorkoutStore();
   const { showFormWithEventType, closeForm } = useEventStore();
+  const [isRoutingToChild, set_isRoutingToChild] = useState(false);
 
   useEffect(() => {
     const asPathWithoutQuery = router.pathname.split("?")[0];
     set_currentPath(asPathWithoutQuery?.split("/").filter((v) => v.length > 0));
   }, [router.pathname]);
+
+  useEffect(() => {
+    // Used for page transition
+    const onStartPageChange = (url: string) => {
+      console.log("router.asPath", router.asPath);
+      console.log("url", url);
+      if (
+        (url.match(/\//g) || []).length >
+        (router.asPath.match(/\//g) || []).length
+      ) {
+        set_isRoutingToChild(true);
+      } else {
+        set_isRoutingToChild(false);
+      }
+    };
+    const onEndPageChange = () => {};
+    router.events.on("routeChangeStart", onStartPageChange);
+    router.events.on("routeChangeComplete", onEndPageChange);
+    router.events.on("routeChangeError", onEndPageChange);
+    return () => {
+      router.events.off("routeChangeStart", onStartPageChange);
+      router.events.off("routeChangeComplete", onEndPageChange);
+      router.events.off("routeChangeError", onEndPageChange);
+    };
+  }, [router.events]);
 
   return (
     <>
@@ -90,7 +117,7 @@ export default function Layout({ children }: LayoutProps) {
               <button
                 type="button"
                 onClick={() => signIn()}
-                className="btn-primary btn flex gap-x-2"
+                className="btn btn-primary flex gap-x-2"
               >
                 <MdLogin size="22px" />
                 Login
@@ -98,14 +125,16 @@ export default function Layout({ children }: LayoutProps) {
             )}
           </div>
 
-          <div id="header" />
+          <AnimatePresence initial={false} mode="sync" key={router.asPath}>
+            <div id="header" />
+          </AnimatePresence>
 
           <AnimatePresence mode="popLayout" initial={false}>
             <motion.div
               key={router.asPath}
-              initial={{ x: 300, opacity: 0 }}
+              initial={isRoutingToChild ? { x: 300 } : { x: 300 }}
               animate={{ x: 0, opacity: 1 }}
-              exit={{ x: 300, opacity: 0 }}
+              exit={isRoutingToChild ? { x: -300 } : { x: -300 }}
             >
               {children}
             </motion.div>

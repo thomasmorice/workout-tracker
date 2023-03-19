@@ -9,7 +9,7 @@ interface WorkoutResultCardProps {
 
 export default function WorkoutResultCard({ result }: WorkoutResultCardProps) {
   return (
-    <div className="rounded-3xl bg-neutral p-5 text-center">
+    <div className="rounded-3xl bg-base-300 p-5 text-center">
       <div className="mb-2 text-sm font-light">
         {format(result.workoutSession.event.eventDate, "eeee, do MMM yyyy")}
       </div>

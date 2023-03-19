@@ -52,23 +52,21 @@ export default function WorkoutCard({
     set_illustration(itemsAndIllustration.illustration);
   }, []);
 
-  useLockedBody(isFullScreen);
-
   if (!illustration && !workoutItems) {
     return <WorkoutCardSkeleton />;
   }
 
   return (
     <>
-      {isFullScreen && (
+      {/* {isFullScreen && (
         <Header onGoBack={() => router.back()} h1={"Workout details"} />
-      )}
+      )} */}
       <div
-        className={`bg-base-300 p-5 pb-4
+        className={`relative bg-base-300 p-5 
           ${
             isFullScreen
-              ? "fixed top-0 bottom-0 left-0 z-50 w-full overflow-scroll"
-              : "relative rounded-3xl"
+              ? " z-40 rounded-b-xl pb-12 shadow-lg"
+              : "rounded-3xl pb-4"
           }
         `}
       >
@@ -119,7 +117,7 @@ export default function WorkoutCard({
               `}
               >
                 <div
-                  className={`absolute -left-1  text-[76px] opacity-20 ${
+                  className={`absolute -left-1 -top-6  text-[76px] opacity-20 ${
                     isFullScreen ? "visible" : "hidden"
                   }`}
                 >
@@ -139,12 +137,12 @@ export default function WorkoutCard({
             <WorkoutCardBadges workout={workout} />
           </div>
 
-          {isFullScreen && (
+          {/* {isFullScreen && (
             <div>
               <div className="divider mt-12 mb-8 opacity-70"></div>
               {<WorkoutResults workoutId={workout.id} />}
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </>
