@@ -25,7 +25,7 @@ const config = importWithPWA({
     GIT_BRANCH: currentGitBranchName(),
   },
   experimental: {
-    scrollRestoration: true,
+    // scrollRestoration: true,
   },
 });
 export default config;

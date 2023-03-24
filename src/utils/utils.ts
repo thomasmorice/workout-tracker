@@ -8,7 +8,7 @@ import {
 } from "date-fns";
 import { zonedTimeToUtc } from "date-fns-tz";
 import { EventRouterType } from "../server/trpc/router/event-router";
-import { WorkoutRouterType } from "../server/trpc/router/workout-router";
+import { WorkoutRouterType } from "../server/trpc/router/WorkoutRouter/workout-router";
 import { WorkoutResultInputsWithWorkout } from "../types/app";
 
 type SessionType = NonNullable<

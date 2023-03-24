@@ -1,10 +1,6 @@
 import { NextPage } from "next";
-import { useEffect } from "react";
-import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import ActivityDashboard from "../components/Activity/ActivityDashboard";
 import Header from "../components/Layout/Header";
-import WeighingForm from "../components/Weighing/WeighingForm";
-import WorkoutSessionForm from "../components/WorkoutSession/WorkoutSessionForm";
 import { useEventStore } from "../store/EventStore";
 
 const Activities: NextPage = () => {

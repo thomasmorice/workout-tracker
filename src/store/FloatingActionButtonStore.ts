@@ -1,6 +1,6 @@
 import { inferRouterOutputs, TRPCError } from "@trpc/server";
 import { create } from "zustand";
-import { WorkoutRouterType } from "../server/trpc/router/workout-router";
+import { WorkoutRouterType } from "../server/trpc/router/WorkoutRouter/workout-router";
 
 type workoutType =
   inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];

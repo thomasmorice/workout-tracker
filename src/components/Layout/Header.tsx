@@ -34,7 +34,7 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
 
   const fadeIn = {
     initial: {
-      y: -40,
+      y: -30,
       opacity: 0,
     },
     animate: {
@@ -42,7 +42,7 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
       opacity: 1,
     },
     exit: {
-      y: -40,
+      y: -30,
       opacity: 0,
     },
   };
@@ -86,7 +86,7 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
                 <button
                   type="button"
                   onClick={() => signIn()}
-                  className="btn-primary btn my-2 flex gap-x-2"
+                  className="btn btn-primary my-2 flex gap-x-2"
                 >
                   <MdLogin size="22px" />
                   Login

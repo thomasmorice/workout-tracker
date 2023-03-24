@@ -3,13 +3,13 @@ import { inferRouterInputs, TRPCError } from "@trpc/server";
 import { useEffect, useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
-import { useWorkoutService } from "../../services/useWorkoutService";
 import { useToastStore } from "../../store/ToastStore";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import { enumToString } from "../../utils/formatting";
 import Modal from "../Layout/Modal/Modal";
 import ConfirmModal from "../Layout/Modal/ConfirmModal";
-import { WorkoutRouterType } from "../../server/trpc/router/workout-router";
+import { WorkoutRouterType } from "../../server/trpc/router/WorkoutRouter/workout-router";
+import { trpc } from "../../utils/trpc";
 
 export default function WorkoutForm() {
   const { addMessage, closeMessage } = useToastStore();
@@ -20,7 +20,34 @@ export default function WorkoutForm() {
     handleWorkoutFormError,
   } = useWorkoutStore();
 
-  const { createWorkout, editWorkout, deleteWorkout } = useWorkoutService();
+  const { mutateAsync: addWorkout } = trpc.workout.add.useMutation({
+    async onSuccess() {
+      await utils.workout.getInfiniteWorkout.invalidate();
+    },
+    onError(e: unknown) {
+      throw e as TRPCError;
+    },
+  });
+
+  const { mutateAsync: editWorkout } = trpc.workout.edit.useMutation({
+    async onSuccess() {
+      await utils.workout.getInfiniteWorkout.invalidate();
+    },
+    onError(e: unknown) {
+      throw e as TRPCError;
+    },
+  });
+
+  const { mutateAsync: deleteWorkout } = trpc.workout.delete.useMutation({
+    async onSuccess() {
+      await utils.workout.getInfiniteWorkout.invalidate();
+    },
+    onError(e: unknown) {
+      throw e as TRPCError;
+    },
+  });
+
+  const utils = trpc.useContext();
 
   const defaultValues: inferRouterInputs<WorkoutRouterType>["add"] =
     useMemo(() => {
@@ -58,16 +85,16 @@ export default function WorkoutForm() {
     });
     try {
       if (state === "edit") {
-        editWorkout.mutateAsync(
-          workout as inferRouterInputs<WorkoutRouterType>["edit"]
-        );
+        editWorkout(workout as inferRouterInputs<WorkoutRouterType>["edit"]);
+
         addMessage({
           type: "success",
           message: "Workout edited successfully",
         });
       } else {
         const { id, ...workoutWithoutId } = workout;
-        await createWorkout.mutateAsync(workoutWithoutId);
+        await addWorkout(workoutWithoutId);
+
         addMessage({
           type: "success",
           message: "Workout created successfully",
@@ -88,7 +115,9 @@ export default function WorkoutForm() {
       message: "Deleting workout",
       type: "pending",
     });
-    await deleteWorkout.mutateAsync(workout);
+
+    deleteWorkout(workout);
+
     closeMessage(toastId);
     addMessage({
       message: "Deleted successfully",
@@ -273,7 +302,7 @@ export default function WorkoutForm() {
                 Cancel
               </button>
               <button
-                className={`btn-primary btn ${isSubmitting ? "loading" : ""}`}
+                className={`btn btn-primary ${isSubmitting ? "loading" : ""}`}
                 type="submit"
               >
                 {`${state} workout`}

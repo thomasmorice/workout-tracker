@@ -1,23 +1,30 @@
 import { inferRouterOutputs } from "@trpc/server";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { BsFillCalendar2EventFill } from "react-icons/bs";
 import { TailSpin } from "react-loading-icons";
-import { WorkoutRouterType } from "../../server/trpc/router/workout-router";
-import { useWorkoutResultService } from "../../services/useWorkoutResultService";
-import WorkoutResultCard from "./WorkoutResultCard2";
+import { WorkoutRouterType } from "../../server/trpc/router/WorkoutRouter/workout-router";
+import { trpc } from "../../utils/trpc";
+import WorkoutResultCard from "./WorkoutResultCard";
 
 type WorkoutResultsProps = {
   workoutId: inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]["id"];
 };
 
 export default function WorkoutResults({ workoutId }: WorkoutResultsProps) {
+  const { data: sessionData } = useSession();
   const [orderBy, set_orderBy] = useState<"date" | "performance">("date");
 
-  const { getWorkoutResultsByWorkoutId } = useWorkoutResultService();
   const { data: workoutResults, isLoading } =
-    getWorkoutResultsByWorkoutId(workoutId);
+    trpc.workoutResult.getWorkoutResultsByWorkoutId.useQuery(
+      {
+        workoutId,
+      },
 
-  useEffect(() => {}, []);
+      {
+        enabled: !!workoutId && sessionData?.user !== undefined,
+        refetchOnWindowFocus: false,
+      }
+    );
 
   if (isLoading) {
     return <TailSpin fontSize={12} />;

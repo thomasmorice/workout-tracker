@@ -1,14 +1,16 @@
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import DatePicker from "react-datepicker";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { CreateWeighingInputSchema } from "../../types/app";
-import { useWeighingService } from "../../services/useWeighingService";
 import { useToastStore } from "../../store/ToastStore";
 import { useEventStore } from "../../store/EventStore";
 import { useEffect, useState } from "react";
 import { Rings } from "react-loading-icons";
 import { inferRouterInputs } from "@trpc/server";
 import { WeighingRouterType } from "../../server/trpc/router/weighing-router";
+import { getRandomPreparingSessionllustration } from "../../utils/workout";
+import DatePicker from "../DatePicker/DatePicker";
+import { trpc } from "../../utils/trpc";
+import { useSession } from "next-auth/react";
 
 interface WeighingFormProps {
   // existingWeighing?: InferQueryOutput<"event.get-events">[number]["weighing"];
@@ -19,21 +21,40 @@ export default function WeighingForm({
   // existingWeighing,
   onSuccess,
 }: WeighingFormProps) {
+  const utils = trpc.useContext();
+  const { data: sessionData } = useSession();
   const { addMessage, closeMessage } = useToastStore();
-  const { getWeighingById, createOrEditWeighing } = useWeighingService();
   const { eventBeingEdited, eventDate } = useEventStore();
 
   const {
     data: existingWeighing,
     isLoading,
     isFetching,
-  } = getWeighingById(eventBeingEdited || -1);
+  } = trpc.weighing.getWeighingById.useQuery(
+    {
+      id: eventBeingEdited || -1,
+    },
+    {
+      enabled: sessionData?.user !== undefined,
+    }
+  );
+  const [illustration] = useState(getRandomPreparingSessionllustration());
 
   const handleCreateOrEdit: SubmitHandler<
     z.infer<typeof CreateWeighingInputSchema>
   > = async (weighing: z.infer<typeof CreateWeighingInputSchema>) => {
     try {
-      await createOrEditWeighing.mutateAsync(weighing);
+      await trpc.weighing.addOrEdit
+        .useMutation({
+          async onSuccess() {
+            await utils.event.invalidate();
+            await utils.weighing.invalidate();
+          },
+          onError(e) {
+            throw e;
+          },
+        })
+        .mutateAsync(weighing);
       addMessage({
         type: "success",
         message: `Weighing ${
@@ -65,6 +86,8 @@ export default function WeighingForm({
     reset,
     register,
     control,
+    getValues,
+    watch,
     formState: { isSubmitting, isDirty },
   } = useForm<inferRouterInputs<WeighingRouterType>["addOrEdit"]>({
     defaultValues,
@@ -77,43 +100,48 @@ export default function WeighingForm({
   if (isLoading && isFetching) {
     return <Rings className="h-14 w-14" />;
   }
+  watch("date");
 
   return (
-    <form
-      className="mt-5 flex flex-col"
-      onSubmit={handleSubmit(handleCreateOrEdit)}
-    >
-      <div className="flex flex-col gap-3">
-        <div className="form-control relative w-full flex-1">
-          <label className="label">
-            <span className="label-text">Weighing date</span>
-          </label>
-          <Controller
-            control={control}
-            name="date"
-            render={({ field }) => (
-              <DatePicker
-                className="input w-full bg-base-200"
-                // disabled={!editMode}
-                showTimeInput
-                placeholderText="Select date"
-                onChange={(date: Date) => field.onChange(date)}
-                selected={field.value}
-                popperPlacement="bottom"
-                dateFormat="MMMM d, h:mm aa"
-              />
-            )}
-          />
-        </div>
-        <div className="form-control w-full">
+    <form onSubmit={handleSubmit(handleCreateOrEdit)}>
+      <div
+        style={{
+          backgroundImage: `url(/workout-item/${illustration}.png)`,
+        }}
+        className="absolute top-0 left-0 h-64 w-full bg-cover bg-center opacity-50"
+      >
+        <div
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(42, 48, 60, 0) 0%, #2A303C 99%)",
+          }}
+          className="absolute inset-0 h-full w-full"
+        ></div>
+      </div>
+
+      <div className="relative flex flex-col gap-3">
+        <DatePicker name="date" control={control} />
+
+        <p className="pt-8 text-center text-sm font-light leading-loose">
+          Track your weight and access those data from your dashboard. <br />
+          <br />
+          Tracking your weight can be beneficial for motivation and identifying
+          patterns or trends in your weight loss journey. It is important to
+          weigh yourself at the same time of day and under the same conditions
+          each time, and to track your weight consistently according to your
+          goals and preferences. Weight is just one aspect of overall health,
+          and it is important to focus on other healthy habits as well.
+        </p>
+
+        <div className="form-control mt-6 w-full flex-row gap-4 self-center">
           <label className="label">
             <span className="label-text">Weight</span>
           </label>
-          <label className="input-group">
+          <label className="input-group w-fit">
             <input
               id="input-rep-max"
               step={0.1}
-              className="input max-w-[110px] flex-1 bg-base-200 placeholder:opacity-50"
+              className="input flex-1 bg-base-200 placeholder:opacity-50"
               {...register("weight", {
                 setValueAs: (v) => {
                   return v === null || v === ""
@@ -128,9 +156,11 @@ export default function WeighingForm({
           </label>
         </div>
 
-        <div className="mt-3 flex flex-wrap justify-end gap-4">
+        <div className="mt-3 flex flex-wrap justify-center gap-4">
           <button
-            className={`btn mt-2 ${isSubmitting ? "loading" : ""}`}
+            className={`btn btn-primary btn-sm mt-2 rounded-full ${
+              isSubmitting ? "loading" : ""
+            }`}
             type="submit"
           >
             {`${existingWeighing ? "Edit" : "Add"} weighing`}

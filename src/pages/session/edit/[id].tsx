@@ -1,15 +1,24 @@
 import { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import WorkoutSessionForm from "../../../components/WorkoutSession/WorkoutSessionForm";
-import { useWorkoutSessionService } from "../../../services/useWorkoutSessionService";
+import { trpc } from "../../../utils/trpc";
 
 const Edit: NextPage = () => {
   const router = useRouter();
+  const { data: sessionData } = useSession();
   const id = parseInt(router.query.id as string, 10);
-  const { getWorkoutSessionById } = useWorkoutSessionService();
 
-  const { data: workoutSession, isFetching } = getWorkoutSessionById(id);
+  const { data: workoutSession, isFetching } =
+    trpc.workoutSession.getWorkoutSessionById.useQuery(
+      {
+        id,
+      },
+      {
+        enabled: sessionData?.user !== undefined && id !== -1,
+        refetchOnWindowFocus: false,
+      }
+    );
   return (
     <>
       <Head>
@@ -17,11 +26,6 @@ const Edit: NextPage = () => {
         <meta name="description" content="Add or edit a session" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="mb-10">
-        {/* {workoutSession && (
-          <WorkoutSessionForm existingWorkoutSession={workoutSession} />
-        )} */}
-      </div>
     </>
   );
 };

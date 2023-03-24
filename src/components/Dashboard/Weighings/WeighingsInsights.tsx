@@ -1,15 +1,22 @@
 import { useMemo } from "react";
 import { MdMonitorWeight } from "react-icons/md";
-import { useWeighingService } from "../../../services/useWeighingService";
+import { trpc } from "../../../utils/trpc";
 import DashboardItem from "../DashboardItem";
 import DashboardItemGraph from "../DashboardItemGraph";
 import DashboardItemList from "../DashboardItemList";
+import { useSession } from "next-auth/react";
 
 export default function WeighingInsights() {
-  const { getWeighings } = useWeighingService();
-  const { data: latestWeighings, isLoading: isLoadingWeights } = getWeighings({
-    take: 8,
-  });
+  const { data: sessionData } = useSession();
+  const { data: latestWeighings, isLoading: isLoadingWeights } =
+    trpc.weighing.getWeighings.useQuery(
+      {
+        take: 8,
+      },
+      {
+        enabled: sessionData?.user !== undefined,
+      }
+    );
 
   // const hasLostWeight = useMemo(() => {
   //   if (latestWeighings && latestWeighings[0] && latestWeighings[1]) {

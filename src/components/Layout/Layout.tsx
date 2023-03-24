@@ -10,12 +10,12 @@ import RightSidebar from "../RightSidebar/RightSidebar";
 import Head from "next/head";
 import FloatingActionButton from "../FloatingActionButton/FloatingActionButton";
 import WorkoutSelectionBanner from "./WorkoutSelectionBanner";
-import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm2";
+import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm";
 import { useEventStore } from "../../store/EventStore";
-import WeighingForm from "../Weighing/WeighingForm2";
+import WeighingForm from "../Weighing/WeighingForm";
 import Modal from "./Modal/Modal";
 import { AnimatePresence, motion } from "framer-motion";
-import { Rings } from "react-loading-icons";
+
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -25,37 +25,37 @@ export default function Layout({ children }: LayoutProps) {
   const [currentPath, set_currentPath] = useState<String[]>();
   const { isWorkoutSelectionModeActive } = useWorkoutStore();
   const { showFormWithEventType, closeForm } = useEventStore();
-  const [isRoutingToChild, set_isRoutingToChild] = useState(false);
+  // const [isRoutingToChild, set_isRoutingToChild] = useState(false);
 
   useEffect(() => {
     const asPathWithoutQuery = router.pathname.split("?")[0];
     set_currentPath(asPathWithoutQuery?.split("/").filter((v) => v.length > 0));
   }, [router.pathname]);
 
-  useEffect(() => {
-    // Used for page transition
-    const onStartPageChange = (url: string) => {
-      console.log("router.asPath", router.asPath);
-      console.log("url", url);
-      if (
-        (url.match(/\//g) || []).length >
-        (router.asPath.match(/\//g) || []).length
-      ) {
-        set_isRoutingToChild(true);
-      } else {
-        set_isRoutingToChild(false);
-      }
-    };
-    const onEndPageChange = () => {};
-    router.events.on("routeChangeStart", onStartPageChange);
-    router.events.on("routeChangeComplete", onEndPageChange);
-    router.events.on("routeChangeError", onEndPageChange);
-    return () => {
-      router.events.off("routeChangeStart", onStartPageChange);
-      router.events.off("routeChangeComplete", onEndPageChange);
-      router.events.off("routeChangeError", onEndPageChange);
-    };
-  }, [router.events]);
+  // useEffect(() => {
+  //   // Used for page transition
+  //   const onStartPageChange = (url: string) => {
+  //     console.log("router.asPath", router.asPath);
+  //     console.log("url", url);
+  //     if (
+  //       (url.match(/\//g) || []).length >
+  //       (router.asPath.match(/\//g) || []).length
+  //     ) {
+  //       set_isRoutingToChild(true);
+  //     } else {
+  //       set_isRoutingToChild(false);
+  //     }
+  //   };
+  //   const onEndPageChange = () => {};
+  //   router.events.on("routeChangeStart", onStartPageChange);
+  //   router.events.on("routeChangeComplete", onEndPageChange);
+  //   router.events.on("routeChangeError", onEndPageChange);
+  //   return () => {
+  //     router.events.off("routeChangeStart", onStartPageChange);
+  //     router.events.off("routeChangeComplete", onEndPageChange);
+  //     router.events.off("routeChangeError", onEndPageChange);
+  //   };
+  // }, [router.events]);
 
   return (
     <>
@@ -129,16 +129,16 @@ export default function Layout({ children }: LayoutProps) {
             <div id="header" />
           </AnimatePresence>
 
-          <AnimatePresence mode="popLayout" initial={false}>
+          {/* <AnimatePresence mode="popLayout" initial={false}>
             <motion.div
               key={router.asPath}
               initial={isRoutingToChild ? { x: 300 } : { x: 300 }}
               animate={{ x: 0, opacity: 1 }}
               exit={isRoutingToChild ? { x: -300 } : { x: -300 }}
-            >
-              {children}
-            </motion.div>
-          </AnimatePresence>
+            > */}
+          {children}
+          {/* </motion.div>
+          </AnimatePresence> */}
         </main>
       </div>
     </>

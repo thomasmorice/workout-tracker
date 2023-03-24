@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { CreateWorkoutSessionInputSchema } from "../../../types/app";
 import { router, protectedProcedure } from "../trpc";
-import { WorkoutExtras, WorkoutSelect } from "./workout-router";
+import { WorkoutExtras, WorkoutSelect } from "./WorkoutRouter/workout-router";
 
 const WorkoutSessionSelect = {
   id: true,

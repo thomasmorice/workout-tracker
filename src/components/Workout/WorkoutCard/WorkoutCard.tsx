@@ -1,21 +1,23 @@
 import { inferRouterOutputs } from "@trpc/server";
-import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
+import { WorkoutRouterType } from "../../../server/trpc/router/WorkoutRouter/workout-router";
 import { useEffect, useState } from "react";
 import WorkoutCardUserAndActions from "./WorkoutCardUserAndActions";
-import WorkoutCardTitle from "./WorkoutCardTitle";
 import WorkoutCardIllustration from "./WorkoutCardIllustration";
 import WorkoutCardBadges from "./WorkoutCardBadges";
-import { useLockedBody } from "usehooks-ts";
 import { getWorkoutItemsAndRandomIllustrationByDescription } from "../../../utils/workout";
-import WorkoutResults from "../../WorkoutResult/WorkoutResults";
 import WorkoutCardSkeleton from "../WorkoutCardSkeleton";
 import { useWorkoutStore } from "../../../store/WorkoutStore";
 import { useRouter } from "next/router";
-import Header from "../../Layout/Header";
+import { AiFillTag } from "react-icons/ai";
+import { GiBiceps } from "react-icons/gi";
+import { BsLightningChargeFill } from "react-icons/bs";
+import { FaRunning } from "react-icons/fa";
+import { enumToString } from "../../../utils/formatting";
 
 interface WorkoutCardProps {
   workout:
-    | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
+    | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
+    | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
   onDuplicate?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -58,15 +60,12 @@ export default function WorkoutCard({
 
   return (
     <>
-      {/* {isFullScreen && (
-        <Header onGoBack={() => router.back()} h1={"Workout details"} />
-      )} */}
       <div
-        className={`relative bg-base-300 p-5 
+        className={`relative  p-5 
           ${
             isFullScreen
-              ? " z-40 rounded-b-xl pb-12 shadow-lg"
-              : "rounded-3xl pb-4"
+              ? " z-40 rounded-b-xl bg-base-100 pb-12"
+              : "rounded-3xl bg-base-300 pb-4"
           }
         `}
       >
@@ -90,11 +89,53 @@ export default function WorkoutCard({
             workout={workout}
             isFullScreen={isFullScreen}
           />
-          <WorkoutCardTitle workout={workout} isFullScreen={isFullScreen} />
 
-          <div onClick={() => !isExpanded && set_isExpanded(true)}>
-            {!isExpanded &&
-            !isFullScreen &&
+          <div
+            className={`
+        flex flex-col items-center font-bold
+        ${isFullScreen ? "mt-5" : "mt-3"}
+      `}
+          >
+            <div
+              className={`
+        flex items-center gap-1.5 text-center  font-semibold tracking-[0.03rem]
+        ${isFullScreen ? "text-lg" : "text-base"}
+        `}
+            >
+              {workout.name ? (
+                <>
+                  <AiFillTag size={14} />
+                  <div className="text-base uppercase">{workout.name}</div>
+                </>
+              ) : (
+                <>
+                  {workout.elementType.includes("STRENGTH") && (
+                    <GiBiceps size={14} />
+                  )}
+                  {workout.elementType.includes("WOD") && (
+                    <BsLightningChargeFill size={14} />
+                  )}
+                  {workout.elementType.includes("ENDURANCE") && (
+                    <FaRunning size={14} />
+                  )}
+                  {enumToString(workout.elementType)}
+                </>
+              )}
+            </div>
+            {workout.workoutType && (
+              <div
+                className={`
+        flex items-center  font-bold tracking-[0.15rem]
+        ${isFullScreen ? "text-base" : "text-sm"}
+      `}
+              >
+                [{enumToString(workout.workoutType)}]
+              </div>
+            )}
+          </div>
+
+          <div>
+            {/* {!isFullScreen &&
             workoutItems &&
             workoutItems.length > 0 ? (
               <div
@@ -105,44 +146,37 @@ export default function WorkoutCard({
               >
                 FEAT. {workoutItems?.join(" - ")}
               </div>
-            ) : (
-              <div
-                onClick={() => isExpanded && set_isExpanded(false)}
-                className={`relative mt-12 whitespace-pre-wrap text-center text-[11.5px] leading-[18px] text-base-content text-opacity-70 
+            ) : ( */}
+            <div
+              // onClick={() => isExpanded && set_isExpanded(false)}
+              className={`relative mt-3 whitespace-pre-wrap text-center text-[11.5px] leading-[18px] text-base-content text-opacity-70 
                 ${
                   isFullScreen
-                    ? "-z-10 mb-12 text-sm font-light leading-[22px] tracking-tight text-opacity-100"
+                    ? "-z-10 mt-8 mb-12 text-sm font-light leading-[22px] tracking-tight text-opacity-100"
                     : ""
                 }
               `}
+            >
+              <div
+                className={`absolute -left-1 -top-6  text-[76px] opacity-20 ${
+                  isFullScreen ? "visible" : "hidden"
+                }`}
               >
-                <div
-                  className={`absolute -left-1 -top-6  text-[76px] opacity-20 ${
-                    isFullScreen ? "visible" : "hidden"
-                  }`}
-                >
-                  “
-                </div>
-                {workout.description}
-                <div
-                  className={`absolute -right-1 -bottom-12 text-[76px] opacity-20 ${
-                    isFullScreen ? "visible" : "hidden"
-                  }`}
-                >
-                  ”
-                </div>
+                “
               </div>
-            )}
+              {workout.description}
+              <div
+                className={`absolute -right-1 -bottom-12 text-[76px] opacity-20 ${
+                  isFullScreen ? "visible" : "hidden"
+                }`}
+              >
+                ”
+              </div>
+            </div>
+            {/* )} */}
 
             <WorkoutCardBadges workout={workout} />
           </div>
-
-          {/* {isFullScreen && (
-            <div>
-              <div className="divider mt-12 mb-8 opacity-70"></div>
-              {<WorkoutResults workoutId={workout.id} />}
-            </div>
-          )} */}
         </div>
       </div>
     </>

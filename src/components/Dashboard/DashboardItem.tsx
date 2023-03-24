@@ -12,8 +12,8 @@ export default function DashboardItem({
   children,
 }: DashboardItemProps) {
   return (
-    <div className="px-4 snap-start">
-      <div className="stat h-full relative max-w-[280px] rounded-xl bg-base-200">
+    <div className="snap-start px-4">
+      <div className="stat relative h-full rounded-xl bg-base-200">
         <div className="stat-figure">{illustration}</div>
         <div className="stat-title">{title}</div>
         <div className="stat-value">{value}</div>

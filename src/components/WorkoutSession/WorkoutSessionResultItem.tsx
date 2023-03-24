@@ -1,13 +1,5 @@
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
-import {
-  MdDragIndicator,
-  MdTimer,
-  MdEdit,
-  MdDelete,
-  MdLink,
-  MdOutlineArrowDropDown,
-  MdOutlineArrowDropUp,
-} from "react-icons/md";
+import { MdEdit, MdDelete } from "react-icons/md";
 import { useEffect, useMemo, useState } from "react";
 import { WorkoutResultInputsWithWorkout } from "../../types/app";
 import { format } from "date-fns";
@@ -16,7 +8,7 @@ import {
   resultHasBenchmarkeableWorkout,
   workoutResultIsFilled,
 } from "../../utils/utils";
-import WorkoutResultCard from "../WorkoutResult/WorkoutResultCard";
+// import WorkoutResultCard from "../WorkoutResult/WorkoutResultCard.tsx.old";
 import WorkoutCard from "../Workout/WorkoutCard/WorkoutCard";
 
 interface WorkoutSessionResultItemProps {
@@ -91,10 +83,10 @@ export default function WorkoutSessionResultItem({
 
       {hasResults && (
         <div className="mx-2 -mt-8 rounded-b-xl border border-base-content border-opacity-10 bg-base-200 pt-8 transition-all group-hover:-mt-1">
-          <WorkoutResultCard
+          {/* <WorkoutResultCard
             onEdit={onOpenWorkoutResultDetail}
             result={result}
-          />
+          /> */}
         </div>
       )}
     </Reorder.Item>

@@ -1,33 +1,27 @@
-import { useWorkoutService } from "../../../services/useWorkoutService";
+import { trpc } from "../../../utils/trpc";
 import DashboardItemList from "../DashboardItemList";
-import { inferRouterOutputs } from "@trpc/server";
-import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
 import PersonalRecordItem from "./PersonalRecordItem";
 
-type PersonalRecordWorkoutType =
-  inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
-
 export default function PersonalRecordsInsights() {
-  const { getInfiniteWorkouts } = useWorkoutService();
+  const { data: personalRecordWorkouts, isLoading } =
+    trpc.workout.getInfiniteWorkoutWithResults.useInfiniteQuery({
+      workoutTypes: ["ONE_REP_MAX"],
+      onlyFetchMine: true,
+      orderResults: [
+        {
+          weight: "desc",
+        },
+        {
+          time: "asc",
+        },
+        {
+          totalReps: "desc",
+        },
+      ],
 
-  const { data: personalRecordWorkouts, isLoading } = getInfiniteWorkouts({
-    workoutTypes: ["ONE_REP_MAX"],
-    onlyFetchMine: true,
-    orderResults: [
-      {
-        weight: "desc",
-      },
-      {
-        time: "asc",
-      },
-      {
-        totalReps: "desc",
-      },
-    ],
-
-    limit: 7,
-    withResults: true,
-  });
+      limit: 7,
+      withResults: true,
+    });
 
   if (
     !personalRecordWorkouts ||
@@ -45,7 +39,7 @@ export default function PersonalRecordsInsights() {
       >
         <>
           {personalRecordWorkouts.pages[0]?.workouts.map((workout) => (
-            <div className="px-4 snap-start" key={workout.id}>
+            <div className="snap-start px-4" key={workout.id}>
               <PersonalRecordItem workout={workout} />
             </div>
           ))}

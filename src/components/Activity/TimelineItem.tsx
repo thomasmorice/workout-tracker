@@ -10,18 +10,18 @@ import {
 } from "react-icons/md";
 import { getSessionTitle, getSessionTotalTime } from "../../utils/utils";
 import { format } from "date-fns";
-import { useEventService } from "../../services/useEventService";
 import { useEventStore } from "../../store/EventStore";
 import { zonedTimeToUtc } from "date-fns-tz";
-import { inferRouterOutputs } from "@trpc/server";
+import { inferRouterOutputs, TRPCError } from "@trpc/server";
 import { EventRouterType } from "../../server/trpc/router/event-router";
+import { trpc } from "../../utils/trpc";
 
 interface TimelineSessionProps {
   event: inferRouterOutputs<EventRouterType>["getEvents"][number];
 }
 
 export default function TimelineItem({ event }: TimelineSessionProps) {
-  const { deleteEvent } = useEventService();
+  const utils = trpc.useContext();
   const { addMessage, closeMessage } = useToastStore();
   const [showConfirmDeleteEventModal, set_showConfirmDeleteEventModal] =
     useState(false);
@@ -30,14 +30,6 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
 
   return (
     <>
-      {/* <div
-        className={`absolute -left-1.5 h-3 w-3 rounded-full border border-opacity-10 transition-all
-          ${
-            isBefore(event.eventDate, Date.now())
-              ? "border-accent-content bg-base-300 group-hover:bg-base-100"
-              : "border-primary bg-primary"
-          }`}
-      ></div> */}
       <div className="relative mb-6 cursor-pointer rounded-md border border-base-content border-opacity-10 bg-base-200 bg-opacity-50 p-5  transition-transform hover:translate-x-1">
         <div
           onClick={() => {
@@ -61,7 +53,7 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
                   )}
                 </time>
               </div>
-              <div className="badge-primary badge">
+              <div className="badge badge-primary">
                 {" "}
                 {format(
                   zonedTimeToUtc(event.eventDate, "Europe/Stockholm"),
@@ -101,7 +93,7 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
           <button
             onClick={() => set_showConfirmDeleteEventModal(true)}
             type="button"
-            className="btn-outline btn-error btn-xs btn w-fit"
+            className="btn-outline btn btn-error btn-xs w-fit"
           >
             <div className="flex items-center gap-2">
               <MdDelete />
@@ -118,9 +110,18 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
             type: "pending",
             message: "Deleting...",
           });
-          await deleteEvent.mutateAsync({
-            id: event.id,
-          });
+          await trpc.event.delete
+            .useMutation({
+              async onSuccess() {
+                utils.event.getEvents.invalidate();
+              },
+              onError(e) {
+                throw e;
+              },
+            })
+            .mutateAsync({
+              id: event.id,
+            });
           addMessage({
             type: "success",
             message: "Deleted successfully",

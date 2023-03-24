@@ -2,24 +2,27 @@ import { endOfMonth, formatISO, isSameDay, startOfMonth } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import { MdAdd } from "react-icons/md";
-import { useEventService } from "../../services/useEventService";
 import { useActivityStore } from "../../store/ActivityStore";
 import { useEventStore } from "../../store/EventStore";
+import { trpc } from "../../utils/trpc";
 import Calendar from "./Calendar";
 import TimelineItem from "./TimelineItem";
+import { useSession } from "next-auth/react";
 
 export default function ActivityDashboard() {
   const { addOrEditEvent } = useEventStore();
   const { currentMonth } = useActivityStore();
+  const { data: sessionData } = useSession();
 
-  const { getEvents } = useEventService();
-
-  const { data: events, isLoading } = getEvents({
-    dateFilter: {
-      gte: formatISO(startOfMonth(currentMonth)),
-      lte: formatISO(endOfMonth(currentMonth)),
+  const { data: events, isLoading } = trpc.event.getEvents.useQuery(
+    {
+      dateFilter: {
+        gte: formatISO(startOfMonth(currentMonth)),
+        lte: formatISO(endOfMonth(currentMonth)),
+      },
     },
-  });
+    { enabled: sessionData?.user !== undefined }
+  );
 
   const [showSpecificDay, set_showSpecificDay] = useState<Date>();
 
@@ -64,7 +67,7 @@ export default function ActivityDashboard() {
         <div className="flex items-center gap-3">
           <h2 className="h2">Activity</h2>
           <div className="dropdown ">
-            <label tabIndex={0} className="btn-outline btn-sm btn-circle btn">
+            <label tabIndex={0} className="btn-outline btn btn-sm btn-circle">
               <MdAdd size={22} />
             </label>
             <ul

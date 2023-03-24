@@ -1,6 +1,6 @@
 import { router } from "../trpc";
 import { authRouter } from "./auth";
-import { workoutRouter } from "./workout-router";
+import { workoutRouter } from "./WorkoutRouter/workout-router";
 import { workoutResultRouter } from "./workout-result-router";
 import { workoutSessionRouter } from "./workout-session-router";
 import { weighingRouter } from "./weighing-router";

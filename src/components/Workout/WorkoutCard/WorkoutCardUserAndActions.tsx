@@ -1,5 +1,5 @@
 import { inferRouterOutputs } from "@trpc/server";
-import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
+import { WorkoutRouterType } from "../../../server/trpc/router/WorkoutRouter/workout-router";
 import Image from "next/image";
 import { format } from "date-fns";
 import { RxDotsVertical } from "react-icons/rx";
@@ -18,7 +18,8 @@ type WorkoutCardUserAndActionsProps = {
   onToggleSelect?: () => void;
   onGoback: () => void;
   workout:
-    | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
+    | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
+    | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
 };
 
 export default function WorkoutCardUserAndActions({
@@ -32,7 +33,6 @@ export default function WorkoutCardUserAndActions({
   isFullScreen,
   workout,
 }: WorkoutCardUserAndActionsProps) {
-  const router = useRouter();
   const workoutActions = useMemo(() => {
     const actions = [];
     onOpenFullScreen &&
@@ -71,7 +71,7 @@ export default function WorkoutCardUserAndActions({
     <div className="w-full">
       <div
         onClick={onGoback}
-        className={`btn-ghost btn-circle btn z-10
+        className={`btn btn-ghost btn-circle z-10
               ${isFullScreen ? "fixed " : "hidden "}`}
       >
         <MdOutlineArrowBackIos className="" size={22} />
@@ -85,7 +85,7 @@ export default function WorkoutCardUserAndActions({
         <div className={`avatar`}>
           <div
             className={`relative rounded-full border-2 border-base-content border-opacity-50 bg-transparent ${
-              isFullScreen ? "h-12 w-12" : "h-8 w-8"
+              isFullScreen ? "mt-12 h-12 w-12" : "h-8 w-8"
             }`}
           >
             <Image
@@ -124,19 +124,19 @@ export default function WorkoutCardUserAndActions({
         >
           {isSelected ? (
             <button
-              className="btn-primary btn-sm btn-circle btn mr-3 mt-2"
+              className="btn btn-primary btn-sm btn-circle mr-3 mt-2"
               onClick={onToggleSelect}
             >
               <MdDone size={17} />
             </button>
           ) : (
             <Dropdown
-              withBackdrop={isFullScreen}
+              withBackdrop
               buttons={workoutActions}
               containerClass="dropdown-left"
             >
               <div
-                className={`btn-ghost btn-circle btn
+                className={`btn btn-ghost btn-circle
                   ${isSelected ? "btn-primary" : ""}
                 `}
               >

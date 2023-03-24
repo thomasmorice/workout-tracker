@@ -2,7 +2,7 @@ import { inferRouterOutputs } from "@trpc/server";
 import { BsLightningChargeFill } from "react-icons/bs";
 import { GiBiceps } from "react-icons/gi";
 import { FaRunning } from "react-icons/fa";
-import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
+import { WorkoutRouterType } from "../../../server/trpc/router/WorkoutRouter/workout-router";
 import { enumToString } from "../../../utils/formatting";
 import { AiFillTag } from "react-icons/ai";
 
@@ -20,7 +20,7 @@ export default function WorkoutCardTitle({
     <div
       className={`
         flex flex-col items-center font-bold
-        ${isFullScreen ? "mt-12" : "mt-3"}
+        ${isFullScreen ? "mt-5" : "mt-3"}
       `}
     >
       <div

@@ -6,13 +6,13 @@ import Masonry from "react-masonry-css";
 import { useIntersectionObserver, useDebounce } from "usehooks-ts";
 import WorkoutCard from "../components/Workout/WorkoutCard/WorkoutCard";
 import WorkoutCardSkeleton from "../components/Workout/WorkoutCardSkeleton";
-import { useWorkoutService } from "../services/useWorkoutService";
 import { useWorkoutStore } from "../store/WorkoutStore";
 import { MdSearch } from "react-icons/md";
 import Header from "../components/Layout/Header";
 import { useRouter } from "next/router";
 import { inferRouterOutputs } from "@trpc/server";
-import { WorkoutRouterType } from "../server/trpc/router/workout-router";
+import { WorkoutRouterType } from "../server/trpc/router/WorkoutRouter/workout-router";
+import { trpc } from "../utils/trpc";
 
 const Workouts: NextPage = () => {
   const { data: sessionData } = useSession();
@@ -22,19 +22,17 @@ const Workouts: NextPage = () => {
   const router = useRouter();
 
   const { toggleSelectWorkout, showWorkoutForm } = useWorkoutStore();
-  const { getInfiniteWorkouts } = useWorkoutService();
   const [showWorkoutDetail, set_showWorkoutDetail] =
     useState<
       inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]["id"]
     >();
   const [classifiedOnly, set_classifiedOnly] = useState(true);
   const [searchTerm, set_searchTerm] = useState("");
-  const [scrollPosition, set_scrollPosition] = useState(0);
   const searchTermDebounced = useDebounce<string>(searchTerm, 500);
 
   const { data, fetchNextPage, hasNextPage, isFetching, isSuccess, ...rest } =
-    getInfiniteWorkouts({
-      showClassifiedWorkoutOnly: classifiedOnly,
+    trpc.workout.getInfiniteWorkout.useInfiniteQuery({
+      classifiedOnly: classifiedOnly,
       searchTerm: searchTermDebounced,
     });
 
@@ -80,7 +78,7 @@ const Workouts: NextPage = () => {
         <button
           type="button"
           onClick={() => showWorkoutForm("create")}
-          className="btn-primary btn-sm btn hidden md:block"
+          className="btn btn-primary btn-sm hidden md:block"
         >
           + Create a new workout
         </button>
@@ -107,7 +105,6 @@ const Workouts: NextPage = () => {
                 />
               </div>
             </div>
-
             <div className="mt-6 flex items-center gap-3">
               <button
                 onClick={() => set_classifiedOnly(false)}
@@ -127,7 +124,6 @@ const Workouts: NextPage = () => {
                 Classified workouts
               </button>
             </div>
-
             <Masonry
               breakpointCols={{
                 default: 3,
@@ -162,13 +158,10 @@ const Workouts: NextPage = () => {
                     .fill(0)
                     .map((_, i) => <WorkoutCardSkeleton key={i} />)}
             </Masonry>
-
             {hasNoWorkouts && (
               <p>No results found yet, start creating workouts</p>
             )}
-
             <div className="mb-10 h-10 w-1/2" ref={ref}></div>
-
             {isFetching &&
               hasNextPage &&
               Array(9)

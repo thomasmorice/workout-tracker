@@ -43,7 +43,7 @@ export default function Modal({
           >
             <div
               ref={innerModal}
-              className="modal-box overflow-y-scroll rounded-t-3xl"
+              className="modal-box overflow-x-hidden overflow-y-scroll rounded-t-3xl"
             >
               {title && (
                 <div className="text-xl font-bold capitalize">{title}</div>

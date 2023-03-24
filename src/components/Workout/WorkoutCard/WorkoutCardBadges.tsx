@@ -1,14 +1,12 @@
 import { inferRouterOutputs } from "@trpc/server";
-import { BsLightningChargeFill } from "react-icons/bs";
-import { GiBiceps } from "react-icons/gi";
 import { MdDone, MdOutlineTimelapse } from "react-icons/md";
 import { WiMoonNew } from "react-icons/wi";
-import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
-import { enumToString } from "../../../utils/formatting";
+import { WorkoutRouterType } from "../../../server/trpc/router/WorkoutRouter/workout-router";
 
 type WorkoutCardBadgesProps = {
   workout:
-    | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
+    | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
+    | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
 };
 
 export default function WorkoutCardBadges({ workout }: WorkoutCardBadgesProps) {

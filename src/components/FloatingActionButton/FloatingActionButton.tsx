@@ -2,7 +2,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { useState } from "react";
 import Modal from "../Layout/Modal/Modal";
 import { useEventStore } from "../../store/EventStore";
-import WeighingForm from "../Weighing/WeighingForm2";
+import WeighingForm from "../Weighing/WeighingForm";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import Dropdown from "../Dropdown/Dropdown";
 import { useAnimationControls } from "framer-motion";
@@ -51,7 +51,7 @@ export default function FloatingActionButton() {
           buttons={mainButtons}
           containerClass="dropdown-top dropdown-left divide-y shadow-lg "
         >
-          <div className="btn-rounded btn-primary btn-circle btn flex h-16 w-16 items-center justify-center shadow-xl">
+          <div className="btn-rounded btn btn-primary btn-circle flex h-16 w-16 items-center justify-center shadow-xl">
             <AiOutlinePlus size={17} />
             {/* {hasSelection() && (
               <div className="absolute -mt-6 -mr-6 text-xs font-normal ">

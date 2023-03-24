@@ -1,6 +1,6 @@
 import { inferRouterOutputs, TRPCError } from "@trpc/server";
 import { create } from "zustand";
-import { WorkoutRouterType } from "../server/trpc/router/workout-router";
+import { WorkoutRouterType } from "../server/trpc/router/WorkoutRouter/workout-router";
 import { useToastStore } from "./ToastStore";
 
 type StateType = "create" | "duplicate" | "edit" | "delete";
