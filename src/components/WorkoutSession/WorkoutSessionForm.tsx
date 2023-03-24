@@ -27,8 +27,6 @@ export default function WorkoutSessionForm({
 }: WorkoutSessionFormProps) {
   const { data: sessionData } = useSession();
   const [illustration] = useState(getRandomPreparingSessionllustration());
-  const datetimePickerRef = useRef<HTMLInputElement>(null);
-  const [showDateTimePicker, set_showDateTimePicker] = useState(false);
   const [defaultValues, set_defaultValues] = useState({});
   const router = useRouter();
 
@@ -42,7 +40,7 @@ export default function WorkoutSessionForm({
         id: eventBeingEdited || -1,
       },
       {
-        enabled: sessionData?.user !== undefined && !eventBeingEdited,
+        enabled: sessionData?.user !== undefined && !!eventBeingEdited,
         refetchOnWindowFocus: false,
       }
     );
@@ -61,12 +59,6 @@ export default function WorkoutSessionForm({
     });
   }, [eventDate, existingWorkoutSession, preselectedWorkouts]);
 
-  useEffect(() => {
-    if (showDateTimePicker) {
-      datetimePickerRef.current?.focus();
-    }
-  }, [showDateTimePicker]);
-
   const {
     handleSubmit,
 
@@ -82,6 +74,8 @@ export default function WorkoutSessionForm({
   >({
     defaultValues,
   });
+
+  console.log("existingWorkoutSession", existingWorkoutSession);
 
   const [selectedIndex, set_selectedIndex] = useState(0);
   const [previousSelectedIndex, set_previousSelectedIndex] =
@@ -222,7 +216,7 @@ export default function WorkoutSessionForm({
                 })}
               </div>
 
-              <AnimatePresence mode="wait">
+              <AnimatePresence initial={false} mode="wait">
                 {selectedWorkoutResult && (
                   <motion.div
                     className="absolute flex w-full flex-col"
