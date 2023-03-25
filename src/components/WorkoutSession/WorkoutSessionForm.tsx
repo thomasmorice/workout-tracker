@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { MdArrowBackIosNew, MdEdit, MdModelTraining } from "react-icons/md";
 import { getRandomPreparingSessionllustration } from "../../utils/workout";
 import { Controller, useForm, useFieldArray } from "react-hook-form";
-import { inferRouterInputs } from "@trpc/server";
+import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 import { WorkoutSessionRouterType } from "../../server/trpc/router/workout-session-router";
 import { WorkoutResultInputsWithWorkout } from "../../types/app";
 import { useRouter } from "next/router";
@@ -17,6 +17,9 @@ import DatePicker from "../DatePicker/DatePicker";
 import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
 import { AnimatePresence, motion } from "framer-motion";
+import { Rings } from "react-loading-icons";
+import WorkoutResultCard from "../WorkoutResult/WorkoutResultCard";
+import { WorkoutResultRouterType } from "../../server/trpc/router/workout-result-router";
 
 type WorkoutSessionFormProps = {
   onSuccess?: () => void;
@@ -34,7 +37,7 @@ export default function WorkoutSessionForm({
     useWorkoutStore();
   const { eventBeingEdited, eventDate, closeForm } = useEventStore();
 
-  const { data: existingWorkoutSession } =
+  const { data: existingWorkoutSession, isLoading } =
     trpc.workoutSession.getWorkoutSessionById.useQuery(
       {
         id: eventBeingEdited || -1,
@@ -75,8 +78,6 @@ export default function WorkoutSessionForm({
     defaultValues,
   });
 
-  console.log("existingWorkoutSession", existingWorkoutSession);
-
   const [selectedIndex, set_selectedIndex] = useState(0);
   const [previousSelectedIndex, set_previousSelectedIndex] =
     useState(selectedIndex);
@@ -101,9 +102,6 @@ export default function WorkoutSessionForm({
   // useEffect(() => {
   //   console.log("workoutResults", workoutResults);
   // }, [workoutResults]);
-  // useEffect(() => {
-
-  // }, [selectedIndex])
 
   const selectedWorkoutResult = workoutResults[selectedIndex];
 
@@ -113,6 +111,18 @@ export default function WorkoutSessionForm({
       set_selectedIndex(index);
     }
   };
+
+  useEffect(() => {
+    console.log("selectedWorkoutResult", selectedWorkoutResult);
+  }, [selectedWorkoutResult]);
+
+  if (isLoading) {
+    return (
+      <div className=" flex h-screen w-screen items-center justify-center">
+        <Rings strokeWidth={1.5} width={64} height={64} />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -133,7 +143,7 @@ export default function WorkoutSessionForm({
 
       <div
         onClick={closeForm}
-        className="btn btn-ghost btn-circle absolute top-4 left-2"
+        className="btn btn-ghost btn-circle fixed top-4 left-2"
       >
         <MdArrowBackIosNew size={26} />
       </div>
@@ -184,58 +194,62 @@ export default function WorkoutSessionForm({
                         </div>
                         <div className="mb-4 h-1 w-5 rounded-full bg-base-content"></div>
                       </div>
-
-                      {/* Save workout result */}
-
-                      {/* <div className="-ml-6 mt-4 w-[calc(100%_+_3rem)] bg-base-300 py-4 text-center text-sm font-bold">
-                        How was your workout?
-                        <input
-                          type="range"
-                          min="1"
-                          max="5"
-                          value={selectedWorkoutResult?.rating + ""}
-                          onChange={(e) =>
-                            updateWorkoutResults(selectedIndex, {
-                              ...selectedWorkoutResult,
-                              rating: parseInt(e.target.value),
-                            } as WorkoutResultInputsWithWorkout)
-                          }
-                          className="range-custom range mt-2 px-3"
-                          step="1"
-                        />
-                        <div className="flex w-full justify-between px-3 text-xl">
-                          <span className="opacity-40">😓</span>
-                          <span className="opacity-40"></span>
-                          <span className="opacity-40"></span>
-
-                          <span className="opacity-40">😍</span>
-                        </div>
-                      </div> */}
                     </div>
                   );
                 })}
               </div>
 
-              <AnimatePresence initial={false} mode="wait">
-                {selectedWorkoutResult && (
+              {selectedWorkoutResult && (
+                <>
+                  {/* <div className="mb-4 -ml-6 w-[calc(100%_+_3rem)] text-center text-sm font-bold">
+                    
+                    <input
+                      type="range"
+                      min="1"
+                      max="5"
+                      value={selectedWorkoutResult?.rating + ""}
+                      onChange={(e) =>
+                        updateWorkoutResults(selectedIndex, {
+                          ...selectedWorkoutResult,
+                          rating: parseInt(e.target.value),
+                        } as WorkoutResultInputsWithWorkout)
+                      }
+                      className="range-custom range mt-2 px-3"
+                      step="1"
+                    />
+                    <div className="flex w-full justify-between px-3 text-xl">
+                      <span className="opacity-40">😓</span>
+                      <span className="opacity-40"></span>
+                      <span className="opacity-40"></span>
+
+                      <span className="opacity-40">😍</span>
+                    </div>
+                  </div> */}
+
+                  {/* <AnimatePresence mode="wait"> */}
                   <motion.div
-                    className="absolute flex w-full flex-col"
-                    key={selectedWorkoutResult.key}
+                    key={selectedIndex}
+                    className="flex w-full flex-col"
                     drag="x"
                     dragConstraints={{
                       left: 0,
                       right: 0,
                     }}
-                    onDragEnd={(_evt, info) => {
+                    onDrag={(_evt, info) => {
                       if (info.offset.x > 50) {
                         switchSelectedWorkoutResult(selectedIndex - 1);
-                      } else {
+                      } else if (info.offset.x < -50) {
                         switchSelectedWorkoutResult(selectedIndex + 1);
                       }
                     }}
                     initial={{
-                      x: previousSelectedIndex > selectedIndex ? -40 : 40,
-                      opacity: 0,
+                      x:
+                        previousSelectedIndex === selectedIndex
+                          ? 0
+                          : previousSelectedIndex > selectedIndex
+                          ? -40
+                          : 40,
+                      opacity: previousSelectedIndex === selectedIndex ? 1 : 0,
                     }}
                     animate={{
                       x: 0,
@@ -252,6 +266,12 @@ export default function WorkoutSessionForm({
                       duration: 0.2,
                     }}
                   >
+                    <div className="mt-3 mb-5 -ml-8 w-[calc(100%_+_4rem)]">
+                      <WorkoutResultCard
+                        condensed
+                        result={selectedWorkoutResult}
+                      />
+                    </div>
                     <div className="flex items-center gap-2 text-base font-semibold">
                       {selectedWorkoutResult?.workout.elementType.includes(
                         "STRENGTH"
@@ -279,8 +299,9 @@ export default function WorkoutSessionForm({
                       {selectedWorkoutResult?.workout?.description}
                     </div>
                   </motion.div>
-                )}
-              </AnimatePresence>
+                  {/* </AnimatePresence> */}
+                </>
+              )}
             </>
           ) : (
             <>

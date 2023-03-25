@@ -91,7 +91,7 @@ export const workoutSessionRouter = router({
     )
     .query(({ ctx, input }) => {
       const { id } = input;
-      return ctx.prisma.workoutSession.findFirst({
+      return ctx.prisma.workoutSession.findFirstOrThrow({
         select: {
           ...WorkoutSessionSelect,
           workoutResults: {
