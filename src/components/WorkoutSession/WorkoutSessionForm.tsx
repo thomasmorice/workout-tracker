@@ -1,11 +1,13 @@
-import { format, parseISO } from "date-fns";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { MdArrowBackIosNew, MdEdit, MdModelTraining } from "react-icons/md";
 import { getRandomPreparingSessionllustration } from "../../utils/workout";
-import { Controller, useForm, useFieldArray } from "react-hook-form";
-import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
+import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
+import { inferRouterInputs, inferRouterOutputs, TRPCError } from "@trpc/server";
 import { WorkoutSessionRouterType } from "../../server/trpc/router/workout-session-router";
-import { WorkoutResultInputsWithWorkout } from "../../types/app";
+import {
+  CreateWorkoutSessionInputSchema,
+  WorkoutResultInputsWithWorkout,
+} from "../../types/app";
 import { useRouter } from "next/router";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import { useEventStore } from "../../store/EventStore";
@@ -16,16 +18,21 @@ import { FaRunning } from "react-icons/fa";
 import DatePicker from "../DatePicker/DatePicker";
 import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Rings } from "react-loading-icons";
 import WorkoutResultCard from "../WorkoutResult/WorkoutResultCard";
-import { WorkoutResultRouterType } from "../../server/trpc/router/workout-result-router";
+import { workoutResultIsFilled } from "../../utils/utils";
+import { Reorder } from "framer-motion";
+import { z } from "zod";
+import { useToastStore } from "../../store/ToastStore";
 
 type WorkoutSessionFormProps = {
+  create?: boolean;
   onSuccess?: () => void;
 };
 
 export default function WorkoutSessionForm({
+  create = true,
   onSuccess,
 }: WorkoutSessionFormProps) {
   const { data: sessionData } = useSession();
@@ -36,17 +43,47 @@ export default function WorkoutSessionForm({
   const { selectedWorkouts: preselectedWorkouts, setWorkoutSelectionMode } =
     useWorkoutStore();
   const { eventBeingEdited, eventDate, closeForm } = useEventStore();
+  const { addMessage } = useToastStore();
 
-  const { data: existingWorkoutSession, isLoading } =
-    trpc.workoutSession.getWorkoutSessionById.useQuery(
-      {
-        id: eventBeingEdited || -1,
+  const {
+    data: existingWorkoutSession,
+    isInitialLoading,
+    isLoading,
+  } = trpc.workoutSession.getWorkoutSessionById.useQuery(
+    {
+      id: eventBeingEdited || -1,
+    },
+    {
+      enabled: sessionData?.user !== undefined && !create,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const { mutateAsync: addOrEditWorkoutSession } =
+    trpc.workoutSession.addOrEdit.useMutation({
+      async onSuccess() {
+        // await utils.workout.getInfiniteWorkout.invalidate();
       },
-      {
-        enabled: sessionData?.user !== undefined && !!eventBeingEdited,
-        refetchOnWindowFocus: false,
-      }
-    );
+      onError(e: unknown) {
+        addMessage({
+          message: (e as TRPCError).message,
+          type: "error",
+        });
+      },
+    });
+
+  const { mutateAsync: addOrEditManyWOrkoutResults } =
+    trpc.workoutResult.addOrEditMany.useMutation({
+      async onSuccess() {
+        // await utils.workout.getInfiniteWorkout.invalidate();
+      },
+      onError(e: unknown) {
+        addMessage({
+          message: (e as TRPCError).message,
+          type: "error",
+        });
+      },
+    });
 
   useEffect(() => {
     set_defaultValues({
@@ -85,6 +122,7 @@ export default function WorkoutSessionForm({
   const {
     fields: workoutResults,
     replace: replaceWorkoutResults,
+    swap: swapWorkoutResults,
     append: appendWorkoutResults,
     update: updateWorkoutResults,
     remove: removeWorkoutResults,
@@ -99,10 +137,6 @@ export default function WorkoutSessionForm({
     reset(defaultValues);
   }, [defaultValues, reset]);
 
-  // useEffect(() => {
-  //   console.log("workoutResults", workoutResults);
-  // }, [workoutResults]);
-
   const selectedWorkoutResult = workoutResults[selectedIndex];
 
   const switchSelectedWorkoutResult = (index: number) => {
@@ -116,7 +150,7 @@ export default function WorkoutSessionForm({
     console.log("selectedWorkoutResult", selectedWorkoutResult);
   }, [selectedWorkoutResult]);
 
-  if (isLoading) {
+  if (isInitialLoading) {
     return (
       <div className=" flex h-screen w-screen items-center justify-center">
         <Rings strokeWidth={1.5} width={64} height={64} />
@@ -124,8 +158,24 @@ export default function WorkoutSessionForm({
     );
   }
 
+  const handleCreateOrEdit: SubmitHandler<
+    z.infer<typeof CreateWorkoutSessionInputSchema>
+  > = async (
+    workoutSession: z.infer<typeof CreateWorkoutSessionInputSchema>
+  ) => {
+    // todo: Is currently saving
+    const savedWorkoutSession = await addOrEditWorkoutSession(workoutSession);
+
+    if (workoutSession.workoutResults?.length ?? 0 > 0) {
+      await addOrEditManyWOrkoutResults({
+        workoutResults: workoutSession.workoutResults,
+        workoutSessionId: savedWorkoutSession.id,
+      });
+    }
+  };
+
   return (
-    <div className="min-h-screen">
+    <div className="">
       <div
         style={{
           backgroundImage: `url(/workout-item/${illustration}.png)`,
@@ -142,7 +192,7 @@ export default function WorkoutSessionForm({
       </div>
 
       <div
-        onClick={closeForm}
+        onClick={() => router.back()}
         className="btn btn-ghost btn-circle fixed top-4 left-2"
       >
         <MdArrowBackIosNew size={26} />
@@ -151,19 +201,27 @@ export default function WorkoutSessionForm({
         <DatePicker name="date" control={control} />
 
         {workoutResults.length ? (
-          <button
-            type="button"
-            className="btn-primary btn-sm mt-7 self-center rounded-full text-xs font-semibold uppercase"
-            onClick={() => {}}
-          >
-            Save this workout
-          </button>
+          <div className=" mt-7 flex justify-center gap-3 ">
+            {/* <button className="btn-ghost btn-sm rounded-full font-semibold uppercase">
+              Cancel
+            </button> */}
+            <button
+              type="button"
+              className="btn-primary btn-sm  rounded-full text-xs font-semibold uppercase"
+              onClick={async () => {
+                await handleSubmit(handleCreateOrEdit)();
+                onSuccess && onSuccess();
+              }}
+            >
+              Save this workout
+            </button>
+          </div>
         ) : (
           <button
             type="button"
             className="btn-primary btn-sm mt-7 self-center rounded-full text-xs font-semibold uppercase"
             onClick={() => {
-              router.push("workouts");
+              router.push("/workouts");
               setWorkoutSelectionMode(true);
               closeForm();
             }}
@@ -172,32 +230,41 @@ export default function WorkoutSessionForm({
           </button>
         )}
 
-        <div className="mt-6">
+        <div className="mt-6 ">
           {workoutResults.length ? (
             <>
-              <div className="flex gap-6">
+              <Reorder.Group
+                axis="x"
+                className="flex gap-6"
+                values={workoutResults}
+                onReorder={(reorderedResults) => {
+                  replaceWorkoutResults(reorderedResults);
+                }}
+              >
                 {workoutResults.map((workoutResult, index) => {
                   return (
-                    <div
-                      key={workoutResult.id}
+                    <Reorder.Item
+                      key={workoutResult.workout.id}
+                      value={workoutResult}
                       onClick={() => {
                         set_previousSelectedIndex(selectedIndex);
                         set_selectedIndex(index);
                       }}
-                      className={`transition-opacity duration-300 ${
+                      className={`flex gap-6 ${
                         selectedIndex === index ? "" : "opacity-40"
                       }`}
                     >
                       <div className="flex flex-col">
                         <div className="text-3xl font-bold">
                           {("0" + (index + 1)).slice(-2)}
+                          {/* {workoutResult.workout.description.substring(0, 10)} */}
                         </div>
                         <div className="mb-4 h-1 w-5 rounded-full bg-base-content"></div>
                       </div>
-                    </div>
+                    </Reorder.Item>
                   );
                 })}
-              </div>
+              </Reorder.Group>
 
               {selectedWorkoutResult && (
                 <>
@@ -254,9 +321,6 @@ export default function WorkoutSessionForm({
                     animate={{
                       x: 0,
                       opacity: 1,
-                      // transition: {
-                      //   delay: 0.15,
-                      // },
                     }}
                     exit={{
                       x: previousSelectedIndex > selectedIndex ? -40 : 40,
@@ -266,12 +330,14 @@ export default function WorkoutSessionForm({
                       duration: 0.2,
                     }}
                   >
-                    <div className="mt-3 mb-5 -ml-8 w-[calc(100%_+_4rem)]">
-                      <WorkoutResultCard
-                        condensed
-                        result={selectedWorkoutResult}
-                      />
-                    </div>
+                    {workoutResultIsFilled(selectedWorkoutResult) && (
+                      <div className="mt-3 mb-5 -ml-8 w-[calc(100%_+_4rem)]">
+                        <WorkoutResultCard
+                          condensed
+                          result={selectedWorkoutResult}
+                        />
+                      </div>
+                    )}
                     <div className="flex items-center gap-2 text-base font-semibold">
                       {selectedWorkoutResult?.workout.elementType.includes(
                         "STRENGTH"
@@ -299,7 +365,6 @@ export default function WorkoutSessionForm({
                       {selectedWorkoutResult?.workout?.description}
                     </div>
                   </motion.div>
-                  {/* </AnimatePresence> */}
                 </>
               )}
             </>

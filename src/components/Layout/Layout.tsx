@@ -82,13 +82,13 @@ export default function Layout({ children }: LayoutProps) {
               <RightSidebar />
             </div>
             <WorkoutForm />
-            <Modal onClose={closeForm} isOpen={!!showFormWithEventType}>
+            {/* <Modal onClose={closeForm} isOpen={!!showFormWithEventType}>
               {showFormWithEventType === "workout-session" ? (
                 <WorkoutSessionForm onSuccess={closeForm} />
               ) : (
                 <WeighingForm onSuccess={closeForm} />
               )}
-            </Modal>
+            </Modal> */}
 
             {!isWorkoutSelectionModeActive && <FloatingActionButton />}
           </>

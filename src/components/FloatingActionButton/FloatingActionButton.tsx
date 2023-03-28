@@ -6,18 +6,20 @@ import WeighingForm from "../Weighing/WeighingForm";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import Dropdown from "../Dropdown/Dropdown";
 import { useAnimationControls } from "framer-motion";
+import { useRouter } from "next/router";
 
 export default function FloatingActionButton() {
   const { showWorkoutForm } = useWorkoutStore();
   const { addOrEditEvent } = useEventStore();
+  const router = useRouter();
 
   const mainButtons = [
     {
       label: `Create a session`,
-      onClick: () =>
-        addOrEditEvent({
-          type: "workout-session",
-        }),
+      onClick: () => router.push("/session/create"),
+      // addOrEditEvent({
+      //   type: "workout-session",
+      // }),
     },
     {
       label: "Add a weighing",

@@ -3,11 +3,15 @@ import { useEffect } from "react";
 import { MdClose } from "react-icons/md";
 import { useEventStore } from "../../store/EventStore";
 import { useWorkoutStore } from "../../store/WorkoutStore";
+import { useRouter } from "next/router";
 
 export default function WorkoutSelectionBanner() {
   const workoutCounterAnimation = useAnimationControls();
-  const { selectedWorkouts, clearSelectedWorkouts } = useWorkoutStore();
+  const { selectedWorkouts, clearSelectedWorkouts, setWorkoutSelectionMode } =
+    useWorkoutStore();
   const { addOrEditEvent } = useEventStore();
+  const router = useRouter();
+
   useEffect(() => {
     if (selectedWorkouts.length > 0) {
       workoutCounterAnimation.start({
@@ -33,16 +37,18 @@ export default function WorkoutSelectionBanner() {
       <div className="flex items-center gap-1">
         <button
           onClick={() => {
-            addOrEditEvent({
-              type: "workout-session",
-            });
+            // addOrEditEvent({
+            //   type: "workout-session",
+            // });
+            setWorkoutSelectionMode(false);
+            router.push("/session/create");
           }}
-          className="btn-primary btn-xs btn rounded-full"
+          className="btn btn-primary btn-xs rounded-full"
         >
           Plan session
         </button>
         <button
-          className="btn-ghost btn-sm btn-circle btn"
+          className="btn btn-ghost btn-sm btn-circle"
           onClick={clearSelectedWorkouts}
           type="button"
         >
