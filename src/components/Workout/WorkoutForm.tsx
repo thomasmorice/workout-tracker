@@ -10,6 +10,8 @@ import Modal from "../Layout/Modal/Modal";
 import ConfirmModal from "../Layout/Modal/ConfirmModal";
 import { WorkoutRouterType } from "../../server/trpc/router/WorkoutRouter/workout-router";
 import { trpc } from "../../utils/trpc";
+import { ZodError } from "zod";
+import { TRPCClientError } from "@trpc/client";
 
 export default function WorkoutForm() {
   const { addMessage, closeMessage } = useToastStore();
@@ -20,12 +22,19 @@ export default function WorkoutForm() {
     handleWorkoutFormError,
   } = useWorkoutStore();
 
+  const handleError = (e: any) => {
+    if (e instanceof TRPCClientError) {
+      const errors = JSON.parse(e.message);
+      addMessage({
+        type: "error",
+        message: errors[0].message || "unknown error",
+      });
+    }
+  };
+
   const { mutateAsync: addWorkout } = trpc.workout.add.useMutation({
     async onSuccess() {
       await utils.workout.getInfiniteWorkout.invalidate();
-    },
-    onError(e: unknown) {
-      throw e as TRPCError;
     },
   });
 
@@ -33,17 +42,11 @@ export default function WorkoutForm() {
     async onSuccess() {
       await utils.workout.getInfiniteWorkout.invalidate();
     },
-    onError(e: unknown) {
-      throw e as TRPCError;
-    },
   });
 
   const { mutateAsync: deleteWorkout } = trpc.workout.delete.useMutation({
     async onSuccess() {
       await utils.workout.getInfiniteWorkout.invalidate();
-    },
-    onError(e: unknown) {
-      throw e as TRPCError;
     },
   });
 
@@ -101,9 +104,10 @@ export default function WorkoutForm() {
         });
       }
     } catch (e) {
-      handleWorkoutFormError(e as TRPCError);
+      handleError(e);
       throw e;
     } finally {
+      reset(defaultValues);
       toastId && closeMessage(toastId);
     }
   };

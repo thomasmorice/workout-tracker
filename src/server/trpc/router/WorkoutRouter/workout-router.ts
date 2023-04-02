@@ -122,9 +122,10 @@ export const workoutRouter = router({
         id: z.number(),
       })
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { id } = input;
-      ctx.prisma.workout.delete({ where: { id } });
+      const details = await ctx.prisma.workout.delete({ where: { id } });
+      console.log("details", details);
       return {
         id,
       };

@@ -1,21 +1,24 @@
 import { inferRouterOutputs } from "@trpc/server";
 import { format } from "date-fns";
+import { RxDotsVertical } from "react-icons/rx";
 import { WorkoutResultRouterType } from "../../server/trpc/router/workout-result-router";
 import { WorkoutSessionRouterType } from "../../server/trpc/router/workout-session-router";
 import { WorkoutResultInputsWithWorkout } from "../../types/app";
+import Dropdown from "../Dropdown/Dropdown";
 
 interface WorkoutResultCardProps {
   result:
     | inferRouterOutputs<WorkoutResultRouterType>["getWorkoutResultsByWorkoutId"][number]
     | inferRouterOutputs<WorkoutSessionRouterType>["getWorkoutSessionById"]["workoutResults"][number]
     | WorkoutResultInputsWithWorkout;
-
+  onEdit?: () => void;
   eventDate?: Date;
   condensed?: boolean;
 }
 
 export default function WorkoutResultCard({
   result,
+  onEdit,
   condensed,
 }: WorkoutResultCardProps) {
   return (
@@ -24,6 +27,25 @@ export default function WorkoutResultCard({
         condensed ? "" : "rounded-3xl"
       } bg-base-300 p-5 text-center`}
     >
+      {onEdit && (
+        <div className="absolute right-0">
+          <Dropdown
+            withBackdrop
+            containerClass="dropdown-left"
+            buttons={[
+              {
+                label: "Edit result",
+                onClick: onEdit,
+              },
+            ]}
+          >
+            <div className={`btn btn-ghost btn-circle`}>
+              <RxDotsVertical size="23" />
+            </div>
+          </Dropdown>
+        </div>
+      )}
+
       {"workoutSession" in result && (
         <div className="mb-2 text-sm font-light">
           {format(result.workoutSession.event.eventDate, "eeee, do MMM yyyy")}

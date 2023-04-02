@@ -1,11 +1,15 @@
+import { inferRouterOutputs } from "@trpc/server";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MdSearch } from "react-icons/md";
 
 import Masonry from "react-masonry-css";
 import { useDebounce, useIntersectionObserver } from "usehooks-ts";
+import { WorkoutRouterType } from "../../server/trpc/router/WorkoutRouter/workout-router";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import { trpc } from "../../utils/trpc";
+import Modal from "../Layout/Modal/Modal";
 import WorkoutCard from "./WorkoutCard/WorkoutCard";
+import WorkoutCardFull from "./WorkoutCard/WorkoutCard.Fetch";
 import WorkoutCardSkeleton from "./WorkoutCardSkeleton";
 
 export default function WorkoutList() {
@@ -16,6 +20,8 @@ export default function WorkoutList() {
   const [classifiedOnly, set_classifiedOnly] = useState(true);
   const [searchTerm, set_searchTerm] = useState("");
   const searchTermDebounced = useDebounce<string>(searchTerm, 500);
+  const [showWorkoutDetail, set_showWorkoutDetail] =
+    useState<inferRouterOutputs<WorkoutRouterType>["getWorkoutById"]["id"]>();
 
   const { data, fetchNextPage, hasNextPage, isFetching, isSuccess, ...rest } =
     trpc.workout.getInfiniteWorkout.useInfiniteQuery({
@@ -33,6 +39,13 @@ export default function WorkoutList() {
 
   return (
     <>
+      <Modal
+        onClose={() => set_showWorkoutDetail(undefined)}
+        isOpen={!!showWorkoutDetail}
+      >
+        <WorkoutCardFull id={showWorkoutDetail || 0} />
+      </Modal>
+
       <div className="flex flex-wrap items-center gap-2 md:pt-6">
         <div className="relative flex w-full items-center justify-between">
           <label className="absolute z-10 ml-3" htmlFor="searchWorkoutInput">
@@ -88,6 +101,7 @@ export default function WorkoutList() {
                     onEdit={() => showWorkoutForm("edit", workout)}
                     onDuplicate={() => showWorkoutForm("duplicate", workout)}
                     onSelect={() => toggleSelectWorkout(workout)}
+                    onOpen={() => set_showWorkoutDetail(workout.id)}
                     onDelete={() => showWorkoutForm("delete", workout)}
                     workout={workout}
                   />

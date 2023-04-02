@@ -72,7 +72,7 @@ export default function WorkoutCardUserAndActions({
       <div
         onClick={onGoback}
         className={`btn btn-ghost btn-circle z-10
-              ${isFullScreen ? "fixed " : "hidden "}`}
+              ${isFullScreen ? "absolute " : "hidden "}`}
       >
         <MdOutlineArrowBackIos className="" size={22} />
       </div>
@@ -116,7 +116,7 @@ export default function WorkoutCardUserAndActions({
           className={`
             ${
               isFullScreen
-                ? "fixed top-5 right-5"
+                ? "absolute top-1 right-2"
                 : `btn-sm absolute -right-6 -top-2`
             }
             

@@ -21,13 +21,13 @@ export default function DatePicker(
   }, [showDateTimePicker]);
 
   return (
-    <div className="flex w-fit items-center justify-center gap-1 self-center px-4 py-2 font-semibold">
+    <div className="flex w-fit items-center justify-center gap-1 self-center px-4 py-2 text-lg font-semibold">
       {field.value && (
         <>
           {format(field.value, "EEEE, MMM dd, p")}
           <button
             onClick={() => set_showDateTimePicker(true)}
-            className="btn-ghost btn-sm btn-circle btn relative"
+            className="btn btn-ghost btn-sm btn-circle relative"
             type="button"
           >
             <MdEdit size={18} />

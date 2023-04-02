@@ -48,7 +48,7 @@ export default function WorkoutResultForm({
     <Portal>
       <Modal isOpen={true} onClose={onClose}>
         <>
-          <h3 className="mb-4 text-xl font-bold capitalize">Add the result</h3>
+          <h3 className="mb-4 text-xl font-bold capitalize">Edit result</h3>
 
           <div className="flex flex-col gap-2">
             <div className="form-control w-full">

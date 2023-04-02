@@ -7,6 +7,7 @@ import { MdArrowBackIosNew } from "react-icons/md";
 type ModalProps = {
   isOpen: boolean;
   title?: React.ReactNode;
+  noPadding?: boolean;
   children: React.ReactNode;
   onClose: () => void;
 };
@@ -15,6 +16,7 @@ export default function Modal({
   isOpen,
   title,
   children,
+  noPadding = false,
   onClose,
 }: ModalProps) {
   const innerModal = useRef(null);
@@ -43,7 +45,9 @@ export default function Modal({
           >
             <div
               ref={innerModal}
-              className="modal-box overflow-x-hidden overflow-y-scroll rounded-t-3xl"
+              className={`modal-box overflow-x-hidden overflow-y-scroll rounded-t-3xl ${
+                noPadding ? "p-0" : ""
+              }`}
             >
               {title && (
                 <div className="text-xl font-bold capitalize">{title}</div>

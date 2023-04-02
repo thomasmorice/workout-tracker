@@ -3,10 +3,11 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Header from "../components/Layout/Header";
 import WorkoutList from "../components/Workout/WorkoutList";
+import { useToastStore } from "../store/ToastStore";
 
 const Workouts: NextPage = () => {
   const { data: sessionData } = useSession();
-
+  const { addMessage } = useToastStore();
   return (
     <>
       <Head>
@@ -26,7 +27,17 @@ const Workouts: NextPage = () => {
           + Create a new workout
         </button>
       </div> */}
-
+      {/* <button
+        onClick={() => {
+          addMessage({
+            type: "pending",
+            message: "test",
+          });
+        }}
+        className="btn my-3"
+      >
+        Toast!
+      </button> */}
       {sessionData && <WorkoutList />}
     </>
   );

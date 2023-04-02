@@ -15,6 +15,7 @@ import { zonedTimeToUtc } from "date-fns-tz";
 import { inferRouterOutputs, TRPCError } from "@trpc/server";
 import { EventRouterType } from "../../server/trpc/router/event-router";
 import { trpc } from "../../utils/trpc";
+import { useRouter } from "next/router";
 
 interface TimelineSessionProps {
   event: inferRouterOutputs<EventRouterType>["getEvents"][number];
@@ -22,23 +23,32 @@ interface TimelineSessionProps {
 
 export default function TimelineItem({ event }: TimelineSessionProps) {
   const utils = trpc.useContext();
+  const router = useRouter();
   const { addMessage, closeMessage } = useToastStore();
   const [showConfirmDeleteEventModal, set_showConfirmDeleteEventModal] =
     useState(false);
 
-  const { addOrEditEvent } = useEventStore();
+  const deleteEvent = trpc.event.delete.useMutation({
+    async onSuccess() {
+      utils.event.getEvents.invalidate();
+    },
+  });
 
   return (
     <>
       <div className="relative mb-6 cursor-pointer rounded-md border border-base-content border-opacity-10 bg-base-200 bg-opacity-50 p-5  transition-transform hover:translate-x-1">
         <div
           onClick={() => {
-            addOrEditEvent({
-              eventId: event.workoutSession
-                ? event.workoutSession.id
-                : event.weighing?.id,
-              type: event.workoutSession ? "workout-session" : "weighing",
-            });
+            if (event.workoutSession) {
+              router.push(`/session/edit/${event.workoutSession.id}`);
+            }
+
+            // addOrEditEvent({
+            //   eventId: event.workoutSession
+            //     ? event.workoutSession.id
+            //     : event.weighing?.id,
+            //   type: event.workoutSession ? "workout-session" : "weighing",
+            // });
           }}
           className="group"
         >
@@ -93,7 +103,7 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
           <button
             onClick={() => set_showConfirmDeleteEventModal(true)}
             type="button"
-            className="btn-outline btn btn-error btn-xs w-fit"
+            className="btn btn-outline btn-error btn-xs w-fit"
           >
             <div className="flex items-center gap-2">
               <MdDelete />
@@ -110,18 +120,10 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
             type: "pending",
             message: "Deleting...",
           });
-          await trpc.event.delete
-            .useMutation({
-              async onSuccess() {
-                utils.event.getEvents.invalidate();
-              },
-              onError(e) {
-                throw e;
-              },
-            })
-            .mutateAsync({
-              id: event.id,
-            });
+
+          await deleteEvent.mutateAsync({
+            id: event.id,
+          });
           addMessage({
             type: "success",
             message: "Deleted successfully",
