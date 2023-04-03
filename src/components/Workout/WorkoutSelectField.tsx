@@ -93,6 +93,7 @@ export default function WorkoutSelectField({
                     }}
                   >
                     <WorkoutCard
+                      onGoBack={() => console.log("go back")}
                       onSelect={() => {
                         addMessage({
                           message: "Workout added",

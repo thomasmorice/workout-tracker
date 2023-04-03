@@ -16,7 +16,7 @@ type WorkoutCardUserAndActionsProps = {
   onEdit?: () => void;
   onDelete?: () => void;
   onToggleSelect?: () => void;
-  onGoback: () => void;
+  onGoBack: () => void;
   workout:
     | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
     | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
@@ -29,7 +29,7 @@ export default function WorkoutCardUserAndActions({
   onEdit,
   onDelete,
   onToggleSelect,
-  onGoback,
+  onGoBack,
   isFullScreen,
   workout,
 }: WorkoutCardUserAndActionsProps) {
@@ -52,6 +52,12 @@ export default function WorkoutCardUserAndActions({
         onClick: onDuplicate,
       });
 
+    // onGoBack &&
+    // actions.push({
+    //   label: "Duplicate",
+    //   onClick: onDuplicate,
+    // });
+
     onEdit &&
       actions.push({
         label: "Edit",
@@ -70,7 +76,7 @@ export default function WorkoutCardUserAndActions({
   return (
     <div className="w-full">
       <div
-        onClick={onGoback}
+        onClick={onGoBack}
         className={`btn btn-ghost btn-circle z-10
               ${isFullScreen ? "absolute " : "hidden "}`}
       >

@@ -16,14 +16,6 @@
     "incremental": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.cjs",
-    "**/*.mjs",
-    "src/components/WorkoutResult/WorkoutResultCard.tsx.old",
-    "src/components/WorkoutSession/WorkoutSessionForm.tsx.old"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],
   "exclude": ["node_modules"]
 }

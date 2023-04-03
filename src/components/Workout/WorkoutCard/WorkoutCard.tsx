@@ -18,6 +18,7 @@ interface WorkoutCardProps {
   workout:
     | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
     | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
+  onGoBack: () => void;
   onDuplicate?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -33,6 +34,7 @@ export default function WorkoutCard({
   workout,
   onDuplicate,
   onEdit,
+  onGoBack,
   onDelete,
   onSelect,
   isFullScreen = false,
@@ -75,7 +77,7 @@ export default function WorkoutCard({
         />
         <div className="relative px-2">
           <WorkoutCardUserAndActions
-            onGoback={() => router.back()}
+            onGoBack={onGoBack}
             onOpenFullScreen={() => {
               // router.push(`/workout/${workout.id}`, undefined, {
               //   shallow: true,

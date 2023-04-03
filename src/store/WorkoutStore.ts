@@ -5,20 +5,21 @@ import { useToastStore } from "./ToastStore";
 
 type StateType = "create" | "duplicate" | "edit" | "delete";
 type WorkoutType =
-  inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
+  | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
+  | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
 
 interface WorkoutFormState {
   state?: StateType;
-  workout?: inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
+  workout?: WorkoutType;
   isWorkoutSelectionModeActive: boolean;
+  openWorkoutDetailModal: (id: WorkoutType["id"]) => void;
+  openedWorkoutDetailModal?: WorkoutType["id"];
+  closeWorkoutDetailModal: () => void;
   selectedWorkouts: WorkoutType[];
   toggleSelectWorkout: (workout: WorkoutType) => void;
   clearSelectedWorkouts: () => void;
   setWorkoutSelectionMode: (isSelectionModActive: boolean) => void;
-  showWorkoutForm: (
-    state: StateType,
-    existingWorkout?: inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
-  ) => void;
+  showWorkoutForm: (state: StateType, existingWorkout?: WorkoutType) => void;
   handleWorkoutFormError: (e: TRPCError) => void;
   closeWorkoutForm: () => void;
 }
@@ -28,6 +29,16 @@ const useWorkoutStore = create<WorkoutFormState>()((set, get) => ({
   setWorkoutSelectionMode: (isSelectionModActive) => {
     set({
       isWorkoutSelectionModeActive: isSelectionModActive,
+    });
+  },
+  openWorkoutDetailModal: (id) => {
+    set({
+      openedWorkoutDetailModal: id,
+    });
+  },
+  closeWorkoutDetailModal: () => {
+    set({
+      openedWorkoutDetailModal: undefined,
     });
   },
   selectedWorkouts: [],

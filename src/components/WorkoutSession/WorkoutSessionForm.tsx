@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { MdArrowBackIosNew, MdEdit, MdModelTraining } from "react-icons/md";
+import {
+  MdArrowBackIosNew,
+  MdEdit,
+  MdModelTraining,
+  MdOpenInNew,
+} from "react-icons/md";
 import { getRandomPreparingSessionllustration } from "../../utils/workout";
 import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
 import { inferRouterInputs, inferRouterOutputs, TRPCError } from "@trpc/server";
@@ -422,6 +427,9 @@ export default function WorkoutSessionForm({
                       {enumToString(
                         selectedWorkoutResult.workout.elementType || ""
                       )}
+                      <button className="btn btn-ghost btn-sm btn-circle">
+                        <MdOpenInNew size={17} />
+                      </button>
                     </div>
                     {selectedWorkoutResult.workout.totalTime && (
                       <div className="text-sm uppercase">

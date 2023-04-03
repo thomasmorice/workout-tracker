@@ -1,6 +1,7 @@
 import { inferRouterOutputs } from "@trpc/server";
 import { Rings } from "react-loading-icons";
 import { WorkoutRouterType } from "../../../server/trpc/router/WorkoutRouter/workout-router";
+import { useWorkoutStore } from "../../../store/WorkoutStore";
 import { trpc } from "../../../utils/trpc";
 import WorkoutResults from "../../WorkoutResult/WorkoutResults";
 import WorkoutCard from "./WorkoutCard";
@@ -20,21 +21,27 @@ export default function WorkoutCardFull({ id }: WorkoutCardFullProps) {
     }
   );
 
-  if (isFetching) {
-    return (
-      <div className=" flex h-screen w-screen items-center justify-center">
-        <Rings strokeWidth={1.5} width={64} height={64} />
-      </div>
-    );
-  } else if (workout) {
-    return (
-      <div className="-ml-4 w-[calc(100%_+_2rem)]">
-        <WorkoutCard workout={workout} isFullScreen />
-        <div className="mt-12 px-4">
-          {<WorkoutResults workoutId={workout.id} />}
+  const { closeWorkoutDetailModal, toggleSelectWorkout } = useWorkoutStore();
+  return (
+    <>
+      {isFetching && (
+        <div className=" flex h-screen w-screen items-center justify-center">
+          <Rings strokeWidth={1.5} width={64} height={64} />
         </div>
-      </div>
-    );
-  }
-  return <></>;
+      )}
+      {workout && (
+        <div className="-ml-4 w-[calc(100%_+_2rem)]">
+          <WorkoutCard
+            onGoBack={closeWorkoutDetailModal}
+            onSelect={() => toggleSelectWorkout(workout)}
+            workout={workout}
+            isFullScreen
+          />
+          <div className="mt-12 px-4">
+            {<WorkoutResults workoutId={workout.id} />}
+          </div>
+        </div>
+      )}
+    </>
+  );
 }
