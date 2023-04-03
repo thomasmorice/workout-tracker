@@ -15,7 +15,7 @@ import { useEventStore } from "../../store/EventStore";
 import WeighingForm from "../Weighing/WeighingForm";
 import Modal from "./Modal/Modal";
 import { AnimatePresence, motion } from "framer-motion";
-import WorkoutCardFull from "../Workout/WorkoutCard/WorkoutCard.Fetch";
+import WorkoutAndResults from "../Workout/WorkoutAndResults";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -26,8 +26,8 @@ export default function Layout({ children }: LayoutProps) {
   const [currentPath, set_currentPath] = useState<String[]>();
   const {
     isWorkoutSelectionModeActive,
-    openedWorkoutDetailModal,
-    closeWorkoutDetailModal,
+    openedWorkoutDetail,
+    closeWorkoutDetail,
   } = useWorkoutStore();
   const { showFormWithEventType, closeForm } = useEventStore();
   // const [isRoutingToChild, set_isRoutingToChild] = useState(false);
@@ -92,10 +92,12 @@ export default function Layout({ children }: LayoutProps) {
 
             <Modal
               noPadding
-              onClose={closeWorkoutDetailModal}
-              isOpen={!!openedWorkoutDetailModal}
+              onClose={closeWorkoutDetail}
+              isOpen={!!openedWorkoutDetail}
             >
-              <WorkoutCardFull id={openedWorkoutDetailModal || 0} />
+              {openedWorkoutDetail && (
+                <WorkoutAndResults workout={openedWorkoutDetail} />
+              )}
             </Modal>
 
             {!isWorkoutSelectionModeActive && <FloatingActionButton />}

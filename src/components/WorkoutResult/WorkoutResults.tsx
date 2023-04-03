@@ -27,7 +27,11 @@ export default function WorkoutResults({ workoutId }: WorkoutResultsProps) {
     );
 
   if (isLoading) {
-    return <TailSpin fontSize={12} />;
+    return (
+      <div className="flex  w-full justify-center pb-20">
+        <TailSpin fontSize={12} />
+      </div>
+    );
   } else if (!workoutResults) {
     return <div>Error</div>;
   }

@@ -12,9 +12,9 @@ interface WorkoutFormState {
   state?: StateType;
   workout?: WorkoutType;
   isWorkoutSelectionModeActive: boolean;
-  openWorkoutDetailModal: (id: WorkoutType["id"]) => void;
-  openedWorkoutDetailModal?: WorkoutType["id"];
-  closeWorkoutDetailModal: () => void;
+  openWorkoutDetail: (workout: WorkoutType) => void;
+  openedWorkoutDetail?: WorkoutType;
+  closeWorkoutDetail: () => void;
   selectedWorkouts: WorkoutType[];
   toggleSelectWorkout: (workout: WorkoutType) => void;
   clearSelectedWorkouts: () => void;
@@ -31,14 +31,14 @@ const useWorkoutStore = create<WorkoutFormState>()((set, get) => ({
       isWorkoutSelectionModeActive: isSelectionModActive,
     });
   },
-  openWorkoutDetailModal: (id) => {
+  openWorkoutDetail: (workout) => {
     set({
-      openedWorkoutDetailModal: id,
+      openedWorkoutDetail: workout,
     });
   },
-  closeWorkoutDetailModal: () => {
+  closeWorkoutDetail: () => {
     set({
-      openedWorkoutDetailModal: undefined,
+      openedWorkoutDetail: undefined,
     });
   },
   selectedWorkouts: [],

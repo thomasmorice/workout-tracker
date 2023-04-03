@@ -13,8 +13,8 @@ export default function WorkoutList() {
   const {
     toggleSelectWorkout,
     showWorkoutForm,
-    openWorkoutDetailModal,
-    closeWorkoutDetailModal,
+    openWorkoutDetail: openWorkoutDetailModal,
+    closeWorkoutDetail: closeWorkoutDetailModal,
   } = useWorkoutStore();
   const lastWorkoutRef = useRef<HTMLDivElement | null>(null);
   const entry = useIntersectionObserver(lastWorkoutRef, {});
@@ -105,7 +105,7 @@ export default function WorkoutList() {
                     onEdit={() => showWorkoutForm("edit", workout)}
                     onDuplicate={() => showWorkoutForm("duplicate", workout)}
                     onSelect={() => toggleSelectWorkout(workout)}
-                    onOpen={() => openWorkoutDetailModal(workout.id)}
+                    onOpen={() => openWorkoutDetailModal(workout)}
                     onDelete={() => showWorkoutForm("delete", workout)}
                     workout={workout}
                   />
