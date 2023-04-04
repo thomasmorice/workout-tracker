@@ -86,7 +86,7 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
                 <button
                   type="button"
                   onClick={() => signIn()}
-                  className="btn btn-primary my-2 flex gap-x-2"
+                  className="btn btn-primary btn-sm my-2 flex gap-x-2"
                 >
                   <MdLogin size="22px" />
                   Login

@@ -78,12 +78,7 @@ export default function WorkoutCard({
         <div className="relative px-2">
           <WorkoutCardUserAndActions
             onGoBack={onGoBack}
-            onOpenFullScreen={() => {
-              // router.push(`/workout/${workout.id}`, undefined, {
-              //   shallow: true,
-              // });
-              onOpen && onOpen();
-            }}
+            onOpenFullScreen={onOpen}
             onToggleSelect={onSelect}
             isSelected={selectedWorkouts.some((w) => w.id === workout.id)}
             onEdit={onEdit}

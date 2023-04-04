@@ -49,8 +49,11 @@ export default function WorkoutSessionForm({
   const [defaultValues, set_defaultValues] = useState({});
   const router = useRouter();
 
-  const { selectedWorkouts: preselectedWorkouts, setWorkoutSelectionMode } =
-    useWorkoutStore();
+  const {
+    selectedWorkouts: preselectedWorkouts,
+    setWorkoutSelectionMode,
+    openWorkoutDetail,
+  } = useWorkoutStore();
   const { eventDate, closeForm } = useEventStore();
   const { addMessage, closeMessage } = useToastStore();
 
@@ -249,28 +252,33 @@ export default function WorkoutSessionForm({
       >
         <MdArrowBackIosNew size={26} />
       </div>
-      <div className="relative mt-14 flex flex-col justify-center ">
+      <div className="relative mt-16 flex flex-col justify-center ">
         <DatePicker name="date" control={control} />
 
         {workoutResults.length ? (
           <div className=" mt-7 flex justify-center gap-3 ">
-            {/* <button className="btn-ghost btn-sm rounded-full font-semibold uppercase">
-              Cancel
-            </button> */}
             {isDirty && (
               <button
-                type="button"
-                className="btn-primary btn-sm  rounded-full text-xs font-semibold uppercase"
-                onClick={async () => {
-                  await handleSubmit(handleCreateOrEdit)();
-                  onSuccess && onSuccess();
-                }}
+                onClick={() => reset()}
+                className="btn-ghost btn-sm rounded-full font-semibold uppercase"
               >
-                {`${
-                  existingSessionId ? "Unsaved changes" : "Create a session"
-                } `}
+                Cancel
               </button>
             )}
+
+            <button
+              type="button"
+              className={`btn-primary btn-sm  rounded-full text-xs font-semibold uppercase ${
+                isDirty ? "" : "btn-disabled"
+              }`}
+              disabled={!isDirty}
+              onClick={async () => {
+                await handleSubmit(handleCreateOrEdit)();
+                onSuccess && onSuccess();
+              }}
+            >
+              {`${existingSessionId ? "Unsaved changes" : "Create a session"} `}
+            </button>
           </div>
         ) : (
           <button
@@ -307,7 +315,7 @@ export default function WorkoutSessionForm({
                         set_selectedWorkoutResultIndex(index);
                       }}
                       className={`flex gap-6 ${
-                        selectedWorkoutResultIndex === index ? "" : "opacity-40"
+                        selectedWorkoutResultIndex === index ? "" : "opacity-30"
                       }`}
                     >
                       <div className="flex flex-col">
@@ -315,7 +323,9 @@ export default function WorkoutSessionForm({
                           {("0" + (index + 1)).slice(-2)}
                           {/* {workoutResult.workout.description.substring(0, 10)} */}
                         </div>
-                        <div className="mb-4 h-1 w-5 rounded-full bg-base-content"></div>
+                        {selectedWorkoutResultIndex === index && (
+                          <div className="mb-4 h-1 w-5 rounded-full bg-base-content"></div>
+                        )}
                       </div>
                     </Reorder.Item>
                   );
@@ -427,7 +437,12 @@ export default function WorkoutSessionForm({
                       {enumToString(
                         selectedWorkoutResult.workout.elementType || ""
                       )}
-                      <button className="btn btn-ghost btn-sm btn-circle">
+                      <button
+                        onClick={() =>
+                          openWorkoutDetail(selectedWorkoutResult?.workout)
+                        }
+                        className="btn btn-ghost btn-sm btn-circle"
+                      >
                         <MdOpenInNew size={17} />
                       </button>
                     </div>

@@ -25,8 +25,11 @@ export default function WorkoutAndResults({ workout }: WorkoutAndResultsProps) {
   //   }
   // );
 
-  const { closeWorkoutDetail: closeWorkoutDetailModal, toggleSelectWorkout } =
-    useWorkoutStore();
+  const {
+    closeWorkoutDetail: closeWorkoutDetailModal,
+    toggleSelectWorkout,
+    showWorkoutForm,
+  } = useWorkoutStore();
   return (
     <>
       <div className="-ml-4 w-[calc(100%_+_2rem)]">
