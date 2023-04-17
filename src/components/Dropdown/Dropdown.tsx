@@ -6,6 +6,8 @@ type DropdownProps = {
   containerClass?: string;
   children: React.ReactNode;
   withBackdrop?: boolean;
+  onOpen?: () => void;
+  onClose?: () => void;
   buttons: {
     label: string;
     onClick: () => void;
@@ -15,6 +17,8 @@ type DropdownProps = {
 export default function Dropdown({
   containerClass,
   children,
+  onOpen,
+  onClose,
   buttons,
   withBackdrop = false,
 }: DropdownProps) {
@@ -44,7 +48,13 @@ export default function Dropdown({
           isOpen ? "dropdown-open z-[100]" : ""
         } `}
       >
-        <button onClick={() => set_isOpen(true)} type="button">
+        <button
+          onClick={() => {
+            set_isOpen(true);
+            onOpen && onOpen();
+          }}
+          type="button"
+        >
           {children}
         </button>
         <ul className="dropdown-content menu rounded-box absolute w-52 gap-1 border-t-transparent bg-base-300 p-2 text-sm">
@@ -53,6 +63,7 @@ export default function Dropdown({
               <a
                 onClick={() => {
                   set_isOpen(false);
+                  onClose && onClose();
                   button.onClick();
                 }}
                 className={`group flex w-full items-center rounded-md text-sm text-base-content`}

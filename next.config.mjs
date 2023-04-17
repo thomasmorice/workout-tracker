@@ -8,6 +8,15 @@ const importWithPWA = withPWA({
   disable: process.env.NODE_ENV === "development",
 });
 
+const rewrites = () => {
+  return [
+    {
+      source: "/crossfit-affiliates",
+      destination: "http://map.crossfit.com/ac.php",
+    },
+  ];
+};
+
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env/server.mjs"));
 
 /** @type {import("next").NextConfig} */
@@ -27,5 +36,6 @@ const config = importWithPWA({
   experimental: {
     // scrollRestoration: true,
   },
+  rewrites,
 });
 export default config;

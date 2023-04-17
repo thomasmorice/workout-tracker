@@ -119,7 +119,7 @@ export default function WeighingForm({
         ></div>
       </div>
 
-      <div className="relative flex flex-col gap-3">
+      <div className="relative flex flex-col gap-3 px-4 py-10">
         <DatePicker name="date" control={control} />
 
         <p className="pt-8 text-center text-sm font-light leading-loose">

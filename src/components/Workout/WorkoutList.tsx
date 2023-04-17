@@ -35,10 +35,7 @@ export default function WorkoutList() {
     );
 
   useEffect(() => {
-    console.log("here", entry);
-    console.log("hasNextPage", hasNextPage);
     if (entry?.isIntersecting && hasNextPage) {
-      console.log("there");
       fetchNextPage();
     }
   }, [entry, fetchNextPage, hasNextPage]);

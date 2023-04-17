@@ -73,8 +73,8 @@ export const weighingRouter = router({
     }),
   addOrEdit: protectedProcedure
     .input(CreateWeighingInputSchema)
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.weighing.upsert({
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.weighing.upsert({
         create: {
           user: {
             connect: {

@@ -16,6 +16,8 @@ import WeighingForm from "../Weighing/WeighingForm";
 import Modal from "./Modal/Modal";
 import { AnimatePresence, motion } from "framer-motion";
 import WorkoutAndResults from "../Workout/WorkoutAndResults";
+import MainDrawer from "./Navigation/MainDrawer";
+import Header from "./Header";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -72,13 +74,12 @@ export default function Layout({ children }: LayoutProps) {
       </Head>
       <div>
         <ToastMessage />
+        <AnimatePresence initial={false} mode="sync" key={router.asPath}>
+          <div id="header" />
+        </AnimatePresence>
 
         <div className="navigation-and-workout-selections relative z-50">
-          {isWorkoutSelectionModeActive ? (
-            <WorkoutSelectionBanner />
-          ) : (
-            <Navigation />
-          )}
+          {isWorkoutSelectionModeActive && <WorkoutSelectionBanner />}
         </div>
 
         {status === "authenticated" && (
@@ -89,6 +90,14 @@ export default function Layout({ children }: LayoutProps) {
 
             {/* Global form */}
             <WorkoutForm />
+
+            <Modal
+              noPadding
+              onClose={closeForm}
+              isOpen={showFormWithEventType === "weighing"}
+            >
+              <WeighingForm onSuccess={closeForm} />
+            </Modal>
 
             <Modal
               noPadding
@@ -103,7 +112,6 @@ export default function Layout({ children }: LayoutProps) {
             {!isWorkoutSelectionModeActive && <FloatingActionButton />}
           </>
         )}
-        <div id="portal" />
 
         <main
           className={`px-4 pb-24 sm:px-8 md:ml-16 md:pb-0 xl:ml-24
@@ -127,17 +135,13 @@ export default function Layout({ children }: LayoutProps) {
               <button
                 type="button"
                 onClick={() => signIn()}
-                className="btn btn-primary flex gap-x-2"
+                className="btn-primary btn flex gap-x-2"
               >
                 <MdLogin size="22px" />
                 Login
               </button>
             )}
           </div>
-
-          <AnimatePresence initial={false} mode="sync" key={router.asPath}>
-            <div id="header" />
-          </AnimatePresence>
 
           {/* <AnimatePresence mode="popLayout" initial={false}>
             <motion.div

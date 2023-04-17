@@ -29,6 +29,7 @@ async function main() {
           creatorId: "cl6jsjxy00006uyo8h2v8fr2e", // My user id
           createdAt: new Date(workout.createdAt),
           description: workout.description,
+          affiliateId: 2290,
           elementType: getTypedElementType(workout.elementType),
           difficulty: getTypedDifficulty(workout.difficulty),
         },

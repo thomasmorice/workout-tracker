@@ -9,6 +9,13 @@ export type WorkoutResultInputsWithWorkout =
     workout: inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
   };
 
+export type Affiliate = {
+  aid: string;
+  country: string;
+  name: string;
+  state: string;
+};
+
 export const CreateWorkoutInputSchema = z.object({
   id: z.number().optional(),
   name: z.string().nullable(),

@@ -9,7 +9,14 @@ const infiniteWorkoutZodInput = z.object({
   workoutTypes: z.nativeEnum(WorkoutType).array().nullish(),
   withResults: z.boolean().nullish(),
   classifiedOnly: z.boolean().nullish(),
+  affiliateOnly: z.boolean().nullish(),
   searchTerm: z.string().nullish(),
+  dateFilter: z
+    .object({
+      lte: z.string(),
+      gte: z.string(),
+    })
+    .nullish(),
   orderResults: z.array(z.any()).nullish(),
   orderByMostlyDone: z.boolean().nullish(),
   onlyFetchMine: z.boolean().nullish(),
@@ -25,7 +32,8 @@ const infiniteWorkoutZodInput = z.object({
 
 const getWhere = (
   props: z.infer<typeof infiniteWorkoutZodInput>,
-  userId: string
+  userId: string,
+  affiliateId?: number | null
 ) => {
   let where: Prisma.WorkoutWhereInput = {};
 
@@ -42,6 +50,14 @@ const getWhere = (
   props.classifiedOnly &&
     (where.NOT = {
       elementType: "UNCLASSIFIED",
+    });
+
+  props.dateFilter &&
+    (where = {
+      createdAt: {
+        lte: props.dateFilter.lte,
+        gte: props.dateFilter.gte,
+      },
     });
 
   // Search term
@@ -78,6 +94,11 @@ const getWhere = (
         in: props.ids.in,
       });
   }
+
+  props.affiliateOnly &&
+    (where = {
+      affiliateId: affiliateId,
+    });
 
   // User Selection
   where.AND = {
@@ -131,6 +152,11 @@ export const getInfiniteWorkout = protectedProcedure
   .query(async ({ ctx, input }) => {
     const limit = input.limit ?? 20;
     const { cursor } = input;
+    const userAffiliate = await ctx.prisma.user.findUnique({
+      where: {
+        id: ctx.session.user.id,
+      },
+    });
     const workouts = await ctx.prisma.workout.findMany({
       take: limit + 1,
       select: {
@@ -149,7 +175,7 @@ export const getInfiniteWorkout = protectedProcedure
           },
         },
       },
-      where: getWhere(input, ctx.session.user.id),
+      where: getWhere(input, ctx.session.user.id, userAffiliate?.affiliateId),
       orderBy: getOrderBy(input),
       cursor: cursor ? { id: cursor } : undefined,
     });

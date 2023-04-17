@@ -4,7 +4,7 @@ module.exports = {
   darkMode: ["class", '[data-theme="dark"]'],
   theme: {
     fontFamily: {
-      sans: ["Work Sans", "ui-sans-serif", "system-ui"],
+      sans: ["Roboto", "ui-sans-serif", "system-ui"],
       script: ["Patrick Hand"],
     },
 
@@ -60,8 +60,11 @@ module.exports = {
       {
         dark: {
           ...require("daisyui/src/colors/themes")["[data-theme=dark]"],
+          // "base-100": "#19181c",
+          // "base-200": "#29272e",
+          // "base-300": "#393740",
           "base-content": "#D1D6E0",
-          primary: "#2D68FF",
+          primary: "#00C89C",
           "range-shdw": "black",
         },
       },

@@ -5,8 +5,6 @@ import PersonalRecordsInsights from "../components/Dashboard/PersonalRecords/Per
 import WeighingsInsights from "../components/Dashboard/Weighings/WeighingsInsights";
 import SessionInsights from "../components/Dashboard/Sessions/SessionsInsights";
 import Header from "../components/Layout/Header";
-import Lottie from "lottie-react";
-import lottieAnimation from "../assets/lottie-stretch-animation.json";
 
 const Home: NextPage = () => {
   const { data: sessionData, status } = useSession();
@@ -38,7 +36,6 @@ const Home: NextPage = () => {
           <Header h1={"Box Track"} />
           {status === "loading" ? (
             <div className="mx-8 flex flex-col items-center justify-center pt-8">
-              <Lottie animationData={lottieAnimation} loop={true} />
               <p className="text-center font-light">
                 Do some stretching while your information are being loaded
               </p>

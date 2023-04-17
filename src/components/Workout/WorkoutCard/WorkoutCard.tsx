@@ -18,7 +18,7 @@ interface WorkoutCardProps {
   workout:
     | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
     | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
-  onGoBack: () => void;
+  onGoBack?: () => void;
   onDuplicate?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -77,7 +77,7 @@ export default function WorkoutCard({
         />
         <div className="relative px-2">
           <WorkoutCardUserAndActions
-            onGoBack={onGoBack}
+            onGoBack={() => onGoBack && onGoBack()}
             onOpenFullScreen={onOpen}
             onToggleSelect={onSelect}
             isSelected={selectedWorkouts.some((w) => w.id === workout.id)}

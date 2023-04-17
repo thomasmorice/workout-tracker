@@ -269,9 +269,9 @@ export default function WorkoutSessionForm({
             <button
               type="button"
               className={`btn-primary btn-sm  rounded-full text-xs font-semibold uppercase ${
-                isDirty ? "" : "btn-disabled"
+                !isDirty && !!existingSessionId ? "btn-disabled" : ""
               }`}
-              disabled={!isDirty}
+              disabled={!isDirty && !!existingSessionId}
               onClick={async () => {
                 await handleSubmit(handleCreateOrEdit)();
                 onSuccess && onSuccess();
