@@ -19,7 +19,8 @@ export type Affiliate = {
 export const CreateWorkoutInputSchema = z.object({
   id: z.number().optional(),
   name: z.string().nullable(),
-  affiliateId: z.number().nullable(),
+  affiliateId: z.number().nullish(),
+  affiliateDate: z.date().nullish(),
   description: z.string().min(1),
   workoutType: z.nativeEnum(WorkoutType).nullable(),
   difficulty: z.nativeEnum(Difficulty).nullable(),

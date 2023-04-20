@@ -15,6 +15,8 @@ export const WorkoutSelect = {
   difficulty: true,
   elementType: true,
   isDoableAtHome: true,
+  affiliateDate: true,
+  affiliateId: true,
   totalTime: true,
   description: true,
   workoutType: true,
@@ -92,7 +94,6 @@ export const workoutRouter = router({
           message: "Could not get user ID",
         });
       } else {
-        console.log("input", input);
         return ctx.prisma.workout.create({
           data: {
             ...input,

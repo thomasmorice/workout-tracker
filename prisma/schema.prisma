@@ -34,6 +34,7 @@ model Workout {
     updatedAt      DateTime        @updatedAt
     workoutResults WorkoutResult[]
     affiliateId    Int? // This workout belongs to a specific box
+    affiliateDate  DateTime?
     isGlobal       Boolean         @default(false) // This workout is available for everyone
 }
 

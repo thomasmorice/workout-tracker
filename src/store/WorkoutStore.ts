@@ -109,7 +109,7 @@ const useWorkoutStore = create<WorkoutFormState>()((set, get) => ({
   },
   createWorkoutFromSelectedText: (workout, selectedText) => {
     let timecap = null;
-    const isEmom = selectedText.match(/(\d+)\s*x\s*E(\d+)M/);
+    const isEmom = selectedText.match(/(\d+)\s*x\s*E(\d+)([\.,]\d+)M/);
     const isEmomWithSeconds = selectedText.match(/(\d+)\s*x\s*E(\d+)s/);
     const hasTimecap = selectedText.match(/(\d+)\s*(m[ni]n)/);
     if (isEmom && isEmom[1] && isEmom[2]) {
@@ -134,12 +134,13 @@ const useWorkoutStore = create<WorkoutFormState>()((set, get) => ({
       affiliateId: 2290, // Todo, use the affiliate ID from the user
 
       description: selectedText,
+      ...(selectedText.includes("STRENGTH") && {
+        elementType: "STRENGTH",
+      }),
+
       ...(selectedText.includes("A.") && {
         elementType: "STRENGTH_OR_SKILLS",
         description: selectedText.replace(/^A\.\s*/, ""),
-      }),
-      ...(selectedText.includes("STRENGTH") && {
-        elementType: "STRENGTH",
       }),
       ...(selectedText.includes("B.") && {
         elementType: "WOD",

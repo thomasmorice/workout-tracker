@@ -54,7 +54,7 @@ export default function WorkoutForm() {
   const defaultValues: inferRouterInputs<WorkoutRouterType>["add"] =
     useMemo(() => {
       return {
-        id: existingWorkout?.id ?? undefined,
+        id: existingWorkout?.id,
         name: existingWorkout?.name ?? "",
         description: existingWorkout?.description ?? "",
         difficulty: existingWorkout?.difficulty ?? null,
@@ -62,8 +62,8 @@ export default function WorkoutForm() {
         workoutType: existingWorkout?.workoutType ?? null,
         elementType: existingWorkout?.elementType ?? "UNCLASSIFIED",
         isDoableAtHome: existingWorkout?.isDoableAtHome ?? false,
-        affiliateId: existingWorkout?.id ?? null,
-        createdAt: existingWorkout?.createdAt ?? null,
+        affiliateId: existingWorkout?.affiliateId,
+        affiliateDate: existingWorkout?.createdAt,
       };
     }, [existingWorkout]);
 

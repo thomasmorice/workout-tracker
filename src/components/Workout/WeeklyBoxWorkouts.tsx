@@ -37,6 +37,8 @@ export default function WeeklyBoxWorkouts() {
       }
     );
 
+  console.log("data", data?.pages[0]?.workouts);
+
   const getAllWeeks = () => {
     let currentDate = weekDays.start;
     const allWeeks = [];
@@ -94,7 +96,8 @@ export default function WeeklyBoxWorkouts() {
       <div className="mt-6 flex flex-col gap-6">
         {data?.pages[0]?.workouts.map(
           (workout) =>
-            isSameDay(workout.createdAt, selectedDay) && (
+            workout.affiliateDate &&
+            isSameDay(workout.affiliateDate, selectedDay) && (
               <WorkoutCard key={workout.id} workout={workout} />
             )
         )}

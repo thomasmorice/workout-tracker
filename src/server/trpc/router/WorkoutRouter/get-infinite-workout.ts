@@ -52,9 +52,14 @@ const getWhere = (
       elementType: "UNCLASSIFIED",
     });
 
+  props.affiliateOnly &&
+    (where = {
+      affiliateId: affiliateId,
+    });
+
   props.dateFilter &&
     (where = {
-      createdAt: {
+      affiliateDate: {
         lte: props.dateFilter.lte,
         gte: props.dateFilter.gte,
       },
@@ -94,11 +99,6 @@ const getWhere = (
         in: props.ids.in,
       });
   }
-
-  props.affiliateOnly &&
-    (where = {
-      affiliateId: affiliateId,
-    });
 
   // User Selection
   where.AND = {
