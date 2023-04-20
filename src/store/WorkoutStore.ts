@@ -1,6 +1,7 @@
 import { inferRouterOutputs, TRPCError } from "@trpc/server";
 import { create } from "zustand";
 import { WorkoutRouterType } from "../server/trpc/router/WorkoutRouter/workout-router";
+import { parseWorkout } from "../utils/workoutRegexp";
 import { useToastStore } from "./ToastStore";
 
 type StateType = "create" | "duplicate" | "edit" | "delete";
@@ -22,6 +23,10 @@ interface WorkoutFormState {
   showWorkoutForm: (state: StateType, existingWorkout?: WorkoutType) => void;
   handleWorkoutFormError: (e: TRPCError) => void;
   closeWorkoutForm: () => void;
+  createWorkoutFromSelectedText: (
+    workout: WorkoutType,
+    selectedText: string
+  ) => void;
 }
 
 const useWorkoutStore = create<WorkoutFormState>()((set, get) => ({
@@ -100,6 +105,30 @@ const useWorkoutStore = create<WorkoutFormState>()((set, get) => ({
     set({
       state: undefined,
       workout: undefined,
+    });
+  },
+  createWorkoutFromSelectedText: (workout, selectedText) => {
+    get().showWorkoutForm("duplicate", {
+      ...workout,
+      description: selectedText,
+      ...(selectedText.includes("A.") && {
+        elementType: "STRENGTH_OR_SKILLS",
+      }),
+      ...(selectedText.includes("STRENGTH") && {
+        elementType: "STRENGTH",
+      }),
+      ...(selectedText.includes("B.") && {
+        elementType: "WOD",
+      }),
+      ...(/AMRAP/i.test(selectedText) && {
+        workoutType: "AMRAP",
+      }),
+      ...(/FORTIME/i.test(selectedText) && {
+        workoutType: "FOR_TIME",
+      }),
+      ...(/\d+\s*x\s*E\d+M/.test(selectedText) && {
+        workoutType: "EMOM",
+      }),
     });
   },
 }));

@@ -1,29 +1,36 @@
 import { inferRouterOutputs } from "@trpc/server";
 import { WorkoutRouterType } from "../../../server/trpc/router/WorkoutRouter/workout-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import WorkoutCardUserAndActions from "./WorkoutCardUserAndActions";
 import WorkoutCardIllustration from "./WorkoutCardIllustration";
 import WorkoutCardBadges from "./WorkoutCardBadges";
 import { getWorkoutItemsAndRandomIllustrationByDescription } from "../../../utils/workout";
 import WorkoutCardSkeleton from "../WorkoutCardSkeleton";
 import { useWorkoutStore } from "../../../store/WorkoutStore";
-import { useRouter } from "next/router";
 import { AiFillTag } from "react-icons/ai";
 import { GiBiceps } from "react-icons/gi";
 import { BsLightningChargeFill } from "react-icons/bs";
-import { FaRunning } from "react-icons/fa";
+import { FaHighlighter, FaRunning } from "react-icons/fa";
 import { enumToString } from "../../../utils/formatting";
+import Dropdown from "../../Dropdown/Dropdown";
+import { RxDotsVertical } from "react-icons/rx";
+import { format } from "date-fns";
+import Image from "next/image";
+import {
+  MdCleaningServices,
+  MdContentCopy,
+  MdDelete,
+  MdDone,
+  MdEdit,
+  MdExpand,
+  MdOutlineArrowBackIos,
+  MdOutlineLibraryAddCheck,
+} from "react-icons/md";
 
 interface WorkoutCardProps {
   workout:
     | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
     | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
-  onGoBack?: () => void;
-  onDuplicate?: () => void;
-  onEdit?: () => void;
-  onDelete?: () => void;
-  onSelect?: () => void;
-  onOpen?: () => void;
   onMoveResultUp?: () => void;
   onMoveResultDown?: () => void;
   footer?: React.ReactNode;
@@ -32,22 +39,105 @@ interface WorkoutCardProps {
 
 export default function WorkoutCard({
   workout,
-  onDuplicate,
-  onEdit,
-  onGoBack,
-  onDelete,
-  onSelect,
   isFullScreen = false,
-  onOpen,
   onMoveResultUp,
   onMoveResultDown,
-  footer,
 }: WorkoutCardProps) {
-  const [isExpanded, set_isExpanded] = useState(false);
   const [workoutItems, set_workoutItems] = useState<string[]>();
   const [illustration, set_illustration] = useState<string>();
+  const [hasSelection, set_hasSelection] = useState(false);
   const { selectedWorkouts } = useWorkoutStore();
-  const router = useRouter();
+  const {
+    toggleSelectWorkout,
+    showWorkoutForm,
+    createWorkoutFromSelectedText,
+    openWorkoutDetail: openWorkoutDetailModal,
+    closeWorkoutDetail: closeWorkoutDetailModal,
+  } = useWorkoutStore();
+
+  const workoutActions = useMemo(() => {
+    const actions = [];
+    !isFullScreen &&
+      actions.push({
+        label: (
+          <>
+            {" "}
+            <MdExpand /> Open card details
+          </>
+        ),
+        onClick: () => openWorkoutDetailModal(workout),
+      });
+
+    actions.push({
+      label: (
+        <>
+          {" "}
+          <MdOutlineLibraryAddCheck /> Select workout
+        </>
+      ),
+      onClick: () => toggleSelectWorkout(workout),
+    });
+
+    actions.push({
+      label: (
+        <>
+          {" "}
+          <MdContentCopy /> Duplicate
+        </>
+      ),
+      onClick: () => showWorkoutForm("duplicate", workout),
+    });
+
+    if (hasSelection) {
+      actions.push({
+        label: (
+          <>
+            <FaHighlighter /> Create workout from selection
+          </>
+        ),
+        onClick: () =>
+          createWorkoutFromSelectedText(
+            workout,
+            window.getSelection()?.toString() || ""
+          ),
+      });
+    }
+
+    actions.push({
+      label: (
+        <>
+          <MdEdit /> Edit
+        </>
+      ),
+      onClick: () => showWorkoutForm("edit", workout),
+    });
+
+    actions.push({
+      label: (
+        <>
+          <MdDelete /> Delete
+        </>
+      ),
+      onClick: () => showWorkoutForm("delete", workout),
+    });
+
+    return actions;
+  }, [
+    isFullScreen,
+    hasSelection,
+    openWorkoutDetailModal,
+    workout,
+    toggleSelectWorkout,
+    showWorkoutForm,
+    createWorkoutFromSelectedText,
+  ]);
+
+  const handleSelection = () => {
+    set_hasSelection(false);
+    if (window.getSelection()?.toString() !== "") {
+      set_hasSelection(true);
+    }
+  };
 
   useEffect(() => {
     const itemsAndIllustration =
@@ -55,6 +145,13 @@ export default function WorkoutCard({
     set_workoutItems(itemsAndIllustration.items);
     set_illustration(itemsAndIllustration.illustration);
   }, []);
+
+  useEffect(() => {
+    document.addEventListener("selectionchange", handleSelection);
+    return () => {
+      document.removeEventListener("selectionchange", handleSelection);
+    };
+  });
 
   if (!illustration && !workoutItems) {
     return <WorkoutCardSkeleton />;
@@ -76,17 +173,101 @@ export default function WorkoutCard({
           isFullScreen={isFullScreen}
         />
         <div className="relative px-2">
-          <WorkoutCardUserAndActions
-            onGoBack={() => onGoBack && onGoBack()}
-            onOpenFullScreen={onOpen}
-            onToggleSelect={onSelect}
+          <div className="w-full">
+            <div
+              onClick={closeWorkoutDetailModal}
+              className={`btn-ghost btn-circle btn z-10
+              ${isFullScreen ? "absolute " : "hidden "}`}
+            >
+              <MdOutlineArrowBackIos className="" size={22} />
+            </div>
+            {/* AUTHOR */}
+            <div
+              className={`flex items-center gap-3
+            ${isFullScreen ? "flex-col justify-center" : ""}
+          `}
+            >
+              <div className={`avatar`}>
+                <div
+                  className={`relative rounded-full border-2 border-base-content border-opacity-50 bg-transparent ${
+                    isFullScreen ? "mt-12 h-12 w-12" : "h-8 w-8"
+                  }`}
+                >
+                  <Image
+                    fill
+                    className="rounded-full object-cover p-0.5"
+                    referrerPolicy="no-referrer"
+                    src={workout.creator.image ?? "https://i.pravatar.cc/300"}
+                    alt="Workout creator"
+                  />
+                </div>
+              </div>
+
+              {/* Creator name and date */}
+              <div
+                className={`flex w-full flex-col self-center
+              ${isFullScreen ? "text-center" : "text-left"}
+            }`}
+              >
+                <div className="text-xs font-bold uppercase leading-[15px] tracking-[0.05em]">
+                  {workout.creator.name}
+                </div>
+                <div className="text-[11px] tracking-tight text-base-content text-opacity-50">
+                  {format(workout.createdAt, "dd/MM/yyyy")}
+                </div>
+              </div>
+
+              <div
+                className={`
+            ${
+              isFullScreen
+                ? "absolute top-1 right-2"
+                : `btn-sm absolute -right-6 -top-2`
+            }
+            
+          `}
+              >
+                {selectedWorkouts.some((w) => w.id === workout.id) ? (
+                  <button
+                    className="btn-primary btn-sm btn-circle btn mr-3 mt-2"
+                    onClick={() => toggleSelectWorkout(workout)}
+                  >
+                    <MdDone size={17} />
+                  </button>
+                ) : (
+                  <Dropdown
+                    withBackdrop
+                    buttons={workoutActions}
+                    containerClass="dropdown-left"
+                  >
+                    <div
+                      className={`btn-ghost btn-circle btn
+                  ${
+                    selectedWorkouts.some((w) => w.id === workout.id)
+                      ? "btn-primary"
+                      : ""
+                  }
+                `}
+                    >
+                      <RxDotsVertical size={isFullScreen ? 28 : 23} />
+                    </div>
+                  </Dropdown>
+                )}
+              </div>
+            </div>
+          </div>
+          {/* <WorkoutCardUserAndActions
+            onGoBack={closeWorkoutDetailModal}
+            onOpenFullScreen={() => openWorkoutDetailModal(workout)}
+            onToggleSelect={() => toggleSelectWorkout(workout)}
             isSelected={selectedWorkouts.some((w) => w.id === workout.id)}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onDuplicate={onDuplicate}
+            onEdit={() => showWorkoutForm("edit", workout)}
+            onDuplicate={() => showWorkoutForm("duplicate", workout)}
+            onDelete={() => showWorkoutForm("delete", workout)}
             workout={workout}
             isFullScreen={isFullScreen}
-          />
+            onClassify={() => onClassify && onClassify()} 
+          />*/}
 
           <div
             className={`
@@ -133,20 +314,7 @@ export default function WorkoutCard({
           </div>
 
           <div>
-            {/* {!isFullScreen &&
-            workoutItems &&
-            workoutItems.length > 0 ? (
-              <div
-                className={`
-            mx-auto mt-2 max-w-[220px] text-center text-xs font-light
-            uppercase 
-          `}
-              >
-                FEAT. {workoutItems?.join(" - ")}
-              </div>
-            ) : ( */}
             <div
-              // onClick={() => isExpanded && set_isExpanded(false)}
               className={`relative mt-3 whitespace-pre-wrap text-center text-[11.5px] leading-[18px] text-base-content text-opacity-70 
                 ${
                   isFullScreen

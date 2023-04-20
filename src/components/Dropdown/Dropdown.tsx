@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useRef, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 import { useOnClickOutside } from "usehooks-ts";
 
 type DropdownProps = {
@@ -9,7 +9,7 @@ type DropdownProps = {
   onOpen?: () => void;
   onClose?: () => void;
   buttons: {
-    label: string;
+    label: ReactNode;
     onClick: () => void;
   }[];
 };
@@ -58,8 +58,8 @@ export default function Dropdown({
           {children}
         </button>
         <ul className="dropdown-content menu rounded-box absolute w-52 gap-1 border-t-transparent bg-base-300 p-2 text-sm">
-          {buttons.map((button) => (
-            <li key={button.label}>
+          {buttons.map((button, index) => (
+            <li key={index}>
               <a
                 onClick={() => {
                   set_isOpen(false);

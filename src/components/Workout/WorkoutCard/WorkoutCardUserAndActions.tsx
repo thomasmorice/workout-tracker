@@ -17,6 +17,7 @@ type WorkoutCardUserAndActionsProps = {
   onDelete?: () => void;
   onToggleSelect?: () => void;
   onGoBack: () => void;
+  onClassify?: () => void;
   workout:
     | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
     | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
@@ -30,6 +31,7 @@ export default function WorkoutCardUserAndActions({
   onDelete,
   onToggleSelect,
   onGoBack,
+  onClassify,
   isFullScreen,
   workout,
 }: WorkoutCardUserAndActionsProps) {
@@ -52,11 +54,11 @@ export default function WorkoutCardUserAndActions({
         onClick: onDuplicate,
       });
 
-    // onGoBack &&
-    // actions.push({
-    //   label: "Duplicate",
-    //   onClick: onDuplicate,
-    // });
+    onClassify &&
+      actions.push({
+        label: "Classify",
+        onClick: onClassify,
+      });
 
     onEdit &&
       actions.push({
@@ -77,7 +79,7 @@ export default function WorkoutCardUserAndActions({
     <div className="w-full">
       <div
         onClick={onGoBack}
-        className={`btn btn-ghost btn-circle z-10
+        className={`btn-ghost btn-circle btn z-10
               ${isFullScreen ? "absolute " : "hidden "}`}
       >
         <MdOutlineArrowBackIos className="" size={22} />
@@ -130,7 +132,7 @@ export default function WorkoutCardUserAndActions({
         >
           {isSelected ? (
             <button
-              className="btn btn-primary btn-sm btn-circle mr-3 mt-2"
+              className="btn-primary btn-sm btn-circle btn mr-3 mt-2"
               onClick={onToggleSelect}
             >
               <MdDone size={17} />
@@ -142,7 +144,7 @@ export default function WorkoutCardUserAndActions({
               containerClass="dropdown-left"
             >
               <div
-                className={`btn btn-ghost btn-circle
+                className={`btn-ghost btn-circle btn
                   ${isSelected ? "btn-primary" : ""}
                 `}
               >

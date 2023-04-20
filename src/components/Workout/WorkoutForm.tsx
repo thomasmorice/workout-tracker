@@ -10,7 +10,6 @@ import Modal from "../Layout/Modal/Modal";
 import ConfirmModal from "../Layout/Modal/ConfirmModal";
 import { WorkoutRouterType } from "../../server/trpc/router/WorkoutRouter/workout-router";
 import { trpc } from "../../utils/trpc";
-import { ZodError } from "zod";
 import { TRPCClientError } from "@trpc/client";
 
 export default function WorkoutForm() {
@@ -306,7 +305,7 @@ export default function WorkoutForm() {
                 Cancel
               </button>
               <button
-                className={`btn btn-primary ${isSubmitting ? "loading" : ""}`}
+                className={`btn-primary btn ${isSubmitting ? "loading" : ""}`}
                 type="submit"
               >
                 {`${state} workout`}

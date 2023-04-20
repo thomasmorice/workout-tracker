@@ -33,12 +33,7 @@ export default function WorkoutAndResults({ workout }: WorkoutAndResultsProps) {
   return (
     <>
       <div className="-ml-4 w-[calc(100%_+_2rem)]">
-        <WorkoutCard
-          onGoBack={closeWorkoutDetailModal}
-          onSelect={() => toggleSelectWorkout(workout)}
-          workout={workout}
-          isFullScreen
-        />
+        <WorkoutCard workout={workout} isFullScreen />
         <div className="mt-12 px-4">
           {<WorkoutResults workoutId={workout.id} />}
         </div>

@@ -62,7 +62,7 @@ export default function WorkoutSelectField({
           onClick={() => {
             set_searchTerm("");
           }}
-          className="btn btn-sm btn-circle"
+          className="btn-sm btn-circle btn"
         >
           <MdClose size={14} />
         </button>
@@ -92,19 +92,7 @@ export default function WorkoutSelectField({
                       duration: 0.3,
                     }}
                   >
-                    <WorkoutCard
-                      onGoBack={() => console.log("go back")}
-                      onSelect={() => {
-                        addMessage({
-                          message: "Workout added",
-                          type: "info",
-                          closeAfter: 1000,
-                        });
-                        handleAddWorkout(workout);
-                      }}
-                      // mode="selecteable"
-                      workout={workout}
-                    />
+                    <WorkoutCard workout={workout} />
                   </motion.div>
                 ))}
               </AnimatePresence>

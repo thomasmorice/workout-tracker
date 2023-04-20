@@ -1,21 +1,12 @@
-import { inferRouterOutputs } from "@trpc/server";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MdSearch } from "react-icons/md";
 import Masonry from "react-masonry-css";
 import { useDebounce, useIntersectionObserver } from "usehooks-ts";
-import { WorkoutRouterType } from "../../server/trpc/router/WorkoutRouter/workout-router";
-import { useWorkoutStore } from "../../store/WorkoutStore";
 import { trpc } from "../../utils/trpc";
 import WorkoutCard from "./WorkoutCard/WorkoutCard";
 import WorkoutCardSkeleton from "./WorkoutCardSkeleton";
 
 export default function WorkoutList() {
-  const {
-    toggleSelectWorkout,
-    showWorkoutForm,
-    openWorkoutDetail: openWorkoutDetailModal,
-    closeWorkoutDetail: closeWorkoutDetailModal,
-  } = useWorkoutStore();
   const lastWorkoutRef = useRef<HTMLDivElement | null>(null);
   const entry = useIntersectionObserver(lastWorkoutRef, {});
 
@@ -97,15 +88,7 @@ export default function WorkoutList() {
                   key={workout.id}
                   className="relative mb-12"
                 >
-                  <WorkoutCard
-                    onGoBack={closeWorkoutDetailModal}
-                    onEdit={() => showWorkoutForm("edit", workout)}
-                    onDuplicate={() => showWorkoutForm("duplicate", workout)}
-                    onSelect={() => toggleSelectWorkout(workout)}
-                    onOpen={() => openWorkoutDetailModal(workout)}
-                    onDelete={() => showWorkoutForm("delete", workout)}
-                    workout={workout}
-                  />
+                  <WorkoutCard workout={workout} />
                 </div>
               ))
             )

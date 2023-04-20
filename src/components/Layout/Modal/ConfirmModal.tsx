@@ -1,4 +1,3 @@
-import Portal from "../../Portal/Portal";
 import Modal from "./Modal";
 
 interface ConfirmModalProps {
@@ -17,21 +16,19 @@ export default function ConfirmModal({
   onClose,
 }: ConfirmModalProps) {
   return (
-    <Portal>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <>
-          <h3 className="mb-2 text-xl font-bold capitalize">{title}</h3>
-          {children}
-          <div className="modal-action">
-            <label onClick={onConfirm} className="btn-error btn">
-              Confirm
-            </label>
-            <label onClick={onClose} className="btn">
-              Cancel
-            </label>
-          </div>
-        </>
-      </Modal>
-    </Portal>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <>
+        <h3 className="mb-2 text-xl font-bold capitalize">{title}</h3>
+        {children}
+        <div className="modal-action">
+          <label onClick={onConfirm} className="btn-error btn">
+            Confirm
+          </label>
+          <label onClick={onClose} className="btn">
+            Cancel
+          </label>
+        </div>
+      </>
+    </Modal>
   );
 }
