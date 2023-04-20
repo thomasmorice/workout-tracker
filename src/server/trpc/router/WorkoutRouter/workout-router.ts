@@ -92,6 +92,7 @@ export const workoutRouter = router({
           message: "Could not get user ID",
         });
       } else {
+        console.log("input", input);
         return ctx.prisma.workout.create({
           data: {
             ...input,

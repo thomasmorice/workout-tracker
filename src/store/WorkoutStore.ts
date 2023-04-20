@@ -1,7 +1,7 @@
 import { inferRouterOutputs, TRPCError } from "@trpc/server";
 import { create } from "zustand";
 import { WorkoutRouterType } from "../server/trpc/router/WorkoutRouter/workout-router";
-import { parseWorkout } from "../utils/workoutRegexp";
+import { Workout, WorkoutType as TypeOfWorkout } from "@prisma/client";
 import { useToastStore } from "./ToastStore";
 
 type StateType = "create" | "duplicate" | "edit" | "delete";
@@ -108,17 +108,46 @@ const useWorkoutStore = create<WorkoutFormState>()((set, get) => ({
     });
   },
   createWorkoutFromSelectedText: (workout, selectedText) => {
+    let timecap = null;
+    const isEmom = selectedText.match(/(\d+)\s*x\s*E(\d+)M/);
+    const isEmomWithSeconds = selectedText.match(/(\d+)\s*x\s*E(\d+)s/);
+    const hasTimecap = selectedText.match(/(\d+)\s*(m[ni]n)/);
+    if (isEmom && isEmom[1] && isEmom[2]) {
+      timecap = parseInt(isEmom[1], 10) * parseInt(isEmom[2], 10);
+    } else if (
+      isEmomWithSeconds &&
+      isEmomWithSeconds[1] &&
+      isEmomWithSeconds[2]
+    ) {
+      timecap =
+        parseInt(isEmomWithSeconds[1], 10) *
+        (parseInt(isEmomWithSeconds[2], 10) / 60);
+    }
+    {
+      if (hasTimecap && hasTimecap[1]) {
+        timecap = parseInt(hasTimecap[1], 10);
+      }
+    }
+
     get().showWorkoutForm("duplicate", {
       ...workout,
+      affiliateId: 2290, // Todo, use the affiliate ID from the user
+
       description: selectedText,
       ...(selectedText.includes("A.") && {
         elementType: "STRENGTH_OR_SKILLS",
+        description: selectedText.replace(/^A\.\s*/, ""),
       }),
       ...(selectedText.includes("STRENGTH") && {
         elementType: "STRENGTH",
       }),
       ...(selectedText.includes("B.") && {
         elementType: "WOD",
+        description: selectedText.replace(/^B\.\s*/, ""),
+      }),
+      ...(/INTENSE MOBILITY/i.test(selectedText) && {
+        elementType: "INTENSE_MOBILITY",
+        description: selectedText.replace(/^INTENSE MOBILITY\.\s*/, ""),
       }),
       ...(/AMRAP/i.test(selectedText) && {
         workoutType: "AMRAP",
@@ -126,9 +155,12 @@ const useWorkoutStore = create<WorkoutFormState>()((set, get) => ({
       ...(/FORTIME/i.test(selectedText) && {
         workoutType: "FOR_TIME",
       }),
-      ...(/\d+\s*x\s*E\d+M/.test(selectedText) && {
+
+      ...(isEmom && {
         workoutType: "EMOM",
       }),
+
+      totalTime: timecap,
     });
   },
 }));

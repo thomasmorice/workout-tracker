@@ -62,6 +62,8 @@ export default function WorkoutForm() {
         workoutType: existingWorkout?.workoutType ?? null,
         elementType: existingWorkout?.elementType ?? "UNCLASSIFIED",
         isDoableAtHome: existingWorkout?.isDoableAtHome ?? false,
+        affiliateId: existingWorkout?.id ?? null,
+        createdAt: existingWorkout?.createdAt ?? null,
       };
     }, [existingWorkout]);
 
