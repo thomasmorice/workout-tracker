@@ -1,7 +1,6 @@
 import { inferRouterOutputs, TRPCError } from "@trpc/server";
 import { create } from "zustand";
 import { WorkoutRouterType } from "../server/trpc/router/WorkoutRouter/workout-router";
-import { Workout, WorkoutType as TypeOfWorkout } from "@prisma/client";
 import { useToastStore } from "./ToastStore";
 
 type StateType = "create" | "duplicate" | "edit" | "delete";
@@ -131,11 +130,13 @@ const useWorkoutStore = create<WorkoutFormState>()((set, get) => ({
 
     get().showWorkoutForm("duplicate", {
       ...workout,
-      affiliateId: 2290, // Todo, use the affiliate ID from the user
 
       description: selectedText,
       ...(selectedText.includes("STRENGTH") && {
         elementType: "STRENGTH",
+      }),
+      ...(selectedText.includes("TEAM") && {
+        elementType: "TEAMWOD",
       }),
 
       ...(selectedText.includes("A.") && {

@@ -219,15 +219,11 @@ export default function WorkoutSessionForm({
         <WorkoutResultForm
           onSave={(workoutResult) => {
             updateWorkoutResults(selectedWorkoutResultIndex, workoutResult);
-            // handleSubmit(handleCreateOrEdit)();
             set_editSelectedWorkoutResult(false);
           }}
           onClose={() => set_editSelectedWorkoutResult(false)}
           workoutResult={
             selectedWorkoutResult as WorkoutResultInputsWithWorkout
-            // workoutResults[
-            //   editWorkoutResultIndex
-            // ] as WorkoutResultInputsWithWorkout
           }
         />
       )}

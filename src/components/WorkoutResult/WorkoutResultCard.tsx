@@ -1,5 +1,6 @@
 import { inferRouterOutputs } from "@trpc/server";
 import { format } from "date-fns";
+import { MdEdit } from "react-icons/md";
 import { RxDotsVertical } from "react-icons/rx";
 import { WorkoutResultRouterType } from "../../server/trpc/router/workout-result-router";
 import { WorkoutSessionRouterType } from "../../server/trpc/router/workout-session-router";
@@ -34,7 +35,11 @@ export default function WorkoutResultCard({
             containerClass="dropdown-left"
             buttons={[
               {
-                label: "Edit result",
+                label: (
+                  <>
+                    <MdEdit /> Edit result
+                  </>
+                ),
                 onClick: onEdit,
               },
             ]}

@@ -37,8 +37,6 @@ export default function WeeklyBoxWorkouts() {
       }
     );
 
-  console.log("data", data?.pages[0]?.workouts);
-
   const getAllWeeks = () => {
     let currentDate = weekDays.start;
     const allWeeks = [];
@@ -81,19 +79,15 @@ export default function WeeklyBoxWorkouts() {
         ))}
       </div>
 
-      <h2 className="mt-6 text-xl font-semibold">
-        {`
-        ${
-          isToday(selectedDay)
-            ? "Today"
-            : isTomorrow(selectedDay)
-            ? "Tomorrow"
-            : format(selectedDay, "eeee")
-        } 
-        at your box`}
+      <h2 className="mt-10 text-3xl font-bold">
+        {isToday(selectedDay)
+          ? "Today"
+          : isTomorrow(selectedDay)
+          ? "Tomorrow"
+          : format(selectedDay, "eeee")}
       </h2>
 
-      <div className="mt-6 flex flex-col gap-6">
+      <div className="mt-6 flex flex-col gap-8">
         {data?.pages[0]?.workouts.map(
           (workout) =>
             workout.affiliateDate &&
