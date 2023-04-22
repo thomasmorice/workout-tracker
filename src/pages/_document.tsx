@@ -32,8 +32,7 @@ export default function Document() {
           sizes="180x180"
           href="/apple-touch-icon.png"
         />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
+        <link rel="icon" href="/favicon.ico" />
 
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
         <meta name="msapplication-TileColor" content="#da532c" />

@@ -27,9 +27,11 @@ async function main() {
       await prisma.workout.create({
         data: {
           creatorId: "cl6jsjxy00006uyo8h2v8fr2e", // My user id
-          createdAt: new Date(workout.createdAt),
+          createdAt: workout?.affiliateDate && new Date(workout?.affiliateDate),
           description: workout.description,
           affiliateId: 2290,
+          affiliateDate:
+            workout?.affiliateDate && new Date(workout?.affiliateDate),
           elementType: getTypedElementType(workout.elementType),
           difficulty: getTypedDifficulty(workout.difficulty),
         },

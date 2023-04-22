@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useRef } from "react";
-import { useOnClickOutside } from "usehooks-ts";
-import { usePreventScroll } from "react-aria";
+import { useOnClickOutside, useLockedBody } from "usehooks-ts";
 import { MdArrowBackIosNew } from "react-icons/md";
 
 type ModalProps = {
@@ -21,9 +20,7 @@ export default function Modal({
 }: ModalProps) {
   const innerModal = useRef(null);
   useOnClickOutside(innerModal, onClose);
-  usePreventScroll({
-    isDisabled: !isOpen,
-  });
+  useLockedBody(isOpen);
   return (
     <AnimatePresence>
       {isOpen && (

@@ -236,7 +236,7 @@ export default function WorkoutSessionForm({
         <div
           style={{
             background:
-              "linear-gradient(180deg, rgba(42, 48, 60, 0) 0%, #2A303C 99%)",
+              "linear-gradient(180deg, rgba(42, 48, 60, 0) 0%, #2A303C 100%)",
           }}
           className="absolute inset-0 h-full w-full"
         ></div>
@@ -332,7 +332,7 @@ export default function WorkoutSessionForm({
                 <>
                   <div className="mt-3 mb-5">
                     {workoutResultIsFilled(selectedWorkoutResult) ? (
-                      <div className="-ml-3 w-[calc(100%_+_1.5rem)]">
+                      <div className="-ml-4 w-[calc(100%_+_2rem)]">
                         <WorkoutResultCard
                           onEdit={() => set_editSelectedWorkoutResult(true)}
                           condensed
