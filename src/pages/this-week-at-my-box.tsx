@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useEffect } from "react";
+import H1 from "../components/H1/H1";
 import Header from "../components/Layout/Header";
 import WeeklyBoxWorkouts from "../components/Workout/WeeklyBoxWorkouts";
 import WorkoutList from "../components/Workout/WorkoutList";
@@ -17,28 +18,18 @@ const ThisWeekAtMyBox: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header h1={"This week at my box"} />
+      {/* <Header h1={"This week at my box"} /> */}
 
-      {/* <div className="flex items-center justify-between">
-        <button
-          type="button"
-          onClick={() => showWorkoutForm("create")}
-          className="btn btn-primary btn-sm hidden md:block"
-        >
-          + Create a new workout
-        </button>
-      </div> */}
-      {/* <button
-        onClick={() => {
-          addMessage({
-            type: "pending",
-            message: "test",
-          });
-        }}
-        className="btn my-3"
-      >
-        Toast!
-      </button> */}
+      <H1
+        icon="/icons/fire/fire-dynamic-premium.png"
+        line1={"This week"}
+        line2={"at the box"}
+      />
+
+      {/* <h1 className="text-4xl leading-9">
+        This week at <br /> my box
+      </h1> */}
+
       {sessionData && <WeeklyBoxWorkouts />}
     </>
   );

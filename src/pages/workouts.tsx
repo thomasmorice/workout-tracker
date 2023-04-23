@@ -2,9 +2,9 @@ import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useEffect } from "react";
-import Header from "../components/Layout/Header";
 import WorkoutList from "../components/Workout/WorkoutList";
-import { useToastStore } from "../store/ToastStore";
+import Image from "next/image";
+import H1 from "../components/H1/H1";
 
 const Workouts: NextPage = () => {
   const { data: sessionData } = useSession();
@@ -13,32 +13,29 @@ const Workouts: NextPage = () => {
       <Head>
         <title>Workouts</title>
         <meta name="description" content="Manage and share your workouts" />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header h1={"Workouts"} />
+      <H1
+        icon="/icons/gym/gym-dynamic-premium.png"
+        line1={"Manage"}
+        line2={"your workouts"}
+      />
 
-      {/* <div className="flex items-center justify-between">
-        <button
-          type="button"
-          onClick={() => showWorkoutForm("create")}
-          className="btn btn-primary btn-sm hidden md:block"
-        >
-          + Create a new workout
-        </button>
-      </div> */}
-      {/* <button
-        onClick={() => {
-          addMessage({
-            type: "pending",
-            message: "test",
-          });
-        }}
-        className="btn my-3"
-      >
-        Toast!
-      </button> */}
-      {sessionData && <WorkoutList />}
+      {/* <h1 className="text-4xl">
+        Manage <br />
+        <div className="relative inline-flex items-center">
+          your workouts
+          <Image
+            alt={"gym icon"}
+            className="absolute -right-16 -z-20"
+            src="/icons/gym/gym-dynamic-premium.png"
+            width={62}
+            height={62}
+          />
+        </div>
+      </h1> */}
+
+      <div className="mt-5">{sessionData && <WorkoutList />}</div>
     </>
   );
 };

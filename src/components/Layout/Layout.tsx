@@ -39,31 +39,6 @@ export default function Layout({ children }: LayoutProps) {
     set_currentPath(asPathWithoutQuery?.split("/").filter((v) => v.length > 0));
   }, [router.pathname]);
 
-  // useEffect(() => {
-  //   // Used for page transition
-  //   const onStartPageChange = (url: string) => {
-  //     console.log("router.asPath", router.asPath);
-  //     console.log("url", url);
-  //     if (
-  //       (url.match(/\//g) || []).length >
-  //       (router.asPath.match(/\//g) || []).length
-  //     ) {
-  //       set_isRoutingToChild(true);
-  //     } else {
-  //       set_isRoutingToChild(false);
-  //     }
-  //   };
-  //   const onEndPageChange = () => {};
-  //   router.events.on("routeChangeStart", onStartPageChange);
-  //   router.events.on("routeChangeComplete", onEndPageChange);
-  //   router.events.on("routeChangeError", onEndPageChange);
-  //   return () => {
-  //     router.events.off("routeChangeStart", onStartPageChange);
-  //     router.events.off("routeChangeComplete", onEndPageChange);
-  //     router.events.off("routeChangeError", onEndPageChange);
-  //   };
-  // }, [router.events]);
-
   return (
     <>
       <Head>
@@ -72,6 +47,13 @@ export default function Layout({ children }: LayoutProps) {
           content="initial-scale=1, user-scalable=no, width=device-width, height=device-height, viewport-fit=cover"
         />
       </Head>
+      {/* <div
+        className="absolute top-0 left-0 -z-40 h-40 w-full blur-lg"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(71,17,187,0.4) 0%, rgba(42,48,60,1) 90%)",
+        }}
+      ></div> */}
       <div>
         <ToastMessage />
         <AnimatePresence initial={false} mode="sync" key={router.asPath}>
@@ -81,6 +63,8 @@ export default function Layout({ children }: LayoutProps) {
         <div className="navigation-and-workout-selections relative z-50">
           {isWorkoutSelectionModeActive && <WorkoutSelectionBanner />}
         </div>
+
+        <Header />
 
         {status === "authenticated" && (
           <>

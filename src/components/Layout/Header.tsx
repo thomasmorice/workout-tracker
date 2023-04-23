@@ -9,7 +9,7 @@ import { HiMenuAlt2 } from "react-icons/hi";
 import MainDrawer from "./Navigation/MainDrawer";
 
 interface HeaderProps {
-  h1:
+  h1?:
     | {
         mobile?: string;
         desktop?: string;
@@ -51,9 +51,9 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
   return (
     <>
       {isDrawerOpen && <MainDrawer onClose={() => set_isDrawerOpen(false)} />}
-      <div className="mb-14 md:hidden">
+      <div className="mb-16 md:hidden">
         <motion.div
-          className="fixed inset-x-0 top-0 z-50 flex h-14 w-full items-center justify-between border-b border-white border-opacity-5 bg-base-100 py-0 px-4 pr-2"
+          className="fixed inset-x-0 top-0 z-50 flex h-14 w-full items-center justify-between bg-base-100 bg-opacity-20 py-0 px-4 pr-2 backdrop-blur-md"
           {...fadeIn}
         >
           <div className="flex items-center gap-1">
@@ -71,14 +71,14 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
               <>
                 <button
                   onClick={() => set_isDrawerOpen(!isDrawerOpen)}
-                  className="btn-ghost btn-md btn-circle btn"
+                  className="btn-ghost btn-sm btn-circle btn"
                 >
-                  <HiMenuAlt2 className="text-primary" size={22} />
+                  <HiMenuAlt2 size={25} className="text-base-content" />
                 </button>
                 {/* <Logo /> */}
-                <h1 className="h1 mobile flex items-center gap-3">
+                {/* <h1 className="h1 mobile flex items-center gap-3">
                   {typeof h1 === "object" ? h1.mobile : h1}
-                </h1>
+                </h1> */}
               </>
             )}
           </div>

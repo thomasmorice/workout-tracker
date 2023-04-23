@@ -5,6 +5,7 @@ import PersonalRecordsInsights from "../components/Dashboard/PersonalRecords/Per
 import WeighingsInsights from "../components/Dashboard/Weighings/WeighingsInsights";
 import SessionInsights from "../components/Dashboard/Sessions/SessionsInsights";
 import Header from "../components/Layout/Header";
+import H1 from "../components/H1/H1";
 
 const Home: NextPage = () => {
   const { data: sessionData, status } = useSession();
@@ -33,7 +34,6 @@ const Home: NextPage = () => {
 
       {!sessionData ? (
         <>
-          <Header h1={"Box Track"} />
           {status === "loading" ? (
             <div className="mx-8 flex flex-col items-center justify-center pt-8">
               <p className="text-center font-light">
@@ -72,10 +72,16 @@ const Home: NextPage = () => {
         </>
       ) : (
         <>
-          <Header h1={`Dashboard`} />
-          <SessionInsights />
-          <PersonalRecordsInsights />
-          <WeighingsInsights />
+          <H1
+            icon="/icons/thumb-up/thumb-up-dynamic-premium.png"
+            line1={"Watch"}
+            line2={"your progress "}
+          />
+          <div className="mt-4">
+            <SessionInsights />
+            <PersonalRecordsInsights />
+            <WeighingsInsights />
+          </div>
         </>
       )}
     </>

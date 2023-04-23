@@ -4,7 +4,7 @@ module.exports = {
   darkMode: ["class", '[data-theme="dark"]'],
   theme: {
     fontFamily: {
-      sans: ["Roboto", "ui-sans-serif", "system-ui"],
+      sans: ["Work sans", "ui-sans-serif", "system-ui"],
       script: ["Patrick Hand"],
     },
 

@@ -18,23 +18,21 @@ export default function AvatarButton({}: AvatarButtonProps) {
       ) : (
         <div className={`dropdown max-md:dropdown-end`}>
           {sessionData ? (
-            <label tabIndex={0} className="btn-ghost btn px-1">
-              <div className="flex items-center gap-1">
-                <Image
-                  width={28}
-                  height={28}
-                  className="rounded-full"
-                  referrerPolicy="no-referrer"
-                  src={sessionData.user?.image ?? "https://i.pravatar.cc/300"}
-                  alt=""
-                />
-                {/* <div className="flex items-center gap-1">
+            <button className="btn btn-ghost btn-circle" type="button">
+              <Image
+                width={32}
+                height={32}
+                className="rounded-full"
+                referrerPolicy="no-referrer"
+                src={sessionData.user?.image ?? "https://i.pravatar.cc/300"}
+                alt=""
+              />
+              {/* <div className="flex items-center gap-1">
                   <MdArrowDropDown size={22} />
                 </div> */}
-              </div>
-            </label>
+            </button>
           ) : (
-            <button onClick={() => signIn()} className="btn-primary btn">
+            <button onClick={() => signIn()} className="btn btn-primary">
               Login
             </button>
           )}

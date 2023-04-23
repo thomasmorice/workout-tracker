@@ -10,6 +10,7 @@ import {
   startOfDay,
   endOfDay,
 } from "date-fns";
+import { motion } from "framer-motion";
 import { useState } from "react";
 import { trpc } from "../../utils/trpc";
 import WorkoutCard from "./WorkoutCard/WorkoutCard";
@@ -48,44 +49,45 @@ export default function WeeklyBoxWorkouts() {
   };
   return (
     <>
-      <div className="mx-auto -ml-4 flex w-[calc(100%_+_2rem)] justify-start overflow-x-scroll py-3 px-2  text-base-content  shadow-md md:mx-12 md:justify-center">
+      <div className="mx-auto mt-3 -ml-4 flex w-[calc(100%_+_2rem)] justify-start overflow-x-scroll py-3 px-2  text-base-content  shadow-md md:mx-12 md:justify-center">
         {getAllWeeks().map((day, index) => (
-          <div
+          <motion.div
+            layout
             key={index}
             className={`group relative mx-1 flex w-16 cursor-pointer justify-center rounded-lg 
                 ${
                   isSameDay(day, selectedDay)
-                    ? "bg-primary-focus text-primary-content"
+                    ? "bg-base-content text-base-300"
                     : ""
                 }
               `}
           >
-            {isToday(day) && (
+            {/* {isToday(day) && (
               <span className="absolute -top-1 -right-1 flex h-3 w-3 ">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary "></span>
-                <span className="relative inline-flex h-3 w-3 rounded-full bg-primary"></span>
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white "></span>
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-white"></span>
               </span>
-            )}
+            )} */}
             <div
               onClick={() => set_selectedDay(day)}
-              className="flex items-center px-3 py-2"
+              className="flex items-center px-2 py-2"
             >
-              <div className="text-center">
-                <p className="text-xs font-black ">{format(day, "dd")}</p>
-                <p className=" text-sm ">{format(day, "ccc")}</p>
+              <div className="flex flex-col items-center gap-2">
+                <p className=" text-xs">{format(day, "ccc")}</p>
+                <p className="text-sm font-medium ">{format(day, "dd")}</p>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
-      <h2 className="mt-10 text-3xl font-bold">
+      {/* <h2 className="mt-6 text-2xl font-bold">
         {isToday(selectedDay)
           ? "Today"
           : isTomorrow(selectedDay)
           ? "Tomorrow"
           : format(selectedDay, "eeee")}
-      </h2>
+      </h2> */}
 
       <div className="mt-6 flex flex-col gap-8">
         {data?.pages[0]?.workouts.map(
