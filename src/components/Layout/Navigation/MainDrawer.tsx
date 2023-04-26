@@ -104,6 +104,7 @@ export default function MainDrawer({ onClose }: MainDrawerProps) {
           </li>
           <li>
             <Link
+              onClick={() => closeDrawer()}
               href="/activities"
               className={`flex items-center ${
                 isLinkActive("/activities") ? "text-primary" : ""

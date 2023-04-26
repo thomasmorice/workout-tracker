@@ -1,7 +1,6 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import WorkoutForm from "../Workout/WorkoutForm";
-import Navigation from "./Navigation/Navigation";
 import ToastMessage from "./ToastMessage";
 import { useRouter } from "next/router";
 import { MdLogin } from "react-icons/md";
@@ -54,7 +53,7 @@ export default function Layout({ children }: LayoutProps) {
             "linear-gradient(180deg, rgba(71,17,187,0.4) 0%, rgba(42,48,60,1) 90%)",
         }}
       ></div> */}
-      <div>
+      <div className="antialiased">
         <ToastMessage />
         <AnimatePresence initial={false} mode="sync" key={router.asPath}>
           <div id="header" />

@@ -51,11 +51,11 @@ export default function FloatingActionButton() {
         <Dropdown
           withBackdrop
           buttons={mainButtons}
-          containerClass="dropdown-top dropdown-left divide-y shadow-lg"
+          containerClass="dropdown-top dropdown-left divide-y"
           onOpen={() => console.log("here")}
           onClose={() => console.log("here")}
         >
-          <div className="btn-rounded btn-primary btn-circle btn flex h-14 w-14 items-center justify-center shadow-xl">
+          <div className="btn-rounded btn-circle btn flex h-14 w-14 items-center justify-center shadow-lg">
             <AiOutlinePlus size={17} />
             {/* {hasSelection() && (
               <div className="absolute -mt-6 -mr-6 text-xs font-normal ">

@@ -4,7 +4,7 @@ import { WorkoutRouterType } from "../../server/trpc/router/WorkoutRouter/workou
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import { trpc } from "../../utils/trpc";
 import WorkoutResults from "../WorkoutResult/WorkoutResults";
-import WorkoutCard from "./WorkoutCard/WorkoutCard";
+import WorkoutCard from "./WorkoutCardSimple/WorkoutCard";
 
 type WorkoutAndResultsProps = {
   // id?: inferRouterOutputs<WorkoutRouterType>["getWorkoutById"]["id"];
@@ -33,7 +33,7 @@ export default function WorkoutAndResults({ workout }: WorkoutAndResultsProps) {
   return (
     <>
       <div className="-ml-4 w-[calc(100%_+_2rem)]">
-        <WorkoutCard workout={workout} isFullScreen />
+        <WorkoutCard workout={workout} />
         <div className="mt-12 px-4">
           {<WorkoutResults workoutId={workout.id} />}
         </div>

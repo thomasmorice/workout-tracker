@@ -41,12 +41,12 @@ export default function WorkoutResults({ workoutId }: WorkoutResultsProps) {
       {workoutResults.length === 0 ? (
         <div className="flex flex-col gap-2 text-center">
           No results associated
-          <i className="text-sm font-thin leading-relaxed">
+          <p className="text-xs  leading-relaxed">
             Ready to see the results of your hard work? Let&apos;s make it
             happen! Use this workout for your next session. It&apos;s time to
             sweat, push yourself and feel the burn. Remember, you&apos;re
             stronger than you think. Let&apos;s do this!{" "}
-          </i>
+          </p>
         </div>
       ) : (
         <>

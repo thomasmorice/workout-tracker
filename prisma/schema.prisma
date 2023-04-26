@@ -178,6 +178,7 @@ enum ElementType {
     INTENSE_MOBILITY
     TEAMWOD
     ENDURANCE
+    CARDIO // aerobic capacity
     OLYMPIC_WEIGHTLIFTING
 }
 

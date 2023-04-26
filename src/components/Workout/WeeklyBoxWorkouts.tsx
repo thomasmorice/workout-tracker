@@ -4,16 +4,13 @@ import {
   subDays,
   format,
   isSameDay,
-  isToday,
-  formatDistance,
-  isTomorrow,
   startOfDay,
   endOfDay,
 } from "date-fns";
-import { motion } from "framer-motion";
+import { LayoutGroup, motion } from "framer-motion";
 import { useState } from "react";
 import { trpc } from "../../utils/trpc";
-import WorkoutCard from "./WorkoutCard/WorkoutCard";
+import WorkoutCard from "./WorkoutCardSimple/WorkoutCard";
 
 export default function WeeklyBoxWorkouts() {
   const weekDays = {
@@ -54,14 +51,14 @@ export default function WeeklyBoxWorkouts() {
           <motion.div
             layout
             key={index}
-            className={`group relative mx-1 flex w-16 cursor-pointer justify-center rounded-lg 
-                ${
-                  isSameDay(day, selectedDay)
-                    ? "bg-base-content text-base-300"
-                    : ""
-                }
-              `}
+            className={`group relative mx-1 flex w-16 cursor-pointer justify-center rounded-lg`}
           >
+            {isSameDay(day, selectedDay) && (
+              <motion.div
+                layoutId="selected-day-in-the-box"
+                className="absolute -z-10 h-full w-full rounded-lg bg-white"
+              ></motion.div>
+            )}
             {/* {isToday(day) && (
               <span className="absolute -top-1 -right-1 flex h-3 w-3 ">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white "></span>
@@ -72,7 +69,7 @@ export default function WeeklyBoxWorkouts() {
               onClick={() => set_selectedDay(day)}
               className="flex items-center px-2 py-2"
             >
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-2 mix-blend-exclusion">
                 <p className=" text-xs">{format(day, "ccc")}</p>
                 <p className="text-sm font-medium ">{format(day, "dd")}</p>
               </div>
@@ -89,14 +86,16 @@ export default function WeeklyBoxWorkouts() {
           : format(selectedDay, "eeee")}
       </h2> */}
 
-      <div className="mt-6 flex flex-col gap-8">
-        {data?.pages[0]?.workouts.map(
-          (workout) =>
-            workout.affiliateDate &&
-            isSameDay(workout.affiliateDate, selectedDay) && (
-              <WorkoutCard key={workout.id} workout={workout} />
-            )
-        )}
+      <div className="mt-10 flex flex-col gap-10">
+        <LayoutGroup>
+          {data?.pages[0]?.workouts.map(
+            (workout) =>
+              workout.affiliateDate &&
+              isSameDay(workout.affiliateDate, selectedDay) && (
+                <WorkoutCard key={workout.id} workout={workout} />
+              )
+          )}
+        </LayoutGroup>
       </div>
     </>
   );

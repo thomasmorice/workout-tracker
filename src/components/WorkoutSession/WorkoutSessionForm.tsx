@@ -23,7 +23,7 @@ import { FaRunning } from "react-icons/fa";
 import DatePicker from "../DatePicker/DatePicker";
 import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
-import { motion } from "framer-motion";
+import { LayoutGroup, motion } from "framer-motion";
 import { Rings } from "react-loading-icons";
 import WorkoutResultCard from "../WorkoutResult/WorkoutResultCard";
 import { workoutResultIsFilled } from "../../utils/utils";
@@ -33,6 +33,7 @@ import { useToastStore } from "../../store/ToastStore";
 import { EventRouterType } from "../../server/trpc/router/event-router";
 import WorkoutResultForm from "../WorkoutResult/WorkoutResultForm";
 import { TRPCClientError } from "@trpc/client";
+import WorkoutCard from "../Workout/WorkoutCardSimple/WorkoutCard";
 
 type WorkoutSessionFormProps = {
   // create?: boolean;
@@ -231,7 +232,7 @@ export default function WorkoutSessionForm({
         style={{
           backgroundImage: `url(/workout-item/${illustration}.png)`,
         }}
-        className="absolute top-0 left-0 h-64 w-full bg-cover bg-center opacity-50"
+        className="absolute top-12 left-0 h-64 w-full bg-cover bg-center opacity-50"
       >
         <div
           style={{
@@ -244,7 +245,7 @@ export default function WorkoutSessionForm({
 
       <div
         onClick={() => router.back()}
-        className="btn btn-ghost btn-circle fixed top-4 left-2"
+        className="btn-ghost btn btn-circle fixed top-4 left-2"
       >
         <MdArrowBackIosNew size={26} />
       </div>
@@ -315,13 +316,17 @@ export default function WorkoutSessionForm({
                       }`}
                     >
                       <div className="flex flex-col">
-                        <div className="text-3xl font-bold">
-                          {("0" + (index + 1)).slice(-2)}
-                          {/* {workoutResult.workout.description.substring(0, 10)} */}
+                        <div className="text-3xl font-bold uppercase">
+                          {String.fromCharCode(97 + index)}.
                         </div>
-                        {selectedWorkoutResultIndex === index && (
-                          <div className="mb-4 h-1 w-5 rounded-full bg-base-content"></div>
-                        )}
+                        <div>
+                          {selectedWorkoutResultIndex === index && (
+                            <motion.div
+                              layoutId="selected-element"
+                              className="mb-4 h-1 w-5 rounded-full bg-base-content"
+                            ></motion.div>
+                          )}
+                        </div>
                       </div>
                     </Reorder.Item>
                   );
@@ -374,7 +379,8 @@ export default function WorkoutSessionForm({
                       </div>
                     )}
                   </div>
-                  <motion.div
+
+                  {/* <motion.div
                     key={selectedWorkoutResultIndex}
                     className="flex w-full flex-col"
                     drag="x"
@@ -419,8 +425,11 @@ export default function WorkoutSessionForm({
                     transition={{
                       duration: 0.2,
                     }}
-                  >
-                    <div className="flex items-center gap-2 text-base font-semibold">
+                  > */}
+                  <div className="mt-8">
+                    <WorkoutCard workout={selectedWorkoutResult.workout} />
+                  </div>
+                  {/* <div className="flex items-center gap-2 text-base font-semibold">
                       {selectedWorkoutResult?.workout.elementType.includes(
                         "STRENGTH"
                       ) && <GiBiceps size={14} />}
@@ -453,8 +462,8 @@ export default function WorkoutSessionForm({
                     )}
                     <div className="mt-6 whitespace-pre-wrap text-xs leading-relaxed">
                       {selectedWorkoutResult?.workout?.description}
-                    </div>
-                  </motion.div>
+                    </div> */}
+                  {/* </motion.div> */}
                 </>
               )}
             </>
@@ -474,7 +483,7 @@ export default function WorkoutSessionForm({
                 <button
                   type="button"
                   disabled
-                  className="btn btn-disabled btn-sm mt-7 rounded-full text-center text-xs font-semibold uppercase"
+                  className="btn-disabled btn btn-sm mt-7 rounded-full text-center text-xs font-semibold uppercase"
                 >
                   <MdModelTraining size={19} />
                   Suggest a session (soon)
