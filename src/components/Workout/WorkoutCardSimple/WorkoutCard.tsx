@@ -253,24 +253,23 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
 
           <WorkoutCardBadges workout={workout} />
 
-          {(workout.elementType === "UNCLASSIFIED" && hasSelection) ||
-            (isFullScreen && (
-              <div className="mt-8 flex justify-center gap-3">
-                {workout.elementType === "UNCLASSIFIED" && hasSelection && (
-                  <button
-                    onClick={() =>
-                      createWorkoutFromSelectedText(
-                        workout,
-                        window.getSelection()?.toString() || ""
-                      )
-                    }
-                    className="btn-primary btn-xs btn"
-                  >
-                    Classify selection
-                  </button>
-                )}
-              </div>
-            ))}
+          {workout.elementType === "UNCLASSIFIED" && hasSelection && (
+            <div className="mt-8 flex justify-center gap-3">
+              {workout.elementType === "UNCLASSIFIED" && hasSelection && (
+                <button
+                  onClick={() =>
+                    createWorkoutFromSelectedText(
+                      workout,
+                      window.getSelection()?.toString() || ""
+                    )
+                  }
+                  className="btn-primary btn-xs btn"
+                >
+                  Classify selection
+                </button>
+              )}
+            </div>
+          )}
         </div>
         {isFullScreen && (
           <div className="mt-8 px-4">
