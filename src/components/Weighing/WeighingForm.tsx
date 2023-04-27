@@ -141,7 +141,7 @@ export default function WeighingForm({
             <input
               id="input-rep-max"
               step={0.1}
-              className="input flex-1 bg-base-200 placeholder:opacity-50"
+              className="input w-24 bg-base-200 placeholder:opacity-50"
               {...register("weight", {
                 setValueAs: (v) => {
                   return v === null || v === ""
@@ -158,7 +158,7 @@ export default function WeighingForm({
 
         <div className="mt-3 flex flex-wrap justify-center gap-4">
           <button
-            className={`btn btn-primary btn-sm mt-2 rounded-full ${
+            className={`btn-primary btn-sm btn mt-2 rounded-full ${
               isSubmitting ? "loading" : ""
             }`}
             type="submit"

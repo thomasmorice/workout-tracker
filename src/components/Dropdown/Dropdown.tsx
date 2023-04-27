@@ -44,7 +44,7 @@ export default function Dropdown({
 
       <div
         ref={dropdownRef}
-        className={`dropdown ${containerClass} ${
+        className={`dropdown  ${containerClass} ${
           isOpen ? "dropdown-open z-[100]" : ""
         } `}
       >

@@ -1,3 +1,4 @@
+import { LayoutGroup } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MdSearch } from "react-icons/md";
 import Masonry from "react-masonry-css";
@@ -80,21 +81,23 @@ export default function WorkoutList() {
         className="-ml-16 mt-6 flex w-auto"
         columnClassName="pl-16 bg-clip-padding "
       >
-        {data?.pages
-          ? data.pages.map((page) =>
-              page.workouts.map((workout) => (
-                <div
-                  // ref={showWorkoutDetail ? openedWorkoutRef : null}
-                  key={workout.id}
-                  className="relative mb-12"
-                >
-                  <WorkoutCard workout={workout} />
-                </div>
-              ))
-            )
-          : Array(9)
-              .fill(0)
-              .map((_, i) => <WorkoutCardSkeleton key={i} />)}
+        <LayoutGroup>
+          {data?.pages
+            ? data.pages.map((page) =>
+                page.workouts.map((workout) => (
+                  <div
+                    // ref={showWorkoutDetail ? openedWorkoutRef : null}
+                    key={workout.id}
+                    className="relative mb-12"
+                  >
+                    <WorkoutCard workout={workout} />
+                  </div>
+                ))
+              )
+            : Array(9)
+                .fill(0)
+                .map((_, i) => <WorkoutCardSkeleton key={i} />)}
+        </LayoutGroup>
       </Masonry>
       {hasNoWorkouts && <p>No results found yet, start creating workouts</p>}
       <div className="mb-10 h-10 w-1/2" ref={lastWorkoutRef}></div>

@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import {
   MdArrowBackIosNew,
+  MdCheck,
   MdClose,
   MdContentCopy,
   MdDelete,
@@ -127,14 +128,15 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
           zIndex: isFullScreen ? 160 : "unset",
         }}
         transition={{
-          zIndex: { delay: isFullScreen ? 0 : 1 },
+          zIndex: { delay: isFullScreen ? 0 : 0.2 },
         }}
-        className={` flex flex-col rounded-xl px-4 py-12 pt-28
+        className={` flex flex-col px-4 py-12 pt-28
           ${isFullScreen ? "fixed inset-0  w-full overflow-scroll" : "relative"}
       `}
         style={{
           background:
             "radial-gradient(circle, rgba(42,47,60,1) 15%, rgba(24,28,37,1) 100%)",
+          borderRadius: isFullScreen ? "0px" : "24px",
         }}
       >
         <div
@@ -159,7 +161,7 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
             <button
               type="button"
               onClick={() => set_isFullScreen(false)}
-              className="btn btn-circle bg-base-100"
+              className="btn-circle btn bg-base-100"
             >
               <MdArrowBackIosNew size="15" />
             </button>
@@ -180,23 +182,26 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
               </div>
             </div>
           )}
-          <Dropdown
-            withBackdrop
-            buttons={workoutActions}
-            containerClass="dropdown-left "
-          >
-            <div
-              className={`btn btn-circle bg-base-100
-                  ${
-                    selectedWorkouts.some((w) => w.id === workout.id)
-                      ? "btn-primary"
-                      : ""
-                  }
-                `}
+
+          {selectedWorkouts.some((w) => w.id === workout.id) ? (
+            <button
+              type="button"
+              onClick={() => toggleSelectWorkout(workout)}
+              className="btn-circle btn bg-base-100 text-primary"
             >
-              <RxDotsVertical size={17} />
-            </div>
-          </Dropdown>
+              <MdCheck size={22} />
+            </button>
+          ) : (
+            <Dropdown
+              withBackdrop
+              buttons={workoutActions}
+              containerClass="dropdown-left "
+            >
+              <div className={`btn-circle btn bg-base-100`}>
+                <RxDotsVertical size={17} />
+              </div>
+            </Dropdown>
+          )}
         </div>
 
         <div
@@ -259,7 +264,7 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
                         window.getSelection()?.toString() || ""
                       )
                     }
-                    className="btn-primary btn btn-xs"
+                    className="btn-primary btn-xs btn"
                   >
                     Classify selection
                   </button>

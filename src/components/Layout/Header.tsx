@@ -71,7 +71,7 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
               <>
                 <button
                   onClick={() => set_isDrawerOpen(!isDrawerOpen)}
-                  className="btn-ghost btn-sm btn-circle btn"
+                  className="btn-ghost btn-md btn-circle btn -ml-2"
                 >
                   <HiMenuAlt2 size={25} className="text-base-content" />
                 </button>

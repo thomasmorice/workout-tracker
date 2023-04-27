@@ -37,7 +37,7 @@ export default function WorkoutResults({ workoutId }: WorkoutResultsProps) {
   }
 
   return (
-    <div className=" mb-6 px-4">
+    <div className=" mb-6">
       {workoutResults.length === 0 ? (
         <div className="flex flex-col gap-2 text-center">
           No results associated

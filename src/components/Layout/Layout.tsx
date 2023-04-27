@@ -17,6 +17,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import WorkoutAndResults from "../Workout/WorkoutAndResults";
 import MainDrawer from "./Navigation/MainDrawer";
 import Header from "./Header";
+import MobileBottomNavbar from "./Navigation/MobileBottomNavbar";
+import Navigation from "./Navigation/Navigation";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -71,6 +73,8 @@ export default function Layout({ children }: LayoutProps) {
               <RightSidebar />
             </div>
 
+            <Navigation />
+
             {/* Global form */}
             <WorkoutForm />
 
@@ -91,13 +95,11 @@ export default function Layout({ children }: LayoutProps) {
                 <WorkoutAndResults workout={openedWorkoutDetail} />
               )}
             </Modal>
-
-            {!isWorkoutSelectionModeActive && <FloatingActionButton />}
           </>
         )}
 
         <main
-          className={`px-4 pb-24 sm:px-8 md:ml-16 md:pb-0 xl:ml-24
+          className={`overflow-x-hidden px-4 pb-24 sm:px-8 md:ml-16 md:pb-0 xl:ml-24
           ${status === "authenticated" ? "md:mr-80 xl:mr-[340px]" : ""}
         `}
         >

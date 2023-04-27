@@ -26,7 +26,7 @@ export default function WorkoutResultCard({
     <div
       className={`${
         condensed ? "" : "rounded-3xl"
-      } bg-base-300 p-5 text-center`}
+      } bg-base-300 p-5 text-center `}
     >
       {onEdit && (
         <div className="absolute right-0">
@@ -44,7 +44,7 @@ export default function WorkoutResultCard({
               },
             ]}
           >
-            <div className={`btn btn-ghost btn-circle`}>
+            <div className={`btn-ghost btn-circle btn`}>
               <RxDotsVertical size="23" />
             </div>
           </Dropdown>
@@ -52,7 +52,7 @@ export default function WorkoutResultCard({
       )}
 
       {"workoutSession" in result && (
-        <div className="mb-2 text-sm font-light">
+        <div className="mb-2 text-sm">
           {format(result.workoutSession.event.eventDate, "eeee, do MMM yyyy")}
         </div>
       )}
@@ -83,12 +83,12 @@ export default function WorkoutResultCard({
           {result.time && (
             <div className="flex flex-col text-2xl font-bold leading-none">
               {format(result.time * 1000, "mm:ss")}
-              <div className="-mt-1 text-[17px] font-light">minutes</div>
+              <div className="-mt-1 text-[17px]">minutes</div>
             </div>
           )}
         </div>
       </div>
-      <div className="whitespace-pre-wrap text-xs font-light">
+      <div className="whitespace-pre-wrap text-xs">
         {result.description ?? <i> no description added.</i>}
       </div>
 

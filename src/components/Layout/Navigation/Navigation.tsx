@@ -10,12 +10,15 @@ import { HiOutlineClipboardList } from "react-icons/hi";
 import MobileBottomNavbar from "./MobileBottomNavbar";
 import DesktopSidebar from "./DesktopSidebar";
 import { AnimatePresence, motion } from "framer-motion";
+import { AiOutlinePlus } from "react-icons/ai";
+import { CgGym } from "react-icons/cg";
 
 export interface NavigationItemsProps {
   items: {
     icon: IconType;
     label: string;
     href: string;
+    isFloatingActionButton?: boolean;
   }[];
 }
 
@@ -27,15 +30,21 @@ export default function Navigation() {
       href: "/",
     },
     {
-      icon: HiOutlineClipboardList,
+      icon: CgGym,
       label: "Workouts",
       href: "/workouts",
     },
-    // {
-    //   icon: MdOutlineSchedule,
-    //   label: "Activities",
-    //   href: "/schedule",
-    // },
+    {
+      icon: AiOutlinePlus,
+      label: "",
+      href: "",
+      isFloatingActionButton: true,
+    },
+    {
+      icon: MdOutlineSchedule,
+      label: "Activities",
+      href: "/activities",
+    },
     {
       icon: MdOutlineAccountCircle,
       label: "Profile",

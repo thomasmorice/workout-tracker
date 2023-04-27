@@ -1,11 +1,8 @@
 import { AiOutlinePlus } from "react-icons/ai";
-import { useState } from "react";
-import Modal from "../Layout/Modal/Modal";
+
 import { useEventStore } from "../../store/EventStore";
-import WeighingForm from "../Weighing/WeighingForm";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import Dropdown from "../Dropdown/Dropdown";
-import { useAnimationControls } from "framer-motion";
 import { useRouter } from "next/router";
 
 export default function FloatingActionButton() {
@@ -47,18 +44,16 @@ export default function FloatingActionButton() {
 
   return (
     <>
-      <div className="fixed bottom-8 right-8 z-50">
+      <div className="">
         <Dropdown
           withBackdrop
           buttons={mainButtons}
-          containerClass="dropdown-top dropdown-left divide-y"
-          onOpen={() => console.log("here")}
-          onClose={() => console.log("here")}
+          containerClass="dropdown-top divide-y"
         >
-          <div className="btn-rounded btn-circle btn flex h-14 w-14 items-center justify-center shadow-lg">
-            <AiOutlinePlus size={17} />
+          <div className="btn-rounded btn-md btn-circle btn flex items-center justify-center">
+            <AiOutlinePlus size={16} />
             {/* {hasSelection() && (
-              <div className="absolute -mt-6 -mr-6 text-xs font-normal ">
+              <div className="absolute -mt-a6 -mr-6 text-xs font-normal ">
                 {selectedWorkouts.length}
               </div>
             )} */}
