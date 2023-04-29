@@ -1,11 +1,5 @@
-import { useEffect, useState } from "react";
-import {
-  MdArrowBackIosNew,
-  MdEdit,
-  MdModelTraining,
-  MdOpenInNew,
-} from "react-icons/md";
-import { getRandomPreparingSessionllustration } from "../../utils/workout";
+import { useEffect, useRef, useState } from "react";
+import { MdCancel, MdModelTraining, MdStar, MdWarning } from "react-icons/md";
 import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
 import { inferRouterInputs, inferRouterOutputs, TRPCError } from "@trpc/server";
 import { WorkoutSessionRouterType } from "../../server/trpc/router/workout-session-router";
@@ -16,16 +10,11 @@ import {
 import { useRouter } from "next/router";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import { useEventStore } from "../../store/EventStore";
-import { BsLightningChargeFill } from "react-icons/bs";
-import { GiBiceps } from "react-icons/gi";
 import { enumToString } from "../../utils/formatting";
-import { FaRunning } from "react-icons/fa";
 import DatePicker from "../DatePicker/DatePicker";
 import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
-import { LayoutGroup, motion } from "framer-motion";
 import { Rings } from "react-loading-icons";
-import WorkoutResultCard from "../WorkoutResult/WorkoutResultCard";
 import { workoutResultIsFilled } from "../../utils/utils";
 import { Reorder } from "framer-motion";
 import { z } from "zod";
@@ -34,6 +23,10 @@ import { EventRouterType } from "../../server/trpc/router/event-router";
 import WorkoutResultForm from "../WorkoutResult/WorkoutResultForm";
 import { TRPCClientError } from "@trpc/client";
 import WorkoutCard from "../Workout/WorkoutCardSimple/WorkoutCard";
+import Dropdown from "../Dropdown/Dropdown";
+import { format, isAfter } from "date-fns";
+import Image from "next/image";
+import { RxDotsVertical } from "react-icons/rx";
 
 type WorkoutSessionFormProps = {
   // create?: boolean;
@@ -46,17 +39,20 @@ export default function WorkoutSessionForm({
   onSuccess,
 }: WorkoutSessionFormProps) {
   const { data: sessionData } = useSession();
-  const [illustration] = useState(getRandomPreparingSessionllustration());
+
   const [defaultValues, set_defaultValues] = useState({});
   const router = useRouter();
 
-  const {
-    selectedWorkouts: preselectedWorkouts,
-    setWorkoutSelectionMode,
-    openWorkoutDetail,
-  } = useWorkoutStore();
+  const saveButtonRef = useRef<HTMLButtonElement>(null);
+  const [showWorkoutDetails, set_showWorkoutDetails] = useState<number>();
+  const [showWorkoutResultForm, set_showWorkoutResultForm] =
+    useState<WorkoutResultInputsWithWorkout>();
+
+  const { selectedWorkouts: preselectedWorkouts, setWorkoutSelectionMode } =
+    useWorkoutStore();
   const { eventDate, closeForm } = useEventStore();
   const { addMessage, closeMessage } = useToastStore();
+  const utils = trpc.useContext();
 
   const {
     data: existingWorkoutSession,
@@ -74,9 +70,6 @@ export default function WorkoutSessionForm({
 
   const { mutateAsync: addOrEditWorkoutSession } =
     trpc.workoutSession.addOrEdit.useMutation({
-      async onSuccess() {
-        // await utils.workout.getInfiniteWorkout.invalidate();
-      },
       onError(e: unknown) {
         addMessage({
           message: (e as TRPCError).message,
@@ -85,11 +78,8 @@ export default function WorkoutSessionForm({
       },
     });
 
-  const { mutateAsync: addOrEditManyWOrkoutResults } =
+  const { mutateAsync: addOrEditManyWorkoutResults } =
     trpc.workoutResult.addOrEditMany.useMutation({
-      async onSuccess() {
-        // await utils.workout.getInfiniteWorkout.invalidate();
-      },
       onError(e: unknown) {
         addMessage({
           message: (e as TRPCError).message,
@@ -128,13 +118,7 @@ export default function WorkoutSessionForm({
     defaultValues,
   });
 
-  const [selectedWorkoutResultIndex, set_selectedWorkoutResultIndex] =
-    useState(0);
-  const [editSelectedWorkoutResult, set_editSelectedWorkoutResult] =
-    useState(false);
-  const [previousSelectedIndex, set_previousSelectedIndex] = useState(
-    selectedWorkoutResultIndex
-  );
+  watch("date"); // Keep track of this change
 
   const {
     fields: workoutResults,
@@ -150,18 +134,7 @@ export default function WorkoutSessionForm({
     reset(defaultValues);
   }, [defaultValues, reset]);
 
-  const selectedWorkoutResult = workoutResults[selectedWorkoutResultIndex];
-
-  const switchSelectedWorkoutResult = (index: number) => {
-    if (index < workoutResults.length && index >= 0) {
-      set_previousSelectedIndex(selectedWorkoutResultIndex);
-      set_selectedWorkoutResultIndex(index);
-    }
-  };
-
-  useEffect(() => {
-    console.log("selectedWorkoutResult", selectedWorkoutResult);
-  }, [selectedWorkoutResult]);
+  const isSessionInTheFuture = isAfter(getValues("date"), new Date());
 
   if (isInitialLoading) {
     return (
@@ -184,7 +157,7 @@ export default function WorkoutSessionForm({
       const savedWorkoutSession = await addOrEditWorkoutSession(workoutSession);
 
       if (workoutSession.workoutResults?.length ?? 0 > 0) {
-        await addOrEditManyWOrkoutResults({
+        await addOrEditManyWorkoutResults({
           workoutResults: workoutSession.workoutResults,
           workoutSessionId: savedWorkoutSession.id,
         });
@@ -192,6 +165,12 @@ export default function WorkoutSessionForm({
           type: "success",
           message: `Session ${existingSessionId ? "edited" : "created"}`,
         });
+      }
+
+      if (!existingSessionId) {
+        router.push(`/session/edit/${savedWorkoutSession.id}`);
+      } else {
+        await utils.workoutSession.getWorkoutSessionById.invalidate();
       }
     } catch (e) {
       if (e instanceof TRPCClientError) {
@@ -206,81 +185,38 @@ export default function WorkoutSessionForm({
     }
   };
 
-  const openWorkoutResultForm = (rating: number) => {
-    updateWorkoutResults(selectedWorkoutResultIndex, {
-      ...(selectedWorkoutResult as WorkoutResultInputsWithWorkout),
-      rating,
-    });
-    set_editSelectedWorkoutResult(true);
-  };
-
   return (
     <div className="">
-      {editSelectedWorkoutResult && (
+      {showWorkoutResultForm && (
         <WorkoutResultForm
           onSave={(workoutResult) => {
-            updateWorkoutResults(selectedWorkoutResultIndex, workoutResult);
-            set_editSelectedWorkoutResult(false);
+            updateWorkoutResults(
+              workoutResults.findIndex(
+                (wr) => wr.workoutId === workoutResult.workoutId
+              ),
+              workoutResult
+            );
+            set_showWorkoutResultForm(undefined);
           }}
-          onClose={() => set_editSelectedWorkoutResult(false)}
-          workoutResult={
-            selectedWorkoutResult as WorkoutResultInputsWithWorkout
-          }
+          onClose={() => set_showWorkoutResultForm(undefined)}
+          workoutResult={showWorkoutResultForm}
         />
       )}
-      <div
-        style={{
-          backgroundImage: `url(/workout-item/${illustration}.png)`,
-        }}
-        className="absolute top-12 left-0 h-64 w-full bg-cover bg-center opacity-50"
-      >
-        <div
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(42, 48, 60, 0) 0%, #2A303C 100%)",
-          }}
-          className="absolute inset-0 h-full w-full"
-        ></div>
+
+      <div className="absolute top-6 right-0 -z-10 h-64 w-64 overflow-hidden opacity-20">
+        <Image
+          fill
+          src={`/icons/session-form-background.png`}
+          className="object-contain object-top"
+          alt={`Session form backgorund`}
+        />
       </div>
 
-      <div
-        onClick={() => router.back()}
-        className="btn-ghost btn btn-circle fixed top-4 left-2"
-      >
-        <MdArrowBackIosNew size={26} />
-      </div>
-      <div className="relative mt-16 flex flex-col justify-center ">
-        <DatePicker name="date" control={control} />
-
-        {workoutResults.length ? (
-          <div className=" mt-7 flex justify-center gap-3 ">
-            {isDirty && (
-              <button
-                onClick={() => reset()}
-                className="btn-ghost btn-sm rounded-full font-semibold uppercase"
-              >
-                Cancel
-              </button>
-            )}
-
-            <button
-              type="button"
-              className={`btn-primary btn-sm  rounded-full text-xs font-semibold uppercase ${
-                !isDirty && !!existingSessionId ? "btn-disabled" : ""
-              }`}
-              disabled={!isDirty && !!existingSessionId}
-              onClick={async () => {
-                await handleSubmit(handleCreateOrEdit)();
-                onSuccess && onSuccess();
-              }}
-            >
-              {`${existingSessionId ? "Unsaved changes" : "Create a session"} `}
-            </button>
-          </div>
-        ) : (
+      <div className="relative mt-2 flex flex-col justify-center ">
+        {!workoutResults.length && (
           <button
             type="button"
-            className="btn-primary btn-sm mt-7 self-center rounded-full text-xs font-semibold uppercase"
+            className="btn-primary btn-sm mt-2 self-center rounded-full text-xs font-semibold uppercase"
             onClick={() => {
               router.push("/workouts");
               setWorkoutSelectionMode(true);
@@ -291,180 +227,207 @@ export default function WorkoutSessionForm({
           </button>
         )}
 
-        <div className="mt-6 ">
+        <div className="">
           {workoutResults.length ? (
             <>
-              <Reorder.Group
-                axis="x"
-                className="flex gap-6"
-                values={workoutResults}
-                onReorder={(reorderedResults) => {
-                  replaceWorkoutResults(reorderedResults);
-                }}
-              >
-                {workoutResults.map((workoutResult, index) => {
-                  return (
-                    <Reorder.Item
-                      key={workoutResult.workout.id}
-                      value={workoutResult}
-                      onClick={() => {
-                        set_previousSelectedIndex(selectedWorkoutResultIndex);
-                        set_selectedWorkoutResultIndex(index);
-                      }}
-                      className={`flex gap-6 ${
-                        selectedWorkoutResultIndex === index ? "" : "opacity-30"
-                      }`}
-                    >
-                      <div className="flex flex-col">
-                        <div className="text-3xl font-bold uppercase">
-                          {String.fromCharCode(97 + index)}.
-                        </div>
-                        <div>
-                          {selectedWorkoutResultIndex === index && (
-                            <motion.div
-                              layoutId="selected-element"
-                              className="mb-4 h-1 w-5 rounded-full bg-base-content"
-                            ></motion.div>
+              <div className="text-lg font-bold text-white">
+                <DatePicker name="date" control={control} />
+              </div>
+
+              {isDirty && (
+                <div className="flex gap-2">
+                  <div
+                    onClick={() =>
+                      saveButtonRef.current?.scrollIntoView({
+                        behavior: "smooth",
+                      })
+                    }
+                    className="badge badge-warning mb-4 mt-2 flex gap-1"
+                  >
+                    <MdWarning /> You have unsaved changes{" "}
+                  </div>
+                  <div
+                    onClick={() => reset(defaultValues)}
+                    className="badge badge-error mb-4 mt-2 flex gap-1"
+                  >
+                    <MdCancel /> Cancel
+                  </div>
+                </div>
+              )}
+
+              <div className="">
+                <Reorder.Group
+                  axis="y"
+                  className="mt-3 flex flex-col gap-3"
+                  values={workoutResults}
+                  onReorder={(reorderedResults) => {
+                    replaceWorkoutResults(reorderedResults);
+                  }}
+                >
+                  {workoutResults.map((workoutResult, index) => {
+                    return (
+                      <Reorder.Item
+                        key={workoutResult.workout.id}
+                        value={workoutResult}
+                        style={{
+                          background:
+                            "radial-gradient(ellipse, rgba(42,47,60,1) 25%, #1d212c 100%)",
+                        }}
+                        className="relative mt-2 flex  rounded-2xl p-4"
+                      >
+                        <div className="flex w-full flex-col">
+                          <div className="absolute right-3 top-3">
+                            <Dropdown
+                              withBackdrop
+                              buttons={[
+                                {
+                                  label: "Show details",
+                                  onClick: () =>
+                                    set_showWorkoutDetails(
+                                      workoutResult.workout.id
+                                    ),
+                                },
+                                {
+                                  label: "Add/Edit result",
+                                  onClick: () =>
+                                    set_showWorkoutResultForm(workoutResult),
+                                },
+                              ]}
+                              containerClass="dropdown-left"
+                            >
+                              <div
+                                className={`btn-ghost btn-sm btn-circle btn`}
+                              >
+                                <RxDotsVertical size={19} />
+                              </div>
+                            </Dropdown>
+                          </div>
+                          <div className="flex gap-2">
+                            {/STRENGTH|WOD|SKILLS|ENDURANCE|MOBILITY|WEIGHTLIFTING|UNCLASSIFIED|CARDIO/i.test(
+                              workoutResult.workout.elementType
+                            ) && (
+                              <Image
+                                width={42}
+                                height={42}
+                                src={`/icons/${workoutResult.workout.elementType.toLowerCase()}.png?3`}
+                                className="blurred-mask object-contain object-top"
+                                alt={`${workoutResult.workout.elementType} workout`}
+                              />
+                            )}
+                            {/* </div> */}
+                            <div className="flex w-full flex-col gap-0.5 text-xs font-bold">
+                              <div className="flex items-center gap-1.5 text-sm  capitalize">
+                                <div className="flex h-4 w-4 items-center justify-center rounded-full border border-base-content text-[0.6rem] uppercase">
+                                  {`${String.fromCharCode(97 + index)}`}
+                                </div>
+                                {enumToString(
+                                  workoutResult.workout.elementType
+                                )}
+                              </div>
+
+                              {workoutResult.workout.totalTime && (
+                                <>{workoutResult.workout.totalTime}mn Timecap</>
+                              )}
+                            </div>
+
+                            {showWorkoutDetails ===
+                              workoutResult.workout.id && (
+                              <WorkoutCard
+                                openFullScreen
+                                onCloseDetails={() =>
+                                  set_showWorkoutDetails(undefined)
+                                }
+                                workout={workoutResult.workout}
+                              />
+                            )}
+                          </div>
+                          <div className="mt-2 whitespace-pre-wrap text-[0.7rem] leading-tight">
+                            {workoutResult.workout.description}
+                          </div>
+                          <div className="divider my-3 text-[0.6rem]">
+                            THE OUTCOME
+                          </div>
+
+                          {workoutResultIsFilled(workoutResult) ? (
+                            <div className="flex gap-2">
+                              <div className="flex flex-col gap-1.5">
+                                <div className="flex items-center gap-2">
+                                  <div className="flex ">
+                                    {[...Array(workoutResult.rating)].map(
+                                      (e, i) => (
+                                        <MdStar key={i} />
+                                      )
+                                    )}
+                                  </div>
+                                  <div
+                                    className={`badge badge-sm ${
+                                      workoutResult.isRx
+                                        ? "badge-primary"
+                                        : "badge-secondary"
+                                    }`}
+                                  >
+                                    {workoutResult.isRx ? "RX" : "Scaled"}
+                                  </div>
+                                </div>
+                                <div>
+                                  <div className="font-extrabold">
+                                    {workoutResult.totalReps && (
+                                      <div>
+                                        {workoutResult.totalReps} repetitions
+                                      </div>
+                                    )}
+                                    {workoutResult.weight && (
+                                      <div>{workoutResult.weight}KG</div>
+                                    )}
+                                  </div>
+                                  {workoutResult.time && (
+                                    <div className="flex flex-col text-xl font-extrabold">
+                                      {format(
+                                        workoutResult.time * 1000,
+                                        "mm:ss"
+                                      )}
+                                      {` minutes`}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="whitespace-pre-wrap text-[0.7rem]">
+                                  {workoutResult.description}
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                set_showWorkoutResultForm(workoutResult)
+                              }
+                              className="btn-secondary btn-xs btn"
+                            >
+                              Add your result!
+                            </button>
                           )}
                         </div>
-                      </div>
-                    </Reorder.Item>
-                  );
-                })}
-              </Reorder.Group>
+                      </Reorder.Item>
+                    );
+                  })}
+                </Reorder.Group>
+              </div>
 
-              {selectedWorkoutResult && (
-                <>
-                  <div className="mt-3 mb-5">
-                    {workoutResultIsFilled(selectedWorkoutResult) ? (
-                      <div className="-ml-4 w-[calc(100%_+_2rem)]">
-                        <WorkoutResultCard
-                          onEdit={() => set_editSelectedWorkoutResult(true)}
-                          condensed
-                          result={selectedWorkoutResult}
-                        />
-                      </div>
-                    ) : (
-                      <div className="btn-group flex">
-                        <button
-                          onClick={() => openWorkoutResultForm(1)}
-                          className="btn btn-sm w-1/5 text-xl"
-                        >
-                          😓
-                        </button>
-                        <button
-                          onClick={() => openWorkoutResultForm(2)}
-                          className="btn btn-sm w-1/5 text-xl"
-                        >
-                          🙁
-                        </button>
-                        <button
-                          onClick={() => openWorkoutResultForm(3)}
-                          className="btn btn-sm w-1/5 text-xl"
-                        >
-                          😐
-                        </button>
-                        <button
-                          onClick={() => openWorkoutResultForm(4)}
-                          className="btn btn-sm w-1/5 text-xl"
-                        >
-                          🙂
-                        </button>
-                        <button
-                          onClick={() => openWorkoutResultForm(5)}
-                          className="btn btn-sm w-1/5 text-xl"
-                        >
-                          😍
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* <motion.div
-                    key={selectedWorkoutResultIndex}
-                    className="flex w-full flex-col"
-                    drag="x"
-                    dragConstraints={{
-                      left: 0,
-                      right: 0,
-                    }}
-                    onDrag={(_evt, info) => {
-                      if (info.offset.x > 50) {
-                        switchSelectedWorkoutResult(
-                          selectedWorkoutResultIndex - 1
-                        );
-                      } else if (info.offset.x < -50) {
-                        switchSelectedWorkoutResult(
-                          selectedWorkoutResultIndex + 1
-                        );
-                      }
-                    }}
-                    initial={{
-                      x:
-                        previousSelectedIndex === selectedWorkoutResultIndex
-                          ? 0
-                          : previousSelectedIndex > selectedWorkoutResultIndex
-                          ? -40
-                          : 40,
-                      opacity:
-                        previousSelectedIndex === selectedWorkoutResultIndex
-                          ? 1
-                          : 0,
-                    }}
-                    animate={{
-                      x: 0,
-                      opacity: 1,
-                    }}
-                    exit={{
-                      x:
-                        previousSelectedIndex > selectedWorkoutResultIndex
-                          ? -40
-                          : 40,
-                      opacity: 0,
-                    }}
-                    transition={{
-                      duration: 0.2,
-                    }}
-                  > */}
-                  <div className="mt-8">
-                    <WorkoutCard workout={selectedWorkoutResult.workout} />
-                  </div>
-                  {/* <div className="flex items-center gap-2 text-base font-semibold">
-                      {selectedWorkoutResult?.workout.elementType.includes(
-                        "STRENGTH"
-                      ) && <GiBiceps size={14} />}
-                      {selectedWorkoutResult.workout.elementType?.includes(
-                        "WOD"
-                      ) && <BsLightningChargeFill size={14} />}
-                      {selectedWorkoutResult.workout.elementType?.includes(
-                        "ENDURANCE"
-                      ) && <FaRunning size={14} />}
-                      {enumToString(
-                        selectedWorkoutResult.workout.elementType || ""
-                      )}
-                      <button
-                        onClick={() =>
-                          openWorkoutDetail(selectedWorkoutResult?.workout)
-                        }
-                        className="btn btn-ghost btn-sm btn-circle"
-                      >
-                        <MdOpenInNew size={17} />
-                      </button>
-                    </div>
-                    {selectedWorkoutResult.workout.totalTime && (
-                      <div className="text-sm uppercase">
-                        {selectedWorkoutResult.workout.totalTime}
-                        MN{" "}
-                        {enumToString(
-                          selectedWorkoutResult.workout.workoutType || "workout"
-                        )}
-                      </div>
-                    )}
-                    <div className="mt-6 whitespace-pre-wrap text-xs leading-relaxed">
-                      {selectedWorkoutResult?.workout?.description}
-                    </div> */}
-                  {/* </motion.div> */}
-                </>
+              {(isDirty || !existingSessionId) && (
+                <button
+                  ref={saveButtonRef}
+                  onClick={async () => {
+                    await handleSubmit(handleCreateOrEdit)();
+                  }}
+                  type="button"
+                  className="btn-primary btn-sm btn mt-6 w-full"
+                >
+                  {isSessionInTheFuture
+                    ? "Plan this session"
+                    : existingSessionId
+                    ? "Save changes"
+                    : "Save this session"}
+                </button>
               )}
             </>
           ) : (
@@ -483,7 +446,7 @@ export default function WorkoutSessionForm({
                 <button
                   type="button"
                   disabled
-                  className="btn-disabled btn btn-sm mt-7 rounded-full text-center text-xs font-semibold uppercase"
+                  className="btn-disabled btn-sm btn mt-7 rounded-full text-center text-xs font-semibold uppercase"
                 >
                   <MdModelTraining size={19} />
                   Suggest a session (soon)

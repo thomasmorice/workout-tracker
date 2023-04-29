@@ -29,9 +29,15 @@ type WorkoutCardProps = {
   workout:
     | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
     | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
+  openFullScreen?: boolean;
+  onCloseDetails?: () => void;
 };
 
-export default function WorkoutCard({ workout }: WorkoutCardProps) {
+export default function WorkoutCard({
+  workout,
+  openFullScreen = false,
+  onCloseDetails,
+}: WorkoutCardProps) {
   const {
     selectedWorkouts,
     toggleSelectWorkout,
@@ -42,7 +48,7 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
   } = useWorkoutStore();
 
   const [hasSelection, set_hasSelection] = useState(false);
-  const [isFullScreen, set_isFullScreen] = useState(false);
+  const [isFullScreen, set_isFullScreen] = useState(openFullScreen);
 
   useLockedBody(isFullScreen);
 
@@ -136,17 +142,16 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
         style={{
           background:
             "radial-gradient(circle, rgba(42,47,60,1) 15%, rgba(24,28,37,1) 100%)",
-          borderRadius: isFullScreen ? "0px" : "24px",
+          borderRadius: isFullScreen ? "0px" : "16px",
         }}
       >
-        <div
+        <motion.div
           className={`blurred-mask-parent absolute inset-x-0 top-10 -mt-2 flex w-full justify-center`}
         >
           {/STRENGTH|WOD|SKILLS|ENDURANCE|MOBILITY|WEIGHTLIFTING|UNCLASSIFIED|CARDIO/i.test(
             workout.elementType
           ) && (
-            <motion.img
-              layout="preserve-aspect"
+            <Image
               width={128}
               height={128}
               src={`/icons/${workout.elementType.toLowerCase()}.png?3`}
@@ -154,16 +159,19 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
               alt={`${workout.elementType} workout`}
             />
           )}
-        </div>
+        </motion.div>
 
         <div className="absolute inset-x-0 top-5 flex w-full items-center justify-between px-5">
           {isFullScreen ? (
             <button
               type="button"
-              onClick={() => set_isFullScreen(false)}
-              className="btn-circle btn bg-base-100"
+              onClick={() => {
+                onCloseDetails && onCloseDetails();
+                set_isFullScreen(false);
+              }}
+              className="btn-ghost btn-md btn-circle btn"
             >
-              <MdArrowBackIosNew size="15" />
+              <MdArrowBackIosNew size="17" />
             </button>
           ) : (
             <div onClick={() => set_isFullScreen(false)} className={`avatar`}>
@@ -197,8 +205,8 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
               buttons={workoutActions}
               containerClass="dropdown-left "
             >
-              <div className={`btn-circle btn bg-base-100`}>
-                <RxDotsVertical size={17} />
+              <div className={`btn-ghost btn-md btn-circle btn`}>
+                <RxDotsVertical size={22} />
               </div>
             </Dropdown>
           )}
@@ -255,24 +263,39 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
 
           {workout.elementType === "UNCLASSIFIED" && hasSelection && (
             <div className="mt-8 flex justify-center gap-3">
-              {workout.elementType === "UNCLASSIFIED" && hasSelection && (
-                <button
-                  onClick={() =>
-                    createWorkoutFromSelectedText(
-                      workout,
-                      window.getSelection()?.toString() || ""
-                    )
-                  }
-                  className="btn-primary btn-xs btn"
-                >
-                  Classify selection
-                </button>
-              )}
+              <button
+                onClick={() =>
+                  createWorkoutFromSelectedText(
+                    workout,
+                    window.getSelection()?.toString() || ""
+                  )
+                }
+                className="btn-primary btn-xs btn"
+              >
+                Classify selection
+              </button>
+            </div>
+          )}
+
+          {workout.elementType === "UNCLASSIFIED" && hasSelection && (
+            <div className="mt-8 flex justify-center gap-3">
+              <button
+                onClick={() =>
+                  createWorkoutFromSelectedText(
+                    workout,
+                    window.getSelection()?.toString() || ""
+                  )
+                }
+                className="btn-primary btn-xs btn"
+              >
+                Classify selection
+              </button>
             </div>
           )}
         </div>
+
         {isFullScreen && (
-          <div className="mt-8 px-4">
+          <div className="mt-8">
             {<WorkoutResults workoutId={workout.id} />}
           </div>
         )}

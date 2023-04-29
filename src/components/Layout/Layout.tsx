@@ -48,6 +48,8 @@ export default function Layout({ children }: LayoutProps) {
           content="initial-scale=1, user-scalable=no, width=device-width, height=device-height, viewport-fit=cover"
         />
       </Head>
+
+      <div id="portal"></div>
       {/* <div
         className="absolute top-0 left-0 -z-40 h-40 w-full blur-lg"
         style={{

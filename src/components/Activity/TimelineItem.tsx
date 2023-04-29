@@ -16,6 +16,7 @@ import { inferRouterOutputs, TRPCError } from "@trpc/server";
 import { EventRouterType } from "../../server/trpc/router/event-router";
 import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
+import Portal from "../Portal/Portal";
 
 interface TimelineSessionProps {
   event: inferRouterOutputs<EventRouterType>["getEvents"][number];
@@ -103,7 +104,7 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
           <button
             onClick={() => set_showConfirmDeleteEventModal(true)}
             type="button"
-            className="btn btn-outline btn-error btn-xs w-fit"
+            className="btn-outline btn-error btn-xs btn w-fit"
           >
             <div className="flex items-center gap-2">
               <MdDelete />
@@ -112,36 +113,37 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
           </button>
         </div>
       </div>
+      <Portal>
+        <ConfirmModal
+          isOpen={showConfirmDeleteEventModal}
+          onConfirm={async () => {
+            const message = addMessage({
+              type: "pending",
+              message: "Deleting...",
+            });
 
-      <ConfirmModal
-        isOpen={showConfirmDeleteEventModal}
-        onConfirm={async () => {
-          const message = addMessage({
-            type: "pending",
-            message: "Deleting...",
-          });
-
-          await deleteEvent.mutateAsync({
-            id: event.id,
-          });
-          addMessage({
-            type: "success",
-            message: "Deleted successfully",
-          });
-          closeMessage(message);
-          set_showConfirmDeleteEventModal(false);
-        }}
-        onClose={() => set_showConfirmDeleteEventModal(false)}
-        title={`Confirm delete ${event.weighing ? "weighing" : "session"}`}
-      >
-        <p>
-          Are you sure you wanna delete this{" "}
-          {event.workoutSession
-            ? "workout session and all the results associated"
-            : "weighing"}{" "}
-          ?
-        </p>
-      </ConfirmModal>
+            await deleteEvent.mutateAsync({
+              id: event.id,
+            });
+            addMessage({
+              type: "success",
+              message: "Deleted successfully",
+            });
+            closeMessage(message);
+            set_showConfirmDeleteEventModal(false);
+          }}
+          onClose={() => set_showConfirmDeleteEventModal(false)}
+          title={`Confirm delete ${event.weighing ? "weighing" : "session"}`}
+        >
+          <p>
+            Are you sure you wanna delete this{" "}
+            {event.workoutSession
+              ? "workout session and all the results associated"
+              : "weighing"}{" "}
+            ?
+          </p>
+        </ConfirmModal>
+      </Portal>
     </>
   );
 }

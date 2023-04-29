@@ -64,7 +64,7 @@ module.exports = {
           // "base-200": "#29272e",
           // "base-300": "#393740",
           "base-content": "#D1D6E0",
-          primary: "#00C89C",
+          // primary: "#00C89C",
           "range-shdw": "black",
         },
       },
