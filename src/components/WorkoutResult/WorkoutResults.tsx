@@ -3,8 +3,10 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { TailSpin } from "react-loading-icons";
 import { WorkoutRouterType } from "../../server/trpc/router/WorkoutRouter/workout-router";
+import { router } from "../../server/trpc/trpc";
 import { trpc } from "../../utils/trpc";
-import WorkoutResultCard from "./WorkoutResultCard";
+import WorkoutResult from "../Workout/WorkoutCard/WorkoutResult";
+import { useRouter } from "next/router";
 
 type WorkoutResultsProps = {
   workoutId: inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]["id"];
@@ -13,7 +15,7 @@ type WorkoutResultsProps = {
 export default function WorkoutResults({ workoutId }: WorkoutResultsProps) {
   const { data: sessionData } = useSession();
   const [orderBy, set_orderBy] = useState<"date" | "performance">("date");
-
+  const router = useRouter();
   const { data: workoutResults, isLoading } =
     trpc.workoutResult.getWorkoutResultsByWorkoutId.useQuery(
       {
@@ -50,8 +52,13 @@ export default function WorkoutResults({ workoutId }: WorkoutResultsProps) {
         </div>
       ) : (
         <>
-          <h2 className="h2">Results associated</h2>
-          <div className="mt-4 mb-8 flex items-center gap-3">
+          <div className="divider text-[0.6rem] uppercase">
+            All results associated
+          </div>
+          {/* <h2 className="h2 pt-4 text-center text-xl">
+            All results associated
+          </h2> */}
+          <div className="my-8 flex items-center gap-3">
             <div className="text-xs">Order by </div>
             <button
               onClick={() => set_orderBy("date")}
@@ -72,9 +79,16 @@ export default function WorkoutResults({ workoutId }: WorkoutResultsProps) {
               Performance
             </button>
           </div>
-          <div className="flex flex-col gap-7">
+          <div className="flex flex-col gap-10">
             {workoutResults.map((result) => (
-              <WorkoutResultCard key={result.id} result={result} />
+              <WorkoutResult
+                key={result.id}
+                workoutResult={result}
+                onEditWorkoutResult={() =>
+                  router.push(`/session/edit/${result.workoutSession.id}`)
+                }
+                fromResultList
+              />
             ))}
           </div>
         </>

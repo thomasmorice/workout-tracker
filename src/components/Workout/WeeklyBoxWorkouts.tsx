@@ -10,7 +10,7 @@ import {
 import { LayoutGroup, motion } from "framer-motion";
 import { useState } from "react";
 import { trpc } from "../../utils/trpc";
-import WorkoutCard from "./WorkoutCardSimple/WorkoutCard";
+import WorkoutCard from "./WorkoutCard/WorkoutCard";
 
 export default function WeeklyBoxWorkouts() {
   const weekDays = {

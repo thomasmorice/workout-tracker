@@ -22,11 +22,12 @@ import { useToastStore } from "../../store/ToastStore";
 import { EventRouterType } from "../../server/trpc/router/event-router";
 import WorkoutResultForm from "../WorkoutResult/WorkoutResultForm";
 import { TRPCClientError } from "@trpc/client";
-import WorkoutCard from "../Workout/WorkoutCardSimple/WorkoutCard";
+import WorkoutCard from "../Workout/WorkoutCard/WorkoutCard";
 import Dropdown from "../Dropdown/Dropdown";
 import { format, isAfter } from "date-fns";
 import Image from "next/image";
 import { RxDotsVertical } from "react-icons/rx";
+import WorkoutResult from "../Workout/WorkoutCard/WorkoutResult";
 
 type WorkoutSessionFormProps = {
   // create?: boolean;
@@ -44,9 +45,10 @@ export default function WorkoutSessionForm({
   const router = useRouter();
 
   const saveButtonRef = useRef<HTMLButtonElement>(null);
-  const [showWorkoutDetails, set_showWorkoutDetails] = useState<number>();
   const [showWorkoutResultForm, set_showWorkoutResultForm] =
     useState<WorkoutResultInputsWithWorkout>();
+
+  const [reorderWorkoutMode, set_reorderWorkoutMode] = useState(false);
 
   const { selectedWorkouts: preselectedWorkouts, setWorkoutSelectionMode } =
     useWorkoutStore();
@@ -123,6 +125,7 @@ export default function WorkoutSessionForm({
   const {
     fields: workoutResults,
     replace: replaceWorkoutResults,
+    remove: removeWorkoutResults,
     update: updateWorkoutResults,
   } = useFieldArray({
     keyName: "key",
@@ -234,6 +237,20 @@ export default function WorkoutSessionForm({
                 <DatePicker name="date" control={control} />
               </div>
 
+              <div className="form-control">
+                <label className="label cursor-pointer justify-start gap-3">
+                  <span className="label-text">
+                    Change the order of the workouts
+                  </span>
+                  <input
+                    type="checkbox"
+                    onClick={() => set_reorderWorkoutMode(!reorderWorkoutMode)}
+                    className="toggle"
+                    checked={reorderWorkoutMode}
+                  />
+                </label>
+              </div>
+
               {isDirty && (
                 <div className="flex gap-2">
                   <div
@@ -242,13 +259,13 @@ export default function WorkoutSessionForm({
                         behavior: "smooth",
                       })
                     }
-                    className="badge badge-warning mb-4 mt-2 flex gap-1"
+                    className="badge badge-warning mb-4 mt-2 flex cursor-pointer gap-1"
                   >
                     <MdWarning /> You have unsaved changes{" "}
                   </div>
                   <div
                     onClick={() => reset(defaultValues)}
-                    className="badge badge-error mb-4 mt-2 flex gap-1"
+                    className="badge badge-error mb-4 mt-2 flex cursor-pointer gap-1"
                   >
                     <MdCancel /> Cancel
                   </div>
@@ -258,7 +275,7 @@ export default function WorkoutSessionForm({
               <div className="">
                 <Reorder.Group
                   axis="y"
-                  className="mt-3 flex flex-col gap-3"
+                  className="mt-3 flex flex-col gap-5"
                   values={workoutResults}
                   onReorder={(reorderedResults) => {
                     replaceWorkoutResults(reorderedResults);
@@ -267,147 +284,172 @@ export default function WorkoutSessionForm({
                   {workoutResults.map((workoutResult, index) => {
                     return (
                       <Reorder.Item
-                        key={workoutResult.workout.id}
+                        key={workoutResult.workoutId}
                         value={workoutResult}
-                        style={{
-                          background:
-                            "radial-gradient(ellipse, rgba(42,47,60,1) 25%, #1d212c 100%)",
-                        }}
-                        className="relative mt-2 flex  rounded-2xl p-4"
+                        dragListener={reorderWorkoutMode}
                       >
-                        <div className="flex w-full flex-col">
-                          <div className="absolute right-3 top-3">
-                            <Dropdown
-                              withBackdrop
-                              buttons={[
-                                {
-                                  label: "Show details",
-                                  onClick: () =>
-                                    set_showWorkoutDetails(
-                                      workoutResult.workout.id
-                                    ),
-                                },
-                                {
-                                  label: "Add/Edit result",
-                                  onClick: () =>
-                                    set_showWorkoutResultForm(workoutResult),
-                                },
-                              ]}
-                              containerClass="dropdown-left"
-                            >
-                              <div
-                                className={`btn-ghost btn-sm btn-circle btn`}
-                              >
-                                <RxDotsVertical size={19} />
-                              </div>
-                            </Dropdown>
-                          </div>
-                          <div className="flex gap-2">
-                            {/STRENGTH|WOD|SKILLS|ENDURANCE|MOBILITY|WEIGHTLIFTING|UNCLASSIFIED|CARDIO/i.test(
-                              workoutResult.workout.elementType
-                            ) && (
-                              <Image
-                                width={42}
-                                height={42}
-                                src={`/icons/${workoutResult.workout.elementType.toLowerCase()}.png?3`}
-                                className="blurred-mask object-contain object-top"
-                                alt={`${workoutResult.workout.elementType} workout`}
-                              />
-                            )}
-                            {/* </div> */}
-                            <div className="flex w-full flex-col gap-0.5 text-xs font-bold">
-                              <div className="flex items-center gap-1.5 text-sm  capitalize">
-                                <div className="flex h-4 w-4 items-center justify-center rounded-full border border-base-content text-[0.6rem] uppercase">
-                                  {`${String.fromCharCode(97 + index)}`}
-                                </div>
-                                {enumToString(
-                                  workoutResult.workout.elementType
-                                )}
-                              </div>
-
-                              {workoutResult.workout.totalTime && (
-                                <>{workoutResult.workout.totalTime}mn Timecap</>
-                              )}
-                            </div>
-
-                            {showWorkoutDetails ===
-                              workoutResult.workout.id && (
-                              <WorkoutCard
-                                openFullScreen
-                                onCloseDetails={() =>
-                                  set_showWorkoutDetails(undefined)
-                                }
-                                workout={workoutResult.workout}
-                              />
-                            )}
-                          </div>
-                          <div className="mt-2 whitespace-pre-wrap text-[0.7rem] leading-tight">
-                            {workoutResult.workout.description}
-                          </div>
-                          <div className="divider my-3 text-[0.6rem]">
-                            THE OUTCOME
-                          </div>
-
-                          {workoutResultIsFilled(workoutResult) ? (
-                            <div className="flex gap-2">
-                              <div className="flex flex-col gap-1.5">
-                                <div className="flex items-center gap-2">
-                                  <div className="flex ">
-                                    {[...Array(workoutResult.rating)].map(
-                                      (e, i) => (
-                                        <MdStar key={i} />
-                                      )
-                                    )}
-                                  </div>
-                                  <div
-                                    className={`badge badge-sm ${
-                                      workoutResult.isRx
-                                        ? "badge-primary"
-                                        : "badge-secondary"
-                                    }`}
-                                  >
-                                    {workoutResult.isRx ? "RX" : "Scaled"}
-                                  </div>
-                                </div>
-                                <div>
-                                  <div className="font-extrabold">
-                                    {workoutResult.totalReps && (
-                                      <div>
-                                        {workoutResult.totalReps} repetitions
-                                      </div>
-                                    )}
-                                    {workoutResult.weight && (
-                                      <div>{workoutResult.weight}KG</div>
-                                    )}
-                                  </div>
-                                  {workoutResult.time && (
-                                    <div className="flex flex-col text-xl font-extrabold">
-                                      {format(
-                                        workoutResult.time * 1000,
-                                        "mm:ss"
-                                      )}
-                                      {` minutes`}
-                                    </div>
-                                  )}
-                                </div>
-                                <div className="whitespace-pre-wrap text-[0.7rem]">
-                                  {workoutResult.description}
-                                </div>
-                              </div>
-                            </div>
-                          ) : (
-                            <button
-                              type="button"
-                              onClick={() =>
+                        <WorkoutCard
+                          isDraggable={reorderWorkoutMode}
+                          isWorkoutFromSessionForm
+                          workout={workoutResult.workout}
+                          onRemoveWorkoutFromSession={() =>
+                            removeWorkoutResults(index)
+                          }
+                          onEditWorkoutResult={() =>
+                            set_showWorkoutResultForm(workoutResult)
+                          }
+                          workoutResult={
+                            <WorkoutResult
+                              workoutResult={workoutResult}
+                              onEditWorkoutResult={() =>
                                 set_showWorkoutResultForm(workoutResult)
                               }
-                              className="btn-secondary btn-xs btn"
-                            >
-                              Add your result!
-                            </button>
-                          )}
-                        </div>
+                            />
+                          }
+                        />
                       </Reorder.Item>
+                      //
+                      //   key={workoutResult.workout.id}
+                      //   value={workoutResult}
+                      //   style={{
+                      //     background:
+                      //       "radial-gradient(ellipse, rgba(42,47,60,1) 25%, #1d212c 100%)",
+                      //   }}
+                      //   className="relative mt-2 flex  rounded-2xl p-4"
+                      // >
+                      //   <div className="flex w-full flex-col">
+                      //     <div className="absolute right-3 top-3">
+                      //       <Dropdown
+                      //         withBackdrop
+                      //         buttons={[
+                      //           {
+                      //             label: "Show details",
+                      //             onClick: () =>
+                      //               set_showWorkoutDetails(
+                      //                 workoutResult.workout.id
+                      //               ),
+                      //           },
+                      //           {
+                      //             label: "Add/Edit result",
+                      //             onClick: () =>
+                      //               set_showWorkoutResultForm(workoutResult),
+                      //           },
+                      //         ]}
+                      //         containerClass="dropdown-left"
+                      //       >
+                      //         <div
+                      //           className={`btn-ghost btn-sm btn-circle btn`}
+                      //         >
+                      //           <RxDotsVertical size={19} />
+                      //         </div>
+                      //       </Dropdown>
+                      //     </div>
+                      //     <div className="flex gap-2">
+                      //       {/STRENGTH|WOD|SKILLS|ENDURANCE|MOBILITY|WEIGHTLIFTING|UNCLASSIFIED|CARDIO/i.test(
+                      //         workoutResult.workout.elementType
+                      //       ) && (
+                      //         <Image
+                      //           width={42}
+                      //           height={42}
+                      //           src={`/icons/${workoutResult.workout.elementType.toLowerCase()}.png?3`}
+                      //           className="blurred-mask object-contain object-top"
+                      //           alt={`${workoutResult.workout.elementType} workout`}
+                      //         />
+                      //       )}
+                      //       {/* </div> */}
+                      //       <div className="flex w-full flex-col gap-0.5 text-xs font-bold">
+                      //         <div className="flex items-center gap-1.5 text-sm  capitalize">
+                      //           <div className="flex h-4 w-4 items-center justify-center rounded-full border border-base-content text-[0.6rem] uppercase">
+                      //             {`${String.fromCharCode(97 + index)}`}
+                      //           </div>
+                      //           {enumToString(
+                      //             workoutResult.workout.elementType
+                      //           )}
+                      //         </div>
+
+                      //         {workoutResult.workout.totalTime && (
+                      //           <>{workoutResult.workout.totalTime}mn Timecap</>
+                      //         )}
+                      //       </div>
+
+                      //       {showWorkoutDetails ===
+                      //         workoutResult.workout.id && (
+                      //         <WorkoutCard
+                      //           openFullScreen
+                      //           onCloseDetails={() =>
+                      //             set_showWorkoutDetails(undefined)
+                      //           }
+                      //           workout={workoutResult.workout}
+                      //         />
+                      //       )}
+                      //     </div>
+                      //     <div className="mt-2 whitespace-pre-wrap text-[0.7rem] leading-tight">
+                      //       {workoutResult.workout.description}
+                      //     </div>
+                      //     <div className="divider my-3 text-[0.6rem]">
+                      //       THE OUTCOME
+                      //     </div>
+
+                      //     {workoutResultIsFilled(workoutResult) ? (
+                      //       <div className="flex gap-2">
+                      //         <div className="flex flex-col gap-1.5">
+                      //           <div className="flex items-center gap-2">
+                      //             <div className="flex ">
+                      //               {[...Array(workoutResult.rating)].map(
+                      //                 (e, i) => (
+                      //                   <MdStar key={i} />
+                      //                 )
+                      //               )}
+                      //             </div>
+                      //             <div
+                      //               className={`badge badge-sm ${
+                      //                 workoutResult.isRx
+                      //                   ? "badge-primary"
+                      //                   : "badge-secondary"
+                      //               }`}
+                      //             >
+                      //               {workoutResult.isRx ? "RX" : "Scaled"}
+                      //             </div>
+                      //           </div>
+                      //           <div>
+                      //             <div className="font-extrabold">
+                      //               {workoutResult.totalReps && (
+                      //                 <div>
+                      //                   {workoutResult.totalReps} repetitions
+                      //                 </div>
+                      //               )}
+                      //               {workoutResult.weight && (
+                      //                 <div>{workoutResult.weight}KG</div>
+                      //               )}
+                      //             </div>
+                      //             {workoutResult.time && (
+                      //               <div className="flex flex-col text-xl font-extrabold">
+                      //                 {format(
+                      //                   workoutResult.time * 1000,
+                      //                   "mm:ss"
+                      //                 )}
+                      //                 {` minutes`}
+                      //               </div>
+                      //             )}
+                      //           </div>
+                      //           <div className="whitespace-pre-wrap text-[0.7rem]">
+                      //             {workoutResult.description}
+                      //           </div>
+                      //         </div>
+                      //       </div>
+                      //     ) : (
+                      //       <button
+                      //         type="button"
+                      //         onClick={() =>
+                      //           set_showWorkoutResultForm(workoutResult)
+                      //         }
+                      //         className="btn-secondary btn-xs btn"
+                      //       >
+                      //         Add your result!
+                      //       </button>
+                      //     )}
+                      //   </div>
+                      // </Reorder.Item>
                     );
                   })}
                 </Reorder.Group>

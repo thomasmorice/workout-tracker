@@ -4,7 +4,7 @@ import { MdSearch } from "react-icons/md";
 import Masonry from "react-masonry-css";
 import { useDebounce, useIntersectionObserver } from "usehooks-ts";
 import { trpc } from "../../utils/trpc";
-import WorkoutCard from "./WorkoutCardSimple/WorkoutCard";
+import WorkoutCard from "./WorkoutCard/WorkoutCard";
 import WorkoutCardSkeleton from "./WorkoutCardSkeleton";
 
 export default function WorkoutList() {

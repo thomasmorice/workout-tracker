@@ -4,7 +4,7 @@ import { WorkoutRouterType } from "../../server/trpc/router/WorkoutRouter/workou
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import { trpc } from "../../utils/trpc";
 import WorkoutResults from "../WorkoutResult/WorkoutResults";
-import WorkoutCard from "./WorkoutCardSimple/WorkoutCard";
+import WorkoutCard from "./WorkoutCard/WorkoutCard";
 
 type WorkoutAndResultsProps = {
   // id?: inferRouterOutputs<WorkoutRouterType>["getWorkoutById"]["id"];
@@ -25,11 +25,7 @@ export default function WorkoutAndResults({ workout }: WorkoutAndResultsProps) {
   //   }
   // );
 
-  const {
-    closeWorkoutDetail: closeWorkoutDetailModal,
-    toggleSelectWorkout,
-    showWorkoutForm,
-  } = useWorkoutStore();
+  const { toggleSelectWorkout, showWorkoutForm } = useWorkoutStore();
   return (
     <>
       <div className="-ml-4 w-[calc(100%_+_2rem)]">

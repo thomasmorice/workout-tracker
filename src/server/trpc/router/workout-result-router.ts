@@ -38,6 +38,7 @@ export const workoutResultRouter = router({
           ...WorkoutResultsSelect,
           workoutSession: {
             select: {
+              id: true,
               event: true,
             },
           },

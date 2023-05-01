@@ -27,11 +27,7 @@ export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
   const { status } = useSession();
   const [currentPath, set_currentPath] = useState<String[]>();
-  const {
-    isWorkoutSelectionModeActive,
-    openedWorkoutDetail,
-    closeWorkoutDetail,
-  } = useWorkoutStore();
+  const { isWorkoutSelectionModeActive } = useWorkoutStore();
   const { showFormWithEventType, closeForm } = useEventStore();
   // const [isRoutingToChild, set_isRoutingToChild] = useState(false);
 
@@ -88,7 +84,7 @@ export default function Layout({ children }: LayoutProps) {
               <WeighingForm onSuccess={closeForm} />
             </Modal>
 
-            <Modal
+            {/* <Modal
               noPadding
               onClose={closeWorkoutDetail}
               isOpen={!!openedWorkoutDetail}
@@ -96,7 +92,7 @@ export default function Layout({ children }: LayoutProps) {
               {openedWorkoutDetail && (
                 <WorkoutAndResults workout={openedWorkoutDetail} />
               )}
-            </Modal>
+            </Modal> */}
           </>
         )}
 

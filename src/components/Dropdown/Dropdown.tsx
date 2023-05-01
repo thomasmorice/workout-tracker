@@ -10,7 +10,7 @@ type DropdownProps = {
   onClose?: () => void;
   buttons: {
     label: ReactNode;
-    onClick: () => void;
+    onClick?: () => void;
   }[];
 };
 
@@ -57,21 +57,31 @@ export default function Dropdown({
         >
           {children}
         </button>
-        <ul className="dropdown-content menu rounded-box absolute w-52 gap-1 border-t-transparent bg-base-300 p-2 text-sm">
-          {buttons.map((button, index) => (
-            <li key={index}>
-              <a
-                onClick={() => {
-                  set_isOpen(false);
-                  onClose && onClose();
-                  button.onClick();
-                }}
-                className={`group flex w-full items-center rounded-md text-sm text-base-content`}
-              >
-                {button.label}
-              </a>
-            </li>
-          ))}
+        <ul className="dropdown-content menu rounded-box menu-compact absolute w-56 gap-1 border-t-transparent bg-base-300 p-2 text-sm">
+          {buttons.map((button, index) => {
+            if (button.onClick) {
+              return (
+                <li key={index}>
+                  <a
+                    onClick={() => {
+                      set_isOpen(false);
+                      onClose && onClose();
+                      button.onClick && button.onClick();
+                    }}
+                    className={`group flex w-full items-center rounded-md text-sm text-base-content`}
+                  >
+                    {button.label}
+                  </a>
+                </li>
+              );
+            } else {
+              return (
+                <li key={index} className="menu-title">
+                  <span>{button.label}</span>
+                </li>
+              );
+            }
+          })}
         </ul>
       </div>
     </>
