@@ -73,10 +73,10 @@ export default function MainDrawer({ onClose }: MainDrawerProps) {
               onClick={() => closeDrawer()}
               href="/"
               className={`flex items-center ${
-                isLinkActive("/") ? "text-primary" : ""
+                isLinkActive("/") ? "text-primary-content" : "opacity-60"
               }`}
             >
-              <RiDashboardLine className="opacity-50" size={28} /> Dashboard
+              <RiDashboardLine size={28} /> Dashboard
             </Link>
           </li>
 
@@ -85,10 +85,12 @@ export default function MainDrawer({ onClose }: MainDrawerProps) {
               onClick={() => closeDrawer()}
               href="/workouts"
               className={`flex items-center ${
-                isLinkActive("/workouts") ? "text-primary" : ""
+                isLinkActive("/workouts")
+                  ? "text-primary-content"
+                  : "opacity-60"
               }`}
             >
-              <CgGym className="opacity-50" size={28} /> Workout manager
+              <CgGym size={28} /> Workout manager
             </Link>
           </li>
           <li>
@@ -96,10 +98,12 @@ export default function MainDrawer({ onClose }: MainDrawerProps) {
               onClick={() => closeDrawer()}
               href="/this-week-at-my-box"
               className={`flex items-center ${
-                isLinkActive("/this-week-at-my-box") ? "text-primary" : ""
+                isLinkActive("/this-week-at-my-box")
+                  ? "text-primary-content"
+                  : "opacity-60"
               }`}
             >
-              <GiGymBag className="opacity-50" size={28} /> This week at my box
+              <GiGymBag size={28} /> This week at my box
             </Link>
           </li>
           <li>
@@ -107,10 +111,12 @@ export default function MainDrawer({ onClose }: MainDrawerProps) {
               onClick={() => closeDrawer()}
               href="/activities"
               className={`flex items-center ${
-                isLinkActive("/activities") ? "text-primary" : ""
+                isLinkActive("/activities")
+                  ? "text-primary-content"
+                  : "opacity-60"
               }`}
             >
-              <IoCalendarOutline className="opacity-50" size={28} /> Activities
+              <IoCalendarOutline size={28} /> Activities
             </Link>
           </li>
           <li>
@@ -118,10 +124,10 @@ export default function MainDrawer({ onClose }: MainDrawerProps) {
               onClick={() => closeDrawer()}
               href="/profile"
               className={`flex items-center ${
-                isLinkActive("/profile") ? "text-primary" : ""
+                isLinkActive("/profile") ? "text-primary-content" : "opacity-60"
               }`}
             >
-              <RxAvatar className="opacity-50" size={28} />
+              <RxAvatar size={28} />
               {sessionData ? "My Profile" : "Login"}
             </Link>
           </li>

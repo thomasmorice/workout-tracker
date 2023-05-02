@@ -8,31 +8,7 @@ const Activities: NextPage = () => {
     useEventStore();
   return (
     <div className="">
-      {!eventBeingEdited ? (
-        <>
-          <Header
-            h1={{
-              mobile: "Activities",
-            }}
-          />
-
-          <ActivityDashboard />
-        </>
-      ) : (
-        <>
-          {/* {showFormWithEventType === "workout-session" ? (
-            <>
-              <Header onGoBack={closeForm} h1={"Session form"} />
-              <WorkoutSessionForm onSuccess={closeForm} />
-            </>
-          ) : (
-            <>
-              <Header onGoBack={closeForm} h1={"Weighing form"} />
-              <WeighingForm onSuccess={closeForm} />
-            </>
-          )} */}
-        </>
-      )}
+      <ActivityDashboard />
     </div>
   );
 };

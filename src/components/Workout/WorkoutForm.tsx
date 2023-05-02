@@ -63,7 +63,8 @@ export default function WorkoutForm() {
         elementType: existingWorkout?.elementType ?? "UNCLASSIFIED",
         isDoableAtHome: existingWorkout?.isDoableAtHome ?? false,
         affiliateId: existingWorkout?.affiliateId,
-        affiliateDate: existingWorkout?.createdAt,
+        affiliateDate:
+          existingWorkout?.affiliateDate || existingWorkout?.createdAt,
       };
     }, [existingWorkout]);
 
@@ -90,7 +91,6 @@ export default function WorkoutForm() {
     try {
       if (state === "edit") {
         editWorkout(workout as inferRouterInputs<WorkoutRouterType>["edit"]);
-
         addMessage({
           type: "success",
           message: "Workout edited successfully",

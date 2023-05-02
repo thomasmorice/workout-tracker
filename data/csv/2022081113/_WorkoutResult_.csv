@@ -1,0 +1,88 @@
+"id","workoutSessionId","workoutId","isRx","totalReps","time","rating","description","shouldRecommendWorkoutAgain","createdAt","updatedAt"
+48,30,68,false,,,2,"Did 90KG backsquats all the way, focusing on quality - Not so easy",false,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298
+47,29,67,true,,,3,"Long intense workout, especially on the B part.
+ A. 9 Rounds + 10 one-arm KB swings 
+ A. 6 Rounds + 17 KB swings",false,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298
+49,30,69,true,209,,3,"Super fun workout, but was a bit unefficient on the wallballs. Went until 20 wallballs and 9 shuttle run",true,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298
+39,24,16,false,,,4,"Felt strong on the backsquat, 80-85-90-90-95 
+ 20KG on the Box for high boxjumps",false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+50,31,41,true,128,,4,Finished the 15th round with a lot of struggle - outside on holiday in Edholma,true,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298
+51,32,70,true,,,3,"A - Backsquats: 80KG - 85KG - 90KG
+B - Z-Press: 15KG - 20KG - 20KG
+
+ A bit heavy on the Z-press",true,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298
+55,34,73,true,214,,,"Open crossfit session, good score",true,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298
+42,26,57,false,,,3,Finished with 80KG on the clean and jerk. I should work on the split jerk.,false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+54,33,73,true,177,,4,"Couldn't find a good pace, because it was warm and I felt tired, but lovely workout",true,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298
+56,35,74,true,,,3,"Lunges: 22.5KG then 26KG on the walking lunges
+Ring pushups: 20KG sandbag and 8 reps",false,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298
+60,37,77,true,1232,,3,"Nice workout, quite tough and not sure about the results
+
+A. 434 reps (almost 3 rounds)
+B. 798 reps (around 4.5 rounds)",true,2022-08-08 19:57:40.893,2022-08-10 22:03:16.298
+31,19,41,true,116,,4,"Did it outside, but not sure the result is 116 or 102.. I was tired",false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+62,38,79,true,100,,2,"Almost 4 rounds, had a calf cramp at the end, very hard but very fun!
+I absolutely need to do it again, and maybe finish it someday",true,2022-08-10 22:03:16.298,2022-08-10 22:03:16.299
+53,33,72,true,,,2,"Really need to work on the deficit handstand pushup - usually doing only one.
+24KG on the Turkish get up, only one left - one right",true,2022-08-06 11:56:39.082,2022-08-10 22:03:16.299
+10,7,12,true,42,,,"2 Rounds + 3 DB Snatch (29 reps) & 2 rounds + 2 devils press (13 reps)",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+18,13,26,false,,,,Deadlift until 110KG,false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+15,10,20,true,,688,4,"",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+16,11,22,true,165,,3,"",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+17,12,25,true,216,,2,"Tough one, really hard on the wallballs",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+14,10,19,false,,,4,"2 to 3 HSPU and on the split squat: 30KG - 30KG - 35KG - 35KG - 40KG",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+25,16,34,true,206,,4,"Went until 11 snatches. I Need to be a bit better at wallballs, I was missing the line sometimes. Harder on strength than cardio",false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.297
+24,16,33,false,,,3,Need to work on my squat snatch. Went until 50Kg but tough on the squat,false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+20,14,29,false,,,,"",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+21,14,30,true,66,,1,"4 rounds feeling tired, not a lot of sleep those days",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+22,15,31,false,,,4,"Started at 50KG, climbed until 105KG - Good feeling overall",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+30,18,40,true,320,,4,"8 rounds exactly - it was very warm so hard and long exercise but fun",false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+32,20,42,true,,,,Did 3 muscle-ups all the way until the last set where I did 5 straight,false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+34,21,44,false,,,4,"50KG - 60KG - 65KG - 70KG - 75KG - 80KG
+Dropped the bar on the second low hang power clean at 80Kg",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+33,20,43,false,116,,4,"Took 40Kg on the Bar, very hard especially on the overhead squat, felt pain on my wrist",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+36,22,48,false,,,3,"3X40KG - 3X50KG - 3X55KG - 1X60KG - 1X60KG - 2X60KG",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+40,24,32,true,221,,2,"Tired from the first part on the legs, I might be able to push to five rounds for the next time",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+41,25,53,true,,1984,4,"Good endurance workout, hard on the burpees",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+45,28,63,false,,,4,Finished with 140KG Deadlift and 75KG Push press,true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+4,4,1,true,283,,,"",false,2022-08-06 11:56:39.079,2022-08-10 22:03:16.297
+3,3,1,true,260,,,"",false,2022-08-06 11:56:39.079,2022-08-10 22:03:16.297
+2,2,1,true,281,,,"",false,2022-08-06 11:56:39.079,2022-08-10 22:03:16.297
+7,6,9,false,,,,Ring dips - Farmers carry at 32KG and skater squats trying to keep a good form all along,false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+1,1,3,true,220,,,"",false,2022-08-06 11:56:39.079,2022-08-10 22:03:16.297
+8,6,10,true,233,,,"",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+5,5,7,false,,,,"First set of frontsquat at 60KG, then 80KG 3 times, and last set at 90KG",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+13,9,17,true,165,,4,"",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+26,17,35,false,,,3,"Started at 90KG, went until 4 reps of 120KG",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+11,8,15,true,346,,5,"133 + 139 + 74",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+6,5,8,true,,640,,"",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+19,13,27,true,320,,2,"Lots of breaks, tired quickly and couldn't keep the pace throughout",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+12,9,16,false,,,,"60KG - 70KG - 80KG - 90KG - 90KG",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+23,15,32,true,225,,4,"5 Rounds approximately, can't remember but did wallballs before boxjumps because of crowded box",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+27,17,36,false,,,3,Added 15KG on my back while doing ring push-ups on last 6 and 4 reps,false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+35,21,45,true,174,,4,Almost 5 rounds - finished at 12 Kb Swings on the 4th round - Hard to keep the cardio on a 'not too high' intensity,true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+29,18,39,true,,,3,Finished with 80KG on the barbell and used a 24Kg kettlebell,false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+61,38,78,true,,,3,Backsquats: 70 - 75 - 80 - 90KG and Harop curl on the rower 😅,true,2022-08-10 22:03:16.298,2022-08-10 22:03:16.298
+43,25,58,true,144,,4,"1st set: 5 rounds
+2nd set: 5 rounds and 3 Powercleans
+3rd set: 5 rounds and 6 Powercleans",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+28,17,37,true,270,,4,"6 rounds exactly, pushed by Albin to challenge myself especially while I start back on the rower, pull before fixing the shoes",false,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+58,36,44,false,,,3,"50 - 60 - 70 - 70 - 75 - 80KG
+
+Veeery hard on the powerclean at 80KG and not great form, but did it.",true,2022-08-07 11:53:11.139,2022-08-10 22:03:16.298
+57,35,75,true,365,,2,"2 Rounds and until 6 reps of Bycicle crunches, very hard and long workout",true,2022-08-06 11:56:39.082,2022-08-10 22:03:16.298
+59,36,49,true,,643,4,Good push on the last double unders - Love this workout <3,true,2022-08-07 11:53:11.139,2022-08-10 22:03:16.298
+9,7,11,true,,,,"3-2-2-2-2",false,2022-08-06 11:56:39.080,2022-08-10 22:03:16.297
+52,32,71,true,404,,4,"8 Rounds + 4 squats, quite long but fun workout, tough on the squats towards the end",true,2022-08-06 11:56:39.082,2022-08-10 22:03:16.299
+37,22,49,true,,670,3,"Fun workout, tough on the grip and front arm, but good pace on the double unders",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+44,27,60,true,,,4,"Great endurance workout, did 4 rounds + 556 meters row. Try 9mn per round to get 3 extra minutes on the last round and finish the row",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+38,23,50,true,,,4,"Super nice and tough endurance/strength workout 
+
+ TGU:24KG 
+ Burpees Box jumps:4-6 
+ Gorilla rows:24KG 
+ Front rack carry:24KG 
+ Wall walks:3 reps 
+ Skater squats:5+5 
+ Farmers carry:32KG",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
+46,28,64,true,,195,5,"Very fast workout, super fun, rushing all the way",true,2022-08-06 11:56:39.081,2022-08-10 22:03:16.298
