@@ -173,8 +173,8 @@ export default function WorkoutCard({
         className={`flex  flex-col border border-base-content border-opacity-5  px-4
           ${
             isFullScreen
-              ? "fixed inset-0  w-full overflow-scroll bg-base-100"
-              : "relative bg-base-200"
+              ? "fixed inset-0 z-20 w-full overflow-scroll bg-base-100"
+              : "relative z-10 bg-base-200"
           }
           ${
             isWorkoutFromSessionForm && !isFullScreen
@@ -349,22 +349,6 @@ export default function WorkoutCard({
           )}
 
           {workoutResult && !isDraggable && workoutResult}
-
-          {workout.elementType === "UNCLASSIFIED" && hasSelection && (
-            <div className="mt-8 flex justify-center gap-3">
-              <button
-                onClick={() =>
-                  createWorkoutFromSelectedText(
-                    workout,
-                    window.getSelection()?.toString() || ""
-                  )
-                }
-                className="btn-primary btn-xs btn"
-              >
-                Classify selection
-              </button>
-            </div>
-          )}
 
           {workout.elementType === "UNCLASSIFIED" && hasSelection && (
             <div className="mt-8 flex justify-center gap-3">

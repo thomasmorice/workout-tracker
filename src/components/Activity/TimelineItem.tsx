@@ -37,7 +37,7 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
 
   return (
     <>
-      <div className="relative mb-6 cursor-pointer rounded-md border border-base-content border-opacity-10 bg-base-200 bg-opacity-50 p-5  transition-transform hover:translate-x-1">
+      <div className="relative mb-6 cursor-pointer rounded-md border border-base-content border-opacity-10 bg-base-200 bg-opacity-50 p-5  transition-transform hover:-translate-y-1">
         <div
           onClick={() => {
             if (event.workoutSession) {

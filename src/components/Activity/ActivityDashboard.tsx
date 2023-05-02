@@ -1,6 +1,6 @@
 import { endOfMonth, formatISO, isSameDay, startOfMonth } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MdAdd } from "react-icons/md";
 import { useActivityStore } from "../../store/ActivityStore";
 import { useEventStore } from "../../store/EventStore";
@@ -8,13 +8,21 @@ import { trpc } from "../../utils/trpc";
 import Calendar from "./Calendar";
 import TimelineItem from "./TimelineItem";
 import { useSession } from "next-auth/react";
+import { EventRouterType } from "../../server/trpc/router/event-router";
+import { inferRouterOutputs } from "@trpc/server";
 
 export default function ActivityDashboard() {
   const { addOrEditEvent } = useEventStore();
   const { currentMonth } = useActivityStore();
   const { data: sessionData } = useSession();
+  const [filteredEvents, set_filteredEvents] =
+    useState<inferRouterOutputs<EventRouterType>["getEvents"]>();
 
-  const { data: events, isLoading } = trpc.event.getEvents.useQuery(
+  const {
+    data: events,
+    isLoading,
+    isRefetching,
+  } = trpc.event.getEvents.useQuery(
     {
       dateFilter: {
         gte: formatISO(startOfMonth(currentMonth)),
@@ -26,29 +34,33 @@ export default function ActivityDashboard() {
 
   const [showSpecificDay, set_showSpecificDay] = useState<Date>();
 
-  const getFilteredEvents = useMemo(() => {
+  useEffect(() => {
+    let filteredEvents = [];
     if (events) {
       if (showSpecificDay) {
-        return events.filter((event) =>
+        filteredEvents = events.filter((event) =>
           isSameDay(event.eventDate, showSpecificDay)
         );
       }
-      return events;
+      set_filteredEvents(events);
     }
   }, [events, showSpecificDay]);
 
-  const timelineItemVariant = {
-    hidden: { opacity: 0, x: -20 },
-    show: { opacity: 1, x: 0 },
-  };
-
   const timelineContainerVariant = {
-    hidden: { opacity: 1 },
+    hidden: {
+      opacity: 0,
+    },
     show: {
+      opacity: 1,
       transition: {
         staggerChildren: 0.1,
       },
     },
+  };
+
+  const timelineItemVariant = {
+    hidden: { y: 20, opacity: 0 },
+    show: { y: 0, opacity: 1 },
   };
 
   return (
@@ -103,34 +115,30 @@ export default function ActivityDashboard() {
         </div>
         {showSpecificDay && (
           <h3 className="mt-2">
-            {getFilteredEvents && getFilteredEvents.length > 0 ? (
-              <>{getFilteredEvents.length} session selected</>
+            {filteredEvents ? (
+              <>{filteredEvents.length} session selected</>
             ) : (
               <>No workout on this specific day</>
             )}
           </h3>
         )}
         <div className="mt-7">
-          <AnimatePresence>
-            {!isLoading && getFilteredEvents && (
-              <motion.ol
-                // className="relative border-l border-accent-content border-opacity-20"
-                variants={timelineContainerVariant}
-                initial="hidden"
-                animate="show"
-              >
-                {getFilteredEvents.map((event) => {
-                  return (
-                    <AnimatePresence key={event.id}>
-                      <motion.li variants={timelineItemVariant}>
-                        <TimelineItem event={event} />
-                      </motion.li>
-                    </AnimatePresence>
-                  );
-                })}
-              </motion.ol>
-            )}
-          </AnimatePresence>
+          {!isLoading && filteredEvents && (
+            <motion.ol
+              key={filteredEvents[0]?.id}
+              variants={timelineContainerVariant}
+              initial="hidden"
+              animate="show"
+            >
+              {filteredEvents.map((event) => {
+                return (
+                  <motion.li key={event.id} variants={timelineItemVariant}>
+                    <TimelineItem event={event} />
+                  </motion.li>
+                );
+              })}
+            </motion.ol>
+          )}
         </div>
       </div>
     </>

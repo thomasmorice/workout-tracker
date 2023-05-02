@@ -13,6 +13,20 @@ import { trpc } from "../../utils/trpc";
 import WorkoutCard from "./WorkoutCard/WorkoutCard";
 
 export default function WeeklyBoxWorkouts() {
+  const workoutContainerVariant = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const workoutItemVariant = {
+    hidden: { y: 20, opacity: 0 },
+    show: { y: 0, opacity: 1 },
+  };
+
   const weekDays = {
     start: startOfDay(subDays(new Date(), 2)),
     end: endOfDay(addDays(new Date(), 5)),
@@ -86,17 +100,25 @@ export default function WeeklyBoxWorkouts() {
           : format(selectedDay, "eeee")}
       </h2> */}
 
-      <div className="mt-10 flex flex-col gap-10">
+      <motion.div
+        key={selectedDay.toString()}
+        variants={workoutContainerVariant}
+        initial="hidden"
+        animate="show"
+        className="mt-10 flex flex-col gap-10"
+      >
         <LayoutGroup>
           {data?.pages[0]?.workouts.map(
             (workout) =>
               workout.affiliateDate &&
               isSameDay(workout.affiliateDate, selectedDay) && (
-                <WorkoutCard key={workout.id} workout={workout} />
+                <motion.div key={workout.id}>
+                  <WorkoutCard workout={workout} />
+                </motion.div>
               )
           )}
         </LayoutGroup>
-      </div>
+      </motion.div>
     </>
   );
 }
