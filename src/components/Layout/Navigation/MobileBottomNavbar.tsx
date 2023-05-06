@@ -29,14 +29,14 @@ export default function MobileBottomNavbar({ items }: NavigationItemsProps) {
               >
                 <div
                   className={`rounded-full p-3 ${
-                    isLinkActive(item.href) ? " bg-base-300 text-white" : ""
+                    isLinkActive(item.href)
+                      ? " text-white"
+                      : "text-base-content opacity-60"
                   }`}
                 >
                   <item.icon
-                    className={`${
-                      isLinkActive(item.href) ? "rounded-full " : ""
-                    }`}
-                    size={19}
+                    className={`${isLinkActive(item.href) ? "" : ""}`}
+                    size={isLinkActive(item.href) ? 22 : 19}
                   />
                 </div>
 
