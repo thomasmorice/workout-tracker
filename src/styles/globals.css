@@ -4,7 +4,7 @@
 
 @layer components {
   .h1 {
-    @apply text-xl font-bold md:hidden;
+    @apply text-lg font-bold md:hidden;
   }
   .h1.desktop {
     @apply hidden text-4xl md:block;
@@ -18,44 +18,19 @@
   }
 
   .workout-card .card {
-    @apply rounded-xl border border-base-content border-opacity-20;
+    @apply rounded-xl border border-base-content border-opacity-[0.15];
+    box-shadow: 0px 2px 30px rgba(0, 0, 0, 0.25);
   }
 
-  .glowing-bg {
-    @apply absolute -inset-[1px] animate-tilt rounded-xl  bg-gradient-to-r opacity-30 blur transition duration-1000 group-hover:opacity-60 group-hover:duration-200;
-    @apply from-slate-700 via-slate-600 to-slate-800;
+  .modal-container {
+    @apply bg-transparent backdrop-blur-[3px];
+    z-index: 9999 !important;
   }
 
-  .workout-card.green .glowing-bg {
-    @apply from-green-600 via-green-500 to-green-800;
-  }
-
-  .workout-card.green .card {
-    @apply border-green-700 border-opacity-20;
-  }
-
-  .workout-card.yellow .glowing-bg {
-    @apply from-yellow-600 via-yellow-500 to-yellow-800;
-  }
-
-  .workout-card.yellow .card {
-    @apply border-yellow-700 border-opacity-20;
-  }
-
-  .workout-card.red .glowing-bg {
-    @apply from-red-600 via-red-500 to-red-800;
-  }
-
-  .workout-card.red .card {
-    @apply border-red-700 border-opacity-20;
-  }
-
-  .workout-card.black .glowing-bg {
-    @apply from-slate-300 via-slate-600 to-slate-400;
-  }
-
-  .workout-card.black .card {
-    @apply border-black border-opacity-40;
+  .inner-modal {
+    @apply absolute bottom-0 top-[10%] h-fit min-h-[90%] w-full rounded-t-2xl bg-base-100 p-6 md:h-fit md:min-h-fit md:max-w-xl md:rounded-2xl;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
   }
 
   .card-body {
@@ -69,4 +44,36 @@
   .badge {
     @apply rounded-lg text-xs;
   }
+}
+
+::-webkit-calendar-picker-indicator {
+  width: 100%;
+  position: absolute;
+  left: 0;
+}
+
+.blurred-mask {
+  /* box-shadow: 0px 0px 10px fade(#fff, 80%); */
+  filter: drop-shadow(0 0 1.5rem rgba(203, 166, 14, 0.25));
+}
+/* .blurred-mask::after {
+  width: 100%;
+  height: 100%;
+  border-radius: 50px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  content: "";
+  background: inherit;
+  filter: blur(20px);
+  opacity: 0.8;
+} */
+
+.no-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }

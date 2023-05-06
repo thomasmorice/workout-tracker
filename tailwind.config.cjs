@@ -4,14 +4,25 @@ module.exports = {
   darkMode: ["class", '[data-theme="dark"]'],
   theme: {
     fontFamily: {
-      sans: ["Work Sans", "ui-sans-serif", "system-ui"],
+      sans: ["Work sans", "ui-sans-serif", "system-ui"],
+      script: ["Patrick Hand"],
     },
 
     extend: {
       animation: {
         tilt: "tilt 5s infinite linear",
+        rotate: "rotate 30s infinite linear",
+        translate: "translate 10s infinite linear",
       },
       keyframes: {
+        rotate: {
+          "0%": {
+            transform: "rotate(0deg)",
+          },
+          "100%": {
+            transform: "rotate(360deg)",
+          },
+        },
         tilt: {
           "0%, 50%, 100%": {
             transform: "rotate(0deg)",
@@ -21,6 +32,26 @@ module.exports = {
           },
           "75%": {
             transform: "rotate(-0.5deg)",
+          },
+        },
+        translate: {
+          "0%, 100%": {
+            transform: "translate(0px)",
+          },
+          "15%": {
+            transform: "translateX(-80px) translateY(20px)",
+          },
+          "30%": {
+            transform: "translateX(-60px) translateY(-40px)",
+          },
+          "45%": {
+            transform: "translateX(-20px) translateY(10px)",
+          },
+          "15%": {
+            transform: "translateX(0px) translateY(20px)",
+          },
+          "15%": {
+            transform: "translateX(10px) translateY(-20px)",
           },
         },
       },
@@ -43,34 +74,30 @@ module.exports = {
     "bg-red-700",
     "bg-yellow-700",
 
-    "bg-green-900",
-    "bg-red-900",
-    "bg-yellow-900",
-    "bg-gray-900",
-
     "border-yellow-700",
     "border-red-700",
     "border-green-700",
     "bg-gray-400",
+
+    "bg-green-900",
+    "bg-red-900",
+    "bg-yellow-900",
+    "bg-gray-900",
+    "bg-gray-400",
   ],
   daisyui: {
     themes: [
-      "night",
-      "dark",
-      "dracula",
-      // {
-      //   dark: {
-      //     primary: "#BBAB8D",
-      //     secondary: "#577371",
-      //     accent: "#749E1F",
-      //     neutral: "#16102D",
-      //     "base-100": "#221D37",
-      //     info: "#4EB6CA",
-      //     success: "#66E5AA",
-      //     warning: "#C19915",
-      //     error: "#F75636",
-      //   },
-      // },
+      {
+        dark: {
+          ...require("daisyui/src/colors/themes")["[data-theme=dark]"],
+          // "base-100": "#19181c",
+          // "base-200": "#29272e",
+          // "base-300": "#393740",
+          "base-content": "#D1D6E0",
+          // primary: "#00C89C",
+          "range-shdw": "black",
+        },
+      },
     ],
   },
   plugins: [require("daisyui")],

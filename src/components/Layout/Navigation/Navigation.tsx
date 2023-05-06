@@ -9,12 +9,17 @@ import {
 import { HiOutlineClipboardList } from "react-icons/hi";
 import MobileBottomNavbar from "./MobileBottomNavbar";
 import DesktopSidebar from "./DesktopSidebar";
+import { AnimatePresence, motion } from "framer-motion";
+import { AiOutlinePlus } from "react-icons/ai";
+import { CgGym } from "react-icons/cg";
+import { GiGymBag } from "react-icons/gi";
 
 export interface NavigationItemsProps {
   items: {
     icon: IconType;
     label: string;
     href: string;
+    isFloatingActionButton?: boolean;
   }[];
 }
 
@@ -26,15 +31,21 @@ export default function Navigation() {
       href: "/",
     },
     {
-      icon: HiOutlineClipboardList,
+      icon: GiGymBag,
       label: "Workouts",
-      href: "/workouts",
+      href: "/this-week-at-my-box",
     },
-    // {
-    //   icon: MdOutlineSchedule,
-    //   label: "Activities",
-    //   href: "/schedule",
-    // },
+    {
+      icon: AiOutlinePlus,
+      label: "",
+      href: "",
+      isFloatingActionButton: true,
+    },
+    {
+      icon: MdOutlineSchedule,
+      label: "Activities",
+      href: "/activities",
+    },
     {
       icon: MdOutlineAccountCircle,
       label: "Profile",
@@ -45,13 +56,17 @@ export default function Navigation() {
   return (
     <>
       {/* Desktop Nav */}
-      <div className="hidden md:block">
-        <DesktopSidebar items={NavigationItems} />
-      </div>
-      {/* Mobile Nav */}
-      <div className="block md:hidden">
-        <MobileBottomNavbar items={NavigationItems} />
-      </div>
+      <AnimatePresence>
+        <>
+          <div className="hidden md:block">
+            <DesktopSidebar items={NavigationItems} />
+          </div>
+          {/* Mobile Nav */}
+          <div className="block md:hidden">
+            <MobileBottomNavbar items={NavigationItems} />
+          </div>
+        </>
+      </AnimatePresence>
     </>
   );
 }

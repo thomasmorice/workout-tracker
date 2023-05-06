@@ -1,8 +1,8 @@
 import { inferRouterOutputs } from "@trpc/server";
-import create from "zustand";
+import { create } from "zustand";
 import { EventRouterType } from "../server/trpc/router/event-router";
 
-type EventType = "weighting" | "workout-session";
+type EventType = "weighing" | "workout-session";
 
 interface AddOrEditEventProps {
   type: EventType;
@@ -10,7 +10,7 @@ interface AddOrEditEventProps {
   date?: Date;
 }
 interface EventState {
-  eventTypeToEdit?: EventType;
+  showFormWithEventType?: EventType;
   eventDate?: Date;
   closeForm: () => void;
   eventBeingEdited?: inferRouterOutputs<EventRouterType>["getEvents"][number]["id"];
@@ -20,14 +20,14 @@ interface EventState {
 const useEventStore = create<EventState>()((set, get) => ({
   addOrEditEvent: ({ type, eventId, date }) => {
     set({
-      eventTypeToEdit: type,
+      showFormWithEventType: type,
       eventBeingEdited: eventId,
       eventDate: date,
     });
   },
   closeForm: () => {
     set({
-      eventTypeToEdit: undefined,
+      showFormWithEventType: undefined,
       eventBeingEdited: undefined,
     });
   },

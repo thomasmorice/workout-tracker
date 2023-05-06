@@ -1,0 +1,22 @@
+{
+  "theme_color": "#2A303C",
+  "background_color": "#ee3e54",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/?version=0.1",
+  "name": "Box Track (dev)",
+  "short_name": "Box Track (dev)",
+  "description": "Workout tracker build especially for Crossfit type of workouts. Plan your session, follow your progress and reach your goals",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,64 +1,114 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  useForm,
-  Controller,
-  SubmitHandler,
-  useFieldArray,
-} from "react-hook-form";
-import DatePicker from "react-datepicker";
-import WorkoutSelectField from "../Workout/WorkoutSelectField";
-import { useWorkoutSessionService } from "../../services/useWorkoutSessionService";
-import { useToastStore } from "../../store/ToastStore";
-import { z } from "zod";
-import WorkoutResultForm from "../WorkoutResult/WorkoutResultForm";
-import { useWorkoutResultService } from "../../services/useWorkoutResultService";
-import { Reorder } from "framer-motion";
-import WorkoutSessionResultItem from "./WorkoutSessionResultItem";
+import { useEffect, useRef, useState } from "react";
+import { MdCancel, MdModelTraining, MdStar, MdWarning } from "react-icons/md";
+import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
+import { inferRouterInputs, inferRouterOutputs, TRPCError } from "@trpc/server";
+import { WorkoutSessionRouterType } from "../../server/trpc/router/workout-session-router";
 import {
   CreateWorkoutSessionInputSchema,
   WorkoutResultInputsWithWorkout,
 } from "../../types/app";
-import { isBefore } from "date-fns";
-import Portal from "../Portal/Portal";
+import { useRouter } from "next/router";
+import { useWorkoutStore } from "../../store/WorkoutStore";
 import { useEventStore } from "../../store/EventStore";
+import { enumToString } from "../../utils/formatting";
+import DatePicker from "../DatePicker/DatePicker";
+import { trpc } from "../../utils/trpc";
+import { useSession } from "next-auth/react";
+import { Rings } from "react-loading-icons";
 import { workoutResultIsFilled } from "../../utils/utils";
-import { inferRouterInputs } from "@trpc/server";
-import { WorkoutSessionRouterType } from "../../server/trpc/router/workout-session-router";
+import { Reorder } from "framer-motion";
+import { z } from "zod";
+import { useToastStore } from "../../store/ToastStore";
+import { EventRouterType } from "../../server/trpc/router/event-router";
+import WorkoutResultForm from "../WorkoutResult/WorkoutResultForm";
+import { TRPCClientError } from "@trpc/client";
+import WorkoutCard from "../Workout/WorkoutCard/WorkoutCard";
+import Dropdown from "../Dropdown/Dropdown";
+import { format, isAfter } from "date-fns";
+import Image from "next/image";
+import { RxDotsVertical } from "react-icons/rx";
+import WorkoutResult from "../Workout/WorkoutCard/WorkoutResult";
 
-interface WorkoutSessionFormProps {
+type WorkoutSessionFormProps = {
+  // create?: boolean;
+  existingSessionId?: inferRouterOutputs<EventRouterType>["getEvents"][number]["id"];
   onSuccess?: () => void;
-}
-const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
-  const { addMessage, closeMessage } = useToastStore();
-  const { createOrEditWorkoutSession, getWorkoutSessionById } =
-    useWorkoutSessionService();
-  const { createOrEditMultipleWorkoutResult, deleteMultipleWorkoutResult } =
-    useWorkoutResultService();
+};
 
-  const { eventBeingEdited, eventDate, addOrEditEvent } = useEventStore();
-
-  const { data: existingWorkoutSession } = getWorkoutSessionById(
-    eventBeingEdited || -1
-  );
+export default function WorkoutSessionForm({
+  existingSessionId,
+  onSuccess,
+}: WorkoutSessionFormProps) {
+  const { data: sessionData } = useSession();
 
   const [defaultValues, set_defaultValues] = useState({});
+  const router = useRouter();
+
+  const saveButtonRef = useRef<HTMLButtonElement>(null);
+  const [showWorkoutResultForm, set_showWorkoutResultForm] =
+    useState<WorkoutResultInputsWithWorkout>();
+
+  const [reorderWorkoutMode, set_reorderWorkoutMode] = useState(false);
+
+  const { selectedWorkouts: preselectedWorkouts } = useWorkoutStore();
+  const { eventDate } = useEventStore();
+  const { addMessage, closeMessage } = useToastStore();
+  const utils = trpc.useContext();
+
+  const {
+    data: existingWorkoutSession,
+    isInitialLoading,
+    isLoading,
+  } = trpc.workoutSession.getWorkoutSessionById.useQuery(
+    {
+      id: existingSessionId || -1,
+    },
+    {
+      enabled: sessionData?.user !== undefined && !!existingSessionId,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const { mutateAsync: addOrEditWorkoutSession } =
+    trpc.workoutSession.addOrEdit.useMutation({
+      onError(e: unknown) {
+        addMessage({
+          message: (e as TRPCError).message,
+          type: "error",
+        });
+      },
+    });
+
+  const { mutateAsync: addOrEditManyWorkoutResults } =
+    trpc.workoutResult.addOrEditMany.useMutation({
+      onError(e: unknown) {
+        addMessage({
+          message: (e as TRPCError).message,
+          type: "error",
+        });
+      },
+    });
 
   useEffect(() => {
     set_defaultValues({
       id: existingWorkoutSession?.id ?? undefined,
       date: existingWorkoutSession?.event.eventDate ?? eventDate ?? new Date(),
-      workoutResults: existingWorkoutSession?.workoutResults ?? [],
+      workoutResults:
+        existingWorkoutSession?.workoutResults ??
+        preselectedWorkouts.map((workout) => ({
+          workout: workout,
+          workoutId: workout.id,
+        })),
       eventId: existingWorkoutSession?.eventId ?? undefined,
     });
-  }, [existingWorkoutSession, eventDate]);
-
-  const [editWorkoutResultIndex, set_editWorkoutResultIndex] =
-    useState<number>(-1);
+  }, [eventDate, existingWorkoutSession, preselectedWorkouts]);
 
   const {
     handleSubmit,
+
     reset,
     getValues,
+    watch,
     control,
     formState: { isSubmitting, isDirty },
   } = useForm<
@@ -69,204 +119,203 @@ const WorkoutSessionForm = ({ onSuccess }: WorkoutSessionFormProps) => {
     defaultValues,
   });
 
-  useEffect(() => {
-    reset(defaultValues);
-  }, [defaultValues, reset]);
-
-  const handleCreateOrEdit: SubmitHandler<
-    z.infer<typeof CreateWorkoutSessionInputSchema>
-  > = async (
-    workoutSession: z.infer<typeof CreateWorkoutSessionInputSchema>
-  ) => {
-    let message = addMessage({
-      type: "pending",
-      message: "Creating workout session",
-    });
-    const savedWorkoutSession = await createOrEditWorkoutSession.mutateAsync(
-      workoutSession
-    );
-    closeMessage(message);
-    if (workoutSession.workoutResults?.length ?? 0 > 0) {
-      message = addMessage({
-        type: "pending",
-        message: "Adding workouts to this session",
-      });
-      await createOrEditMultipleWorkoutResult.mutateAsync({
-        workoutResults: workoutSession.workoutResults,
-        workoutSessionId: savedWorkoutSession.id,
-      });
-      closeMessage(message);
-    }
-
-    const resultsToDelete = existingWorkoutSession?.workoutResults
-      .filter((existingRes) =>
-        workoutSession?.workoutResults.every((res) => res.id !== existingRes.id)
-      )
-      .map((resToDelete) => resToDelete.id);
-
-    if (resultsToDelete && resultsToDelete.length > 0) {
-      await deleteMultipleWorkoutResult.mutateAsync({
-        ids: resultsToDelete,
-      });
-    }
-
-    addMessage({
-      type: "success",
-      message: `Session ${
-        existingWorkoutSession ? "edited" : "created"
-      } successfully`,
-    });
-
-    if (
-      workoutSession.workoutResults.every((result) =>
-        workoutResultIsFilled(result)
-      )
-    ) {
-      onSuccess
-        ? onSuccess()
-        : addOrEditEvent({
-            type: "workout-session",
-            eventId: savedWorkoutSession.id,
-          });
-    } else {
-      addOrEditEvent({
-        type: "workout-session",
-        eventId: savedWorkoutSession.id,
-      });
-    }
-  };
+  watch("date"); // Keep track of this change
 
   const {
     fields: workoutResults,
     replace: replaceWorkoutResults,
-    append: appendWorkoutResults,
-    update: updateWorkoutResults,
     remove: removeWorkoutResults,
-    move: moveWorkoutResults,
+    update: updateWorkoutResults,
   } = useFieldArray({
     keyName: "key",
     control, // control props comes from useForm (optional: if you are using FormContext)
     name: "workoutResults", // unique name for your Field Array
   });
 
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues, reset]);
+
+  const isSessionInTheFuture = isAfter(getValues("date"), new Date());
+
+  if (isInitialLoading) {
+    return (
+      <div className=" flex h-screen w-screen items-center justify-center">
+        <Rings strokeWidth={1.5} width={64} height={64} />
+      </div>
+    );
+  }
+
+  const handleCreateOrEdit: SubmitHandler<
+    z.infer<typeof CreateWorkoutSessionInputSchema>
+  > = async (
+    workoutSession: z.infer<typeof CreateWorkoutSessionInputSchema>
+  ) => {
+    const toastId = addMessage({
+      type: "pending",
+      message: `${existingWorkoutSession ? "Editing" : "Creating"} session`,
+    });
+    try {
+      const savedWorkoutSession = await addOrEditWorkoutSession(workoutSession);
+
+      if (workoutSession.workoutResults?.length ?? 0 > 0) {
+        await addOrEditManyWorkoutResults({
+          workoutResults: workoutSession.workoutResults,
+          workoutSessionId: savedWorkoutSession.id,
+        });
+        addMessage({
+          type: "success",
+          message: `Session ${existingSessionId ? "edited" : "created"}`,
+        });
+      }
+
+      if (!existingSessionId) {
+        router.push(`/session/edit/${savedWorkoutSession.id}`);
+      } else {
+        await utils.workoutSession.getWorkoutSessionById.invalidate();
+      }
+    } catch (e) {
+      if (e instanceof TRPCClientError) {
+        addMessage({
+          type: "error",
+          message: e.message,
+        });
+      }
+    } finally {
+      reset(defaultValues);
+      toastId && closeMessage(toastId);
+    }
+  };
+
   return (
-    <>
-      <form
-        className="flex flex-col pb-10 pt-2 md:pt-5"
-        onSubmit={handleSubmit(handleCreateOrEdit)}
-      >
-        <div className="flex flex-col gap-1">
-          <div className="form-control relative z-40 w-full flex-1">
-            <label className="label">
-              <span className="label-text">Session date</span>
-            </label>
-            <Controller
-              control={control}
-              name="date"
-              render={({ field }) => (
-                <DatePicker
-                  className="input-bordered input w-full"
-                  onFocus={(e) => (e.target.readOnly = true)}
-                  showTimeInput
-                  // showTimeSelect
-                  placeholderText="Select date"
-                  onChange={(date: Date) => field.onChange(date)}
-                  selected={field.value}
-                  popperPlacement="bottom"
-                  dateFormat="MMMM d, h:mm aa"
-                />
-              )}
-            />
-          </div>
+    <div className="">
+      {showWorkoutResultForm && (
+        <WorkoutResultForm
+          onSave={(workoutResult) => {
+            updateWorkoutResults(
+              workoutResults.findIndex(
+                (wr) => wr.workoutId === workoutResult.workoutId
+              ),
+              workoutResult
+            );
+            set_showWorkoutResultForm(undefined);
+          }}
+          onClose={() => set_showWorkoutResultForm(undefined)}
+          workoutResult={showWorkoutResultForm}
+        />
+      )}
 
-          {/* {editMode && ( */}
-          <div className="form-control relative">
-            <label className="label">
-              <span className="label-text">Add workouts to this session </span>
-            </label>
+      <div className="absolute top-6 right-0 -z-10 h-64 w-64 overflow-hidden opacity-20">
+        <Image
+          fill
+          src={`/icons/session-form-background.png`}
+          className="object-contain object-top"
+          alt={`Session form backgorund`}
+        />
+      </div>
 
-            <WorkoutSelectField
-              selectedIds={workoutResults.map((result) => result.workout.id)}
-              handleAddWorkout={(workout) =>
-                appendWorkoutResults({
-                  workout: workout,
-                  workoutId: workout.id,
-                })
-              }
-            />
-          </div>
-          {/* )} */}
-          {workoutResults.length > 0 && (
-            <div className="form-control relative mt-2 w-full flex-1">
-              <label className="label">
-                <h2 className="h2 mt-3">
-                  Session workouts {`(${workoutResults.length})`}
-                </h2>
-              </label>
-              <div className="mt-2 flex flex-col gap-8 text-sm">
-                <Reorder.Group
-                  values={workoutResults}
-                  onReorder={(values) => replaceWorkoutResults(values)}
-                >
-                  {workoutResults.map((result, index) => (
-                    <WorkoutSessionResultItem
-                      key={result.workout.id}
-                      isDone={isBefore(getValues("date"), new Date())}
-                      result={result}
-                      onRemoveWorkoutResult={() => removeWorkoutResults(index)}
-                      onMoveResultUp={() =>
-                        index > 0 && moveWorkoutResults(index, index - 1)
-                      }
-                      onMoveResultDown={() =>
-                        index < workoutResults.length - 1 &&
-                        moveWorkoutResults(index, index + 1)
-                      }
-                      onOpenWorkoutResultDetail={() =>
-                        set_editWorkoutResultIndex(index)
-                      }
-                    />
-                  ))}
-                </Reorder.Group>
-              </div>
+      <div className="relative mt-2 flex flex-col justify-center ">
+        {workoutResults.length && (
+          <>
+            <div className="text-lg font-bold text-white">
+              <DatePicker name="date" control={control} />
             </div>
-          )}
-        </div>
-        {isDirty && (
-          <div className="flex flex-col gap-2 text-sm">
-            <button
-              className={`btn mt-3 ${isSubmitting ? "loading" : ""}`}
-              type="button"
-              onClick={async () => {
-                await handleSubmit(handleCreateOrEdit)();
-                onSuccess && onSuccess();
-              }}
-            >
-              {isBefore(getValues("date"), new Date()) ? "Save" : "Plan"}
-              {` this session`}
-            </button>
-          </div>
-        )}
 
-        {editWorkoutResultIndex !== -1 && (
-          <Portal>
-            <WorkoutResultForm
-              onSave={(workoutResult) => {
-                updateWorkoutResults(editWorkoutResultIndex, workoutResult);
-                handleSubmit(handleCreateOrEdit)();
-                set_editWorkoutResultIndex(-1);
-              }}
-              onClose={() => set_editWorkoutResultIndex(-1)}
-              workoutResult={
-                workoutResults[
-                  editWorkoutResultIndex
-                ] as WorkoutResultInputsWithWorkout
-              }
-            />
-          </Portal>
+            <div className="form-control">
+              <label className="label cursor-pointer justify-start gap-3">
+                <span className="label-text">
+                  Change the order of the workouts
+                </span>
+                <input
+                  type="checkbox"
+                  onClick={() => set_reorderWorkoutMode(!reorderWorkoutMode)}
+                  className="toggle"
+                  checked={reorderWorkoutMode}
+                />
+              </label>
+            </div>
+
+            {isDirty && (
+              <div className="flex gap-2">
+                <div
+                  onClick={() =>
+                    saveButtonRef.current?.scrollIntoView({
+                      behavior: "smooth",
+                    })
+                  }
+                  className="badge badge-warning mb-4 mt-2 flex cursor-pointer gap-1"
+                >
+                  <MdWarning /> You have unsaved changes{" "}
+                </div>
+                <div
+                  onClick={() => reset(defaultValues)}
+                  className="badge badge-error mb-4 mt-2 flex cursor-pointer gap-1"
+                >
+                  <MdCancel /> Cancel
+                </div>
+              </div>
+            )}
+
+            <div className="">
+              <Reorder.Group
+                axis="y"
+                className="mt-3 flex flex-col gap-5"
+                values={workoutResults}
+                onReorder={(reorderedResults) => {
+                  replaceWorkoutResults(reorderedResults);
+                }}
+              >
+                {workoutResults.map((workoutResult, index) => {
+                  return (
+                    <Reorder.Item
+                      key={workoutResult.workoutId}
+                      value={workoutResult}
+                      dragListener={reorderWorkoutMode}
+                    >
+                      <WorkoutCard
+                        isDraggable={reorderWorkoutMode}
+                        isWorkoutFromSessionForm
+                        workout={workoutResult.workout}
+                        onRemoveWorkoutFromSession={() =>
+                          removeWorkoutResults(index)
+                        }
+                        onEditWorkoutResult={() =>
+                          set_showWorkoutResultForm(workoutResult)
+                        }
+                        workoutResult={
+                          <WorkoutResult
+                            workoutResult={workoutResult}
+                            onEditWorkoutResult={() =>
+                              set_showWorkoutResultForm(workoutResult)
+                            }
+                          />
+                        }
+                      />
+                    </Reorder.Item>
+                  );
+                })}
+              </Reorder.Group>
+            </div>
+
+            {(isDirty || !existingSessionId) && (
+              <button
+                ref={saveButtonRef}
+                onClick={async () => {
+                  await handleSubmit(handleCreateOrEdit)();
+                }}
+                type="button"
+                className="btn-primary btn-sm btn mt-6 w-full"
+              >
+                {isSessionInTheFuture
+                  ? "Plan this session"
+                  : existingSessionId
+                  ? "Save changes"
+                  : "Save this session"}
+              </button>
+            )}
+          </>
         )}
-      </form>
-    </>
+      </div>
+    </div>
   );
-};
-
-export default WorkoutSessionForm;
+}

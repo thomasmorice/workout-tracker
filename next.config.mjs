@@ -1,4 +1,5 @@
 import withPWA from "next-pwa";
+import currentGitBranchName from "current-git-branch";
 
 const importWithPWA = withPWA({
   dest: "public",
@@ -6,6 +7,15 @@ const importWithPWA = withPWA({
   skipWaiting: false,
   disable: process.env.NODE_ENV === "development",
 });
+
+const rewrites = () => {
+  return [
+    {
+      source: "/crossfit-affiliates",
+      destination: "http://map.crossfit.com/ac.php",
+    },
+  ];
+};
 
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env/server.mjs"));
 
@@ -18,7 +28,14 @@ const config = importWithPWA({
     defaultLocale: "en",
   },
   images: {
-    domains: ["lh3.googleusercontent.com"],
+    domains: ["lh3.googleusercontent.com", "i.pravatar.cc"],
   },
+  env: {
+    GIT_BRANCH: currentGitBranchName(),
+  },
+  experimental: {
+    // scrollRestoration: true,
+  },
+  rewrites,
 });
 export default config;

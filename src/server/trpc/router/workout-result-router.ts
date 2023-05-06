@@ -28,6 +28,7 @@ export const workoutResultRouter = router({
     .input(
       z.object({
         workoutId: z.number(),
+        onlyFetchMine: z.boolean().default(true),
       })
     )
     .query(({ ctx, input }) => {
@@ -35,9 +36,27 @@ export const workoutResultRouter = router({
       const workoutResults = ctx.prisma.workoutResult.findMany({
         select: {
           ...WorkoutResultsSelect,
+          workoutSession: {
+            select: {
+              id: true,
+              event: true,
+            },
+          },
         },
         where: {
           workoutId: workoutId,
+          ...(input.onlyFetchMine && {
+            workoutSession: {
+              athleteId: ctx.session.user.id,
+            },
+          }),
+        },
+        orderBy: {
+          workoutSession: {
+            event: {
+              eventDate: "desc",
+            },
+          },
         },
       });
       return workoutResults;

@@ -10,7 +10,7 @@ import {
   subMonths,
   addMonths,
 } from "date-fns";
-import { Rings } from "react-loading-icons";
+import { TailSpin } from "react-loading-icons";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import { useActivityStore } from "../../store/ActivityStore";
 import { inferRouterOutputs } from "@trpc/server";
@@ -174,7 +174,7 @@ const Calendar = ({
       {getDates()}
       {isLoading && (
         <div className="absolute -top-4 -left-4 flex h-[calc(100%_+_2rem)] w-[calc(100%_+_2rem)] items-center justify-center rounded-xl bg-base-200 bg-opacity-70">
-          <Rings className="h-14 w-14" />
+          <TailSpin className="h-8" stroke="#2D68FF" speed={1.2} />{" "}
         </div>
       )}
     </section>

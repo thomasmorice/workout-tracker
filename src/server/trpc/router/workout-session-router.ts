@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { CreateWorkoutSessionInputSchema } from "../../../types/app";
 import { router, protectedProcedure } from "../trpc";
+import { WorkoutExtras, WorkoutSelect } from "./WorkoutRouter/workout-router";
 
 const WorkoutSessionSelect = {
   id: true,
@@ -90,7 +91,7 @@ export const workoutSessionRouter = router({
     )
     .query(({ ctx, input }) => {
       const { id } = input;
-      return ctx.prisma.workoutSession.findFirst({
+      return ctx.prisma.workoutSession.findFirstOrThrow({
         select: {
           ...WorkoutSessionSelect,
           workoutResults: {
@@ -98,7 +99,12 @@ export const workoutSessionRouter = router({
               order: "asc",
             },
             include: {
-              workout: true,
+              workout: {
+                select: {
+                  ...WorkoutExtras,
+                  ...WorkoutSelect,
+                },
+              },
             },
           },
         },

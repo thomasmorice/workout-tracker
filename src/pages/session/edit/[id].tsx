@@ -1,27 +1,29 @@
 import { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import H1 from "../../../components/H1/H1";
 import WorkoutSessionForm from "../../../components/WorkoutSession/WorkoutSessionForm";
-import { useWorkoutSessionService } from "../../../services/useWorkoutSessionService";
 
 const Edit: NextPage = () => {
   const router = useRouter();
   const id = parseInt(router.query.id as string, 10);
-  const { getWorkoutSessionById } = useWorkoutSessionService();
 
-  const { data: workoutSession, isFetching } = getWorkoutSessionById(id);
   return (
     <>
       <Head>
-        <title>Workout session</title>
+        <title>Edit workout session</title>
         <meta name="description" content="Add or edit a session" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="mb-10">
-        {/* {workoutSession && (
-          <WorkoutSessionForm existingWorkoutSession={workoutSession} />
-        )} */}
-      </div>
+
+      <H1
+        // icon="/icons/fire/fire-dynamic-premium.png"
+        line1={"Edit"}
+        line2={"this session"}
+      />
+
+      <WorkoutSessionForm existingSessionId={id} />
     </>
   );
 };

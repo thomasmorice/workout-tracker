@@ -8,12 +8,12 @@ import {
 import { useMemo, useCallback } from "react";
 
 import { inferRouterOutputs } from "@trpc/server";
-import { WorkoutRouterType } from "../../../server/trpc/router/workout-router";
+import { WorkoutRouterType } from "../../../server/trpc/router/WorkoutRouter/workout-router";
 import DashboardItemGraph from "../DashboardItemGraph";
 import Link from "next/link";
 
 type PersonalRecordWorkoutType = {
-  workout: inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number];
+  workout: inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkoutWithResults"]["workouts"][number];
 };
 
 export default function PersonalRecordItem({
@@ -61,8 +61,8 @@ export default function PersonalRecordItem({
         href={`/workout/${workout.id}`}
         className={`flex cursor-pointer items-center  gap-1`}
       >
-        <div className="stat relative max-w-[280px] rounded-xl bg-base-200 transition-transform hover:scale-[1.03] hover:shadow-inner ">
-          <div className="stat-figure text-secondary">
+        <div className="stat relative rounded-xl bg-base-200 transition-transform hover:scale-[1.03] hover:shadow-inner ">
+          <div className="stat-figure text-primary">
             <div
               className={`badge ml-4
               ${
@@ -102,7 +102,7 @@ export default function PersonalRecordItem({
               {workout.workoutResults.length}
             </div>
           </div>
-          <div className="stat-value text-secondary">
+          <div className="stat-value">
             {resultsByPerformance()[0]?.weight}KG
           </div>
           <div className="stat-desc">

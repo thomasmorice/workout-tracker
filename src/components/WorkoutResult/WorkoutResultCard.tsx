@@ -1,83 +1,105 @@
 import { inferRouterOutputs } from "@trpc/server";
 import { format } from "date-fns";
-import { MdEdit, MdOutlineCalendarToday } from "react-icons/md";
-import { WorkoutRouterType } from "../../server/trpc/router/workout-router";
+import { MdEdit } from "react-icons/md";
+import { RxDotsVertical } from "react-icons/rx";
+import { WorkoutResultRouterType } from "../../server/trpc/router/workout-result-router";
+import { WorkoutSessionRouterType } from "../../server/trpc/router/workout-session-router";
 import { WorkoutResultInputsWithWorkout } from "../../types/app";
-import { resultHasBenchmarkeableWorkout } from "../../utils/utils";
-import { moods } from "../MoodSelector/MoodSelector";
+import Dropdown from "../Dropdown/Dropdown";
 
 interface WorkoutResultCardProps {
   result:
-    | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"]["workoutResults"][number]
+    | inferRouterOutputs<WorkoutResultRouterType>["getWorkoutResultsByWorkoutId"][number]
+    | inferRouterOutputs<WorkoutSessionRouterType>["getWorkoutSessionById"]["workoutResults"][number]
     | WorkoutResultInputsWithWorkout;
-  eventDate?: Date;
   onEdit?: () => void;
-  onOpen?: () => void;
+  eventDate?: Date;
+  condensed?: boolean;
 }
 
 export default function WorkoutResultCard({
   result,
-  onOpen,
   onEdit,
-  eventDate,
+  condensed,
 }: WorkoutResultCardProps) {
-  const MoodIcon = ({
-    moodIndex,
-    props,
-  }: {
-    moodIndex: number;
-    props: any;
-  }) => {
-    const Icon = moods.find((mood) => mood.key === moodIndex)?.icon;
-    return <>{Icon && <Icon {...props} />}</>;
-  };
   return (
-    <div className="card relative z-0 rounded-xl border border-base-content pt-8">
-      <div className=" card-body  p-5 ">
-        <h3 className="h3">
-          {eventDate && (
-            <div className="mb-3 flex items-center gap-2">
-              <MdOutlineCalendarToday />
-              {`${format(eventDate, "do MMMM yyyy")}`}
+    <div
+      className={`${
+        condensed ? "" : "rounded-3xl"
+      } bg-base-300 p-5 text-center `}
+    >
+      {onEdit && (
+        <div className="absolute right-0">
+          <Dropdown
+            withBackdrop
+            containerClass="dropdown-left"
+            buttons={[
+              {
+                label: (
+                  <>
+                    <MdEdit /> Edit result
+                  </>
+                ),
+                onClick: onEdit,
+              },
+            ]}
+          >
+            <div className={`btn-ghost btn-circle btn`}>
+              <RxDotsVertical size="23" />
             </div>
-          )}
-        </h3>
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-3">
-            {result.isRx && <div className="badge-success  badge">RX</div>}
-            {result.rating && (
-              <div className="badge-success badge">
-                <MoodIcon
-                  props={{
-                    size: "18px",
-                  }}
-                  moodIndex={result.rating}
-                />
-              </div>
-            )}
+          </Dropdown>
+        </div>
+      )}
+
+      {"workoutSession" in result && (
+        <div className="mb-2 text-sm">
+          {format(result.workoutSession.event.eventDate, "eeee, do MMM yyyy")}
+        </div>
+      )}
+
+      <div className="mb-3.5 flex items-center justify-center gap-1">
+        {result.rating && (
+          <div
+            className={`inline-flex h-11 w-11 items-center justify-center rounded-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-2xl
+        `}
+          >
+            {
+              {
+                1: "😓",
+                2: "🙁",
+                3: "😐",
+                4: "🙂",
+                5: "😍",
+              }[result.rating]
+            }
           </div>
-          <div className="whitespace-pre-wrap text-xs opacity-80">
-            {result.description}
+        )}
+
+        <div className="">
+          <div className="font-extrabold">
+            {result.totalReps && <div>{result.totalReps}</div>}
+            {result.weight && <div>{result.weight}KG</div>}
           </div>
-          {resultHasBenchmarkeableWorkout(result) && (
-            <div className="badge-primary badge">
-              {result.time && format(result.time * 1000, "mm:ss' minutes'")}
-              {result.totalReps && `${result.totalReps} reps`}
-              {result.weight && `${result.weight}KG`}
+          {result.time && (
+            <div className="flex flex-col text-2xl font-bold leading-none">
+              {format(result.time * 1000, "mm:ss")}
+              <div className="-mt-1 text-[17px]">minutes</div>
             </div>
           )}
         </div>
-        {onEdit && (
-          <div className="card-actions justify-end pt-3">
-            <button
-              type="button"
-              onClick={onEdit}
-              className="btn-outline btn btn-sm z-20 gap-x-2 text-xs"
-            >
-              <MdEdit size={17} /> {`Edit result`}
-            </button>
-          </div>
-        )}
+      </div>
+      <div className="whitespace-pre-wrap text-xs">
+        {result.description ?? <i> no description added.</i>}
+      </div>
+
+      <div className="mt-3">
+        <div
+          className={`badge
+          ${result.isRx ? "badge-primary" : "badge-secondary"}
+          `}
+        >
+          {result.isRx ? "RX" : "Scaled"}
+        </div>
       </div>
     </div>
   );

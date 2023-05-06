@@ -71,9 +71,9 @@ export const eventRouter = router({
         id: z.number(),
       })
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { id } = input;
-      ctx.prisma.event.delete({
+      await ctx.prisma.event.delete({
         where: { id },
         include: {
           weighing: true,

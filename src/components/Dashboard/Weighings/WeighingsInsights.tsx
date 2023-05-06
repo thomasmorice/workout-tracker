@@ -1,15 +1,22 @@
 import { useMemo } from "react";
-import { IoScale } from "react-icons/io5";
-import { useWeighingService } from "../../../services/useWeighingService";
+import { MdMonitorWeight } from "react-icons/md";
+import { trpc } from "../../../utils/trpc";
 import DashboardItem from "../DashboardItem";
 import DashboardItemGraph from "../DashboardItemGraph";
 import DashboardItemList from "../DashboardItemList";
+import { useSession } from "next-auth/react";
 
 export default function WeighingInsights() {
-  const { getWeighings } = useWeighingService();
-  const { data: latestWeighings, isLoading: isLoadingWeights } = getWeighings({
-    take: 8,
-  });
+  const { data: sessionData } = useSession();
+  const { data: latestWeighings, isLoading: isLoadingWeights } =
+    trpc.weighing.getWeighings.useQuery(
+      {
+        take: 8,
+      },
+      {
+        enabled: sessionData?.user !== undefined,
+      }
+    );
 
   // const hasLostWeight = useMemo(() => {
   //   if (latestWeighings && latestWeighings[0] && latestWeighings[1]) {
@@ -42,13 +49,13 @@ export default function WeighingInsights() {
           {latestWeighings && latestWeighings.length > 0 && (
             <DashboardItem
               title="Weighings"
-              illustration={<IoScale size={26} />}
+              illustration={<MdMonitorWeight size={32} />}
               value={getLatestWeight ? `${getLatestWeight.weight}Kg` : ""}
             >
               <DashboardItemGraph
                 graphNumbers={[...latestWeighings]
                   .reverse()
-                  .map((weighting) => weighting.weight)}
+                  .map((weighing) => weighing.weight)}
               />
             </DashboardItem>
           )}

@@ -1,14 +1,24 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import WorkoutForm from "../Workout/WorkoutForm";
-import Navigation from "./Navigation/Navigation";
 import ToastMessage from "./ToastMessage";
 import { useRouter } from "next/router";
 import { MdLogin } from "react-icons/md";
 import { useEffect, useState } from "react";
 import RightSidebar from "../RightSidebar/RightSidebar";
-import { useSidebarStore } from "../../store/SidebarStore";
 import Head from "next/head";
+import FloatingActionButton from "../FloatingActionButton/FloatingActionButton";
+import WorkoutSelectionBanner from "./WorkoutSelectionBanner";
+import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm";
+import { useEventStore } from "../../store/EventStore";
+import WeighingForm from "../Weighing/WeighingForm";
+import Modal from "./Modal/Modal";
+import { AnimatePresence, motion } from "framer-motion";
+import WorkoutAndResults from "../Workout/WorkoutAndResults";
+import MainDrawer from "./Navigation/MainDrawer";
+import Header from "./Header";
+import MobileBottomNavbar from "./Navigation/MobileBottomNavbar";
+import Navigation from "./Navigation/Navigation";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -16,10 +26,10 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
   const { status } = useSession();
-  const { state: workoutFormState } = useWorkoutStore();
   const [currentPath, set_currentPath] = useState<String[]>();
-
-  const { isSidebarExpanded } = useSidebarStore();
+  const { isWorkoutSelectionModeActive } = useWorkoutStore();
+  const { showFormWithEventType, closeForm } = useEventStore();
+  // const [isRoutingToChild, set_isRoutingToChild] = useState(false);
 
   useEffect(() => {
     const asPathWithoutQuery = router.pathname.split("?")[0];
@@ -34,20 +44,60 @@ export default function Layout({ children }: LayoutProps) {
           content="initial-scale=1, user-scalable=no, width=device-width, height=device-height, viewport-fit=cover"
         />
       </Head>
-      <div>
+
+      <div id="portal"></div>
+      {/* <div
+        className="absolute top-0 left-0 -z-40 h-40 w-full blur-lg"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(71,17,187,0.4) 0%, rgba(42,48,60,1) 90%)",
+        }}
+      ></div> */}
+      <div className="antialiased">
         <ToastMessage />
-        <Navigation />
+        <AnimatePresence initial={false} mode="sync" key={router.asPath}>
+          <div id="header" />
+        </AnimatePresence>
+
+        <div className="navigation-and-workout-selections relative z-50">
+          {isWorkoutSelectionModeActive && <WorkoutSelectionBanner />}
+        </div>
+
+        <Header />
+
         {status === "authenticated" && (
-          <div className="hidden md:block">
-            <RightSidebar />
-          </div>
+          <>
+            <div className="hidden md:block">
+              <RightSidebar />
+            </div>
+
+            <Navigation />
+
+            {/* Global form */}
+            <WorkoutForm />
+
+            <Modal
+              noPadding
+              onClose={closeForm}
+              isOpen={showFormWithEventType === "weighing"}
+            >
+              <WeighingForm onSuccess={closeForm} />
+            </Modal>
+
+            {/* <Modal
+              noPadding
+              onClose={closeWorkoutDetail}
+              isOpen={!!openedWorkoutDetail}
+            >
+              {openedWorkoutDetail && (
+                <WorkoutAndResults workout={openedWorkoutDetail} />
+              )}
+            </Modal> */}
+          </>
         )}
-        {workoutFormState && <WorkoutForm />}
-        <div id="portal" />
 
         <main
-          className={`px-4 pb-24 sm:px-8 md:pb-0 
-          ${isSidebarExpanded ? "md:ml-64" : "md:ml-16 xl:ml-24"}
+          className={`overflow-x-hidden px-4 pb-24 sm:px-8 md:ml-16 md:pb-0 xl:ml-24
           ${status === "authenticated" ? "md:mr-80 xl:mr-[340px]" : ""}
         `}
         >
@@ -76,7 +126,16 @@ export default function Layout({ children }: LayoutProps) {
             )}
           </div>
 
+          {/* <AnimatePresence mode="popLayout" initial={false}>
+            <motion.div
+              key={router.asPath}
+              initial={isRoutingToChild ? { x: 300 } : { x: 300 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={isRoutingToChild ? { x: -300 } : { x: -300 }}
+            > */}
           {children}
+          {/* </motion.div>
+          </AnimatePresence> */}
         </main>
       </div>
     </>

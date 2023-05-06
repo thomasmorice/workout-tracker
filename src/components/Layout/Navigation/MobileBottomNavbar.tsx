@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { MdOutlineSchedule } from "react-icons/md";
 import { NavigationItemsProps } from "./Navigation";
+import { motion } from "framer-motion";
+import FloatingActionButton from "../../FloatingActionButton/FloatingActionButton";
 
 export default function MobileBottomNavbar({ items }: NavigationItemsProps) {
   const router = useRouter();
@@ -14,31 +16,53 @@ export default function MobileBottomNavbar({ items }: NavigationItemsProps) {
   }, [router]);
 
   return (
-    <div
-      // style={{ boxShadow: "0px -1px 5px 0px rgba(0,0,0,0.3)" }}
-      className="fixed inset-x-0 bottom-0 z-40 flex h-14 w-full items-center border-t border-t-white border-opacity-10 bg-base-100 text-xs"
-    >
+    <div className="fixed inset-x-0 bottom-0 z-40 flex h-14 w-full items-center border-t border-t-white border-opacity-10 bg-base-100 text-xs">
       <>
         {items.map((item) => {
-          return (
-            <Link
-              className={`flex h-full w-1/4 flex-col items-center justify-center gap-0.5 text-xs 
-            ${
-              isLinkActive(item.href)
-                ? "bg-primary text-primary-content"
-                : "text-neutral-content "
-            }
+          if (!item.isFloatingActionButton) {
+            return (
+              <Link
+                className={`flex h-full w-1/5 items-center justify-center rounded-full
           `}
-              key={item.href}
-              href={item.href}
-            >
-              <item.icon size="22px" />
-              {item.label}
-            </Link>
-          );
+                key={item.href}
+                href={item.href}
+              >
+                <div
+                  className={`rounded-full p-3 ${
+                    isLinkActive(item.href)
+                      ? " text-white"
+                      : "text-base-content opacity-60"
+                  }`}
+                >
+                  <item.icon
+                    className={`${isLinkActive(item.href) ? "" : ""}`}
+                    size={isLinkActive(item.href) ? 22 : 19}
+                  />
+                </div>
+
+                {/* {isLinkActive(item.href) && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                >
+                  {item.label}
+                </motion.div>
+              )} */}
+              </Link>
+            );
+          } else {
+            return (
+              <div
+                key={"floating-action-button"}
+                className="flex h-full w-1/5 items-center justify-center"
+              >
+                <FloatingActionButton />
+              </div>
+            );
+          }
         })}
-        <Link
-          className={`flex h-full w-1/4 flex-col items-center justify-center gap-0.5 text-xs
+        {/* <Link
+          className={`flex h-full w-1/4 flex-col items-center justify-center gap-0.5
                     
                     ${
                       isLinkActive("/activities")
@@ -48,9 +72,8 @@ export default function MobileBottomNavbar({ items }: NavigationItemsProps) {
                   `}
           href={"/activities"}
         >
-          <MdOutlineSchedule size="22px" />
-          Activities
-        </Link>
+          <MdOutlineSchedule size={18} />
+        </Link> */}
       </>
     </div>
   );

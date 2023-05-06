@@ -1,23 +1,24 @@
 import { useMemo, useState } from "react";
 import { format, isSameMonth, differenceInYears } from "date-fns";
-import { useWorkoutSessionService } from "../../../services/useWorkoutSessionService";
 import DashboardItemList from "../DashboardItemList";
-import { useWorkoutService } from "../../../services/useWorkoutService";
 import { MdDone, MdFavorite } from "react-icons/md";
-import {
-  IoCheckmarkDoneCircleSharp,
-  IoHeartCircleSharp,
-} from "react-icons/io5";
+import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import Link from "next/link";
 import DashboardItemGraph from "../DashboardItemGraph";
 import DashboardItem from "../DashboardItem";
+import { trpc } from "../../../utils/trpc";
+import { useSession } from "next-auth/react";
 
 export default function SessionInsights() {
-  const { getInfiniteWorkouts } = useWorkoutService();
-  const { getSessionForInsights } = useWorkoutSessionService();
-  const { data: sessionsForInsights, isLoading } = getSessionForInsights();
+  const { data: sessionData } = useSession();
+
+  const { data: sessionsForInsights, isLoading } =
+    trpc.workoutSession.getSessionsForInsights.useQuery(undefined, {
+      enabled: sessionData?.user !== undefined,
+    });
+
   const { data: mostlyDoneWorkouts, isLoading: isLoadingMostlyDoneWorkout } =
-    getInfiniteWorkouts({
+    trpc.workout.getInfiniteWorkout.useInfiniteQuery({
       onlyFetchMine: true,
       limit: 3,
       orderByMostlyDone: true,
@@ -68,7 +69,7 @@ export default function SessionInsights() {
       <DashboardItemList
         loadingMessage="fetching metrics"
         isLoading={isLoading || isLoadingMostlyDoneWorkout}
-        title="Workout/session metrics"
+        // title="Sessions metrics"
       >
         <>
           {sessionsForInsights && sessionsForInsights.length > 0 && (
@@ -78,10 +79,10 @@ export default function SessionInsights() {
                 illustration={<IoCheckmarkDoneCircleSharp size={32} />}
                 value={sessionsForInsights.length}
               >
-                <div className="stat-desc flex items-center gap-1">
-                  <span className="text-sm font-bold text-secondary">
+                <div className="stat-desc flex items-center gap-2">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-content">
                     {sessionsThisMonth}
-                  </span>
+                  </div>
                   done this month
                 </div>
               </DashboardItem>
@@ -114,9 +115,9 @@ export default function SessionInsights() {
                         className={`link-hover link flex items-center gap-1`}
                       >
                         {workout.name || `#${workout.id}`}
-                        <div className="flex items-center gap-0.5 text-secondary">
+                        <div className="flex items-center gap-0.5">
                           <MdDone size="16" />
-                          {workout.workoutResults.length}
+                          {workout._count.workoutResults}
                         </div>
                       </Link>
                     </div>

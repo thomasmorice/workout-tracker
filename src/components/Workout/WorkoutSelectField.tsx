@@ -1,14 +1,14 @@
 import { useState, useRef, useMemo } from "react";
-import { Rings } from "react-loading-icons";
+import { TailSpin } from "react-loading-icons";
 import { useDebounce } from "usehooks-ts";
-import { useWorkoutService } from "../../services/useWorkoutService";
 import WorkoutCard from "./WorkoutCard/WorkoutCard";
 import { MdClose } from "react-icons/md";
 
 import { useToastStore } from "../../store/ToastStore";
 import { inferRouterOutputs } from "@trpc/server";
-import { WorkoutRouterType } from "../../server/trpc/router/workout-router";
+import { WorkoutRouterType } from "../../server/trpc/router/WorkoutRouter/workout-router";
 import { AnimatePresence, motion } from "framer-motion";
+import { trpc } from "../../utils/trpc";
 
 interface WorkoutSelectProps {
   handleAddWorkout: (
@@ -30,18 +30,20 @@ export default function WorkoutSelectField({
 
   const searchTermDebounced = useDebounce<string>(searchTerm, 500);
 
-  const { getInfiniteWorkouts } = useWorkoutService();
-
   const {
     data: fetchedWorkouts,
     fetchNextPage,
     hasNextPage,
     isFetching,
-  } = getInfiniteWorkouts({
-    searchTerm: searchTermDebounced,
-    enabled: searchTermDebounced.length > 2,
-    showClassifiedWorkoutOnly: true,
-  });
+  } = trpc.workout.getInfiniteWorkout.useInfiniteQuery(
+    {
+      searchTerm: searchTermDebounced,
+      classifiedOnly: true,
+    },
+    {
+      enabled: searchTermDebounced.length > 2,
+    }
+  );
 
   const filteredWorkouts = useMemo(() => {
     if (fetchedWorkouts) {
@@ -90,18 +92,7 @@ export default function WorkoutSelectField({
                       duration: 0.3,
                     }}
                   >
-                    <WorkoutCard
-                      onSelect={() => {
-                        addMessage({
-                          message: "Workout added",
-                          type: "info",
-                          closeAfter: 1000,
-                        });
-                        handleAddWorkout(workout);
-                      }}
-                      mode="selecteable"
-                      workout={workout}
-                    />
+                    <WorkoutCard workout={workout} />
                   </motion.div>
                 ))}
               </AnimatePresence>
@@ -116,7 +107,7 @@ export default function WorkoutSelectField({
   return (
     <div className="relative flex w-full flex-col gap-2">
       <input
-        className="input-bordered input w-full pr-8"
+        className="input w-full bg-base-200 pr-8"
         onFocus={() => set_showWorkoutSearchResult(true)}
         onBlur={() => set_showWorkoutSearchResult(false)}
         ref={searchInput}
@@ -143,7 +134,7 @@ export default function WorkoutSelectField({
 
       {isFetching && (
         <div className="absolute top-0 right-1">
-          <Rings className="w-12" />
+          <TailSpin className="h-8" stroke="#2D68FF" speed={1.2} />{" "}
         </div>
       )}
       {searchTerm !== "" && workoutSearchResult}
