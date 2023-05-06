@@ -12,6 +12,7 @@ import DesktopSidebar from "./DesktopSidebar";
 import { AnimatePresence, motion } from "framer-motion";
 import { AiOutlinePlus } from "react-icons/ai";
 import { CgGym } from "react-icons/cg";
+import { GiGymBag } from "react-icons/gi";
 
 export interface NavigationItemsProps {
   items: {
@@ -30,9 +31,9 @@ export default function Navigation() {
       href: "/",
     },
     {
-      icon: CgGym,
+      icon: GiGymBag,
       label: "Workouts",
-      href: "/workouts",
+      href: "/this-week-at-my-box",
     },
     {
       icon: AiOutlinePlus,

@@ -11,8 +11,18 @@ module.exports = {
     extend: {
       animation: {
         tilt: "tilt 5s infinite linear",
+        rotate: "rotate 30s infinite linear",
+        translate: "translate 10s infinite linear",
       },
       keyframes: {
+        rotate: {
+          "0%": {
+            transform: "rotate(0deg)",
+          },
+          "100%": {
+            transform: "rotate(360deg)",
+          },
+        },
         tilt: {
           "0%, 50%, 100%": {
             transform: "rotate(0deg)",
@@ -22,6 +32,26 @@ module.exports = {
           },
           "75%": {
             transform: "rotate(-0.5deg)",
+          },
+        },
+        translate: {
+          "0%, 100%": {
+            transform: "translate(0px)",
+          },
+          "15%": {
+            transform: "translateX(-80px) translateY(20px)",
+          },
+          "30%": {
+            transform: "translateX(-60px) translateY(-40px)",
+          },
+          "45%": {
+            transform: "translateX(-20px) translateY(10px)",
+          },
+          "15%": {
+            transform: "translateX(0px) translateY(20px)",
+          },
+          "15%": {
+            transform: "translateX(10px) translateY(-20px)",
           },
         },
       },

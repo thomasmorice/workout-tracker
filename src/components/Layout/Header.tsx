@@ -53,7 +53,7 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
       {isDrawerOpen && <MainDrawer onClose={() => set_isDrawerOpen(false)} />}
       <div className="mb-16 md:hidden">
         <motion.div
-          className="fixed inset-x-0 top-0 z-50 flex h-14 w-full items-center justify-between bg-base-100 bg-opacity-20 py-0 px-4 pr-2 backdrop-blur-md"
+          className="fixed inset-x-0 top-0 z-50 flex h-14 w-full items-center justify-between bg-opacity-20 py-0 px-4"
           {...fadeIn}
         >
           <div className="flex items-center gap-1">

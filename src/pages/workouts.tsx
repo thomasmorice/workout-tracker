@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import WorkoutList from "../components/Workout/WorkoutList";
 import Image from "next/image";
 import H1 from "../components/H1/H1";
+import WeeklyBoxWorkouts from "../components/Workout/WeeklyBoxWorkouts";
 
 const Workouts: NextPage = () => {
   const { data: sessionData } = useSession();
