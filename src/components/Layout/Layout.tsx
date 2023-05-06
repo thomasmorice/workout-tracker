@@ -41,7 +41,14 @@ export default function Layout({ children }: LayoutProps) {
       <Head>
         <meta
           name="viewport"
-          content="initial-scale=1, user-scalable=no, width=device-width, height=device-height, viewport-fit=cover"
+          content="initial-scale=1; user-scalable=no; width=device-width; height=device-height; viewport-fit=cover"
+        />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
         />
       </Head>
 
