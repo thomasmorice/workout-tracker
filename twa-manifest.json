@@ -1,0 +1,45 @@
+{
+  "packageId": "app.vercel.workout_tracker_rho.twa",
+  "host": "workout-tracker-rho.vercel.app",
+  "name": "Box Track",
+  "launcherName": "Box Track",
+  "display": "standalone",
+  "themeColor": "#2A303C",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#2A303C",
+  "enableNotifications": true,
+  "startUrl": "",
+  "iconUrl": "https://workout-tracker-rho.vercel.app/android-chrome-512x512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "/Users/thomas.morice/Code/workout-tracker-t3/android.keystore",
+    "alias": "box-tracker"
+  },
+  "appVersionName": "1",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://workout-tracker-rho.vercel.app/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {
+    "playBilling": {
+      "enabled": true
+    }
+  },
+  "alphaDependencies": {
+    "enabled": true
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://workout-tracker-rho.vercel.app/",
+  "minSdkVersion": 19,
+  "orientation": "portrait",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "appVersion": "1"
+}

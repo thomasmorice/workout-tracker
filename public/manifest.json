@@ -3,7 +3,7 @@
   "background_color": "#2A303C",
   "display": "standalone",
   "scope": "/",
-  "start_url": "/?standalone=true",
+  "start_url": "/",
   "name": "Box Track",
   "short_name": "Box Track",
   "description": "Workout tracker build especially for Crossfit type of workouts. Plan your session, follow your progress and reach your goals",

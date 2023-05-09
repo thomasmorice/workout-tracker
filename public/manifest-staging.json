@@ -1,11 +1,11 @@
 {
   "theme_color": "#2A303C",
-  "background_color": "#ee3e54",
+  "background_color": "#2A303C",
   "display": "standalone",
   "scope": "/",
-  "start_url": "/?version=0.1",
+  "start_url": "/",
   "name": "Box Track (dev)",
-  "short_name": "Box Track (dev)",
+  "short_name": "Box Track",
   "description": "Workout tracker build especially for Crossfit type of workouts. Plan your session, follow your progress and reach your goals",
   "icons": [
     {
