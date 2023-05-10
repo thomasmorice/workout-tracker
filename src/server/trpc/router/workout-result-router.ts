@@ -68,7 +68,18 @@ export const workoutResultRouter = router({
         workoutSessionId: z.number(),
       })
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
+      const workoutResults = input.workoutResults
+        .map((wr) => wr.id)
+        .filter((wr): wr is number => !!wr);
+      await ctx.prisma.workoutResult.deleteMany({
+        where: {
+          id: {
+            notIn: workoutResults,
+          },
+        },
+      });
+
       return ctx.prisma.$transaction(
         input.workoutResults.map((result, index) => {
           const pickedResult = {
@@ -84,6 +95,7 @@ export const workoutResultRouter = router({
             workoutId: result.workout.id,
             workoutSessionId: input.workoutSessionId,
           };
+
           return ctx.prisma.workoutResult.upsert({
             include: {
               workout: true,
