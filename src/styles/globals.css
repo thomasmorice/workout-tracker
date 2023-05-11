@@ -77,3 +77,8 @@
   -ms-user-select: none;
   user-select: none;
 }
+
+.select-text {
+  user-select: text;
+  -webkit-user-select: text;
+}

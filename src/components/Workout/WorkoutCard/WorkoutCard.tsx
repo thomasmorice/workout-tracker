@@ -335,7 +335,7 @@ export default function WorkoutCard({
           )}
           {(!isDraggable || !isWorkoutFromSessionForm || isFullScreen) && (
             <div
-              className={`mt-2 whitespace-pre-wrap rounded-xl border-base-content border-opacity-20 text-center text-xs  text-base-content transition-all 
+              className={`mt-2 select-text whitespace-pre-wrap rounded-xl border-base-content border-opacity-20 text-center text-xs  text-base-content transition-all 
               ${isWorkoutFromSessionForm ? "leading-snug" : "leading-relaxed"}`}
             >
               {workout.description}
