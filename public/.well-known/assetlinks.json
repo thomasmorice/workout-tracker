@@ -1,6 +1,12 @@
-[{
-        "relation": ["delegate_permission/common.handle_all_urls"],
-        "target" : { "namespace": "android_app", "package_name": "app.vercel.workout_tracker_rho.twa",
-                     "sha256_cert_fingerprints": ["99:61:F4:B8:94:92:5E:C6:23:35:33:78:6A:D1:67:59:B8:5A:65:10:EB:13:82:2D:98:25:66:12:DB:19:AA:45"] }
-      }
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.vercel.workout_tracker_rho.twa",
+      "sha256_cert_fingerprints": [
+        "AD:6A:F2:9A:DC:10:53:71:F2:9A:60:B6:9C:A6:43:3B:0D:85:27:DF:3A:C8:70:53:8A:3A:E1:55:F4:83:15:50"
+      ]
+    }
+  }
 ]
