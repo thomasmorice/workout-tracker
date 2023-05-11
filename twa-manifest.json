@@ -11,12 +11,14 @@
   "navigationDividerColorDark": "#000000",
   "backgroundColor": "#2A303C",
   "enableNotifications": true,
-  "startUrl": "",
+  "startUrl": "/",
   "iconUrl": "https://workout-tracker-rho.vercel.app/android-chrome-512x512.png",
+  "maskableIconUrl": "https://workout-tracker-rho.vercel.app/apple-touch-icon.png",
+  "monochromeIconUrl": "https://workout-tracker-rho.vercel.app/safari-pinned-tab.svg",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "/Users/thomas.morice/Code/workout-tracker-t3/android.keystore",
-    "alias": "box-tracker"
+    "alias": "android"
   },
   "appVersionName": "1",
   "appVersionCode": 1,
@@ -24,20 +26,16 @@
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://workout-tracker-rho.vercel.app/manifest.json",
   "fallbackType": "customtabs",
-  "features": {
-    "playBilling": {
-      "enabled": true
-    }
-  },
+  "features": {},
   "alphaDependencies": {
-    "enabled": true
+    "enabled": false
   },
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
   "fullScopeUrl": "https://workout-tracker-rho.vercel.app/",
   "minSdkVersion": 19,
-  "orientation": "portrait",
+  "orientation": "default",
   "fingerprints": [],
   "additionalTrustedOrigins": [],
   "retainedBundles": [],

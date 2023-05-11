@@ -1,0 +1,6 @@
+[{
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target" : { "namespace": "android_app", "package_name": "app.vercel.workout_tracker_rho.twa",
+                     "sha256_cert_fingerprints": ["99:61:F4:B8:94:92:5E:C6:23:35:33:78:6A:D1:67:59:B8:5A:65:10:EB:13:82:2D:98:25:66:12:DB:19:AA:45"] }
+      }
+]
