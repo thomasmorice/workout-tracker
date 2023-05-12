@@ -59,22 +59,39 @@ export default function WorkoutCard({
 
   const [hasSelection, set_hasSelection] = useState(false);
   const [isFullScreen, set_isFullScreen] = useState(false);
+  const [selectedRange, set_selectedRange] = useState<Range>();
+
+  let timer = null;
+
+  useEffect(() => {
+    if (selectedRange?.startOffset !== selectedRange?.endOffset) {
+      set_hasSelection(true);
+    } else {
+      set_hasSelection(false);
+    }
+  }, [selectedRange]);
 
   useLockedBody(isFullScreen);
 
-  const handleSelection = () => {
-    set_hasSelection(false);
-    if (window.getSelection()?.toString() !== "") {
-      set_hasSelection(true);
+  const getSelectedRange = () => {
+    try {
+      set_selectedRange(window?.getSelection()?.getRangeAt(0) || undefined);
+    } catch (err) {
+      console.log("error while trying to get selected range", err);
     }
   };
 
   useEffect(() => {
-    document.addEventListener("selectionchange", handleSelection);
-    return () => {
-      document.removeEventListener("selectionchange", handleSelection);
-    };
-  });
+    const interval = setInterval(getSelectedRange, 150);
+    return () => clearInterval(interval);
+  }, []);
+
+  // useEffect(() => {
+  //   document.addEventListener("selectionchange", handleSelection);
+  //   return () => {
+  //     document.removeEventListener("selectionchange", handleSelection);
+  //   };
+  // });
 
   const workoutActions = useMemo(() => {
     const actions = [];
@@ -356,7 +373,7 @@ export default function WorkoutCard({
                 onClick={() =>
                   createWorkoutFromSelectedText(
                     workout,
-                    window.getSelection()?.toString() || ""
+                    selectedRange?.toString() || ""
                   )
                 }
                 className="btn-primary btn-xs btn"
