@@ -73,7 +73,6 @@ export const workoutResultRouter = router({
         .map((wr) => wr.id)
         .filter((wr): wr is number => !!wr);
 
-      console.log("workoutResults", workoutResults);
       await ctx.prisma.workoutResult.deleteMany({
         where: {
           AND: [
