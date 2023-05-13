@@ -72,11 +72,18 @@ export const workoutResultRouter = router({
       const workoutResults = input.workoutResults
         .map((wr) => wr.id)
         .filter((wr): wr is number => !!wr);
+
+      console.log("workoutResults", workoutResults);
       await ctx.prisma.workoutResult.deleteMany({
         where: {
-          id: {
-            notIn: workoutResults,
-          },
+          AND: [
+            {
+              id: {
+                notIn: workoutResults,
+              },
+              workoutSessionId: input.workoutSessionId,
+            },
+          ],
         },
       });
 
