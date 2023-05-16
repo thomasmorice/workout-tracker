@@ -37,13 +37,13 @@ export default function PersonalRecordsInsights() {
         loadingMessage="fetching personal records"
         title="Latest personal records"
       >
-        <>
-          {personalRecordWorkouts.pages[0]?.workouts.map((workout) => (
-            <div className="snap-start px-4" key={workout.id}>
-              <PersonalRecordItem workout={workout} />
-            </div>
-          ))}
-        </>
+        {!personalRecordWorkouts ||
+          (!personalRecordWorkouts?.pages[0]?.workouts?.length &&
+            personalRecordWorkouts.pages[0]?.workouts.map((workout) => (
+              <div className="snap-start px-4" key={workout.id}>
+                <PersonalRecordItem workout={workout} />
+              </div>
+            )))}
       </DashboardItemList>
     </>
   );

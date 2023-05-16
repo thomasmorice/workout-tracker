@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 type H1Props = {
   icon?: string;
   line1: string;

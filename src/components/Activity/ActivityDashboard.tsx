@@ -10,6 +10,7 @@ import TimelineItem from "./TimelineItem";
 import { useSession } from "next-auth/react";
 import { EventRouterType } from "../../server/trpc/router/event-router";
 import { inferRouterOutputs } from "@trpc/server";
+import Link from "next/link";
 
 export default function ActivityDashboard() {
   const { addOrEditEvent } = useEventStore();
@@ -87,16 +88,7 @@ export default function ActivityDashboard() {
               className="dropdown-content menu rounded-box w-52 bg-base-200 p-2 text-sm shadow"
             >
               <li>
-                <a
-                  onClick={() =>
-                    addOrEditEvent({
-                      type: "workout-session",
-                      date: showSpecificDay,
-                    })
-                  }
-                >
-                  Add new session
-                </a>
+                <Link href="/session/create">Add new session</Link>
               </li>
               <li>
                 <a

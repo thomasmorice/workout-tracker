@@ -5,7 +5,7 @@ import { useToastStore } from "../../store/ToastStore";
 import { useEventStore } from "../../store/EventStore";
 import { useEffect, useState } from "react";
 import { Rings } from "react-loading-icons";
-import { inferRouterInputs } from "@trpc/server";
+import { inferRouterInputs, TRPCError } from "@trpc/server";
 import { WeighingRouterType } from "../../server/trpc/router/weighing-router";
 import { getRandomPreparingSessionllustration } from "../../utils/workout";
 import DatePicker from "../DatePicker/DatePicker";
@@ -38,35 +38,28 @@ export default function WeighingForm({
       enabled: sessionData?.user !== undefined,
     }
   );
+
+  const { mutateAsync: addOrEditWeighing } =
+    trpc.weighing.addOrEdit.useMutation({
+      onError(e: unknown) {
+        addMessage({
+          message: (e as TRPCError).message,
+          type: "error",
+        });
+      },
+    });
+
   const [illustration] = useState(getRandomPreparingSessionllustration());
 
   const handleCreateOrEdit: SubmitHandler<
     z.infer<typeof CreateWeighingInputSchema>
   > = async (weighing: z.infer<typeof CreateWeighingInputSchema>) => {
-    try {
-      await trpc.weighing.addOrEdit
-        .useMutation({
-          async onSuccess() {
-            await utils.event.invalidate();
-            await utils.weighing.invalidate();
-          },
-          onError(e) {
-            throw e;
-          },
-        })
-        .mutateAsync(weighing);
-      addMessage({
-        type: "success",
-        message: `Weighing ${
-          eventBeingEdited ? "edited" : "added"
-        } successfully`,
-      });
-    } catch {
-      addMessage({
-        message: "Error while adding the weight, probably missing the value",
-        type: "error",
-      });
-    }
+    await addOrEditWeighing(weighing);
+    addMessage({
+      type: "success",
+      message: `Weighing ${eventBeingEdited ? "edited" : "added"} successfully`,
+    });
+
     onSuccess && onSuccess();
   };
 

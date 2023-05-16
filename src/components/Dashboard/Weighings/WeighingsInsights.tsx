@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { MdMonitorWeight } from "react-icons/md";
 import { trpc } from "../../../utils/trpc";
 import DashboardItem from "../DashboardItem";
@@ -31,12 +30,9 @@ export default function WeighingInsights() {
   //   return null;
   // }, [latestWeighings]);
 
-  const getLatestWeight = useMemo(() => {
-    if (latestWeighings && latestWeighings[0]) {
-      return latestWeighings[0];
-    }
+  if (!latestWeighings || latestWeighings.length === 0) {
     return null;
-  }, [latestWeighings]);
+  }
 
   return (
     <>
@@ -50,7 +46,7 @@ export default function WeighingInsights() {
             <DashboardItem
               title="Weighings"
               illustration={<MdMonitorWeight size={32} />}
-              value={getLatestWeight ? `${getLatestWeight.weight}Kg` : ""}
+              value={`${latestWeighings[0]?.weight} Kg` || ""}
             >
               <DashboardItemGraph
                 graphNumbers={[...latestWeighings]

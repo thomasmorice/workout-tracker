@@ -1,16 +1,20 @@
 import { motion, useAnimationControls } from "framer-motion";
-import { useEffect } from "react";
-import { MdClose } from "react-icons/md";
+import { useEffect, useState } from "react";
+import { MdOutlineExpandMore } from "react-icons/md";
 import { useEventStore } from "../../store/EventStore";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import { useRouter } from "next/router";
+import { useLockedBody } from "usehooks-ts";
+import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm";
 
 export default function WorkoutSelectionBanner() {
   const workoutCounterAnimation = useAnimationControls();
   const { selectedWorkouts, clearSelectedWorkouts, setWorkoutSelectionMode } =
     useWorkoutStore();
-  const { addOrEditEvent } = useEventStore();
+  const [expandedBanner, set_expandedBanner] = useState(false);
   const router = useRouter();
+
+  useLockedBody(expandedBanner);
 
   useEffect(() => {
     if (selectedWorkouts.length > 0) {
@@ -22,39 +26,66 @@ export default function WorkoutSelectionBanner() {
   }, [selectedWorkouts, workoutCounterAnimation]);
 
   return (
-    <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-between bg-base-300 px-3">
-      <div className="flex items-center gap-1.5 text-xs font-bold uppercase">
-        <div className="placeholder avatar ">
-          <motion.div
-            animate={workoutCounterAnimation}
-            className="w-5 rounded-full bg-base-content text-base-300"
-          >
-            <span>{selectedWorkouts.length}</span>
-          </motion.div>
+    <div
+      className={`fixed bottom-0 left-0 z-50 flex w-full px-3 transition-all ${
+        expandedBanner
+          ? "h-full flex-col bg-base-100"
+          : "h-16 items-center overflow-hidden bg-base-300"
+      }`}
+    >
+      <div
+        className={`flex w-full items-center justify-between ${
+          expandedBanner ? "mt-4 h-8" : "h-full"
+        }
+      `}
+      >
+        <div className="flex items-center gap-1.5 text-xs font-bold uppercase">
+          <div className="placeholder avatar ">
+            <motion.div
+              animate={workoutCounterAnimation}
+              className="w-5 rounded-full bg-base-content text-base-300"
+            >
+              <span>{selectedWorkouts.length}</span>
+            </motion.div>
+          </div>
+          workout(s) selected
         </div>
-        workout(s) selected
+        <div className="flex items-center gap-1">
+          {!expandedBanner ? (
+            <button
+              onClick={() => {
+                set_expandedBanner(true);
+              }}
+              className="btn-primary btn-xs btn rounded-full"
+            >
+              Plan session
+            </button>
+          ) : (
+            <button
+              className="btn-ghost btn-sm btn-circle btn"
+              onClick={() => set_expandedBanner(false)}
+              type="button"
+            >
+              <MdOutlineExpandMore size={22} />
+            </button>
+          )}
+        </div>
       </div>
-      <div className="flex items-center gap-1">
-        <button
-          onClick={() => {
-            // addOrEditEvent({
-            //   type: "workout-session",
-            // });
-            setWorkoutSelectionMode(false);
-            router.push("/session/create");
-          }}
-          className="btn btn-primary btn-xs rounded-full"
-        >
-          Plan session
-        </button>
-        <button
-          className="btn btn-ghost btn-sm btn-circle"
-          onClick={clearSelectedWorkouts}
-          type="button"
-        >
-          <MdClose size={19} />
-        </button>
-      </div>
+      {expandedBanner && (
+        <div className="mt-4 flex flex-col gap-3">
+          <WorkoutSessionForm />
+
+          <button
+            onClick={() => {
+              clearSelectedWorkouts();
+              setWorkoutSelectionMode(false);
+            }}
+            className="btn-error btn-sm btn w-full"
+          >
+            Cancel
+          </button>
+        </div>
+      )}
     </div>
   );
 }

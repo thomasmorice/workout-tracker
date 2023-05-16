@@ -69,10 +69,10 @@ export default function SessionInsights() {
       <DashboardItemList
         loadingMessage="fetching metrics"
         isLoading={isLoading || isLoadingMostlyDoneWorkout}
-        // title="Sessions metrics"
+        title="Sessions metrics"
       >
         <>
-          {sessionsForInsights && sessionsForInsights.length > 0 && (
+          {sessionsForInsights && sessionsForInsights.length > 0 ? (
             <>
               <DashboardItem
                 title={"Total sessions"}
@@ -125,6 +125,16 @@ export default function SessionInsights() {
                 </>
               </DashboardItem>
             </>
+          ) : (
+            <div className="px-4">
+              <p>
+                You haven&apos;t done any session yet{" "}
+                <div className="mt-2">
+                  Start planning your first session, and unlock your full
+                  potential
+                </div>
+              </p>
+            </div>
           )}
         </>
       </DashboardItemList>

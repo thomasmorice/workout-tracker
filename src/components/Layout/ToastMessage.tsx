@@ -16,7 +16,7 @@ export default function ToastMessage() {
           className={`fixed left-1 bottom-1 z-[9999] flex w-[calc(100%_-_0.5rem)] flex-col gap-1 py-0 md:bottom-5 md:right-5 md:max-w-fit`}
         >
           {messages.map((toast) => (
-            <>
+            <div key={toast.id}>
               {toast.type === "pending" && (
                 <motion.div
                   transition={{
@@ -31,7 +31,6 @@ export default function ToastMessage() {
               <motion.div
                 drag
                 onDragEnd={() => closeMessage(toast.id)}
-                key={toast.id}
                 variants={itemVariants}
                 initial="initial"
                 animate="animate"
@@ -61,7 +60,7 @@ export default function ToastMessage() {
 
                       <div className="text-sm">{toast.message}</div>
                     </div>
-                    <button className="btn btn-ghost btn-sm">
+                    <button className="btn-ghost btn-sm btn">
                       <MdClose
                         size={20}
                         onClick={() => closeMessage(toast.id)}
@@ -70,7 +69,7 @@ export default function ToastMessage() {
                   </div>
                 </div>
               </motion.div>
-            </>
+            </div>
           ))}
         </motion.div>
       )}

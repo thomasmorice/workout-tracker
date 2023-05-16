@@ -35,6 +35,7 @@ type WorkoutCardProps = {
     | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
     | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
   workoutResult?: React.ReactNode;
+  canRemoveWorkoutFromSession?: boolean;
   isWorkoutFromSessionForm?: boolean;
   isDraggable?: boolean;
   onRemoveWorkoutFromSession?: () => void;
@@ -47,6 +48,7 @@ export default function WorkoutCard({
   workoutResult,
   isDraggable = false,
   onRemoveWorkoutFromSession,
+  canRemoveWorkoutFromSession = true,
   onEditWorkoutResult,
 }: WorkoutCardProps) {
   const {
@@ -74,15 +76,17 @@ export default function WorkoutCard({
   useLockedBody(isFullScreen);
 
   const getSelectedRange = () => {
-    try {
-      set_selectedRange(window?.getSelection()?.getRangeAt(0) || undefined);
-    } catch (err) {
-      console.log("error while trying to get selected range", err);
+    if (window?.getSelection()?.rangeCount ?? 0 >= 1) {
+      try {
+        set_selectedRange(window?.getSelection()?.getRangeAt(0) || undefined);
+      } catch (err) {
+        console.log("error while trying to get selected range", err);
+      }
     }
   };
 
   useEffect(() => {
-    const interval = setInterval(getSelectedRange, 150);
+    const interval = setInterval(getSelectedRange, 500);
     return () => clearInterval(interval);
   }, []);
 
@@ -160,6 +164,7 @@ export default function WorkoutCard({
         ),
         onClick: onEditWorkoutResult,
       }) &&
+      canRemoveWorkoutFromSession &&
       actions.push({
         label: (
           <>
@@ -270,7 +275,7 @@ export default function WorkoutCard({
             <button
               type="button"
               onClick={() => toggleSelectWorkout(workout)}
-              className="btn-circle btn bg-base-100 text-primary"
+              className="btn-success btn-circle btn"
             >
               <MdCheck size={22} />
             </button>

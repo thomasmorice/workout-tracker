@@ -66,11 +66,9 @@ export default function Layout({ children }: LayoutProps) {
           <div id="header" />
         </AnimatePresence>
 
-        <div className="navigation-and-workout-selections relative z-50">
-          {isWorkoutSelectionModeActive && <WorkoutSelectionBanner />}
-        </div>
-
         <Header />
+
+        {isWorkoutSelectionModeActive && <WorkoutSelectionBanner />}
 
         {status === "authenticated" && (
           <>

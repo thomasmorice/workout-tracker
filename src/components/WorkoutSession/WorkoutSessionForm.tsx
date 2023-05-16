@@ -28,6 +28,8 @@ import { format, isAfter } from "date-fns";
 import Image from "next/image";
 import { RxDotsVertical } from "react-icons/rx";
 import WorkoutResult from "../Workout/WorkoutCard/WorkoutResult";
+import Modal from "../Layout/Modal/Modal";
+import ConfirmModal from "../Layout/Modal/ConfirmModal";
 
 type WorkoutSessionFormProps = {
   // create?: boolean;
@@ -205,15 +207,6 @@ export default function WorkoutSessionForm({
         />
       )}
 
-      <div className="absolute top-6 right-0 -z-10 h-64 w-64 overflow-hidden opacity-20">
-        <Image
-          fill
-          src={`/icons/session-form-background.png`}
-          className="object-contain object-top"
-          alt={`Session form backgorund`}
-        />
-      </div>
-
       <div className="relative mt-2 flex flex-col justify-center ">
         {workoutResults.length && (
           <>
@@ -275,6 +268,7 @@ export default function WorkoutSessionForm({
                       <WorkoutCard
                         isDraggable={reorderWorkoutMode}
                         isWorkoutFromSessionForm
+                        canRemoveWorkoutFromSession={!existingWorkoutSession}
                         workout={workoutResult.workout}
                         onRemoveWorkoutFromSession={() =>
                           removeWorkoutResults(index)

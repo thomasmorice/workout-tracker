@@ -35,12 +35,16 @@ const useWorkoutStore = create<WorkoutFormState>()((set, get) => ({
   },
   selectedWorkouts: [],
   toggleSelectWorkout: (workout) => {
-    const { selectedWorkouts } = get();
-
+    const { selectedWorkouts, clearSelectedWorkouts } = get();
     if (selectedWorkouts.find((w) => w.id === workout.id)) {
-      set({
-        selectedWorkouts: selectedWorkouts.filter((w) => w.id !== workout.id),
-      });
+      // removing a selected workout
+      if (selectedWorkouts.length === 1) {
+        clearSelectedWorkouts();
+      } else {
+        set({
+          selectedWorkouts: selectedWorkouts.filter((w) => w.id !== workout.id),
+        });
+      }
     } else {
       // selecting a workout
       set({

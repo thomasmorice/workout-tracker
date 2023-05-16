@@ -21,7 +21,7 @@ export const CreateWorkoutInputSchema = z.object({
   name: z.string().nullable(),
   affiliateId: z.number().nullish(),
   affiliateDate: z.date().nullish(),
-  description: z.string().min(1),
+  description: z.string().min(2),
   workoutType: z.nativeEnum(WorkoutType).nullable(),
   difficulty: z.nativeEnum(Difficulty).nullable(),
   elementType: z.nativeEnum(ElementType).default("UNCLASSIFIED"),

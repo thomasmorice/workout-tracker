@@ -55,7 +55,7 @@ export default function WorkoutForm() {
     useMemo(() => {
       return {
         id: existingWorkout?.id,
-        name: existingWorkout?.name ?? "",
+        name: existingWorkout?.name ?? null,
         description: existingWorkout?.description ?? "",
         difficulty: existingWorkout?.difficulty ?? null,
         totalTime: existingWorkout?.totalTime ?? null,
@@ -88,6 +88,9 @@ export default function WorkoutForm() {
       type: "pending",
       message: `${state} workout`,
     });
+    if (workout.name === "") {
+      workout.name = null;
+    }
     try {
       if (state === "edit") {
         editWorkout(workout as inferRouterInputs<WorkoutRouterType>["edit"]);

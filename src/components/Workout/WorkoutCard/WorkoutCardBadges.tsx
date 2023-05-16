@@ -52,10 +52,6 @@ export default function WorkoutCardBadges({ workout }: WorkoutCardBadgesProps) {
           no result
         </div>
       )}
-
-      {workout.totalTime && (
-        <div className={`badge`}>{workout.totalTime}MN</div>
-      )}
     </div>
   );
 }

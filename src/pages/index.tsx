@@ -4,7 +4,6 @@ import Head from "next/head";
 import PersonalRecordsInsights from "../components/Dashboard/PersonalRecords/PersonalRecordsInsights";
 import WeighingsInsights from "../components/Dashboard/Weighings/WeighingsInsights";
 import SessionInsights from "../components/Dashboard/Sessions/SessionsInsights";
-import Header from "../components/Layout/Header";
 import H1 from "../components/H1/H1";
 
 const Home: NextPage = () => {
@@ -77,7 +76,7 @@ const Home: NextPage = () => {
             line1={"Watch"}
             line2={"your progress "}
           />
-          <div className="mt-4">
+          <div className="mt-8">
             <SessionInsights />
             <PersonalRecordsInsights />
             <WeighingsInsights />

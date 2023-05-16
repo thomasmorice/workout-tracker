@@ -25,6 +25,7 @@ interface TimelineSessionProps {
 export default function TimelineItem({ event }: TimelineSessionProps) {
   const utils = trpc.useContext();
   const router = useRouter();
+  const { addOrEditEvent } = useEventStore();
   const { addMessage, closeMessage } = useToastStore();
   const [showConfirmDeleteEventModal, set_showConfirmDeleteEventModal] =
     useState(false);
@@ -42,14 +43,12 @@ export default function TimelineItem({ event }: TimelineSessionProps) {
           onClick={() => {
             if (event.workoutSession) {
               router.push(`/session/edit/${event.workoutSession.id}`);
+            } else {
+              addOrEditEvent({
+                eventId: event.weighing?.id,
+                type: "weighing",
+              });
             }
-
-            // addOrEditEvent({
-            //   eventId: event.workoutSession
-            //     ? event.workoutSession.id
-            //     : event.weighing?.id,
-            //   type: event.workoutSession ? "workout-session" : "weighing",
-            // });
           }}
           className="group"
         >
