@@ -20,11 +20,7 @@ const ThisWeekAtMyBox: NextPage = () => {
 
       {/* <Header h1={"This week at my box"} /> */}
 
-      <H1
-        icon="/icons/fire/fire-dynamic-premium.png"
-        line1={"This week"}
-        line2={"at the box"}
-      />
+      <H1 line1={"This week"} line2={"at the box"} />
 
       {/* <h1 className="text-4xl leading-9">
         This week at <br /> my box

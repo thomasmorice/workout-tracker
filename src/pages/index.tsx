@@ -71,11 +71,7 @@ const Home: NextPage = () => {
         </>
       ) : (
         <>
-          <H1
-            icon="/icons/thumb-up/thumb-up-dynamic-premium.png"
-            line1={"Watch"}
-            line2={"your progress "}
-          />
+          <H1 line1={"Watch"} line2={"your progress "} />
           <div className="mt-8">
             <SessionInsights />
             <PersonalRecordsInsights />

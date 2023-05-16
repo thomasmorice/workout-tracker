@@ -1,4 +1,4 @@
-import { format, parseISO } from "date-fns";
+import { format, parseISO, isToday, isTomorrow } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import { UseControllerProps, useController } from "react-hook-form";
 import { MdEdit } from "react-icons/md";
@@ -24,7 +24,16 @@ export default function DatePicker(
     <div className="flex w-fit items-center justify-center gap-2">
       {field.value && (
         <>
-          {format(field.value, "EEEE, MMM dd, p")}
+          {isToday(field.value) || isTomorrow(field.value) ? (
+            <>
+              {isToday(field.value) && "Today"}
+              {isTomorrow(field.value) && "Tomorrow"}
+              {format(field.value, ", p")}
+            </>
+          ) : (
+            format(field.value, "EEEE, MMM dd, p")
+          )}
+
           <button
             onClick={() => set_showDateTimePicker(true)}
             className="btn-ghost btn-sm btn-circle btn relative"

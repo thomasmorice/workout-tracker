@@ -1,10 +1,9 @@
 type H1Props = {
-  icon?: string;
   line1: string;
   line2?: string;
 };
 
-export default function H1({ icon, line1, line2 }: H1Props) {
+export default function H1({ line1, line2 }: H1Props) {
   return (
     <>
       <div

@@ -16,11 +16,7 @@ const Workouts: NextPage = () => {
         <meta name="description" content="Manage and share your workouts" />
       </Head>
 
-      <H1
-        icon="/icons/gym/gym-dynamic-premium.png"
-        line1={"Manage"}
-        line2={"your workouts"}
-      />
+      <H1 line1={"Manage"} line2={"your workouts"} />
 
       {/* <h1 className="text-4xl">
         Manage <br />

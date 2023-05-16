@@ -9,8 +9,7 @@ import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm";
 
 export default function WorkoutSelectionBanner() {
   const workoutCounterAnimation = useAnimationControls();
-  const { selectedWorkouts, clearSelectedWorkouts, setWorkoutSelectionMode } =
-    useWorkoutStore();
+  const { selectedWorkouts, clearSelectedWorkouts } = useWorkoutStore();
   const [expandedBanner, set_expandedBanner] = useState(false);
   const router = useRouter();
 
@@ -29,8 +28,8 @@ export default function WorkoutSelectionBanner() {
     <div
       className={`fixed bottom-0 left-0 z-50 flex w-full px-3 transition-all ${
         expandedBanner
-          ? "h-full flex-col bg-base-100"
-          : "h-16 items-center overflow-hidden bg-base-300"
+          ? "inset-0 h-full flex-col overflow-auto bg-base-100 pb-8"
+          : "h-16 items-center  bg-base-300"
       }`}
     >
       <div
@@ -73,15 +72,9 @@ export default function WorkoutSelectionBanner() {
       </div>
       {expandedBanner && (
         <div className="mt-4 flex flex-col gap-3">
-          <WorkoutSessionForm />
+          <WorkoutSessionForm onSuccess={clearSelectedWorkouts} />
 
-          <button
-            onClick={() => {
-              clearSelectedWorkouts();
-              setWorkoutSelectionMode(false);
-            }}
-            className="btn-error btn-sm btn w-full"
-          >
+          <button onClick={clearSelectedWorkouts} className="btn-sm btn w-full">
             Cancel
           </button>
         </div>
