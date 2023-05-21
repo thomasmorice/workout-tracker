@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MdCancel, MdModelTraining, MdStar, MdWarning } from "react-icons/md";
+import { MdCancel, MdWarning } from "react-icons/md";
 import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
 import { inferRouterInputs, inferRouterOutputs, TRPCError } from "@trpc/server";
 import { WorkoutSessionRouterType } from "../../server/trpc/router/workout-session-router";
@@ -10,12 +10,10 @@ import {
 import { useRouter } from "next/router";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import { useEventStore } from "../../store/EventStore";
-import { enumToString } from "../../utils/formatting";
 import DatePicker from "../DatePicker/DatePicker";
 import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
 import { Rings } from "react-loading-icons";
-import { workoutResultIsFilled } from "../../utils/utils";
 import { Reorder } from "framer-motion";
 import { z } from "zod";
 import { useToastStore } from "../../store/ToastStore";
@@ -23,13 +21,8 @@ import { EventRouterType } from "../../server/trpc/router/event-router";
 import WorkoutResultForm from "../WorkoutResult/WorkoutResultForm";
 import { TRPCClientError } from "@trpc/client";
 import WorkoutCard from "../Workout/WorkoutCard/WorkoutCard";
-import Dropdown from "../Dropdown/Dropdown";
-import { format, isAfter } from "date-fns";
-import Image from "next/image";
-import { RxDotsVertical } from "react-icons/rx";
+import { isAfter } from "date-fns";
 import WorkoutResult from "../Workout/WorkoutCard/WorkoutResult";
-import Modal from "../Layout/Modal/Modal";
-import ConfirmModal from "../Layout/Modal/ConfirmModal";
 
 type WorkoutSessionFormProps = {
   // create?: boolean;
@@ -52,7 +45,8 @@ export default function WorkoutSessionForm({
 
   const [reorderWorkoutMode, set_reorderWorkoutMode] = useState(false);
 
-  const { selectedWorkouts: preselectedWorkouts } = useWorkoutStore();
+  const { selectedWorkouts: preselectedWorkouts, clearSelectedWorkouts } =
+    useWorkoutStore();
   const { eventDate } = useEventStore();
   const { addMessage, closeMessage } = useToastStore();
   const utils = trpc.useContext();
@@ -186,6 +180,7 @@ export default function WorkoutSessionForm({
     } finally {
       reset(defaultValues);
       toastId && closeMessage(toastId);
+      clearSelectedWorkouts();
     }
   };
 
@@ -236,13 +231,13 @@ export default function WorkoutSessionForm({
                       behavior: "smooth",
                     })
                   }
-                  className="badge badge-warning mb-4 mt-2 flex cursor-pointer gap-1"
+                  className="badge-warning badge mb-4 mt-2 flex cursor-pointer gap-1"
                 >
                   <MdWarning /> You have unsaved changes{" "}
                 </div>
                 <div
                   onClick={() => reset(defaultValues)}
-                  className="badge badge-error mb-4 mt-2 flex cursor-pointer gap-1"
+                  className="badge-error badge mb-4 mt-2 flex cursor-pointer gap-1"
                 >
                   <MdCancel /> Cancel
                 </div>
