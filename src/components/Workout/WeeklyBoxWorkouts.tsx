@@ -60,7 +60,7 @@ export default function WeeklyBoxWorkouts() {
   };
   return (
     <>
-      <div className="mx-auto mt-3 -ml-4 flex w-[calc(100%_+_2rem)] justify-start overflow-x-scroll py-3 px-2  text-base-content  shadow-md md:mx-12 md:justify-center">
+      <div className="mx-auto -ml-4 flex w-[calc(100%_+_2rem)] justify-start overflow-x-scroll px-2 py-3  text-base-content  shadow-md md:mx-12 md:justify-center">
         {getAllWeeks().map((day, index) => (
           <motion.div
             layout

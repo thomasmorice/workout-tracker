@@ -5,6 +5,7 @@ import PersonalRecordsInsights from "../components/Dashboard/PersonalRecords/Per
 import WeighingsInsights from "../components/Dashboard/Weighings/WeighingsInsights";
 import SessionInsights from "../components/Dashboard/Sessions/SessionsInsights";
 import H1 from "../components/H1/H1";
+import RadarChart from "../components/RadarChart/RadarChart";
 
 const Home: NextPage = () => {
   const { data: sessionData, status } = useSession();
@@ -71,8 +72,8 @@ const Home: NextPage = () => {
         </>
       ) : (
         <>
-          <H1 line1={"Watch"} line2={"your progress "} />
-          <div className="mt-8">
+          <H1> Dashboard </H1>
+          <div className="">
             <SessionInsights />
             <PersonalRecordsInsights />
             <WeighingsInsights />

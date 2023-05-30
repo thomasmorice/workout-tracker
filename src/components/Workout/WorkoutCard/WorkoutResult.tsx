@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { MdStar } from "react-icons/md";
 import { WorkoutResultRouterType } from "../../../server/trpc/router/workout-result-router";
 import { WorkoutSessionRouterType } from "../../../server/trpc/router/workout-session-router";
+import { WorkoutRouterType } from "../../../server/trpc/router/WorkoutRouter/workout-router";
 import { WorkoutResultInputsWithWorkout } from "../../../types/app";
 import { workoutResultIsFilled } from "../../../utils/utils";
 
@@ -10,6 +11,7 @@ type WorkoutResultProps = {
   workoutResult:
     | inferRouterOutputs<WorkoutResultRouterType>["getWorkoutResultsByWorkoutId"][number]
     | inferRouterOutputs<WorkoutSessionRouterType>["getWorkoutSessionById"]["workoutResults"][number]
+    | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"]["workoutResults"][number]
     | WorkoutResultInputsWithWorkout;
   fromResultList?: boolean;
   onEditWorkoutResult?: () => void;

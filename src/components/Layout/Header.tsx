@@ -51,9 +51,9 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
   return (
     <>
       {isDrawerOpen && <MainDrawer onClose={() => set_isDrawerOpen(false)} />}
-      <div className="mb-16 md:hidden">
+      <div className="mb-12 md:hidden">
         <motion.div
-          className="fixed inset-x-0 top-0 z-50 flex h-14 w-full items-center justify-between bg-opacity-20 py-0 px-4"
+          className="fixed inset-x-0 top-0 z-50 flex h-14 w-full items-center justify-between bg-opacity-20 px-2 py-0 backdrop-blur-sm"
           {...fadeIn}
         >
           <div className="flex items-center gap-1">
@@ -68,18 +68,18 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
                 </h1>
               </div>
             ) : (
-              <>
+              <div className="flex">
                 <button
                   onClick={() => set_isDrawerOpen(!isDrawerOpen)}
                   className="btn-ghost btn-md btn-circle btn -ml-2"
                 >
                   <HiMenuAlt2 size={25} className="text-base-content" />
                 </button>
-                {/* <Logo /> */}
+
                 {/* <h1 className="h1 mobile flex items-center gap-3">
                   {typeof h1 === "object" ? h1.mobile : h1}
                 </h1> */}
-              </>
+              </div>
             )}
           </div>
           {status === "loading" ? (

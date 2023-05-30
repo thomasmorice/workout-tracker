@@ -5,7 +5,7 @@ import { workoutResultRouter } from "./workout-result-router";
 import { workoutSessionRouter } from "./workout-session-router";
 import { weighingRouter } from "./weighing-router";
 import { eventRouter } from "./event-router";
-import { userRouter } from "./user";
+import { userRouter } from "./user-router";
 
 export const appRouter = router({
   workout: workoutRouter,

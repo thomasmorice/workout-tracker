@@ -2,6 +2,7 @@ import Image from "next/image";
 import { MdArrowDropDown } from "react-icons/md";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { TailSpin } from "react-loading-icons";
+import Link from "next/link";
 
 type AvatarButtonProps = {};
 
@@ -18,7 +19,7 @@ export default function AvatarButton({}: AvatarButtonProps) {
       ) : (
         <div className={`dropdown max-md:dropdown-end`}>
           {sessionData ? (
-            <button className="btn btn-ghost btn-circle" type="button">
+            <button className="btn-ghost btn-circle btn" type="button">
               <Image
                 width={32}
                 height={32}
@@ -32,7 +33,7 @@ export default function AvatarButton({}: AvatarButtonProps) {
                 </div> */}
             </button>
           ) : (
-            <button onClick={() => signIn()} className="btn btn-primary">
+            <button onClick={() => signIn()} className="btn-primary btn">
               Login
             </button>
           )}
@@ -42,7 +43,7 @@ export default function AvatarButton({}: AvatarButtonProps) {
             className="dropdown-content menu rounded-box w-52 bg-base-200 p-2 shadow"
           >
             <li>
-              <a>Settings</a>
+              <Link href="/settings">Settings</Link>
             </li>
             <li onClick={() => signOut()}>
               <a className="bg-error text-error-content">Log out</a>

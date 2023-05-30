@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { trpc } from "../../../utils/trpc";
 import { router, protectedProcedure } from "../trpc";
 
 export const userRouter = router({
@@ -59,5 +58,25 @@ export const userRouter = router({
         .then((result) => result);
     }
     return null;
+  }),
+  getUser: protectedProcedure.query(async ({ ctx }) => {
+    let affiliate;
+    let user = await ctx.prisma.user.findUnique({
+      where: {
+        id: ctx.session.user.id,
+      },
+    });
+
+    if (user?.affiliateId) {
+      affiliate = await fetch(
+        `https://map.crossfit.com/getAffiliateInfo.php?aid=${user.affiliateId}`
+      )
+        .then((response) => response.json())
+        .then((result) => result);
+    }
+    return {
+      user: user,
+      affiliate: affiliate,
+    };
   }),
 });

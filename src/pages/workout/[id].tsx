@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import WorkoutAndResults from "../../components/Workout/WorkoutAndResults";
+import WorkoutCard from "../../components/Workout/WorkoutCard/WorkoutCard";
 
 const Workout: NextPage = () => {
   const router = useRouter();
@@ -16,7 +17,7 @@ const Workout: NextPage = () => {
       enabled: !!id,
     }
   );
-  return <>{workout && <WorkoutAndResults workout={workout} />}</>;
+  return <div className="">{workout && <WorkoutCard workout={workout} />}</div>;
 };
 
 export default Workout;

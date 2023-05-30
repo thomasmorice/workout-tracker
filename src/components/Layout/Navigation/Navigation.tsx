@@ -11,7 +11,7 @@ import MobileBottomNavbar from "./MobileBottomNavbar";
 import DesktopSidebar from "./DesktopSidebar";
 import { AnimatePresence, motion } from "framer-motion";
 import { AiOutlinePlus } from "react-icons/ai";
-import { CgGym } from "react-icons/cg";
+import { IoIosAnalytics } from "react-icons/io";
 import { GiGymBag } from "react-icons/gi";
 
 export interface NavigationItemsProps {
@@ -47,7 +47,7 @@ export default function Navigation() {
       href: "/activities",
     },
     {
-      icon: MdOutlineAccountCircle,
+      icon: IoIosAnalytics,
       label: "Profile",
       href: "/profile",
     },

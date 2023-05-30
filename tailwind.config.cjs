@@ -42,7 +42,7 @@ module.exports = {
             transform: "translateX(-80px) translateY(20px)",
           },
           "30%": {
-            transform: "translateX(-60px) translateY(-40px)",
+            transform: "translateX(60px) translateY(-40px)",
           },
           "45%": {
             transform: "translateX(-20px) translateY(10px)",
