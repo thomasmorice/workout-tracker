@@ -88,7 +88,10 @@ export default function WorkoutResults({ workoutId }: WorkoutResultsProps) {
                 style={
                   {
                     "--value": Math.round(
-                      getLevelFromIndividualWorkout(workout) || 0
+                      getLevelFromIndividualWorkout(
+                        workout,
+                        sessionData?.user?.gender
+                      ) || 0
                     ),
                     "--size": "4rem",
                     "--thickness": "0.6rem",
@@ -96,7 +99,13 @@ export default function WorkoutResults({ workoutId }: WorkoutResultsProps) {
                 }
               >
                 <span className="text-base-content">
-                  {Math.round(getLevelFromIndividualWorkout(workout) || 0)}%
+                  {Math.round(
+                    getLevelFromIndividualWorkout(
+                      workout,
+                      sessionData?.user?.gender
+                    ) || 0
+                  )}
+                  %
                 </span>
               </div>
             </div>
