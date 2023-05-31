@@ -28,7 +28,7 @@ import WorkoutCardBadges from "./WorkoutCardBadges";
 import { motion } from "framer-motion";
 import WorkoutResults from "../../WorkoutResult/WorkoutResults";
 import { useLockedBody } from "usehooks-ts";
-// import WorkoutCardActions from "./WorkoutCardActions";
+import { getLevelFromIndividualWorkout } from "../../../utils/benchmark";
 
 type WorkoutCardProps = {
   workout:
@@ -321,7 +321,7 @@ export default function WorkoutCard({
                   className={` ${
                     isWorkoutFromSessionForm && !isFullScreen
                       ? "text-sm"
-                      : "text-lg"
+                      : "text-base"
                   }`}
                 >
                   [{enumToString(workout.workoutType)}]
@@ -330,8 +330,23 @@ export default function WorkoutCard({
             )}
           </div>
 
+          {workout.benchmark && (
+            <>
+              <div className="mt-4 flex flex-wrap justify-center gap-2">
+                {workout.benchmark?.abilitiesRequired.map((ability) => (
+                  <div
+                    key={ability}
+                    className="badge-primary badge items-center font-semibold"
+                  >
+                    {enumToString(ability)}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
           {(!isWorkoutFromSessionForm || isFullScreen) && (
-            <div className="mt-6 mb-4 flex flex-col gap-0.5 text-sm">
+            <div className="mb-4 mt-6 flex flex-col gap-0.5 text-sm">
               <div className="flex justify-center gap-2">
                 <div className="flex items-center gap-1 ">
                   <MdEvent />

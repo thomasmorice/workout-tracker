@@ -64,7 +64,7 @@ export default function PersonalRecordItem({
         <div className="stat relative rounded-xl bg-base-200 transition-transform hover:scale-[1.03] hover:shadow-inner ">
           <div className="stat-figure text-primary">
             <div
-              className={`badge ml-4
+              className={`badge
               ${
                 getPercentageOfImprovement?.isIncreasing
                   ? "badge-success"
@@ -86,7 +86,7 @@ export default function PersonalRecordItem({
                       <span>{getPercentageOfImprovement?.result || "0%"}</span>
                     </>
                   ) : (
-                    <div className="flex min-w-[52px] items-center">
+                    <div className="flex min-w-[46px] items-center">
                       <MdArrowDropDown size={16} />
                       {getPercentageOfImprovement?.result || "0%"}
                     </div>
@@ -95,8 +95,10 @@ export default function PersonalRecordItem({
               )}
             </div>
           </div>
-          <div className="stat-title flex items-center gap-2">
-            {workout.name ?? workout.id}
+          <div className="stat-title flex  items-center gap-2">
+            <div className="">
+              {workout?.name?.substring(0, 15) + "\u2026" ?? workout.id}
+            </div>
             <div className="badge flex items-center gap-0.5">
               <MdDone size="16" />
               {workout.workoutResults.length}

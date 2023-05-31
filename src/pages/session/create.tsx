@@ -20,11 +20,7 @@ const CreateSession: NextPage = () => {
         <meta name="description" content="Add or edit a session" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <H1
-        // icon="/icons/fire/fire-dynamic-premium.png"
-        line1={"Create "}
-        line2={"a new session"}
-      />
+      <H1> Create a session </H1>
 
       {preselectedWorkouts.length > 0 ? (
         <WorkoutSessionForm />

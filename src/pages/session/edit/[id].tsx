@@ -17,13 +17,10 @@ const Edit: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <H1
-        // icon="/icons/fire/fire-dynamic-premium.png"
-        line1={"Edit"}
-        line2={"this session"}
-      />
-
-      <WorkoutSessionForm existingSessionId={id} />
+      <H1> Edit session </H1>
+      <div className="mt-8">
+        <WorkoutSessionForm existingSessionId={id} />
+      </div>
     </>
   );
 };

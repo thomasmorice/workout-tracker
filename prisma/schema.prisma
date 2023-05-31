@@ -35,7 +35,19 @@ model Workout {
     workoutResults WorkoutResult[]
     affiliateId    Int? // This workout belongs to a specific box
     affiliateDate  DateTime?
+    benchmark      Benchmark?
     isGlobal       Boolean         @default(false) // This workout is available for everyone
+}
+
+model Benchmark {
+    id                String      @id @default(cuid())
+    workout           Workout     @relation(fields: [workoutId], references: [id])
+    workoutId         Int         @unique
+    worstWomanResult  Int
+    worstManResult    Int
+    bestWomanResult   Int
+    bestManResult     Int
+    abilitiesRequired Abilities[]
 }
 
 model WorkoutSession {
@@ -124,6 +136,7 @@ model User {
     following       Friends[]        @relation(name: "users")
     followedBy      Friends[]        @relation(name: "friendUsers")
     affiliateId     Int?
+    gender          Gender?
 }
 
 model Friends {
@@ -152,6 +165,24 @@ model VerificationToken {
 enum FriendPrivilege {
     TAKE_UNCLASSIFIED_OWNERSHIP // can take ownership of unclassified events
     CAN_ACCESS_CLASSIFIED
+}
+
+enum Gender {
+    MALE
+    FEMALE
+}
+
+enum Abilities {
+    ENDURANCE
+    STAMINA
+    STRENGTH
+    POWER
+    SPEED
+    AGILITY
+    CARDIOVASCULAR_FITNESS
+    MENTAL_TOUGHNESS
+    TECHNIQUE
+    RECOVERY
 }
 
 enum Difficulty {

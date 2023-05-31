@@ -12,13 +12,17 @@ export default function WorkoutList() {
   const entry = useIntersectionObserver(lastWorkoutRef, {});
 
   const [classifiedOnly, set_classifiedOnly] = useState(true);
+  const [filterOn, set_filterOn] = useState<
+    undefined | "classified" | "benchmarks"
+  >("classified");
   const [searchTerm, set_searchTerm] = useState("");
   const searchTermDebounced = useDebounce<string>(searchTerm, 500);
 
   const { data, fetchNextPage, hasNextPage, isFetching, isSuccess } =
     trpc.workout.getInfiniteWorkout.useInfiniteQuery(
       {
-        classifiedOnly: classifiedOnly,
+        classifiedOnly: filterOn === "classified",
+        benchmarkOnly: filterOn === "benchmarks",
         searchTerm: searchTermDebounced,
       },
       {
@@ -53,32 +57,41 @@ export default function WorkoutList() {
           />
         </div>
       </div>
-      <div className="mt-6 flex items-center gap-3">
+      <div className="mb-2 mt-6 text-lg font-bold">Filters</div>
+      <div className=" flex flex-wrap items-center gap-3">
         <button
-          onClick={() => set_classifiedOnly(false)}
+          onClick={() => set_filterOn(undefined)}
           className={`badge badge-lg font-medium ${
-            !classifiedOnly ? "badge-primary" : ""
+            !filterOn ? "badge-primary" : ""
           }`}
         >
           All workouts
         </button>
-
         <button
-          onClick={() => set_classifiedOnly(true)}
+          onClick={() => set_filterOn("classified")}
           className={`badge badge-lg font-medium ${
-            classifiedOnly ? "badge-primary" : ""
+            filterOn === "classified" ? "badge-primary" : ""
           }`}
         >
-          Classified workouts
+          Classified
+        </button>
+        <button
+          onClick={() => set_filterOn("benchmarks")}
+          className={`badge badge-lg font-medium ${
+            filterOn === "benchmarks" ? "badge-primary" : ""
+          }`}
+        >
+          Only Benchmarks
         </button>
       </div>
+      <div className="mb-2 mt-8 text-lg font-bold">Workout List</div>
       <Masonry
         breakpointCols={{
           default: 3,
           1500: 2,
           1226: 1,
         }}
-        className="-ml-16 mt-6 flex w-auto"
+        className="-ml-16 flex w-auto"
         columnClassName="pl-16 bg-clip-padding "
       >
         <LayoutGroup>

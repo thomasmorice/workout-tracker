@@ -5,6 +5,7 @@ import { CreateWorkoutInputSchema } from "../../../../types/app";
 import { router, protectedProcedure } from "../../trpc";
 import { WorkoutResultsSelect } from "../workout-result-router";
 import {
+  getAllWorkoutWithResults,
   getInfiniteWorkout,
   getInfiniteWorkoutWithResults,
 } from "./get-infinite-workout";
@@ -44,6 +45,7 @@ export const workoutRouter = router({
         select: {
           ...WorkoutExtras,
           ...WorkoutSelect,
+          benchmark: true,
           creator: true,
           _count: {
             select: {
@@ -61,6 +63,7 @@ export const workoutRouter = router({
               ...WorkoutResultsSelect,
               workoutSession: {
                 select: {
+                  id: true,
                   event: true,
                 },
               },
@@ -85,6 +88,7 @@ export const workoutRouter = router({
     }),
   getInfiniteWorkout,
   getInfiniteWorkoutWithResults,
+  getAllWorkoutWithResults,
   add: protectedProcedure
     .input(CreateWorkoutInputSchema)
     .mutation(({ ctx, input }) => {

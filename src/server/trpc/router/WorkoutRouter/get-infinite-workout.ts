@@ -10,6 +10,7 @@ const infiniteWorkoutZodInput = z.object({
   withResults: z.boolean().nullish(),
   classifiedOnly: z.boolean().nullish(),
   affiliateOnly: z.boolean().nullish(),
+  benchmarkOnly: z.boolean().nullish(),
   searchTerm: z.string().nullish(),
   dateFilter: z
     .object({
@@ -20,6 +21,7 @@ const infiniteWorkoutZodInput = z.object({
   orderResults: z.array(z.any()).nullish(),
   orderByMostlyDone: z.boolean().nullish(),
   onlyFetchMine: z.boolean().nullish(),
+
   ids: z
     .object({
       in: z.array(z.number()).nullish(),
@@ -55,6 +57,11 @@ const getWhere = (
   props.affiliateOnly &&
     (where = {
       affiliateId: affiliateId,
+    });
+
+  props.benchmarkOnly &&
+    (where.NOT = {
+      benchmark: null,
     });
 
   props.dateFilter &&
@@ -163,6 +170,7 @@ export const getInfiniteWorkout = protectedProcedure
         ...WorkoutSelect,
         ...WorkoutExtras,
         creator: true,
+        benchmark: true,
         _count: {
           select: {
             workoutResults: {
@@ -200,6 +208,7 @@ export const getInfiniteWorkoutWithResults = protectedProcedure
       select: {
         ...WorkoutSelect,
         ...WorkoutExtras,
+        benchmark: true,
         creator: true,
         _count: {
           select: {
@@ -237,4 +246,60 @@ export const getInfiniteWorkoutWithResults = protectedProcedure
       workouts,
       nextCursor,
     };
+  });
+
+export const getAllWorkoutWithResults = protectedProcedure
+  .input(infiniteWorkoutZodInput)
+  .query(async ({ ctx, input }) => {
+    const workouts = await ctx.prisma.workout.findMany({
+      select: {
+        ...WorkoutSelect,
+        ...WorkoutExtras,
+        creator: true,
+        benchmark: true,
+        _count: {
+          select: {
+            workoutResults: {
+              where: {
+                workoutSession: {
+                  athleteId: ctx.session.user.id,
+                },
+              },
+            },
+          },
+        },
+        workoutResults: {
+          where: {
+            workoutSession: {
+              athleteId: ctx.session.user.id,
+            },
+            OR: [
+              {
+                weight: {
+                  not: null,
+                },
+              },
+              {
+                totalReps: {
+                  not: null,
+                },
+              },
+              {
+                time: {
+                  not: null,
+                },
+              },
+            ],
+          },
+          include: {
+            workoutSession: true,
+          },
+        },
+      },
+      where: {
+        ...getWhere(input, ctx.session.user.id),
+      },
+      orderBy: getOrderBy(input),
+    });
+    return workouts;
   });

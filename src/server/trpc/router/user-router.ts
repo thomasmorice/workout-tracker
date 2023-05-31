@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { trpc } from "../../../utils/trpc";
 import { router, protectedProcedure } from "../trpc";
+import { Gender } from "@prisma/client";
 
 export const userRouter = router({
   getAffiliates: protectedProcedure
@@ -60,4 +60,39 @@ export const userRouter = router({
     }
     return null;
   }),
+  getUser: protectedProcedure.query(async ({ ctx }) => {
+    let affiliate;
+    let user = await ctx.prisma.user.findUnique({
+      where: {
+        id: ctx.session.user.id,
+      },
+    });
+
+    if (user?.affiliateId) {
+      affiliate = await fetch(
+        `https://map.crossfit.com/getAffiliateInfo.php?aid=${user.affiliateId}`
+      )
+        .then((response) => response.json())
+        .then((result) => result);
+    }
+    return {
+      user: user,
+      affiliate: affiliate,
+    };
+  }),
+  edit: protectedProcedure
+    .input(
+      z.object({
+        gender: z.nativeEnum(Gender).nullish(),
+      })
+    )
+
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.user.update({
+        where: { id: ctx.session.user.id },
+        data: input,
+      });
+    }),
 });
+
+export type UserRouterType = typeof userRouter;
