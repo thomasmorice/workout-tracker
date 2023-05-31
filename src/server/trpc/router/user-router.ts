@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
+import { Gender } from "@prisma/client";
 
 export const userRouter = router({
   getAffiliates: protectedProcedure
@@ -79,4 +80,19 @@ export const userRouter = router({
       affiliate: affiliate,
     };
   }),
+  edit: protectedProcedure
+    .input(
+      z.object({
+        gender: z.nativeEnum(Gender).nullish(),
+      })
+    )
+
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.user.update({
+        where: { id: ctx.session.user.id },
+        data: input,
+      });
+    }),
 });
+
+export type UserRouterType = typeof userRouter;

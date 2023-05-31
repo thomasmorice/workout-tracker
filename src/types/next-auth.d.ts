@@ -1,4 +1,5 @@
 import { DefaultSession } from "next-auth";
+import { GenderType } from "@prisma/client";
 
 declare module "next-auth" {
   /**
@@ -7,6 +8,7 @@ declare module "next-auth" {
   interface Session {
     user?: {
       id: string;
+      gender?: GenderType;
     } & DefaultSession["user"];
   }
 }

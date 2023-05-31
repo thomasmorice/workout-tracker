@@ -101,7 +101,7 @@ export default function WeighingForm({
         style={{
           backgroundImage: `url(/workout-item/${illustration}.png)`,
         }}
-        className="absolute top-0 left-0 h-64 w-full bg-cover bg-center opacity-50"
+        className="absolute left-0 top-0 h-64 w-full bg-cover bg-center opacity-50"
       >
         <div
           style={{

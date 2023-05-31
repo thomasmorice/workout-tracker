@@ -1,4 +1,4 @@
-import { Abilities } from "@prisma/client";
+import { Abilities, Gender } from "@prisma/client";
 import { inferRouterOutputs } from "@trpc/server";
 import { WorkoutRouterType } from "../server/trpc/router/WorkoutRouter/workout-router";
 
@@ -14,13 +14,20 @@ export const getLevelFromIndividualWorkout = (
   workout:
     | inferRouterOutputs<WorkoutRouterType>["getAllWorkoutWithResults"][number]
     | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
-    | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"]
+    | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"],
+  gender: Gender
 ) => {
   let level: number | undefined = undefined;
   if (workout && workout.workoutResults && workout.workoutResults.length > 0) {
     // has result
-    const worstScoreLevel = workout.benchmark?.worstManResult;
-    const bestScoreLevel = workout.benchmark?.bestManResult;
+    const worstScoreLevel =
+      gender === "MALE"
+        ? workout.benchmark?.worstManResult
+        : workout.benchmark?.worstWomanResult;
+    const bestScoreLevel =
+      gender === "MALE"
+        ? workout.benchmark?.bestManResult
+        : workout.benchmark?.bestWomanResult;
     if (worstScoreLevel && bestScoreLevel) {
       level = 1;
       if (workout.workoutType === "FOR_TIME") {
@@ -65,12 +72,13 @@ export const getLevelFromIndividualWorkout = (
 };
 
 export const getBenchmarksAndAbilities = (
-  benchmarkWorkouts: inferRouterOutputs<WorkoutRouterType>["getAllWorkoutWithResults"]
+  benchmarkWorkouts: inferRouterOutputs<WorkoutRouterType>["getAllWorkoutWithResults"],
+  gender: Gender
 ) => {
   // let userAbilitiesScore: { [key: string]: number[] } = {};
   let benchmarkWorkoutsAndLevel: BenchmarkAndLevelType = [];
   benchmarkWorkouts?.forEach((workout) => {
-    const level = getLevelFromIndividualWorkout(workout);
+    const level = getLevelFromIndividualWorkout(workout, gender);
     if (level) {
       benchmarkWorkoutsAndLevel.push({
         benchmarkWorkout: workout,

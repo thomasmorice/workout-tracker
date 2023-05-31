@@ -11,6 +11,7 @@ import {
   Filler,
   ScriptableContext,
 } from "chart.js";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Radar } from "react-chartjs-2";
 import { TailSpin } from "react-loading-icons";
@@ -38,6 +39,7 @@ ChartJS.register(
 );
 
 export default function RadarChart() {
+  const { data: sessionData, status } = useSession();
   const { data: benchmarkWorkouts, isFetching } =
     trpc.workout.getAllWorkoutWithResults.useQuery(
       {
@@ -52,7 +54,8 @@ export default function RadarChart() {
   const [showLevelScore, set_showLevelScore] = useState(false);
 
   const benchmarksAndAbilities = getBenchmarksAndAbilities(
-    benchmarkWorkouts || []
+    benchmarkWorkouts || [],
+    sessionData?.user?.gender
   );
 
   const latestChartColor = "102, 26, 230";
