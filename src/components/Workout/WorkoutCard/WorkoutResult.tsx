@@ -67,8 +67,8 @@ export default function WorkoutResult({
               </div>
               {workoutResult.time && (
                 <div className="flex flex-col text-xl font-extrabold">
-                  {Math.round(workoutResult.time / 60)}:
-                  {format(workoutResult.time % 60, "ss")}
+                  {Math.floor(workoutResult.time / 60)}:
+                  {`0${workoutResult.time % 60}`.slice(-2)}
                   {` minutes`}
                 </div>
               )}

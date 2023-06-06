@@ -188,14 +188,15 @@ export default function WorkoutSessionForm({
     <div className="">
       {showWorkoutResultForm && (
         <WorkoutResultForm
-          onSave={(workoutResult) => {
+          onSave={async (workoutResult) => {
             updateWorkoutResults(
               workoutResults.findIndex(
                 (wr) => wr.workoutId === workoutResult.workoutId
               ),
               workoutResult
             );
-            set_showWorkoutResultForm(undefined);
+
+            await handleSubmit(handleCreateOrEdit)();
           }}
           onClose={() => set_showWorkoutResultForm(undefined)}
           workoutResult={showWorkoutResultForm}

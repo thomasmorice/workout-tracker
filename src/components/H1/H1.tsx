@@ -4,13 +4,13 @@ type H1Props = {
 
 export default function H1({ children }: H1Props) {
   return (
-    <>
+    <div className="">
       <div className="flex w-full justify-center">
         <h1 className="fixed top-4 z-40 flex w-fit text-base font-black text-primary-content">
           {children}
         </h1>
       </div>
-      <div className="absolute left-0 top-6 w-full animate-translate opacity-[0.15] blur-2xl">
+      <div className="absolute left-0 top-6 w-full opacity-[0.15] blur-2xl">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           version="1.1"
@@ -135,6 +135,6 @@ export default function H1({ children }: H1Props) {
           </g>
         </svg>
       </div>
-    </>
+    </div>
   );
 }
