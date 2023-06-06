@@ -17,7 +17,6 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user = { ...user };
       }
-      console.log("session", session);
       return session;
     },
   },

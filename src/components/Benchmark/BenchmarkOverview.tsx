@@ -11,7 +11,6 @@ import {
   Filler,
 } from "chart.js";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
 import { Radar } from "react-chartjs-2";
 import { TailSpin } from "react-loading-icons";
 import {
@@ -23,7 +22,6 @@ import {
 } from "../../utils/benchmark";
 import { enumToString } from "../../utils/formatting";
 import { trpc } from "../../utils/trpc";
-import DashboardItemList from "../Dashboard/DashboardItemList";
 
 ChartJS.register(
   CategoryScale,
@@ -37,7 +35,7 @@ ChartJS.register(
   Filler
 );
 
-export default function RadarChart() {
+export default function BenchmarkOverview() {
   const { data: sessionData, status } = useSession();
   const { data: benchmarkWorkouts, isFetching } =
     trpc.workout.getAllWorkoutWithResults.useQuery(
@@ -49,8 +47,6 @@ export default function RadarChart() {
         refetchOnWindowFocus: false,
       }
     );
-
-  const [showLevelScore, set_showLevelScore] = useState(false);
 
   const benchmarksAndAbilities = getBenchmarksAndAbilities(
     benchmarkWorkouts || [],
@@ -100,21 +96,20 @@ export default function RadarChart() {
         legend: {
           display: false,
         },
-        datalabels: {
-          display: showLevelScore,
-          align: "end" as const,
-          font: {
-            family: "Work sans",
-            size: 9.5,
-            weight: 900,
-          },
-          color: `rgba(${latestChartColor})`,
+        // datalabels: {
+        //   align: "end" as const,
+        //   font: {
+        //     family: "Work sans",
+        //     size: 9.5,
+        //     weight: 900,
+        //   },
+        //   color: `rgba(${latestChartColor})`,
 
-          offset: 1,
-          formatter: (value: number) => {
-            return Math.round(value);
-          },
-        },
+        //   offset: 1,
+        //   formatter: (value: number) => {
+        //     return Math.round(value);
+        //   },
+        // },
       },
       scales: {
         r: {
@@ -155,9 +150,7 @@ export default function RadarChart() {
   };
 
   return (
-    <div className="mt-5">
-      {/* Profile accuracy: <b> 10% </b> */}
-
+    <>
       <div className="flex items-center justify-between rounded-3xl bg-base-200 px-8 py-6">
         <div className="flex flex-col items-center">
           <div
@@ -219,44 +212,9 @@ export default function RadarChart() {
           </div>
         </div>
       </div>
-      <div className="-z-10 flex w-full">
+      <div className="-z-10 -mt-5  flex w-full">
         <Radar options={{ ...config.options }} data={data} />
       </div>
-
-      <div className="">
-        <div className="flex flex-col gap-5">
-          {getAverageLevelPerAbilities(benchmarksAndAbilities).map(
-            (levelPerAbility) => (
-              <div
-                key={levelPerAbility.ability}
-                className="flex flex-col gap-1"
-              >
-                <div className="label-text">
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-col">
-                      <div className="-mt-1 text-xs font-black uppercase">
-                        {enumToString(levelPerAbility.ability).toUpperCase()}
-                      </div>
-                      <div className="text-[0.72rem]">
-                        Based on {levelPerAbility.accuracy} workouts
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-center rounded-full text-base font-black uppercase">
-                      {levelPerAbility.level}
-                    </div>
-                  </div>
-                </div>
-
-                <progress
-                  className={`progress progress-primary`}
-                  value={levelPerAbility.level}
-                  max="100"
-                ></progress>
-              </div>
-            )
-          )}
-        </div>
-      </div>
-    </div>
+    </>
   );
 }

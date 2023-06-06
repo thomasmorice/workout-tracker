@@ -1,5 +1,5 @@
 import { inferRouterOutputs } from "@trpc/server";
-import { format } from "date-fns";
+import { format, intervalToDuration } from "date-fns";
 import { MdStar } from "react-icons/md";
 import { WorkoutResultRouterType } from "../../../server/trpc/router/workout-result-router";
 import { WorkoutSessionRouterType } from "../../../server/trpc/router/workout-session-router";
@@ -67,7 +67,8 @@ export default function WorkoutResult({
               </div>
               {workoutResult.time && (
                 <div className="flex flex-col text-xl font-extrabold">
-                  {format(workoutResult.time * 1000, "mm:ss")}
+                  {Math.round(workoutResult.time / 60)}:
+                  {format(workoutResult.time % 60, "ss")}
                   {` minutes`}
                 </div>
               )}

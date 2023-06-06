@@ -1,11 +1,5 @@
 import { IconType } from "react-icons/lib";
-import {
-  MdOutlineSchedule,
-  MdHome,
-  MdPadding,
-  MdOutlineDashboard,
-  MdOutlineAccountCircle,
-} from "react-icons/md";
+import { MdOutlineSchedule, MdHome, MdSettings } from "react-icons/md";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import MobileBottomNavbar from "./MobileBottomNavbar";
 import DesktopSidebar from "./DesktopSidebar";
@@ -47,9 +41,9 @@ export default function Navigation() {
       href: "/activities",
     },
     {
-      icon: IoIosAnalytics,
-      label: "Profile",
-      href: "/profile",
+      icon: MdSettings,
+      label: "Settings",
+      href: "/settings",
     },
   ];
 

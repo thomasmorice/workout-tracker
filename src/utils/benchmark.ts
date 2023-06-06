@@ -7,67 +7,118 @@ type BenchmarkAndLevelType = {
   level: number;
 }[];
 
+type ResultType = "latest" | "best";
+type BenchmarkWorkoutType =
+  | inferRouterOutputs<WorkoutRouterType>["getAllWorkoutWithResults"][number]
+  | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
+  | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"];
+
 export const MAX_LEVEL = 100;
-const chartType: "latest" | "best" = "latest";
+
+const getResultFromBenchmarkWorkout = ({
+  resultType,
+  workout,
+}: {
+  resultType: ResultType;
+  workout: BenchmarkWorkoutType;
+}) => {
+  if (workout?.workoutResults?.length) {
+    let resultToTakeIntoAccount = workout.workoutResults[0];
+    let rawResultToTakeIntoAccount: number | undefined;
+    let filteredResults: typeof workout.workoutResults | undefined =
+      workout.workoutResults;
+
+    if (resultType === "best") {
+      // filter only rx if there is
+      if (filteredResults.findIndex((wr) => wr.isRx)) {
+        filteredResults.map((res) => res.isRx && res);
+      }
+
+      filteredResults.forEach((result) => {
+        if (result?.time) {
+          if (!resultToTakeIntoAccount?.time) {
+            resultToTakeIntoAccount = result;
+          } else if (
+            resultToTakeIntoAccount?.time &&
+            result.time < resultToTakeIntoAccount.time
+          ) {
+            resultToTakeIntoAccount = result;
+          }
+        } else if (
+          resultToTakeIntoAccount?.weight &&
+          resultToTakeIntoAccount.weight < (result.weight || 0)
+        ) {
+          resultToTakeIntoAccount = result;
+        }
+      });
+
+      // switch (workout.workoutType) {
+      //   case "ONE_REP_MAX":
+      //   case "X_REP_MAX":
+      //     // result = resultToTakeIntoAccount?.weight || undefined
+      //     break;
+      //   case "FOR_TIME":
+      //     result = resultToTakeIntoAccount?.time || resultToTakeIntoAccount?.totalReps ||   undefined
+      //     break;
+      //   default:
+      //     break;
+      // }
+    }
+    return resultToTakeIntoAccount;
+  }
+};
 
 export const getLevelFromIndividualWorkout = (
-  workout:
-    | inferRouterOutputs<WorkoutRouterType>["getAllWorkoutWithResults"][number]
-    | inferRouterOutputs<WorkoutRouterType>["getInfiniteWorkout"]["workouts"][number]
-    | inferRouterOutputs<WorkoutRouterType>["getWorkoutById"],
-  gender: Gender
+  workout: BenchmarkWorkoutType,
+  gender: Gender,
+  resultType: ResultType = "latest"
 ) => {
   let level: number | undefined = undefined;
-  if (workout && workout.workoutResults && workout.workoutResults.length > 0) {
-    // has result
-    const worstScoreLevel =
-      gender === "MALE"
-        ? workout.benchmark?.worstManResult
-        : workout.benchmark?.worstWomanResult;
-    const bestScoreLevel =
-      gender === "MALE"
-        ? workout.benchmark?.bestManResult
-        : workout.benchmark?.bestWomanResult;
-    if (worstScoreLevel && bestScoreLevel) {
-      level = 1;
-      if (workout.workoutType === "FOR_TIME") {
-        const isRx =
-          (chartType === "latest" && workout?.workoutResults[0]?.isRx) || false;
-        if (isRx) {
-          level = 10;
-        }
-        const resultToTakeIntoAccount =
-          (chartType === "latest" && workout?.workoutResults[0]?.time) || 0;
+  const resultToTakeIntoAccount = getResultFromBenchmarkWorkout({
+    workout: workout,
+    resultType: resultType,
+  });
+  if (resultToTakeIntoAccount) {
+    const benchmarkScores = {
+      worst:
+        gender === "MALE"
+          ? workout.benchmark?.worstManResult
+          : workout.benchmark?.worstWomanResult,
+      best:
+        gender === "MALE"
+          ? workout.benchmark?.bestManResult
+          : workout.benchmark?.bestWomanResult,
+    };
+
+    if (benchmarkScores.worst && benchmarkScores.best) {
+      level = resultToTakeIntoAccount?.isRx ? 10 : 1;
+
+      const rawLevelValue =
+        resultToTakeIntoAccount?.time ||
+        resultToTakeIntoAccount?.totalReps ||
+        resultToTakeIntoAccount?.weight;
+
+      if (resultToTakeIntoAccount?.time && rawLevelValue) {
         for (
-          let i = worstScoreLevel;
-          i >= resultToTakeIntoAccount && level < MAX_LEVEL;
-          i += (bestScoreLevel - worstScoreLevel) / MAX_LEVEL
-        ) {
+          let i = benchmarkScores.worst;
+          i >= rawLevelValue && level < MAX_LEVEL;
+          i += (benchmarkScores.best - benchmarkScores.worst) / MAX_LEVEL
+        )
           level++;
-        }
-        if (!isRx) {
-          level = level / 10;
-        }
-      } else if (
-        workout.workoutType === "ONE_REP_MAX" ||
-        workout.workoutType === "X_REP_MAX"
-      ) {
-        // console.log("Workout: ", workout.name);
-        const resultToTakeIntoAccount =
-          (chartType === "latest" && workout?.workoutResults[0]?.weight) || 0;
-        // console.log("resultToTakeIntoAccount", resultToTakeIntoAccount);
+      } else if (rawLevelValue) {
         for (
-          let i = worstScoreLevel;
-          i <= resultToTakeIntoAccount && level < MAX_LEVEL;
-          i += (bestScoreLevel - worstScoreLevel) / MAX_LEVEL
-        ) {
-          // console.log("score: ", i);
+          let i = benchmarkScores.worst;
+          i <= rawLevelValue && level < MAX_LEVEL;
+          i += (benchmarkScores.best - benchmarkScores.worst) / MAX_LEVEL
+        )
           level++;
-        }
-        // console.log("END\n\n");
+      }
+      if (level === 1) {
+        console.log(workout);
       }
     }
   }
+
   return level;
 };
 
@@ -78,7 +129,7 @@ export const getBenchmarksAndAbilities = (
   // let userAbilitiesScore: { [key: string]: number[] } = {};
   let benchmarkWorkoutsAndLevel: BenchmarkAndLevelType = [];
   benchmarkWorkouts?.forEach((workout) => {
-    const level = getLevelFromIndividualWorkout(workout, gender);
+    const level = getLevelFromIndividualWorkout(workout, gender, "latest");
     if (level) {
       benchmarkWorkoutsAndLevel.push({
         benchmarkWorkout: workout,

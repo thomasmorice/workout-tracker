@@ -11,11 +11,13 @@ import H1 from "../components/H1/H1";
 import { Affiliate } from "../types/app";
 import { trpc } from "../utils/trpc";
 import { useToastStore } from "../store/ToastStore";
+import { useSession } from "next-auth/react";
 
 const Settings: NextPage = () => {
   const utils = trpc.useContext();
 
   const { addMessage, closeMessage } = useToastStore();
+  const { update: sessionUpdate } = useSession();
 
   const [searchTerm, set_searchTerm] = useState("");
   const searchTermDebounced = useDebounce<string>(searchTerm, 500);
@@ -26,7 +28,7 @@ const Settings: NextPage = () => {
 
   const { mutateAsync: editUser } = trpc.user.edit.useMutation({
     async onSuccess() {
-      await utils.workout.getInfiniteWorkout.invalidate();
+      await utils.workout.getAllWorkoutWithResults.invalidate();
     },
   });
 
@@ -51,9 +53,11 @@ const Settings: NextPage = () => {
   }, [isFetchingUser]);
 
   const onSubmit = async (user: inferRouterInputs<UserRouterType>["edit"]) => {
-    console.log("user", user);
     try {
       await editUser({
+        gender: user.gender,
+      });
+      sessionUpdate({
         gender: user.gender,
       });
       addMessage({
@@ -163,10 +167,8 @@ const Settings: NextPage = () => {
               onClick={async () => {
                 await handleSubmit(onSubmit)();
               }}
-              disabled={!isDirty}
-              className={`btn-primary btn mt-6 ${
-                isDirty ? "" : "btn-disabled"
-              }`}
+              // disabled={!isDirty}
+              className={`btn-primary btn mt-6`}
               type="button"
             >
               {`Save settings`}
