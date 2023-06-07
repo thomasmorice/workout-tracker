@@ -25,7 +25,7 @@ export const UserAvatarAndAffiliate = () => {
         <p className="text-2xl">{sessionData?.user?.name}</p>
         <p className="text-xs">
           {isFetchingUserAffiliate ? (
-            <TailSpin className="h-5" />
+            <TailSpin className="h-8" stroke="#2D68FF" speed={1.2} />
           ) : userAffiliate ? (
             `${(userAffiliate as Affiliate).name} @ ${
               (userAffiliate as Affiliate).state

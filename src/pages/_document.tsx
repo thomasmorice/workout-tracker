@@ -2,11 +2,7 @@ import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
   return (
-    <Html
-      data-theme="dark"
-      lang="en"
-      className="overflow-x-hidden overscroll-none"
-    >
+    <Html data-theme="dark" lang="en" className="overflow-x-hidden">
       <Head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
