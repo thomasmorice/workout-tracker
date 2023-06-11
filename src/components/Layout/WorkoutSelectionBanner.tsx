@@ -28,7 +28,7 @@ export default function WorkoutSelectionBanner() {
     <div
       className={`fixed bottom-0 left-0 z-50 flex w-full px-3 transition-all ${
         expandedBanner
-          ? "inset-0 h-full flex-col overflow-auto bg-base-100 pb-8"
+          ? "h-full flex-col overflow-auto bg-base-100 pb-8"
           : "h-16 items-center  bg-base-300"
       }`}
     >

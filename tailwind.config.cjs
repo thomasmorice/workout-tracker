@@ -34,26 +34,6 @@ module.exports = {
             transform: "rotate(-0.5deg)",
           },
         },
-        translate: {
-          "0%, 100%": {
-            transform: "translate(0px)",
-          },
-          "15%": {
-            transform: "translateX(-80px) translateY(20px)",
-          },
-          "30%": {
-            transform: "translateX(60px) translateY(-40px)",
-          },
-          "45%": {
-            transform: "translateX(-20px) translateY(10px)",
-          },
-          "15%": {
-            transform: "translateX(0px) translateY(20px)",
-          },
-          "15%": {
-            transform: "translateX(10px) translateY(-20px)",
-          },
-        },
       },
     },
   },
@@ -89,7 +69,7 @@ module.exports = {
     themes: [
       {
         dark: {
-          ...require("daisyui/src/colors/themes")["[data-theme=dark]"],
+          ...require("daisyui/src/theming/themes")["[data-theme=dark]"],
           // "base-100": "#19181c",
           // "base-200": "#29272e",
           // "base-300": "#393740",

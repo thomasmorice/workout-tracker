@@ -81,7 +81,7 @@ export default function WorkoutList() {
             filterOn === "benchmarks" ? "badge-primary" : ""
           }`}
         >
-          Only Benchmarks
+          Benchmarks
         </button>
       </div>
       <div className="mb-2 mt-8 text-lg font-bold">Workout List</div>

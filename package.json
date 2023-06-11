@@ -24,7 +24,7 @@
     "@trpc/server": "^10.29.1",
     "array-shuffle": "^3.0.0",
     "chart.js": "^3.9.1",
-    "daisyui": "^2.52.0",
+    "daisyui": "^3.0.20",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^1.3.8",
     "framer-motion": "^7.10.3",

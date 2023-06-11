@@ -1,11 +1,9 @@
 import { IconType } from "react-icons/lib";
 import { MdOutlineSchedule, MdHome, MdSettings } from "react-icons/md";
-import { HiOutlineClipboardList } from "react-icons/hi";
 import MobileBottomNavbar from "./MobileBottomNavbar";
 import DesktopSidebar from "./DesktopSidebar";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { AiOutlinePlus } from "react-icons/ai";
-import { IoIosAnalytics } from "react-icons/io";
 import { GiGymBag } from "react-icons/gi";
 
 export interface NavigationItemsProps {

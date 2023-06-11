@@ -52,6 +52,13 @@ export const sessionHasResultsFilled = (session: SessionType) => {
   return false;
 };
 
+export const secondsToMinutesAndSeconds = (seconds: number) => {
+  return {
+    minutes: Math.floor(seconds / 60),
+    seconds: ("0" + (seconds % 60)).slice(-2),
+  };
+};
+
 export const getSessionTitle = (session: SessionType) => {
   return isBefore(new Date(), session.event.eventDate)
     ? "Session planned"

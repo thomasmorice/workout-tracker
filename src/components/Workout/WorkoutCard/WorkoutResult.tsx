@@ -5,7 +5,10 @@ import { WorkoutResultRouterType } from "../../../server/trpc/router/workout-res
 import { WorkoutSessionRouterType } from "../../../server/trpc/router/workout-session-router";
 import { WorkoutRouterType } from "../../../server/trpc/router/WorkoutRouter/workout-router";
 import { WorkoutResultInputsWithWorkout } from "../../../types/app";
-import { workoutResultIsFilled } from "../../../utils/utils";
+import {
+  secondsToMinutesAndSeconds,
+  workoutResultIsFilled,
+} from "../../../utils/utils";
 
 type WorkoutResultProps = {
   workoutResult:
@@ -67,9 +70,9 @@ export default function WorkoutResult({
               </div>
               {workoutResult.time && (
                 <div className="flex flex-col text-xl font-extrabold">
-                  {Math.floor(workoutResult.time / 60)}:
-                  {`0${workoutResult.time % 60}`.slice(-2)}
-                  {` minutes`}
+                  {secondsToMinutesAndSeconds(workoutResult.time).minutes}:
+                  {secondsToMinutesAndSeconds(workoutResult.time).seconds}{" "}
+                  minutes
                 </div>
               )}
             </div>

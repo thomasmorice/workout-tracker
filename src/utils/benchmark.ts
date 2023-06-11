@@ -1,6 +1,18 @@
 import { Abilities, Gender } from "@prisma/client";
 import { inferRouterOutputs } from "@trpc/server";
 import { WorkoutRouterType } from "../server/trpc/router/WorkoutRouter/workout-router";
+import { secondsToMinutesAndSeconds } from "./utils";
+import {
+  FaHeartbeat,
+  FaMoon,
+  FaMountain,
+  FaShieldAlt,
+  FaRunning,
+  FaDumbbell,
+} from "react-icons/fa";
+import { SiFalcon } from "react-icons/si";
+import { BsFillLightningChargeFill, BsSpeedometer } from "react-icons/bs";
+import { IoShapes } from "react-icons/io5";
 
 type BenchmarkAndLevelType = {
   benchmarkWorkout: inferRouterOutputs<WorkoutRouterType>["getAllWorkoutWithResults"][number];
@@ -15,7 +27,39 @@ type BenchmarkWorkoutType =
 
 export const MAX_LEVEL = 100;
 
-const getResultFromBenchmarkWorkout = ({
+export const getFormattedResultFromBenchmarkWorkout = ({
+  resultType,
+  workout,
+}: {
+  resultType: ResultType;
+  workout: BenchmarkWorkoutType;
+}) => {
+  const result = getResultFromBenchmarkWorkout({
+    resultType,
+    workout,
+  });
+  if (result?.weight) {
+    return {
+      raw: result.weight,
+      formatted: `${result.weight}KG`,
+    };
+  } else if (result?.totalReps) {
+    return {
+      raw: result.totalReps,
+      formatted: `${result.totalReps} reps`,
+    };
+  } else if (result?.time) {
+    return {
+      raw: result.time,
+      formatted:
+        secondsToMinutesAndSeconds(result.time).minutes +
+        ":" +
+        secondsToMinutesAndSeconds(result.time).seconds,
+    };
+  }
+};
+
+export const getResultFromBenchmarkWorkout = ({
   resultType,
   workout,
 }: {
@@ -24,7 +68,6 @@ const getResultFromBenchmarkWorkout = ({
 }) => {
   if (workout?.workoutResults?.length) {
     let resultToTakeIntoAccount = workout.workoutResults[0];
-    let rawResultToTakeIntoAccount: number | undefined;
     let filteredResults: typeof workout.workoutResults | undefined =
       workout.workoutResults;
 
@@ -51,18 +94,6 @@ const getResultFromBenchmarkWorkout = ({
           resultToTakeIntoAccount = result;
         }
       });
-
-      // switch (workout.workoutType) {
-      //   case "ONE_REP_MAX":
-      //   case "X_REP_MAX":
-      //     // result = resultToTakeIntoAccount?.weight || undefined
-      //     break;
-      //   case "FOR_TIME":
-      //     result = resultToTakeIntoAccount?.time || resultToTakeIntoAccount?.totalReps ||   undefined
-      //     break;
-      //   default:
-      //     break;
-      // }
     }
     return resultToTakeIntoAccount;
   }
@@ -203,4 +234,31 @@ export const getChartAccuracy = (
       return total + (accuracy * 100) / consideredFullAccuracy;
     }, 0) / averageLevelPerAbilities.length
   );
+};
+
+export const getIconFromBenchmarkAbility = (ability: `${Abilities}`) => {
+  switch (ability) {
+    case "ENDURANCE":
+      return FaMountain;
+    case "AGILITY":
+      return SiFalcon;
+    case "CARDIOVASCULAR_FITNESS":
+      return FaHeartbeat;
+    case "MENTAL_TOUGHNESS":
+      return FaShieldAlt;
+    case "POWER":
+      return BsFillLightningChargeFill;
+    case "RECOVERY":
+      return FaMoon;
+    case "SPEED":
+      return BsSpeedometer;
+    case "STAMINA":
+      return FaRunning;
+    case "STRENGTH":
+      return FaDumbbell;
+    case "TECHNIQUE":
+      return IoShapes;
+    default:
+      return FaMountain;
+  }
 };
