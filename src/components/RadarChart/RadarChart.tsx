@@ -59,8 +59,6 @@ export default function RadarChart() {
 
   const latestChartColor = "102, 26, 230";
 
-  console.log("benchmarksAndAbilities", benchmarksAndAbilities);
-
   if (isFetching) {
     return (
       <>
@@ -248,7 +246,7 @@ export default function RadarChart() {
                 </div>
 
                 <progress
-                  className={`progress progress-primary`}
+                  className={`progress-primary progress`}
                   value={levelPerAbility.level}
                   max="100"
                 ></progress>

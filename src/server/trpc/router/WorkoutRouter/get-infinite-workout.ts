@@ -11,6 +11,7 @@ const infiniteWorkoutZodInput = z.object({
   classifiedOnly: z.boolean().nullish(),
   affiliateOnly: z.boolean().nullish(),
   benchmarkOnly: z.boolean().nullish(),
+  workoutRecommendedOnly: z.boolean().nullish(),
   searchTerm: z.string().nullish(),
   dateFilter: z
     .object({
@@ -62,6 +63,18 @@ const getWhere = (
   props.benchmarkOnly &&
     (where.NOT = {
       benchmark: null,
+    });
+
+  props.workoutRecommendedOnly &&
+    (where = {
+      workoutResults: {
+        some: {
+          shouldRecommendWorkoutAgain: true,
+          workoutSession: {
+            athleteId: userId,
+          },
+        },
+      },
     });
 
   props.dateFilter &&

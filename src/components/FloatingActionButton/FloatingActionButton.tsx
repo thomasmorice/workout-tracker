@@ -4,6 +4,7 @@ import { useEventStore } from "../../store/EventStore";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import Dropdown from "../Dropdown/Dropdown";
 import { useRouter } from "next/router";
+import { MdMenu } from "react-icons/md";
 
 export default function FloatingActionButton() {
   const { showWorkoutForm } = useWorkoutStore();
@@ -47,8 +48,8 @@ export default function FloatingActionButton() {
           buttons={mainButtons}
           containerClass="dropdown-top divide-y"
         >
-          <div className="btn-rounded btn-md btn-circle btn flex items-center justify-center">
-            <AiOutlinePlus size={16} />
+          <div className="btn-rounded btn-sm btn-circle btn flex items-center justify-center bg-base-300">
+            <MdMenu size={15} />
           </div>
         </Dropdown>
       </div>

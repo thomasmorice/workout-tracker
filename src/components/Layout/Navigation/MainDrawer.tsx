@@ -53,12 +53,12 @@ export default function MainDrawer({ onClose }: MainDrawerProps) {
       />
       <div className="drawer-side">
         <label htmlFor="my-drawer" className="drawer-overlay"></label>
-        <ul className="menu w-80 bg-base-100 p-4">
+        <ul className="menu h-full w-80 bg-base-100 p-4">
           <button className="btn-ghost btn-sm btn-circle btn absolute right-4 top-4 z-[9000]">
             <MdClose onClick={closeDrawer} size={21} />
           </button>
           <div className="ml-4 mt-6 text-[24px] font-semibold">Box Tracker</div>
-          <li className="mb-4 -mt-3">
+          <li className="-mt-3 mb-4">
             <Link
               onClick={closeDrawer}
               className="flex flex-col items-start gap-0"

@@ -68,6 +68,11 @@ export const workoutRouter = router({
                 },
               },
             },
+            where: {
+              workoutSession: {
+                athleteId: ctx.session.user.id,
+              },
+            },
             orderBy: {
               workoutSession: {
                 event: {
@@ -131,7 +136,6 @@ export const workoutRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { id } = input;
       const details = await ctx.prisma.workout.delete({ where: { id } });
-      console.log("details", details);
       return {
         id,
       };

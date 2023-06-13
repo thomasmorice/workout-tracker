@@ -13,7 +13,7 @@ export default function WorkoutList() {
 
   const [classifiedOnly, set_classifiedOnly] = useState(true);
   const [filterOn, set_filterOn] = useState<
-    undefined | "classified" | "benchmarks"
+    undefined | "classified" | "benchmarks" | "recommended"
   >("classified");
   const [searchTerm, set_searchTerm] = useState("");
   const searchTermDebounced = useDebounce<string>(searchTerm, 500);
@@ -23,6 +23,7 @@ export default function WorkoutList() {
       {
         classifiedOnly: filterOn === "classified",
         benchmarkOnly: filterOn === "benchmarks",
+        workoutRecommendedOnly: filterOn === "recommended",
         searchTerm: searchTermDebounced,
       },
       {
@@ -82,6 +83,15 @@ export default function WorkoutList() {
           }`}
         >
           Benchmarks
+        </button>
+
+        <button
+          onClick={() => set_filterOn("recommended")}
+          className={`badge badge-lg font-medium ${
+            filterOn === "recommended" ? "badge-primary" : ""
+          }`}
+        >
+          Saved for later
         </button>
       </div>
       <div className="mb-2 mt-8 text-lg font-bold">Workout List</div>

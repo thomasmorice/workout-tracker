@@ -6,15 +6,15 @@ export default function H1({ children }: H1Props) {
   return (
     <div className="">
       <div className="flex w-full justify-center">
-        <h1 className="fixed top-4 z-40 flex w-fit text-base font-black text-primary-content">
+        <h1 className="fixed top-4 z-40 flex w-fit text-lg font-black text-primary-content">
           {children}
         </h1>
       </div>
-      <div className="absolute left-0 top-6 w-full opacity-[0.15] blur-2xl">
+      <div className="fixed left-0 top-6 -z-40 w-full opacity-[0.16] blur-2xl">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           version="1.1"
-          viewBox="0 0 700 300"
+          viewBox="0 0 700 340"
         >
           <defs>
             <linearGradient

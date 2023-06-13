@@ -55,7 +55,7 @@ export default function BenchmarkOverview() {
 
   const latestChartColor = "102, 26, 230";
 
-  console.log("benchmarksAndAbilities", benchmarksAndAbilities);
+  // console.log("benchmarksAndAbilities", benchmarksAndAbilities);
 
   if (isFetching) {
     return (

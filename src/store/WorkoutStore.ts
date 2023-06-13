@@ -88,7 +88,7 @@ const useWorkoutStore = create<WorkoutFormState>()((set, get) => ({
         closeAfter: 7000,
       });
     } else {
-      console.log("message", e.message);
+      console.error("message", e.message);
       addMessage({
         type: "error",
         message: e.message,

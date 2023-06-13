@@ -63,7 +63,7 @@ export default function WorkoutCard({
   const [isFullScreen, set_isFullScreen] = useState(false);
   const [selectedRange, set_selectedRange] = useState<Range>();
 
-  let timer = null;
+  isFullScreen && console.log("workout", workout);
 
   useEffect(() => {
     if (selectedRange?.startOffset !== selectedRange?.endOffset) {
@@ -196,7 +196,7 @@ export default function WorkoutCard({
           ${
             isFullScreen
               ? "fixed inset-0 z-20 w-full overflow-scroll bg-base-100"
-              : "relative z-10 bg-base-200"
+              : "relative z-10 bg-base-300"
           }
           ${
             isWorkoutFromSessionForm && !isFullScreen
@@ -336,7 +336,7 @@ export default function WorkoutCard({
                 {workout.benchmark?.abilitiesRequired.map((ability) => (
                   <div
                     key={ability}
-                    className="badge-primary badge items-center font-semibold"
+                    className="badge badge-primary items-center font-semibold"
                   >
                     {enumToString(ability)}
                   </div>
