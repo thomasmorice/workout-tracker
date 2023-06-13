@@ -11,6 +11,8 @@ import { useSession } from "next-auth/react";
 import { EventRouterType } from "../../server/trpc/router/event-router";
 import { inferRouterOutputs } from "@trpc/server";
 import Link from "next/link";
+import Dropdown from "../Dropdown/Dropdown";
+import { useRouter } from "next/router";
 
 export default function ActivityDashboard() {
   const { addOrEditEvent } = useEventStore();
@@ -18,6 +20,8 @@ export default function ActivityDashboard() {
   const { data: sessionData } = useSession();
   const [filteredEvents, set_filteredEvents] =
     useState<inferRouterOutputs<EventRouterType>["getEvents"]>();
+
+  const router = useRouter();
 
   const {
     data: events,
@@ -79,31 +83,28 @@ export default function ActivityDashboard() {
       <div>
         <div className="flex items-center gap-3">
           <h2 className="h2">Activity</h2>
-          <div className="dropdown ">
-            <label tabIndex={0} className="btn-outline btn-sm btn-circle btn">
-              <MdAdd size={22} />
-            </label>
-            <ul
-              tabIndex={0}
-              className="dropdown-content menu rounded-box w-52 bg-base-200 p-2 text-sm shadow"
-            >
-              <li>
-                <Link href="/session/create">Add new session</Link>
-              </li>
-              <li>
-                <a
-                  onClick={() =>
-                    addOrEditEvent({
-                      type: "weighing",
-                      date: showSpecificDay,
-                    })
-                  }
-                >
-                  Add weighing
-                </a>
-              </li>
-            </ul>
-          </div>
+          <Dropdown
+            withBackdrop
+            buttons={[
+              {
+                label: "Add new session",
+                onClick: () => router.push("/session/create"),
+              },
+              {
+                label: "Add weighing",
+                onClick: () =>
+                  addOrEditEvent({
+                    type: "weighing",
+                    date: showSpecificDay,
+                  }),
+              },
+            ]}
+            containerClass="dropdown-right "
+          >
+            <div className={`btn-outline btn-xs btn-circle btn`}>
+              <MdAdd size={16} />
+            </div>
+          </Dropdown>
         </div>
         {showSpecificDay && (
           <h3 className="mt-2">

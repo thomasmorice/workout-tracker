@@ -48,8 +48,8 @@ export default function FloatingActionButton() {
           buttons={mainButtons}
           containerClass="dropdown-top divide-y"
         >
-          <div className="btn-rounded btn-sm btn-circle btn flex items-center justify-center bg-base-300">
-            <MdMenu size={15} />
+          <div className="btn-rounded btn-ghost btn-md btn-circle btn flex items-center justify-center">
+            <MdMenu size={18} />
           </div>
         </Dropdown>
       </div>

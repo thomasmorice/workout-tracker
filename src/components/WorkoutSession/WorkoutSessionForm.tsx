@@ -204,7 +204,7 @@ export default function WorkoutSessionForm({
       )}
 
       <div className="relative mt-2 flex flex-col justify-center ">
-        {workoutResults.length && (
+        {workoutResults.length ? (
           <>
             <div className="text-lg font-bold text-white">
               <DatePicker name="date" control={control} />
@@ -232,13 +232,13 @@ export default function WorkoutSessionForm({
                       behavior: "smooth",
                     })
                   }
-                  className="badge-warning badge mb-4 mt-2 flex cursor-pointer gap-1"
+                  className="badge badge-warning mb-4 mt-2 flex cursor-pointer gap-1"
                 >
                   <MdWarning /> You have unsaved changes{" "}
                 </div>
                 <div
                   onClick={() => reset(defaultValues)}
-                  className="badge-error badge mb-4 mt-2 flex cursor-pointer gap-1"
+                  className="badge badge-error mb-4 mt-2 flex cursor-pointer gap-1"
                 >
                   <MdCancel /> Cancel
                 </div>
@@ -304,6 +304,8 @@ export default function WorkoutSessionForm({
               </button>
             )}
           </>
+        ) : (
+          <>No workout selected</>
         )}
       </div>
     </div>

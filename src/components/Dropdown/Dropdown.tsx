@@ -57,7 +57,7 @@ export default function Dropdown({
         >
           {children}
         </button>
-        <ul className="dropdown-content menu rounded-box menu-compact absolute w-56 gap-1 border-t-transparent bg-base-300 p-2 text-sm">
+        <ul className="dropdown-content menu rounded-box menu-sm absolute w-56 gap-1 border-t-transparent bg-base-300 p-2 text-sm">
           {buttons.map((button, index) => {
             if (button.onClick) {
               return (
@@ -68,7 +68,7 @@ export default function Dropdown({
                       onClose && onClose();
                       button.onClick && button.onClick();
                     }}
-                    className={`group flex w-full items-center rounded-md text-sm text-base-content`}
+                    className={`group flex w-full items-center rounded-md`}
                   >
                     {button.label}
                   </a>
