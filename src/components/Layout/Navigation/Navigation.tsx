@@ -18,12 +18,6 @@ export interface NavigationItemsProps {
 export default function Navigation() {
   const NavigationItems: NavigationItemsProps["items"] = [
     {
-      icon: AiOutlinePlus,
-      label: "",
-      href: "",
-      isFloatingActionButton: true,
-    },
-    {
       icon: MdHome,
       label: "Dashboard",
       href: "/",
@@ -33,7 +27,12 @@ export default function Navigation() {
       label: "Workouts",
       href: "/this-week-at-my-box",
     },
-
+    {
+      icon: AiOutlinePlus,
+      label: "",
+      href: "",
+      isFloatingActionButton: true,
+    },
     {
       icon: MdOutlineSchedule,
       label: "Activities",

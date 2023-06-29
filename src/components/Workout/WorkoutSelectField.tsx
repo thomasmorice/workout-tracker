@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo } from "react";
-import { TailSpin } from "react-loading-icons";
+
 import { useDebounce } from "usehooks-ts";
 import WorkoutCard from "./WorkoutCard/WorkoutCard";
 import { MdClose } from "react-icons/md";
@@ -56,7 +56,7 @@ export default function WorkoutSelectField({
   // Workout Search Results
   const workoutSearchResult = (
     <div className="">
-      <div className="absolute top-2 right-3 z-40">
+      <div className="absolute right-3 top-2 z-40">
         <button
           type="button"
           onClick={() => {
@@ -77,7 +77,7 @@ export default function WorkoutSelectField({
           }
           className="absolute top-16 z-30 -ml-2 flex max-h-[380px] w-[calc(100%_+_1rem)] flex-col gap-4 overflow-auto rounded-2xl border border-white border-opacity-5 bg-base-200"
         >
-          <div className="py-6 px-4">
+          <div className="px-4 py-6">
             {/* {fetchedWorkouts?.pages.map((workoutPage, pageIndex) => ( */}
             <div className="flex flex-col gap-10">
               <AnimatePresence>
@@ -133,8 +133,8 @@ export default function WorkoutSelectField({
       )}
 
       {isFetching && (
-        <div className="absolute top-0 right-1">
-          <TailSpin className="h-8" stroke="#2D68FF" speed={1.2} />{" "}
+        <div className="absolute right-1 top-0">
+          <span className="loading loading-infinity loading-md"></span>
         </div>
       )}
       {searchTerm !== "" && workoutSearchResult}

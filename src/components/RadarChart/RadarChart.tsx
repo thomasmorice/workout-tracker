@@ -13,7 +13,6 @@ import {
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Radar } from "react-chartjs-2";
-import { TailSpin } from "react-loading-icons";
 import {
   MAX_LEVEL,
   getBenchmarksAndAbilities,
@@ -23,7 +22,6 @@ import {
 } from "../../utils/benchmark";
 import { enumToString } from "../../utils/formatting";
 import { trpc } from "../../utils/trpc";
-import DashboardItemList from "../Dashboard/DashboardItemList";
 
 ChartJS.register(
   CategoryScale,
@@ -63,7 +61,7 @@ export default function RadarChart() {
     return (
       <>
         <div className="mt-8 flex justify-center">
-          <TailSpin className="h-8" stroke="#2D68FF" speed={1.2} />{" "}
+          <span className="loading loading-infinity loading-md"></span>
         </div>
       </>
     );
@@ -139,9 +137,9 @@ export default function RadarChart() {
             //   return value + ` ()`;
             // },
             font: {
-              family: "Work sans",
-              size: 10,
-              weight: "900",
+              family: "Roboto",
+              size: 11,
+              weight: "400",
             },
           },
           ticks: {

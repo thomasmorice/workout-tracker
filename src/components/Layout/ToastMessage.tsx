@@ -13,7 +13,7 @@ export default function ToastMessage() {
     <AnimatePresence>
       {messages.length && (
         <motion.div
-          className={`fixed left-1 bottom-1 z-[9999] flex w-[calc(100%_-_0.5rem)] flex-col gap-1 py-0 md:bottom-5 md:right-5 md:max-w-fit`}
+          className={`fixed bottom-1 left-1 z-[9999] flex w-[calc(100%_-_0.5rem)] flex-col gap-1 py-0 md:bottom-5 md:right-5 md:max-w-fit`}
         >
           {messages.map((toast) => (
             <div key={toast.id}>

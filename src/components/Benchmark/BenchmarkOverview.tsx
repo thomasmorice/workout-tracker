@@ -12,7 +12,6 @@ import {
 } from "chart.js";
 import { useSession } from "next-auth/react";
 import { Radar } from "react-chartjs-2";
-import { TailSpin } from "react-loading-icons";
 import {
   MAX_LEVEL,
   getBenchmarksAndAbilities,
@@ -61,7 +60,7 @@ export default function BenchmarkOverview() {
     return (
       <>
         <div className="mt-8 flex justify-center">
-          <TailSpin className="h-8" stroke="#2D68FF" speed={1.2} />{" "}
+          <span className="loading loading-infinity loading-md"></span>
         </div>
       </>
     );
@@ -151,70 +150,77 @@ export default function BenchmarkOverview() {
 
   return (
     <>
-      <div className="flex items-center justify-between rounded-3xl bg-base-200 px-8 py-6">
-        <div className="flex flex-col items-center">
-          <div
-            className="radial-progress text-xs font-black text-primary"
-            style={
-              {
-                "--value": Math.round(getAthleteLevel(benchmarksAndAbilities)),
-                "--size": "3rem",
-                "--thickness": "0.3rem",
-              } as React.CSSProperties
-            }
-          >
-            <span className="text-base-content">
-              {Math.round(getAthleteLevel(benchmarksAndAbilities))}%
-            </span>
-          </div>
-          <div className="pt-2 text-center text-xs font-bold leading-3">
-            Athlete <br /> Level
-          </div>
-        </div>
+      {benchmarksAndAbilities?.length ? (
+        <>
+          <div className="flex items-center justify-between rounded-3xl bg-base-200 px-8 py-6">
+            <div className="flex flex-col items-center">
+              <div
+                className="radial-progress text-xs font-black text-primary"
+                style={
+                  {
+                    "--value": Math.round(
+                      getAthleteLevel(benchmarksAndAbilities)
+                    ),
+                    "--size": "3rem",
+                    "--thickness": "0.3rem",
+                  } as React.CSSProperties
+                }
+              >
+                <span className="text-base-content">
+                  {Math.round(getAthleteLevel(benchmarksAndAbilities))}%
+                </span>
+              </div>
+              <div className="pt-2 text-center text-xs font-bold leading-3">
+                Athlete <br /> Level
+              </div>
+            </div>
 
-        <div className="flex flex-col items-center">
-          <div
-            className="radial-progress text-xs font-black text-primary"
-            style={
-              {
-                "--value": "100",
-                "--size": "3rem",
-                "--thickness": "0.3rem",
-              } as React.CSSProperties
-            }
-          >
-            <span className="text-base-content">
-              {benchmarksAndAbilities?.length || 0}
-            </span>
-          </div>
-          <div className="pt-2 text-center text-xs font-bold leading-3">
-            Benchmark <br /> Validated
-          </div>
-        </div>
+            <div className="flex flex-col items-center">
+              <div
+                className="radial-progress text-xs font-black text-primary"
+                style={
+                  {
+                    "--value": "100",
+                    "--size": "3rem",
+                    "--thickness": "0.3rem",
+                  } as React.CSSProperties
+                }
+              >
+                <span className="text-base-content">
+                  {benchmarksAndAbilities?.length || 0}
+                </span>
+              </div>
+              <div className="pt-2 text-center text-xs font-bold leading-3">
+                Benchmark <br /> Validated
+              </div>
+            </div>
 
-        <div className="flex flex-col items-center">
-          <div
-            className="radial-progress text-xs font-black text-primary"
-            style={
-              {
-                "--value": Math.round(getChartAccuracy(benchmarksAndAbilities)),
-                "--size": "3rem",
-                "--thickness": "0.3rem",
-              } as React.CSSProperties
-            }
-          >
-            <span className="text-base-content">
-              {Math.round(getChartAccuracy(benchmarksAndAbilities))}%
-            </span>
+            <div className="flex flex-col items-center">
+              <div
+                className="radial-progress text-xs font-black text-primary"
+                style={
+                  {
+                    "--value": Math.round(
+                      getChartAccuracy(benchmarksAndAbilities)
+                    ),
+                    "--size": "3rem",
+                    "--thickness": "0.3rem",
+                  } as React.CSSProperties
+                }
+              >
+                <span className="text-base-content">
+                  {Math.round(getChartAccuracy(benchmarksAndAbilities))}%
+                </span>
+              </div>
+              <div className="pt-2 text-center text-xs font-bold leading-3">
+                Data <br /> Accuracy
+              </div>
+            </div>
           </div>
-          <div className="pt-2 text-center text-xs font-bold leading-3">
-            Chart <br /> Accuracy
-          </div>
-        </div>
-      </div>
-      <div className="-z-10 -mt-5  flex w-full">
-        <Radar options={{ ...config.options }} data={data} />
-      </div>
+        </>
+      ) : (
+        "No benchmark available"
+      )}
     </>
   );
 }

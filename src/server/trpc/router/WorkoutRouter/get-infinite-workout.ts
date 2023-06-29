@@ -1,4 +1,4 @@
-import { ElementType, Prisma, WorkoutType } from "@prisma/client";
+import { Difficulty, ElementType, Prisma, WorkoutType } from "@prisma/client";
 import { z } from "zod";
 
 import { protectedProcedure } from "../../trpc";
@@ -7,6 +7,9 @@ import { WorkoutExtras, WorkoutSelect } from "./workout-router";
 const infiniteWorkoutZodInput = z.object({
   elementTypes: z.nativeEnum(ElementType).array().nullish(),
   workoutTypes: z.nativeEnum(WorkoutType).array().nullish(),
+  difficulties: z.nativeEnum(Difficulty).array().nullish(),
+  minDuration: z.number().nullish(),
+  maxDuration: z.number().nullish(),
   withResults: z.boolean().nullish(),
   classifiedOnly: z.boolean().nullish(),
   affiliateOnly: z.boolean().nullish(),
@@ -48,6 +51,21 @@ const getWhere = (
   props.workoutTypes?.length &&
     (where.workoutType = {
       in: props.workoutTypes,
+    });
+
+  props.difficulties?.length &&
+    (where.difficulty = {
+      in: props.difficulties,
+    });
+
+  props.minDuration &&
+    (where.totalTime = {
+      gte: props.minDuration,
+    });
+
+  props.maxDuration &&
+    (where.totalTime = {
+      lte: props.maxDuration,
     });
 
   props.classifiedOnly &&
@@ -125,6 +143,11 @@ const getWhere = (
     OR: [
       {
         creatorId: userId,
+      },
+      {
+        benchmark: {
+          isNot: null,
+        },
       },
       {
         AND: [
@@ -242,6 +265,11 @@ export const getInfiniteWorkoutWithResults = protectedProcedure
               select: {
                 event: true,
               },
+            },
+          },
+          where: {
+            workoutSession: {
+              athleteId: ctx.session.user.id,
             },
           },
         },

@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import H1 from "../../../components/H1/H1";
+import Header from "../../../components/Layout/Header";
 import WorkoutSessionForm from "../../../components/WorkoutSession/WorkoutSessionForm";
 
 const Edit: NextPage = () => {
@@ -17,7 +17,7 @@ const Edit: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <H1> Edit session </H1>
+      <Header h1="Edit session" />
       <div className="mt-8">
         <WorkoutSessionForm existingSessionId={id} />
       </div>

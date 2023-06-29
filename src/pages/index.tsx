@@ -4,12 +4,8 @@ import Head from "next/head";
 import PersonalRecordsInsights from "../components/Dashboard/PersonalRecords/PersonalRecordsInsights";
 import WeighingsInsights from "../components/Dashboard/Weighings/WeighingsInsights";
 import SessionInsights from "../components/Dashboard/Sessions/SessionsInsights";
-import H1 from "../components/H1/H1";
-
 import Benchmark from "../components/Benchmark/BenchmarkOverview";
-import UserAvatarAndAffiliate from "../components/Benchmark/UserAvatarAndAffiliate";
-import Link from "next/link";
-import { HiOutlineExternalLink } from "react-icons/hi";
+import Header from "../components/Layout/Header";
 
 const Home: NextPage = () => {
   const { data: sessionData, status } = useSession();
@@ -76,22 +72,28 @@ const Home: NextPage = () => {
         </>
       ) : (
         <>
-          <H1> Dashboard </H1>
-          <div className="mt-8">
-            <UserAvatarAndAffiliate />
+          <Header h1="Dashboard" />
+          <div className="tabs mb-8 mt-0 w-fit">
+            {/* <a className="tab-bordered tab tab-active">Overview</a>
+            <a className="tab-bordered tab">Tab 3</a> */}
+          </div>
+          {/* <UserAvatarAndAffiliate /> */}
 
-            <div className="h2 mb-3 mt-3 flex items-center gap-3">
+          {/* <div className="h2 mb-3 mt-3 flex items-center gap-3">
               Athlete overview
-              <Link href="/benchmarks" className="btn-primary btn-xs btn ">
+              <Link
+                href="/benchmarks"
+                className="btn-primary btn-xs btn cursor-pointer"
+              >
                 <HiOutlineExternalLink size={15} />
               </Link>
-            </div>
+            </div> */}
 
-            <Benchmark />
-            <SessionInsights />
-            <PersonalRecordsInsights />
-            <WeighingsInsights />
-          </div>
+          <Benchmark />
+          <SessionInsights />
+          <PersonalRecordsInsights />
+          <WeighingsInsights />
+          {/* </div> */}
         </>
       )}
     </>

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { trpc } from "../../utils/trpc";
-import { TailSpin } from "react-loading-icons";
+
 import { Affiliate } from "../../types/app";
 import { useSession } from "next-auth/react";
 
@@ -25,7 +25,7 @@ export const UserAvatarAndAffiliate = () => {
         <p className="text-2xl">{sessionData?.user?.name}</p>
         <p className="text-xs">
           {isFetchingUserAffiliate ? (
-            <TailSpin className="h-8" stroke="#2D68FF" speed={1.2} />
+            <span className="loading loading-infinity loading-md"></span>
           ) : userAffiliate ? (
             `${(userAffiliate as Affiliate).name} @ ${
               (userAffiliate as Affiliate).state

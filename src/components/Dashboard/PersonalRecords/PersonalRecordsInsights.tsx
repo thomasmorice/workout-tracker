@@ -25,7 +25,9 @@ export default function PersonalRecordsInsights() {
 
   if (
     !personalRecordWorkouts ||
-    !personalRecordWorkouts?.pages[0]?.workouts?.length
+    personalRecordWorkouts?.pages.every((page) =>
+      page.workouts.every((workout) => workout.workoutResults.length === 0)
+    )
   ) {
     return null;
   }

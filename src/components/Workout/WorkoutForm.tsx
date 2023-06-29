@@ -1,12 +1,11 @@
 import { Difficulty, ElementType, WorkoutType } from "@prisma/client";
 import { inferRouterInputs, TRPCError } from "@trpc/server";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
 import { useToastStore } from "../../store/ToastStore";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import { enumToString } from "../../utils/formatting";
-import Modal from "../Layout/Modal/Modal";
 import ConfirmModal from "../Layout/Modal/ConfirmModal";
 import { WorkoutRouterType } from "../../server/trpc/router/WorkoutRouter/workout-router";
 import { trpc } from "../../utils/trpc";
@@ -18,16 +17,18 @@ export default function WorkoutForm() {
     state,
     workout: existingWorkout,
     closeWorkoutForm,
-    handleWorkoutFormError,
   } = useWorkoutStore();
+
+  const [formError, set_formError] = useState();
 
   const handleError = (e: any) => {
     if (e instanceof TRPCClientError) {
       const errors = JSON.parse(e.message);
-      addMessage({
-        type: "error",
-        message: errors[0].message || "unknown error",
-      });
+      set_formError(errors[0].message || "unknown error");
+      // addMessage({
+      //   type: "error",
+      //   message: errors[0].message || "unknown error",
+      // });
     }
   };
 
@@ -124,7 +125,7 @@ export default function WorkoutForm() {
       type: "pending",
     });
 
-    deleteWorkout(workout);
+    await deleteWorkout(workout);
 
     closeMessage(toastId);
     addMessage({
@@ -140,24 +141,36 @@ export default function WorkoutForm() {
 
   return (
     <>
-      <ConfirmModal
-        isOpen={state === "delete"}
-        onClose={closeWorkoutForm}
-        title="Delete workout"
-        onConfirm={async () =>
-          existingWorkout && (await handleDelete(existingWorkout))
-        }
-      >
-        <p>Are you sure you wanna delete the workout </p>
-      </ConfirmModal>
+      {state && state === "delete" && (
+        <>
+          <p className="text-sm">
+            Are you sure you want to delete the workout{" "}
+          </p>
+          <div className="modal-action">
+            <button
+              type="button"
+              onClick={async () =>
+                existingWorkout && (await handleDelete(existingWorkout))
+              }
+              className="btn-primary btn"
+            >
+              Delete
+            </button>
+            <button
+              type="button"
+              onClick={closeWorkoutForm}
+              className="btn-neutral btn"
+            >
+              Cancel
+            </button>
+          </div>
+        </>
+      )}
 
-      <Modal
-        title={state && `${state} a workout`}
-        isOpen={!!state && state !== "delete"}
-        onClose={closeWorkoutForm}
-      >
+      {state && state !== "delete" && (
         <>
           <form
+            method="dialog"
             className="mt-5 flex flex-col gap-2"
             onSubmit={async (e) => {
               try {
@@ -300,25 +313,33 @@ export default function WorkoutForm() {
                 </label>
               </div>
             </div>
-
-            <div className="mt-3 flex flex-wrap justify-end gap-4">
+            {formError && (
+              <div className="mt-2 text-sm text-error">{formError}</div>
+            )}
+            <div className="mt-5 flex flex-wrap justify-end gap-4">
               <button
                 type={"button"}
-                className="btn"
+                className="btn-neutral btn-sm btn"
                 onClick={closeWorkoutForm}
               >
                 Cancel
               </button>
               <button
-                className={`btn-primary btn ${isSubmitting ? "loading" : ""}`}
+                disabled={isSubmitting}
+                className={`btn-primary btn-sm btn ${
+                  isSubmitting ? "btn-disabled" : ""
+                } `}
                 type="submit"
               >
+                {isSubmitting && (
+                  <span className="loading loading-spinner"></span>
+                )}
                 {`${state} workout`}
               </button>
             </div>
           </form>
         </>
-      </Modal>
+      )}
     </>
   );
 }

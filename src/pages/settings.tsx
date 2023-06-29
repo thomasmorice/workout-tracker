@@ -3,15 +3,13 @@ import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { MdDelete } from "react-icons/md";
-import { TailSpin } from "react-loading-icons";
 import { useDebounce } from "usehooks-ts";
 import { UserRouterType } from "../server/trpc/router/user-router";
-
-import H1 from "../components/H1/H1";
 import { Affiliate } from "../types/app";
 import { trpc } from "../utils/trpc";
 import { useToastStore } from "../store/ToastStore";
 import { useSession } from "next-auth/react";
+import Header from "../components/Layout/Header";
 
 const Settings: NextPage = () => {
   const utils = trpc.useContext();
@@ -72,11 +70,11 @@ const Settings: NextPage = () => {
   watch("gender");
   return (
     <>
-      <H1> User settings </H1>
+      <Header h1={"User settings"} />
       <div className="mt-2">
         {isFetchingUser ? (
           <div className="flex w-full items-center justify-center">
-            <TailSpin className="h-12" />
+            <span className="loading loading-infinity loading-md"></span>
           </div>
         ) : (
           <form

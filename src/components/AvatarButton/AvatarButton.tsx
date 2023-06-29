@@ -1,36 +1,26 @@
 import Image from "next/image";
-import { MdArrowDropDown } from "react-icons/md";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { TailSpin } from "react-loading-icons";
 import Link from "next/link";
 
-type AvatarButtonProps = {};
-
-export default function AvatarButton({}: AvatarButtonProps) {
+export default function AvatarButton() {
   const { data: sessionData, status } = useSession();
 
   return (
     <>
-      {status === "loading" ? (
-        <div className="flex items-center gap-2">
-          <TailSpin className="h-8" stroke="#2D68FF" speed={1.2} /> Fetching
-          data
-        </div>
-      ) : (
+      {status === "authenticated" && (
         <div className={`dropdown max-md:dropdown-end`}>
           {sessionData ? (
-            <button className="btn-ghost btn-circle btn" type="button">
+            <button
+              className="btn-ghost btn-sm btn-circle btn relative flex overflow-hidden"
+              type="button"
+            >
               <Image
-                width={32}
-                height={32}
-                className="rounded-full"
+                fill
+                className="object-cover"
                 referrerPolicy="no-referrer"
                 src={sessionData.user?.image ?? "https://i.pravatar.cc/300"}
                 alt=""
               />
-              {/* <div className="flex items-center gap-1">
-                  <MdArrowDropDown size={22} />
-                </div> */}
             </button>
           ) : (
             <button onClick={() => signIn()} className="btn-primary btn">

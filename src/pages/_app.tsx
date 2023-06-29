@@ -4,27 +4,21 @@ import { SessionProvider } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import "../styles/globals.css";
 import Layout from "../components/Layout/Layout";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AnimatePresence, motion } from "framer-motion";
+// import { Roboto } from "@next/font/google";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
-  // const queryClient = new QueryClient({
-  //   defaultOptions: {
-  //     queries: {
-  //       networkMode: "always",
-  //     },
-  //   },
+  // const roboto = Roboto({
+  //   subsets: ["latin"],
+  //   weight: ["100", "300", "400", "500", "700", "900"],
   // });
   return (
     <SessionProvider session={session}>
-      {/* <QueryClientProvider client={queryClient}> */}
       <Layout>
         <Component {...pageProps} />
       </Layout>
-      {/* </QueryClientProvider> */}
     </SessionProvider>
   );
 };

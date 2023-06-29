@@ -1,7 +1,6 @@
 import { inferRouterOutputs } from "@trpc/server";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { TailSpin } from "react-loading-icons";
 import { WorkoutRouterType } from "../../server/trpc/router/WorkoutRouter/workout-router";
 import { trpc } from "../../utils/trpc";
 import WorkoutResult from "../Workout/WorkoutCard/WorkoutResult";
@@ -30,7 +29,7 @@ export default function WorkoutResults({ workoutId }: WorkoutResultsProps) {
   if (isLoading) {
     return (
       <div className="flex  w-full justify-center pb-20">
-        <TailSpin fontSize={12} />
+        <span className="loading loading-infinity loading-md"></span>
       </div>
     );
   } else if (!workout) {

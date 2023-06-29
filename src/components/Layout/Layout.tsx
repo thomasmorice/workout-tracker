@@ -7,17 +7,10 @@ import { MdLogin } from "react-icons/md";
 import { useEffect, useState } from "react";
 import RightSidebar from "../RightSidebar/RightSidebar";
 import Head from "next/head";
-import FloatingActionButton from "../FloatingActionButton/FloatingActionButton";
 import WorkoutSelectionBanner from "./WorkoutSelectionBanner";
-import WorkoutSessionForm from "../WorkoutSession/WorkoutSessionForm";
 import { useEventStore } from "../../store/EventStore";
 import WeighingForm from "../Weighing/WeighingForm";
-import Modal from "./Modal/Modal";
-import { AnimatePresence, motion } from "framer-motion";
-import WorkoutAndResults from "../Workout/WorkoutAndResults";
-import MainDrawer from "./Navigation/MainDrawer";
-import Header from "./Header";
-import MobileBottomNavbar from "./Navigation/MobileBottomNavbar";
+import Dialog from "../Layout/Dialog/Dialog";
 import Navigation from "./Navigation/Navigation";
 
 interface LayoutProps {
@@ -27,9 +20,13 @@ export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
   const { status } = useSession();
   const [currentPath, set_currentPath] = useState<String[]>();
-  const { isWorkoutSelectionModeActive } = useWorkoutStore();
   const { showFormWithEventType, closeForm } = useEventStore();
-  // const [isRoutingToChild, set_isRoutingToChild] = useState(false);
+  const {
+    state,
+    workout: existingWorkout,
+    closeWorkoutForm,
+    isWorkoutSelectionModeActive,
+  } = useWorkoutStore();
 
   useEffect(() => {
     const asPathWithoutQuery = router.pathname.split("?")[0];
@@ -41,8 +38,10 @@ export default function Layout({ children }: LayoutProps) {
       <Head>
         <meta
           name="viewport"
-          content="initial-scale=1; user-scalable=no; width=device-width; height=device-height; viewport-fit=cover"
+          content="initial-scale=1; maximum-scale=1; width=device-width; viewport-fit=cover"
         />
+        <meta name="apple-mobile-web-app-title" content="Box tracker"></meta>
+        <meta name="apple-touch-fullscreen" content="yes"></meta>
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
 
@@ -53,20 +52,9 @@ export default function Layout({ children }: LayoutProps) {
       </Head>
 
       <div id="portal"></div>
-      {/* <div
-        className="absolute top-0 left-0 -z-40 h-40 w-full blur-lg"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(71,17,187,0.4) 0%, rgba(42,48,60,1) 90%)",
-        }}
-      ></div> */}
+
       <div className="antialiased">
         <ToastMessage />
-        <AnimatePresence initial={false} mode="sync" key={router.asPath}>
-          <div id="header" />
-        </AnimatePresence>
-
-        <Header />
 
         {isWorkoutSelectionModeActive && <WorkoutSelectionBanner />}
 
@@ -79,30 +67,26 @@ export default function Layout({ children }: LayoutProps) {
             <Navigation />
 
             {/* Global form */}
-            <WorkoutForm />
+            <Dialog
+              title={state && `${state} a workout`}
+              isVisible={!!state}
+              onClose={closeWorkoutForm}
+            >
+              <WorkoutForm />
+            </Dialog>
 
-            <Modal
-              noPadding
+            <Dialog
+              title={"Weighing form"}
               onClose={closeForm}
-              isOpen={showFormWithEventType === "weighing"}
+              isVisible={showFormWithEventType === "weighing"}
             >
               <WeighingForm onSuccess={closeForm} />
-            </Modal>
-
-            {/* <Modal
-              noPadding
-              onClose={closeWorkoutDetail}
-              isOpen={!!openedWorkoutDetail}
-            >
-              {openedWorkoutDetail && (
-                <WorkoutAndResults workout={openedWorkoutDetail} />
-              )}
-            </Modal> */}
+            </Dialog>
           </>
         )}
 
         <main
-          className={`overflow-x-hidden px-4 pb-24 sm:px-8 md:ml-16 md:pb-0 xl:ml-24
+          className={`overflow-x-hidden px-5 pb-24 sm:px-8 md:ml-16 md:pb-0 xl:ml-24
           ${status === "authenticated" ? "md:mr-80 xl:mr-[340px]" : ""}
         `}
         >

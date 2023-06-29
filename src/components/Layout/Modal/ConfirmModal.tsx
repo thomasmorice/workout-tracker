@@ -1,4 +1,4 @@
-import Modal from "./Modal";
+import Dialog from "../Dialog/Dialog";
 
 interface ConfirmModalProps {
   title: string;
@@ -16,19 +16,18 @@ export default function ConfirmModal({
   onClose,
 }: ConfirmModalProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <>
-        <h3 className="mb-2 text-xl font-bold capitalize">{title}</h3>
+    <Dialog title={title} isVisible={isOpen} onClose={onClose}>
+      <div className="mt-1">
         {children}
         <div className="modal-action">
-          <label onClick={onConfirm} className="btn-error btn">
-            Confirm
-          </label>
-          <label onClick={onClose} className="btn">
+          <label onClick={onClose} className="btn-neutral btn">
             Cancel
           </label>
+          <label onClick={onConfirm} className="btn-primary btn">
+            Confirm
+          </label>
         </div>
-      </>
-    </Modal>
+      </div>
+    </Dialog>
   );
 }

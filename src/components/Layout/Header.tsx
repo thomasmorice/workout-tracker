@@ -1,92 +1,86 @@
 import { MdLogin, MdMenu, MdOutlineArrowBackIosNew } from "react-icons/md";
-import { TailSpin } from "react-loading-icons";
 import AvatarButton from "../AvatarButton/AvatarButton";
 import { signIn, signOut, useSession } from "next-auth/react";
-import Logo from "./Logo";
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { HiMenuAlt2 } from "react-icons/hi";
+import { IoMdApps } from "react-icons/io";
 import MainDrawer from "./Navigation/MainDrawer";
+import Image from "next/image";
+import useScrollPosition from "../../hooks/useScrollPosition";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface HeaderProps {
-  h1?:
-    | {
-        mobile?: string;
-        desktop?: string;
-      }
-    | string;
+  h1: string;
   onGoBack?: () => void;
 }
 
 export default function Header({ h1, onGoBack }: HeaderProps) {
   const { data: sessionData, status } = useSession();
-  const [mounted, setMounted] = useState(false);
-  const [headerDiv, set_headerDiv] = useState<Element | null>();
   const [isDrawerOpen, set_isDrawerOpen] = useState(false);
+  const [isH1Condensed, set_isH1Condensed] = useState(false);
+  const scrollPosition = useScrollPosition();
 
   useEffect(() => {
-    setMounted(true);
-    set_headerDiv(document.querySelector("#header"));
-    return () => setMounted(false);
-  }, []);
+    if (scrollPosition.y > 12) {
+      set_isH1Condensed(true);
+    } else {
+      set_isH1Condensed(false);
+    }
+  }, [scrollPosition.y]);
 
-  if (!headerDiv || !mounted) {
-    return null;
-  }
-
-  const fadeIn = {
-    initial: {
-      y: -30,
-      opacity: 0,
-    },
-    animate: {
-      y: 0,
-      opacity: 1,
-    },
-    exit: {
-      y: -30,
-      opacity: 0,
-    },
+  const h1Variants = {
+    visible: { opacity: 1, transition: { duration: 0.3 } },
+    hidden: { opacity: 0, transition: { duration: 0 } },
   };
+
   return (
     <>
       {isDrawerOpen && <MainDrawer onClose={() => set_isDrawerOpen(false)} />}
-      <div className="mb-12 md:hidden">
-        <motion.div
-          className="fixed inset-x-0 top-0 z-30 flex h-14 w-full items-center justify-between bg-opacity-20 px-2 py-0 backdrop-blur-sm"
-          {...fadeIn}
-        >
+      <div className=" mb-14 md:hidden">
+        <div className="fixed inset-0 -z-50 h-60 opacity-10 blur-3xl">
+          <Image
+            fill
+            alt="header background"
+            src="/blurry-gradient.svg"
+            className="object-cover"
+          />
+        </div>
+        <div className="fixed inset-x-0 top-0 z-50 flex h-12 w-full items-center justify-between px-2 py-0 backdrop-blur-sm">
           <div className="flex items-center gap-1">
             {onGoBack ? (
               <div
                 onClick={onGoBack}
                 className="flex cursor-pointer items-center gap-3 text-lg"
               >
-                <MdOutlineArrowBackIosNew size={17} />{" "}
-                <h1 className="h1 mobile flex items-center gap-2">
-                  {typeof h1 === "object" ? h1.mobile : h1}{" "}
-                </h1>
+                <MdOutlineArrowBackIosNew size={17} />
+
+                <h1 className="flex w-fit text-lg font-semibold">{h1}</h1>
               </div>
             ) : (
-              <div className="flex">
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => set_isDrawerOpen(!isDrawerOpen)}
-                  className="btn-ghost btn-md btn-circle btn -ml-2"
+                  className="btn-ghost btn-sm btn-circle btn"
                 >
-                  <HiMenuAlt2 size={25} className="text-base-content" />
+                  <IoMdApps size={25} className="text-base-content" />
                 </button>
-
-                {/* <h1 className="h1 mobile flex items-center gap-3">
-                  {typeof h1 === "object" ? h1.mobile : h1}
-                </h1> */}
+                <AnimatePresence>
+                  {isH1Condensed && (
+                    <motion.h1
+                      variants={h1Variants}
+                      initial="hidden"
+                      animate="visible"
+                      className="flex w-fit pt-1 text-sm font-bold uppercase"
+                    >
+                      {h1}
+                    </motion.h1>
+                  )}
+                </AnimatePresence>
               </div>
             )}
           </div>
           {status === "loading" ? (
             <>
-              <div className="flex items-center gap-x-2">
-                <TailSpin className="h-8" stroke="#2D68FF" speed={1.2} />{" "}
-              </div>
+              <span className="loading loading-infinity loading-md"></span>
             </>
           ) : (
             <>
@@ -104,11 +98,22 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
               )}
             </>
           )}
-        </motion.div>
+        </div>
       </div>
-      <h1 className="h1 desktop">
-        {typeof h1 === "object" ? h1.desktop : h1}{" "}
-      </h1>
+      <div className="h-6">
+        <AnimatePresence>
+          {!isH1Condensed && (
+            <motion.h1
+              variants={h1Variants}
+              initial="hidden"
+              animate="visible"
+              className="text-2xl font-black"
+            >
+              {h1}
+            </motion.h1>
+          )}
+        </AnimatePresence>
+      </div>
     </>
   );
 }

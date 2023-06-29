@@ -10,7 +10,6 @@ import {
   subMonths,
   addMonths,
 } from "date-fns";
-import { TailSpin } from "react-loading-icons";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import { useActivityStore } from "../../store/ActivityStore";
 import { inferRouterOutputs } from "@trpc/server";
@@ -43,7 +42,7 @@ const Calendar = ({
 
   const getHeader = () => {
     return (
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-3 mt-2 flex items-center justify-between">
         <h2 className="h2">{format(currentMonth, "MMMM, yyyy")}</h2>
         <div className="flex gap-3">
           <div
@@ -173,8 +172,8 @@ const Calendar = ({
       {getWeekDaysNames()}
       {getDates()}
       {isLoading && (
-        <div className="absolute -top-4 -left-4 flex h-[calc(100%_+_2rem)] w-[calc(100%_+_2rem)] items-center justify-center rounded-xl bg-base-200 bg-opacity-70">
-          <TailSpin className="h-8" stroke="#2D68FF" speed={1.2} />{" "}
+        <div className="absolute -left-6 -top-10 flex h-[calc(100%_+_3rem)] w-[calc(100%_+_3rem)] items-center justify-center rounded-xl bg-base-200 bg-opacity-70">
+          <span className="loading loading-infinity loading-md"></span>
         </div>
       )}
     </section>

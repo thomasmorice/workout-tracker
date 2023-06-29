@@ -13,7 +13,6 @@ import { useEventStore } from "../../store/EventStore";
 import DatePicker from "../DatePicker/DatePicker";
 import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
-import { Rings } from "react-loading-icons";
 import { Reorder } from "framer-motion";
 import { z } from "zod";
 import { useToastStore } from "../../store/ToastStore";
@@ -23,11 +22,11 @@ import { TRPCClientError } from "@trpc/client";
 import WorkoutCard from "../Workout/WorkoutCard/WorkoutCard";
 import { isAfter } from "date-fns";
 import WorkoutResult from "../Workout/WorkoutCard/WorkoutResult";
+import Dialog from "../Layout/Dialog/Dialog";
 
 type WorkoutSessionFormProps = {
-  // create?: boolean;
-  existingSessionId?: inferRouterOutputs<EventRouterType>["getEvents"][number]["id"];
   onSuccess?: () => void;
+  existingSessionId?: inferRouterOutputs<EventRouterType>["getEvents"][number]["id"];
 };
 
 export default function WorkoutSessionForm({
@@ -137,7 +136,7 @@ export default function WorkoutSessionForm({
   if (isInitialLoading) {
     return (
       <div className=" flex h-screen w-screen items-center justify-center">
-        <Rings strokeWidth={1.5} width={64} height={64} />
+        <span className="loading loading-infinity loading-md"></span>
       </div>
     );
   }
@@ -181,27 +180,32 @@ export default function WorkoutSessionForm({
       reset(defaultValues);
       toastId && closeMessage(toastId);
       clearSelectedWorkouts();
+      onSuccess && onSuccess();
     }
   };
 
   return (
-    <div className="">
-      {showWorkoutResultForm && (
-        <WorkoutResultForm
-          onSave={async (workoutResult) => {
-            updateWorkoutResults(
-              workoutResults.findIndex(
-                (wr) => wr.workoutId === workoutResult.workoutId
-              ),
-              workoutResult
-            );
+    <>
+      <Dialog
+        isVisible={!!showWorkoutResultForm}
+        onClose={() => set_showWorkoutResultForm(undefined)}
+      >
+        {showWorkoutResultForm && (
+          <WorkoutResultForm
+            onSave={async (workoutResult) => {
+              updateWorkoutResults(
+                workoutResults.findIndex(
+                  (wr) => wr.workoutId === workoutResult.workoutId
+                ),
+                workoutResult
+              );
 
-            await handleSubmit(handleCreateOrEdit)();
-          }}
-          onClose={() => set_showWorkoutResultForm(undefined)}
-          workoutResult={showWorkoutResultForm}
-        />
-      )}
+              await handleSubmit(handleCreateOrEdit)();
+            }}
+            workoutResult={showWorkoutResultForm}
+          />
+        )}
+      </Dialog>
 
       <div className="relative mt-2 flex flex-col justify-center ">
         {workoutResults.length ? (
@@ -217,7 +221,7 @@ export default function WorkoutSessionForm({
                 </span>
                 <input
                   type="checkbox"
-                  onClick={() => set_reorderWorkoutMode(!reorderWorkoutMode)}
+                  onChange={() => set_reorderWorkoutMode(!reorderWorkoutMode)}
                   className="toggle"
                   checked={reorderWorkoutMode}
                 />
@@ -308,6 +312,6 @@ export default function WorkoutSessionForm({
           <>No workout selected</>
         )}
       </div>
-    </div>
+    </>
   );
 }

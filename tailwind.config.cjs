@@ -4,8 +4,7 @@ module.exports = {
   darkMode: ["class", '[data-theme="dark"]'],
   theme: {
     fontFamily: {
-      sans: ["Work sans", "ui-sans-serif", "system-ui"],
-      script: ["Patrick Hand"],
+      sans: ["Roboto", "ui-sans-serif", "system-ui"],
     },
 
     extend: {
@@ -64,6 +63,11 @@ module.exports = {
     "bg-yellow-900",
     "bg-gray-900",
     "bg-gray-400",
+
+    "menu-xs",
+    "menu-sm",
+    "menu-md",
+    "menu-lg",
   ],
   daisyui: {
     themes: [
@@ -73,7 +77,7 @@ module.exports = {
           // "base-100": "#19181c",
           // "base-200": "#29272e",
           // "base-300": "#393740",
-          "base-content": "#D1D6E0",
+          // "base-content": "#D1D6E0",
           // primary: "#00C89C",
           "range-shdw": "black",
         },

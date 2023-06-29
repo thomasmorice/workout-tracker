@@ -1,8 +1,7 @@
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-
-import H1 from "../components/H1/H1";
+import Header from "../components/Layout/Header";
 
 import WeeklyBoxWorkouts from "../components/Workout/WeeklyBoxWorkouts";
 
@@ -18,7 +17,7 @@ const ThisWeekAtMyBox: NextPage = () => {
 
       {/* <Header h1={"This week at my box"} /> */}
 
-      <H1> Weekly overview</H1>
+      <Header h1={"Weekly overview"} />
 
       {/* <h1 className="text-4xl leading-9">
         This week at <br /> my box

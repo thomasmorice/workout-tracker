@@ -1,9 +1,16 @@
+import { Difficulty } from "@prisma/client";
 import { LayoutGroup } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { MdSearch } from "react-icons/md";
+import { IoOptions } from "react-icons/io5";
+import { MdClose, MdFilterList, MdSearch } from "react-icons/md";
 import Masonry from "react-masonry-css";
 import { useDebounce, useIntersectionObserver } from "usehooks-ts";
 import { trpc } from "../../utils/trpc";
+import Dialog from "../Layout/Dialog/Dialog";
+import WorkoutFilters, {
+  IWorkoutFilters,
+} from "../WorkoutFilters/WorkoutFilters";
+import WorkoutFiltersBadges from "../WorkoutFilters/WorkoutFiltersBadges";
 import WorkoutCard from "./WorkoutCard/WorkoutCard";
 import WorkoutCardSkeleton from "./WorkoutCardSkeleton";
 
@@ -11,19 +18,23 @@ export default function WorkoutList() {
   const lastWorkoutRef = useRef<HTMLDivElement | null>(null);
   const entry = useIntersectionObserver(lastWorkoutRef, {});
 
-  const [classifiedOnly, set_classifiedOnly] = useState(true);
-  const [filterOn, set_filterOn] = useState<
-    undefined | "classified" | "benchmarks" | "recommended"
-  >("classified");
+  const [filters, set_filters] = useState<IWorkoutFilters>();
+
+  const [showFiltersModal, set_showFiltersModal] = useState(false);
   const [searchTerm, set_searchTerm] = useState("");
   const searchTermDebounced = useDebounce<string>(searchTerm, 500);
 
   const { data, fetchNextPage, hasNextPage, isFetching, isSuccess } =
     trpc.workout.getInfiniteWorkout.useInfiniteQuery(
       {
-        classifiedOnly: filterOn === "classified",
-        benchmarkOnly: filterOn === "benchmarks",
-        workoutRecommendedOnly: filterOn === "recommended",
+        classifiedOnly: filters?.global === "classified",
+        workoutTypes: filters?.workoutType ? [filters?.workoutType] : undefined,
+        elementTypes: filters?.elementType ? [filters?.elementType] : undefined,
+        difficulties: filters?.difficulty ? [filters?.difficulty] : undefined,
+        minDuration: filters?.minDuration,
+        maxDuration: filters?.maxDuration,
+        benchmarkOnly: filters?.global === "benchmarks",
+        workoutRecommendedOnly: filters?.global === "recommended",
         searchTerm: searchTermDebounced,
       },
       {
@@ -43,65 +54,53 @@ export default function WorkoutList() {
 
   return (
     <>
+      <Dialog
+        title={"Workout filters"}
+        onClose={() => set_showFiltersModal(false)}
+        isVisible={showFiltersModal}
+      >
+        <WorkoutFilters
+          savedFilters={filters}
+          updateFilters={(filters) => {
+            set_filters(filters);
+            set_showFiltersModal(false);
+          }}
+        />
+      </Dialog>
+
       <div className="flex flex-wrap items-center gap-2 md:pt-6">
-        <div className="relative flex w-full items-center justify-between">
-          <label className="absolute z-10 ml-3" htmlFor="searchWorkoutInput">
-            <MdSearch size={22} />
-          </label>
+        <div className="group relative flex w-full items-center justify-between">
           <input
             id="searchWorkoutInput"
             type="search"
-            placeholder="Search…"
+            placeholder="Search movement, equipement..."
             value={searchTerm}
             onChange={(e) => set_searchTerm(e.target.value)}
-            className="input left-0 w-full  rounded-full bg-base-200 px-12"
+            className="input input-md w-full bg-base-100 px-4 placeholder:opacity-70"
           />
+          <button
+            onClick={() => set_showFiltersModal(true)}
+            className="btn-neutral btn-square btn-sm btn absolute right-3 z-10"
+          >
+            <IoOptions size={18} />
+          </button>
         </div>
       </div>
-      <div className="mb-2 mt-6 text-lg font-bold">Filters</div>
-      <div className=" flex flex-wrap items-center gap-3">
-        <button
-          onClick={() => set_filterOn(undefined)}
-          className={`badge badge-lg font-medium ${
-            !filterOn ? "badge-primary" : ""
-          }`}
-        >
-          All workouts
-        </button>
-        <button
-          onClick={() => set_filterOn("classified")}
-          className={`badge badge-lg font-medium ${
-            filterOn === "classified" ? "badge-primary" : ""
-          }`}
-        >
-          Classified
-        </button>
-        <button
-          onClick={() => set_filterOn("benchmarks")}
-          className={`badge badge-lg font-medium ${
-            filterOn === "benchmarks" ? "badge-primary" : ""
-          }`}
-        >
-          Benchmarks
-        </button>
 
-        <button
-          onClick={() => set_filterOn("recommended")}
-          className={`badge badge-lg font-medium ${
-            filterOn === "recommended" ? "badge-primary" : ""
-          }`}
-        >
-          Saved for later
-        </button>
+      <div className="my-2 ">
+        <WorkoutFiltersBadges
+          filters={filters}
+          setFilters={(newFilters) => set_filters(newFilters)}
+        />
       </div>
-      <div className="mb-2 mt-8 text-lg font-bold">Workout List</div>
+
       <Masonry
         breakpointCols={{
           default: 3,
           1500: 2,
           1226: 1,
         }}
-        className="-ml-16 flex w-auto"
+        className="-ml-16 mt-1 flex w-auto"
         columnClassName="pl-16 bg-clip-padding "
       >
         <LayoutGroup>

@@ -1,10 +1,8 @@
-import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { RiDashboardLine } from "react-icons/ri";
 import { CgGym } from "react-icons/cg";
 import { IoCalendarOutline } from "react-icons/io5";
-import AvatarButton from "../../AvatarButton/AvatarButton";
 import { useSession } from "next-auth/react";
 import { RxAvatar } from "react-icons/rx";
 import { useRouter } from "next/router";
@@ -72,11 +70,11 @@ export default function MainDrawer({ onClose }: MainDrawerProps) {
             <Link
               onClick={() => closeDrawer()}
               href="/"
-              className={`flex items-center ${
-                isLinkActive("/") ? "text-primary-content" : "opacity-60"
+              className={`flex items-center gap-3 text-lg ${
+                isLinkActive("/") ? "" : "opacity-60"
               }`}
             >
-              <RiDashboardLine size={28} /> Dashboard
+              <RiDashboardLine size={22} /> Dashboard
             </Link>
           </li>
 
@@ -84,50 +82,44 @@ export default function MainDrawer({ onClose }: MainDrawerProps) {
             <Link
               onClick={() => closeDrawer()}
               href="/workouts"
-              className={`flex items-center ${
-                isLinkActive("/workouts")
-                  ? "text-primary-content"
-                  : "opacity-60"
+              className={`flex items-center gap-3 text-lg ${
+                isLinkActive("/workouts") ? "" : "opacity-60"
               }`}
             >
-              <CgGym size={28} /> Workout manager
+              <CgGym size={22} /> Workout manager
             </Link>
           </li>
           <li>
             <Link
               onClick={() => closeDrawer()}
               href="/this-week-at-my-box"
-              className={`flex items-center ${
-                isLinkActive("/this-week-at-my-box")
-                  ? "text-primary-content"
-                  : "opacity-60"
+              className={`flex items-center gap-3 text-lg ${
+                isLinkActive("/this-week-at-my-box") ? " " : "opacity-60"
               }`}
             >
-              <GiGymBag size={28} /> This week at my box
+              <GiGymBag size={22} /> This week at my box
             </Link>
           </li>
           <li>
             <Link
               onClick={() => closeDrawer()}
               href="/activities"
-              className={`flex items-center ${
-                isLinkActive("/activities")
-                  ? "text-primary-content"
-                  : "opacity-60"
+              className={`flex items-center gap-3 text-lg ${
+                isLinkActive("/activities") ? "" : "opacity-60"
               }`}
             >
-              <IoCalendarOutline size={28} /> Activities
+              <IoCalendarOutline size={22} /> Activities
             </Link>
           </li>
           <li>
             <Link
               onClick={() => closeDrawer()}
               href="/profile"
-              className={`flex items-center ${
-                isLinkActive("/profile") ? "text-primary-content" : "opacity-60"
+              className={`flex items-center gap-3 text-lg ${
+                isLinkActive("/profile") ? "" : "opacity-60"
               }`}
             >
-              <RxAvatar size={28} />
+              <RxAvatar size={22} />
               {sessionData ? "My Profile" : "Login"}
             </Link>
           </li>

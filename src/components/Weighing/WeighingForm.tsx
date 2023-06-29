@@ -4,10 +4,8 @@ import { CreateWeighingInputSchema } from "../../types/app";
 import { useToastStore } from "../../store/ToastStore";
 import { useEventStore } from "../../store/EventStore";
 import { useEffect, useState } from "react";
-import { Rings } from "react-loading-icons";
 import { inferRouterInputs, TRPCError } from "@trpc/server";
 import { WeighingRouterType } from "../../server/trpc/router/weighing-router";
-import { getRandomPreparingSessionllustration } from "../../utils/workout";
 import DatePicker from "../DatePicker/DatePicker";
 import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
@@ -49,8 +47,6 @@ export default function WeighingForm({
       },
     });
 
-  const [illustration] = useState(getRandomPreparingSessionllustration());
-
   const handleCreateOrEdit: SubmitHandler<
     z.infer<typeof CreateWeighingInputSchema>
   > = async (weighing: z.infer<typeof CreateWeighingInputSchema>) => {
@@ -91,27 +87,12 @@ export default function WeighingForm({
   }, [defaultValues, reset]);
 
   if (isLoading && isFetching) {
-    return <Rings className="h-14 w-14" />;
+    return <span className="loading loading-infinity loading-md"></span>;
   }
   watch("date");
 
   return (
     <form onSubmit={handleSubmit(handleCreateOrEdit)}>
-      <div
-        style={{
-          backgroundImage: `url(/workout-item/${illustration}.png)`,
-        }}
-        className="absolute left-0 top-0 h-64 w-full bg-cover bg-center opacity-50"
-      >
-        <div
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(42, 48, 60, 0) 0%, #2A303C 99%)",
-          }}
-          className="absolute inset-0 h-full w-full"
-        ></div>
-      </div>
-
       <div className="relative flex flex-col gap-3 px-4 py-10">
         <DatePicker name="date" control={control} />
 

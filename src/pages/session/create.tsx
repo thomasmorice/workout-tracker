@@ -1,11 +1,11 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import H1 from "../../components/H1/H1";
 import { useRouter } from "next/router";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import { useEventStore } from "../../store/EventStore";
 import { MdModelTraining } from "react-icons/md";
 import WorkoutSessionForm from "../../components/WorkoutSession/WorkoutSessionForm";
+import Header from "../../components/Layout/Header";
 
 const CreateSession: NextPage = () => {
   const router = useRouter();
@@ -20,7 +20,7 @@ const CreateSession: NextPage = () => {
         <meta name="description" content="Add or edit a session" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <H1> Create a session </H1>
+      <Header h1="Create a session" />
 
       {preselectedWorkouts.length > 0 ? (
         <WorkoutSessionForm />

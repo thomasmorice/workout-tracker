@@ -13,8 +13,12 @@ export default function FloatingActionButton() {
 
   const mainButtons = [
     {
-      label: `Create a session`,
+      label: `New session`,
       onClick: () => router.push("/session/create"),
+    },
+    {
+      label: "Create a workout",
+      onClick: () => showWorkoutForm("create"),
     },
     {
       label: "Add a weighing",
@@ -23,22 +27,18 @@ export default function FloatingActionButton() {
           type: "weighing",
         }),
     },
-    {
-      label: "Create a workout",
-      onClick: () => showWorkoutForm("create"),
-    },
   ];
 
-  const multipleSelectionButtons = [
-    {
-      label: "Unselect all",
-      onClick: () => console.log("hello"),
-    },
-    {
-      label: "",
-      onClick: () => console.log("hello"),
-    },
-  ];
+  // const multipleSelectionButtons = [
+  //   {
+  //     label: "Unselect all",
+  //     onClick: () => console.log("hello"),
+  //   },
+  //   {
+  //     label: "",
+  //     onClick: () => console.log("hello"),
+  //   },
+  // ];
 
   return (
     <>
@@ -48,8 +48,8 @@ export default function FloatingActionButton() {
           buttons={mainButtons}
           containerClass="dropdown-top divide-y"
         >
-          <div className="btn-rounded btn-ghost btn-md btn-circle btn flex items-center justify-center">
-            <MdMenu size={18} />
+          <div className="btn-rounded btn-ghost btn-md btn-circle btn flex items-center justify-center bg-primary text-primary-content">
+            <AiOutlinePlus size={16} />
           </div>
         </Dropdown>
       </div>

@@ -1,5 +1,4 @@
 import { inferRouterOutputs } from "@trpc/server";
-import { Rings } from "react-loading-icons";
 import { WorkoutRouterType } from "../../server/trpc/router/WorkoutRouter/workout-router";
 import { useWorkoutStore } from "../../store/WorkoutStore";
 import { trpc } from "../../utils/trpc";

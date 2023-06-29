@@ -16,6 +16,7 @@ import {
   MdOutlineLibraryAddCheck,
   MdOutlineLocationOn,
   MdRemove,
+  MdStackedLineChart,
 } from "react-icons/md";
 import { WorkoutRouterType } from "../../../server/trpc/router/WorkoutRouter/workout-router";
 import { enumToString } from "../../../utils/formatting";
@@ -28,7 +29,6 @@ import WorkoutCardBadges from "./WorkoutCardBadges";
 import { motion } from "framer-motion";
 import WorkoutResults from "../../WorkoutResult/WorkoutResults";
 import { useLockedBody } from "usehooks-ts";
-import { getLevelFromIndividualWorkout } from "../../../utils/benchmark";
 
 type WorkoutCardProps = {
   workout:
@@ -186,6 +186,7 @@ export default function WorkoutCard({
     <>
       <motion.div
         layoutId={workout.id.toString()}
+        layout="preserve-aspect"
         animate={{
           zIndex: isFullScreen ? 160 : "unset",
         }}
@@ -196,7 +197,7 @@ export default function WorkoutCard({
           ${
             isFullScreen
               ? "fixed inset-0 z-20 w-full overflow-scroll bg-base-100"
-              : "relative z-10 bg-base-300"
+              : "relative z-10 bg-base-200"
           }
           ${
             isWorkoutFromSessionForm && !isFullScreen
@@ -214,7 +215,7 @@ export default function WorkoutCard({
           ${
             isWorkoutFromSessionForm && !isFullScreen
               ? "top-5 h-16"
-              : "top-10 h-32"
+              : "top-10 h-24"
           }`}
         >
           {/STRENGTH|WOD|SKILLS|ENDURANCE|MOBILITY|WEIGHTLIFTING|UNCLASSIFIED|CARDIO/i.test(
@@ -289,8 +290,8 @@ export default function WorkoutCard({
                   buttons={workoutActions}
                   containerClass="dropdown-left "
                 >
-                  <div className={`btn-ghost btn-md btn-circle btn`}>
-                    <RxDotsVertical size={22} />
+                  <div className={`btn-neutral btn-square btn-sm btn`}>
+                    <RxDotsVertical size={18} />
                   </div>
                 </Dropdown>
               )}
@@ -300,7 +301,7 @@ export default function WorkoutCard({
 
         <div
           className={`relative z-10 
-          ${isWorkoutFromSessionForm && !isFullScreen ? "mt-14" : "mt-16"}
+          ${isWorkoutFromSessionForm && !isFullScreen ? "mt-16" : "mt-8"}
           `}
         >
           <div
@@ -308,11 +309,19 @@ export default function WorkoutCard({
               ${
                 isWorkoutFromSessionForm && !isFullScreen
                   ? "leading-5"
-                  : "text-2xl leading-7"
+                  : "text-xl leading-6"
               }
             `}
           >
-            {workout.name ? workout.name : enumToString(workout.elementType)}
+            {workout.name ? (
+              workout.name
+            ) : (
+              <>
+                {workout.elementType === "UNCLASSIFIED"
+                  ? "Session of the day"
+                  : enumToString(workout.elementType)}
+              </>
+            )}
 
             {workout.workoutType && (
               <>
@@ -333,6 +342,10 @@ export default function WorkoutCard({
           {workout.benchmark && (
             <>
               <div className="mt-4 flex flex-wrap justify-center gap-2">
+                <div className="badge badge-info items-center gap-1 font-semibold">
+                  <MdStackedLineChart size={18} />
+                  Benchmark workout
+                </div>
                 {workout.benchmark?.abilitiesRequired.map((ability) => (
                   <div
                     key={ability}
@@ -346,7 +359,7 @@ export default function WorkoutCard({
           )}
 
           {(!isWorkoutFromSessionForm || isFullScreen) && (
-            <div className="mb-4 mt-6 flex flex-col gap-0.5 text-sm">
+            <div className="my-3 flex flex-col gap-0.5 text-sm">
               <div className="flex justify-center gap-2">
                 <div className="flex items-center gap-1 ">
                   <MdEvent />

@@ -1,9 +1,9 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import H1 from "../components/H1/H1";
 import BenchmarkOverview from "../components/Benchmark/BenchmarkOverview";
 import BenchmarkDetails from "../components/Benchmark/BenchmarkDetails";
 import UserAvatarAndAffiliate from "../components/Benchmark/UserAvatarAndAffiliate";
+import Header from "../components/Layout/Header";
 
 const Benchmarks: NextPage = () => {
   return (
@@ -20,7 +20,7 @@ const Benchmarks: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <H1> Athlete details </H1>
+      <Header h1="Athlete details" />
       <div className="mt-8">
         <UserAvatarAndAffiliate />
         <BenchmarkOverview />
