@@ -4,6 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import "../styles/globals.css";
 import Layout from "../components/Layout/Layout";
+import "./multiRangeSlider.css";
 // import { Roboto } from "@next/font/google";
 
 const MyApp: AppType<{ session: Session | null }> = ({
