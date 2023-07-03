@@ -8,6 +8,7 @@ import { useDebounce, useIntersectionObserver } from "usehooks-ts";
 import { trpc } from "../../utils/trpc";
 import Dialog from "../Layout/Dialog/Dialog";
 import WorkoutFilters, {
+  defaultFilters,
   IWorkoutFilters,
 } from "../WorkoutFilters/WorkoutFilters";
 import WorkoutFiltersBadges from "../WorkoutFilters/WorkoutFiltersBadges";
@@ -18,7 +19,7 @@ export default function WorkoutList() {
   const lastWorkoutRef = useRef<HTMLDivElement | null>(null);
   const entry = useIntersectionObserver(lastWorkoutRef, {});
 
-  const [filters, set_filters] = useState<IWorkoutFilters>();
+  const [filters, set_filters] = useState<IWorkoutFilters>(defaultFilters);
 
   const [showFiltersModal, set_showFiltersModal] = useState(false);
   const [searchTerm, set_searchTerm] = useState("");

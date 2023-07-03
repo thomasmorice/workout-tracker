@@ -57,14 +57,12 @@ export default function Layout({ children }: LayoutProps) {
         <ToastMessage />
 
         {isWorkoutSelectionModeActive && <WorkoutSelectionBanner />}
-
+        <Navigation />
         {status === "authenticated" && (
           <>
             <div className="hidden md:block">
               <RightSidebar />
             </div>
-
-            <Navigation />
 
             {/* Global form */}
             <Dialog

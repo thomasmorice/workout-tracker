@@ -7,8 +7,11 @@ export default function AvatarButton() {
 
   return (
     <>
+      {status === "loading" && (
+        <span className="loading loading-infinity loading-md"></span>
+      )}
       {status === "authenticated" && (
-        <div className={`dropdown max-md:dropdown-end`}>
+        <div className={`dropdown-top dropdown-left dropdown`}>
           {sessionData ? (
             <button
               className="btn-ghost btn-sm btn-circle btn relative flex overflow-hidden"
@@ -30,7 +33,7 @@ export default function AvatarButton() {
 
           <ul
             tabIndex={0}
-            className="dropdown-content menu rounded-box w-52 bg-base-200 p-2 shadow"
+            className="dropdown-content menu rounded-box w-52 bg-base-300 p-2 shadow"
           >
             <li>
               <Link href="/settings">Settings</Link>

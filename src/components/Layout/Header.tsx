@@ -84,7 +84,7 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
             </>
           ) : (
             <>
-              {!sessionData ? (
+              {!sessionData && (
                 <button
                   type="button"
                   onClick={() => signIn()}
@@ -93,8 +93,6 @@ export default function Header({ h1, onGoBack }: HeaderProps) {
                   <MdLogin size="22px" />
                   Login
                 </button>
-              ) : (
-                <AvatarButton />
               )}
             </>
           )}

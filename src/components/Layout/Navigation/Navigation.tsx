@@ -38,27 +38,17 @@ export default function Navigation() {
       label: "Activities",
       href: "/activities",
     },
-    {
-      icon: MdSettings,
-      label: "Settings",
-      href: "/settings",
-    },
   ];
 
   return (
     <>
-      {/* Desktop Nav */}
-      <AnimatePresence>
-        <>
-          <div className="hidden md:block">
-            <DesktopSidebar items={NavigationItems} />
-          </div>
-          {/* Mobile Nav */}
-          <div className="block md:hidden">
-            <MobileBottomNavbar items={NavigationItems} />
-          </div>
-        </>
-      </AnimatePresence>
+      <div className="hidden md:block">
+        <DesktopSidebar items={NavigationItems} />
+      </div>
+      {/* Mobile Nav */}
+      <div className="block md:hidden">
+        <MobileBottomNavbar items={NavigationItems} />
+      </div>
     </>
   );
 }
